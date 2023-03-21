@@ -1,0 +1,189 @@
+// old colors (classic BGA colors) : $player-colors: ("red": "ff0000", "green": "008000", "blue": "0000ff", "yellow": "ffa500", "purple": "982fff");
+// new colors (from end score train image)
+$player-colors: ("red": "e3001a", "green": "41a62a", "blue": "0056aa", "yellow": "ffed00", "purple": "af0ac2");
+
+@import 'playerboards';
+@import 'map/map';
+@import 'train-car-deck/train-car-deck';
+@import 'destination-deck/destination-deck';
+@import 'player-table/player-table';
+@import 'end-score/end-score';
+
+/* make space between buttons on touch devices */
+@media (hover: none) {
+    #page-title .action-button.bgabutton, #page-title .bgabutton {
+      margin-bottom: 8px;
+      margin-top: 8px;
+    }
+  }
+  
+$background: linear-gradient(90deg, rgba(57, 124, 150, 1) 0%, rgba(21, 104, 134, 1) 100%);
+
+html, .mode_3d #game_play_area_background {
+    background: $background #b59958;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+#last-round {
+    margin: 5px -5px -5px;
+    text-align: center;
+    background-color: #900;
+    color: white;
+    text-shadow: 0 0 1px #900, 0 0 5px #900, 0 0 6px #900, 0 0 7px #900;
+
+    .last-round-text {
+        display: inline-block;
+
+        &.animate {
+            animation: last-round-animation 2s 1 forwards ease-in-out;
+        }
+    }
+}
+
+@keyframes last-round-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3);
+  }
+  100% { 
+    transform: scale(1);
+  }
+}
+
+.train-car-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px; 
+    height: 161px; 
+    background-image: url("img/train-cards.jpg");
+    border-radius: 6px;
+    box-shadow: 0 0 8px 1px black;
+    transform-origin: center center;
+
+    &.selectable {
+        cursor: pointer;
+    }
+    
+    &.disabled {
+        filter: contrast(0.6);
+        cursor: not-allowed;
+    }
+
+    @for $i from 0 through 8 {
+        &[data-color="#{$i}"] {
+            background-position: #{$i * 12.5%} 50%;
+        }
+    }
+
+    &.animated {
+        pointer-events: none;
+        transition: transform 0.5s;
+
+        &.transform-origin-top-left {
+            transform-origin: top left;
+        }
+    
+        &.from-hidden-pile {
+            background-image: url("img/deck-cardLevel-10.png");
+        }
+    }
+
+    &.tunnel-card {
+        transform: scale(0.1);
+    }
+}
+
+.stockitem {
+    border-radius: 6px;
+    
+    &.disabled {
+        filter: contrast(0.6);
+        cursor: not-allowed;
+    }
+}
+
+#page-title {
+    .color-cards {
+        display: inline-block;
+
+        .icon.train-car-color:not(:first-child) {
+            margin-left: -20px;
+        }
+    }
+
+    .icon.train-car-color {
+        margin: -5px 0px;
+    }
+}
+
+.dijitTooltipContents {
+    .destinations-flex {
+        display: flex;
+        gap: 5px;
+
+        .destination-card {
+            position: relative;
+        }
+    }
+}
+
+// hack to move to the framework
+.preference_choice .row-data.row-data-large {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .row-label {
+        white-space: normal;
+    }
+    
+    .row-value {
+        flex: 1;
+        margin-left: unset;
+        min-width: 200px;
+    }
+}
+
+html[data-color-blind="true"] {
+    [data-color-blind-player-no]::after {
+        font-size: 120%;
+        display: flex;
+        justify-content: center;
+        color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        align-items: center;
+        text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;
+    }
+
+    .wagon::after {
+        font-size: 200%;
+    }
+
+    [data-color-blind-player-no="1"]::after {
+      content: '●'; // circle
+    }
+
+    [data-color-blind-player-no="2"]::after {
+      content: '▲'; // triangle
+    }
+
+    [data-color-blind-player-no="3"]::after {
+      content: '■'; // square
+    }
+
+    [data-color-blind-player-no="4"]::after {
+      content: '◆'; // diamond
+    }
+
+    [data-color-blind-player-no="5"]::after {
+      content: '⬟'; // pentagon
+    }
+}

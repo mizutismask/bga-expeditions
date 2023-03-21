@@ -1,72 +1,1466 @@
-/**
- *------
- * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * Expeditions implementation : © <Your name here> <Your email address here>
- *
- * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
- * See http://en.boardgamearena.com/#!doc/Studio for more information.
- * -----
- *
- * expeditions.css
- *
- * Expeditions stylesheet
- *
- */
+@charset "UTF-8";
+.player-board {
+  color: white;
+  background: url("img/playerboard-background-bottom.jpg");
+  background-position: bottom;
+  background-size: cover;
+}
+.player-board[data-player-color=e3001a]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #e3001a;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px black;
+  border-radius: 8px;
+}
+.player-board[data-player-color="41a62a"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #41a62a;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px black;
+  border-radius: 8px;
+}
+.player-board[data-player-color="0056aa"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #0056aa;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px black;
+  border-radius: 8px;
+}
+.player-board[data-player-color=ffed00]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #ffed00;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px black;
+  border-radius: 8px;
+}
+.player-board[data-player-color=af0ac2]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #af0ac2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px black;
+  border-radius: 8px;
+}
+.player-board .player-name, .player-board .player-name a {
+  color: white !important;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+.player-board .player_score_value {
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+.player-board .train-car-counter {
+  flex-direction: column;
+  width: 64px;
+  height: 64px;
+  background: url("img/playerboard-train-background.png") no-repeat center;
+  margin: -5px -10px -10px -10px;
+  position: relative;
+  color: black;
+}
+.player-board .train-car-counter span {
+  margin-top: -5px;
+}
+.player-board .train-car-counter.animate-low-count {
+  z-index: 1;
+  animation: train-car-low-count-animation 1.5s 1 forwards ease-in-out;
+}
+.player-board .train-car-counter.animate-low-count:after {
+  animation: train-car-low-count-after-animation 1.5s 1 forwards ease-in-out;
+}
+.player-board .train-car-counter:after {
+  content: "";
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin-left: -24px;
+  margin-top: -24px;
+}
+.player-board .player-turn-order {
+  background: rgba(255, 255, 255, 0.6666666667);
+  color: black;
+  margin: 2px;
+  margin-top: 10px;
+  padding: 2px;
+  text-align: center;
+  border-radius: 8px;
+}
 
-/*
-    This is the CSS stylesheet of your game User Interface.
-    
-    Styles defined on this file will be applied to the HTML elements you define in your
-    HTML template (expeditions_expeditions.tpl), and to HTML elements you create dynamically
-    (in expeditions.js).
-    
-    Usually, you are using CSS to:
-    
-    1°) define the overall layout of your game
-        (ex: place the board on the top left, place player's hand beside, place the deck on the right, ...).
+@keyframes train-car-low-count-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3);
+    color: red;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes train-car-low-count-after-animation {
+  50% {
+    box-shadow: 0 0 10px 10px red;
+  }
+}
+.counters {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  font-weight: bold;
+}
+.counters .counter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.counters .counter span {
+  padding: 0 5px 0 5px;
+}
 
-    2°) create your CSS-sprites:
-        All images of your games should be gathered into a small number of image files. Then, using
-        background-image and background-position CSS properties, you create HTML blocks that can 
-        display these images correctly (see example below).
-    
-    3°) ... anything else:
-        It is really easy to add and remove CSS classes dynamically from your Javascript with
-        dojo.addClass and dojo.removeClass. It is also easy to check if an element has a class
-        (dojo.hasClass) or to get all elements with a specific class (dojo.query). This is why,
-        very often, using CSS classes for the logic of your user interface allow you to do complex
-        thing easily.
-        
-        
-     Note: on the production platform, this file will be compressed and comments will be removed.
-           Consequently, don't hesitate to put as many comments as necessary.
-*/
+.icon {
+  display: inline-block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background-image: url("img/icons.png");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+.icon.train-car-card-icon {
+  background-position: 0% 50%;
+}
+.icon.destination-card {
+  background-position: 33.3333333333% 50%;
+}
+.icon.completed-destination {
+  background-position: 66.6666666667% 50%;
+}
+.icon.uncompleted-destination {
+  background-position: 100% 50%;
+}
+.icon.train {
+  background-image: url("img/train-icons.png");
+}
+.icon.train[data-player-color=e3001a] {
+  background-position: 75% 0%;
+}
+.icon.train[data-player-color="41a62a"] {
+  background-position: 25% 0%;
+}
+.icon.train[data-player-color="0056aa"] {
+  background-position: 0% 0%;
+}
+.icon.train[data-player-color=ffed00] {
+  background-position: 100% 0%;
+}
+.icon.train[data-player-color=af0ac2] {
+  background-position: 50% 0%;
+}
+.icon.train-car-color {
+  background-image: url("img/train-cards.jpg");
+  background-repeat: no-repeat;
+  background-size: 900%;
+  height: 21px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+.icon.train-car-color[data-color="0"] {
+  background-position: 0% 50%;
+}
+.icon.train-car-color[data-color="1"] {
+  background-position: 12.5% 50%;
+}
+.icon.train-car-color[data-color="2"] {
+  background-position: 25% 50%;
+}
+.icon.train-car-color[data-color="3"] {
+  background-position: 37.5% 50%;
+}
+.icon.train-car-color[data-color="4"] {
+  background-position: 50% 50%;
+}
+.icon.train-car-color[data-color="5"] {
+  background-position: 62.5% 50%;
+}
+.icon.train-car-color[data-color="6"] {
+  background-position: 75% 50%;
+}
+.icon.train-car-color[data-color="7"] {
+  background-position: 87.5% 50%;
+}
+.icon.train-car-color[data-color="8"] {
+  background-position: 100% 50%;
+}
 
+#map-zoom-wrapper {
+  position: relative;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+}
+#map-zoom-wrapper #map-zoom {
+  max-width: 100%;
+}
+#map-zoom-wrapper #map-zoom.scrollable {
+  overflow: auto;
+}
+#map-zoom-wrapper #zoom-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  background: url("img/zoom.png");
+  background-position: 66.66% 50%;
+}
+#map-zoom-wrapper #zoom-button:hover {
+  background-position: 100% 50%;
+}
+#map-zoom-wrapper #zoom-button:hover.zoomed {
+  background-position: 33.33% 50%;
+}
+#map-zoom-wrapper #zoom-button.zoomed {
+  background-position: 0% 50%;
+}
 
-/* Note: you must not use any @import directive */
+.disable-scrollbars::-webkit-scrollbar {
+  background: transparent; /* Chrome/Safari/Webkit */
+  width: 0px;
+  display: none;
+}
 
+.disable-scrollbars {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
 
-/********* You can start writing your CSS below this line: **********/
+#resized {
+  transform-origin: top center;
+}
 
+#main-line {
+  display: flex;
+}
 
-/*
-    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
+#map-and-borders {
+  position: relative;
+}
+#map-and-borders .side {
+  position: absolute;
+  pointer-events: none;
+  z-index: 6;
+  background-size: 100% 100%;
+}
+#map-and-borders .side.left {
+  background-image: url("img/border-map-left.png");
+  width: 9px;
+  left: 0;
+  top: 180px;
+  bottom: 180px;
+}
+#map-and-borders .side.right {
+  background-image: url("img/border-map-right.png");
+  width: 8px;
+  right: 0;
+  top: 180px;
+  bottom: 180px;
+}
+#map-and-borders .side.top {
+  background-image: url("img/border-map-top.png");
+  height: 8px;
+  left: 180px;
+  right: 180px;
+  top: 0;
+}
+#map-and-borders .side.bottom {
+  background-image: url("img/border-map-bottom.png");
+  height: 9px;
+  left: 180px;
+  right: 180px;
+  bottom: 0;
+}
+#map-and-borders .corner {
+  position: absolute;
+  pointer-events: none;
+  width: 180px;
+  height: 180px;
+  z-index: 6;
+}
+#map-and-borders .corner.top-left {
+  background: url("img/border-map-corner-top-left.png");
+  left: 0;
+  top: 0;
+}
+#map-and-borders .corner.top-right {
+  background: url("img/border-map-corner-top-right.png");
+  right: 0;
+  top: 0;
+}
+#map-and-borders .corner.bottom-left {
+  background: url("img/border-map-corner-bottom-left.png");
+  left: 0;
+  bottom: 0;
+}
+#map-and-borders .corner.bottom-right {
+  background: url("img/border-map-corner-bottom-right.png");
+  right: 0;
+  bottom: 0;
+}
 
-    .white_token {
-        background-image: url('img/tokens.png');
-        background-position: 0px 0px;
+#map-destination-highlight-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#map-destination-highlight-shadow[data-visible=true] {
+  opacity: 1;
+}
+
+#map-zoom {
+  position: relative;
+}
+
+#map {
+  position: relative;
+  width: 1744px;
+  height: 1321px;
+  background: url("img/map.jpg");
+  transform-origin: top left;
+}
+
+/*.point-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    box-shadow: 1px 1px 1px 1px black;
+    border-radius: 50%;
+    background-image: url('img/points.png');
+    background-size: auto 100%;   
+    transition: transform 0.5s, opacity 0.5s; 
+    pointer-events: none;
+
+    &.color-blind {
+      &::after {
+        font-size: 120%;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        margin-top: -4px;
+      }
+
+      &[data-player-no="1"]::after {
+        content: '●'; // circle
+      }
+
+      &[data-player-no="2"]::after {
+        content: '▲'; // triangle
+      }
+
+      &[data-player-no="3"]::after {
+        content: '■'; // square
+      }
+
+      &[data-player-no="4"]::after {
+        content: '◆'; // diamond
+      }
+
+      &[data-player-no="5"]::after {
+        content: '★'; // star
+      }
     }
-    .black_token {
-        background-image: url('img/tokens.png');
-        background-position: -20px 0px;
-    }
-    .token {
-        width: 20px;
-        height: 20px;
-        background-repeat: none;
-    }
-*/
+}*/
+.city {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: -30px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: url("img/cities.png");
+  background-size: auto 100%;
+  position: relative;
+  z-index: 1;
+}
+.city[data-hovered=true][data-valid=true] {
+  background-position-x: 60% !important;
+  opacity: 1;
+}
+.city[data-hovered=true][data-valid=false] {
+  background-position-x: 100% !important;
+  opacity: 1;
+}
+.city[data-to-connect=true] {
+  opacity: 1;
+}
+.city[data-to-connect=true][data-selected-destination=true] {
+  background-position-x: 20%;
+}
+.city[data-to-connect=true]:not([data-selected=true]):not([data-highlight=true]):not([data-selected-destination=true]) {
+  background-position-x: 40%;
+}
+.city[data-selectable=true] {
+  z-index: 8;
+  background-position-x: 20%;
+  opacity: 1;
+}
+.city[data-selectable=true]:not([data-selected=true]):not([data-highlight=true]) {
+  background-position-x: 0%;
+}
+.city[data-selected=true] {
+  z-index: 8;
+  background-position-x: 20%;
+  opacity: 1;
+}
+.city[data-highlight=true] {
+  z-index: 8;
+  background-position-x: 60%;
+  opacity: 1;
+}
 
+.big-city {
+  position: absolute;
+  border-bottom: 2px solid darkred;
+}
 
+.route-space {
+  background: red;
+  display: inline-block;
+  margin: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 54px;
+  height: 16px;
+}
+.route-space.selectable {
+  cursor: pointer;
+}
+.route-space.selectable::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  bottom: -13px;
+  left: -10px;
+  right: -15px;
+  background: url("img/road-highlight.png") no-repeat;
+  background-size: 900% 100%;
+  animation: selectable-road-animation 1s alternate-reverse infinite ease-in-out;
+}
+.route-space.selectable[data-color="0"]::before {
+  background-position: 0% 50%;
+}
+.route-space.selectable[data-color="1"]::before {
+  background-position: 12.5% 50%;
+}
+.route-space.selectable[data-color="2"]::before {
+  background-position: 25% 50%;
+}
+.route-space.selectable[data-color="3"]::before {
+  background-position: 37.5% 50%;
+}
+.route-space.selectable[data-color="4"]::before {
+  background-position: 50% 50%;
+}
+.route-space.selectable[data-color="5"]::before {
+  background-position: 62.5% 50%;
+}
+.route-space.selectable[data-color="6"]::before {
+  background-position: 75% 50%;
+}
+.route-space.selectable[data-color="7"]::before {
+  background-position: 87.5% 50%;
+}
+.route-space.selectable[data-color="8"]::before {
+  background-position: 100% 50%;
+}
+.route-space.forbidden::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  bottom: -13px;
+  left: 0;
+  right: 0;
+  background: url("img/forbidden.png") no-repeat;
+  background-position: center center;
+}
 
+@keyframes selectable-road-animation {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.wagon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 85px;
+  height: 85px;
+  margin-left: -7px;
+  margin-top: -28px;
+  background-size: 600%;
+  pointer-events: none;
+}
+.wagon.angle0 {
+  background-position: 0% 0%;
+}
+.wagon.angle1 {
+  background-position: 20% 0%;
+}
+.wagon.angle2 {
+  background-position: 40% 0%;
+}
+.wagon.angle3 {
+  background-position: 60% 0%;
+}
+.wagon.angle4 {
+  background-position: 80% 0%;
+}
+.wagon.angle5 {
+  background-position: 100% 0%;
+}
+.wagon.angle6 {
+  background-position: 0% 20%;
+}
+.wagon.angle7 {
+  background-position: 20% 20%;
+}
+.wagon.angle8 {
+  background-position: 40% 20%;
+}
+.wagon.angle9 {
+  background-position: 60% 20%;
+}
+.wagon.angle10 {
+  background-position: 80% 20%;
+}
+.wagon.angle11 {
+  background-position: 100% 20%;
+}
+.wagon.angle12 {
+  background-position: 0% 40%;
+}
+.wagon.angle13 {
+  background-position: 20% 40%;
+}
+.wagon.angle14 {
+  background-position: 40% 40%;
+}
+.wagon.angle15 {
+  background-position: 60% 40%;
+}
+.wagon.angle16 {
+  background-position: 80% 40%;
+}
+.wagon.angle17 {
+  background-position: 100% 40%;
+}
+.wagon.angle18 {
+  background-position: 0% 60%;
+}
+.wagon.angle19 {
+  background-position: 20% 60%;
+}
+.wagon.angle20 {
+  background-position: 40% 60%;
+}
+.wagon.angle21 {
+  background-position: 60% 60%;
+}
+.wagon.angle22 {
+  background-position: 80% 60%;
+}
+.wagon.angle23 {
+  background-position: 100% 60%;
+}
+.wagon.angle24 {
+  background-position: 0% 80%;
+}
+.wagon.angle25 {
+  background-position: 20% 80%;
+}
+.wagon.angle26 {
+  background-position: 40% 80%;
+}
+.wagon.angle27 {
+  background-position: 60% 80%;
+}
+.wagon.angle28 {
+  background-position: 80% 80%;
+}
+.wagon.angle29 {
+  background-position: 100% 80%;
+}
+.wagon.angle30 {
+  background-position: 0% 100%;
+}
+.wagon.angle31 {
+  background-position: 20% 100%;
+}
+.wagon.angle32 {
+  background-position: 40% 100%;
+}
+.wagon.angle33 {
+  background-position: 60% 100%;
+}
+.wagon.angle34 {
+  background-position: 80% 100%;
+}
+.wagon.angle35 {
+  background-position: 100% 100%;
+}
+.wagon[data-player-color=e3001a] {
+  background-image: url("img/wagons-red.png"), url("img/wagons-shadow.png");
+}
+.wagon[data-player-color="41a62a"] {
+  background-image: url("img/wagons-green.png"), url("img/wagons-shadow.png");
+}
+.wagon[data-player-color="0056aa"] {
+  background-image: url("img/wagons-blue.png"), url("img/wagons-shadow.png");
+}
+.wagon[data-player-color=ffed00] {
+  background-image: url("img/wagons-yellow.png"), url("img/wagons-shadow.png");
+}
+.wagon[data-player-color=af0ac2] {
+  background-image: url("img/wagons-purple.png"), url("img/wagons-shadow.png");
+}
+.wagon.phantom {
+  opacity: 0.5;
+}
+.wagon.top {
+  z-index: 1;
+}
+.wagon.top.highlight {
+  z-index: 11;
+}
+.wagon.highlight {
+  z-index: 11;
+}
 
+#map[data-big-shadows=true] .wagon[data-player-color=e3001a] {
+  background-image: url("img/wagons-red.png"), url("img/wagons-shadow-big.png");
+}
+#map[data-big-shadows=true] .wagon[data-player-color="41a62a"] {
+  background-image: url("img/wagons-green.png"), url("img/wagons-shadow-big.png");
+}
+#map[data-big-shadows=true] .wagon[data-player-color="0056aa"] {
+  background-image: url("img/wagons-blue.png"), url("img/wagons-shadow-big.png");
+}
+#map[data-big-shadows=true] .wagon[data-player-color=ffed00] {
+  background-image: url("img/wagons-yellow.png"), url("img/wagons-shadow-big.png");
+}
+#map[data-big-shadows=true] .wagon[data-player-color=af0ac2] {
+  background-image: url("img/wagons-purple.png"), url("img/wagons-shadow-big.png");
+}
+
+#longest-path-animation {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  margin: -60px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 400%;
+  z-index: 21;
+}
+
+#map-drag-overlay {
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  bottom: -100px;
+  z-index: 20;
+  /*.route-space {
+    background: #FF000088;
+  }*/
+}
+#map-drag-overlay #map-drag-target {
+  position: absolute;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' id='root' version='1.1' viewBox='0 0 16 16'%3E%3Ccircle fill='none' stroke='currentColor' cx='8' cy='8' r='6'/%3E%3Cpath fill='none' stroke='currentColor' d='M 8 0 L 8 6.5'/%3E%3Cpath fill='none' stroke='currentColor' d='M 0 8 L 6.5 8'/%3E%3Cpath fill='none' stroke='currentColor' d='M 8 9.5 L 8 16'/%3E%3Cpath fill='none' stroke='currentColor' d='M 9.5 8 L 16 8'/%3E%3C/svg%3E");
+  transition: left 0.05s, top 0.05s;
+}
+
+#train-car-deck {
+  position: relative;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  z-index: 7;
+}
+#train-car-deck .stock {
+  position: relative;
+  width: 272px;
+  height: 166px;
+}
+#train-car-deck .hidden-pile {
+  position: relative;
+  display: flex;
+  height: 192px;
+  margin-bottom: -20px;
+}
+#train-car-deck .hidden-pile .deck-level {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="1"] {
+  background-image: url("img/deck-cardLevel-10.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="2"] {
+  background-image: url("img/deck-cardLevel-20.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="3"] {
+  background-image: url("img/deck-cardLevel-30.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="4"] {
+  background-image: url("img/deck-cardLevel-40.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="5"] {
+  background-image: url("img/deck-cardLevel-50.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="6"] {
+  background-image: url("img/deck-cardLevel-60.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="7"] {
+  background-image: url("img/deck-cardLevel-70.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="8"] {
+  background-image: url("img/deck-cardLevel-80.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="9"] {
+  background-image: url("img/deck-cardLevel-90.png");
+}
+#train-car-deck .hidden-pile #train-car-deck-level[data-level="10"] {
+  background-image: url("img/deck-cardLevel-100.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="1"] {
+  background-image: url("img/deck-destiLevel-10.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="2"] {
+  background-image: url("img/deck-destiLevel-20.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="3"] {
+  background-image: url("img/deck-destiLevel-30.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="4"] {
+  background-image: url("img/deck-destiLevel-40.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="5"] {
+  background-image: url("img/deck-destiLevel-50.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="6"] {
+  background-image: url("img/deck-destiLevel-60.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="7"] {
+  background-image: url("img/deck-destiLevel-70.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="8"] {
+  background-image: url("img/deck-destiLevel-80.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="9"] {
+  background-image: url("img/deck-destiLevel-90.png");
+}
+#train-car-deck .hidden-pile #destination-deck-level[data-level="10"] {
+  background-image: url("img/deck-destiLevel-100.png");
+}
+#train-car-deck .hidden-pile .button {
+  display: none;
+  flex: 1;
+  border: 3px dashed white;
+  color: white;
+  font-size: 400%;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 2px 2px 2px black;
+  z-index: 1;
+}
+#train-car-deck .hidden-pile .button.left-radius {
+  border-radius: 10px 0 0 10px;
+}
+#train-car-deck .hidden-pile .button.right-radius {
+  border-radius: 0 10px 10px 0;
+}
+#train-car-deck .hidden-pile.buttonselection.selectable .button {
+  display: flex;
+  cursor: pointer;
+}
+#train-car-deck .hidden-pile.buttonselection.selectable .button.hidden {
+  visibility: hidden;
+  pointer-events: none;
+  cursor: default;
+}
+#train-car-deck .hidden-pile:not(.buttonselection).selectable {
+  cursor: pointer;
+}
+#train-car-deck #visible-train-cards {
+  transform-origin: 0 0;
+  transform: scale(0.9);
+  margin-bottom: -90px;
+  margin-left: 10px;
+  z-index: 1;
+}
+#train-car-deck #destination-deck-hidden-pile {
+  margin-top: 40px;
+}
+#train-car-deck #destination-deck-hidden-pile.top {
+  margin-bottom: 40px;
+  margin-top: -20px;
+}
+
+.gauge {
+  width: 50px;
+  height: 158px;
+  position: absolute;
+  left: 0;
+  top: 10px;
+}
+.gauge .inner {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  background-position: bottom;
+}
+.gauge.train-car {
+  background-image: url("img/gauge-train-car-empty.png");
+}
+.gauge.train-car .inner {
+  background-image: url("img/gauge-train-car-full.png");
+}
+.gauge.destination {
+  background-image: url("img/gauge-destination-empty.png");
+}
+.gauge.destination .inner {
+  background-image: url("img/gauge-destination-full.png");
+}
+
+.animated-destination-card {
+  position: absolute;
+  left: 0px;
+  width: 250px;
+  height: 161px;
+  background-image: url("img/deck-destiLevel-10.png");
+  border-radius: 6px;
+  box-shadow: 0 0 8px 1px black;
+  pointer-events: none;
+  transform-origin: center center;
+  transition: transform 0.5s;
+}
+
+.highlight-locomotive {
+  filter: unset !important;
+  animation: locomotives-animation 1s 1 forwards ease-in-out;
+}
+
+@keyframes locomotives-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+#destination-deck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url("img/destination-choice-background.jpg");
+  background-size: 100% 100%;
+  z-index: 1;
+}
+#destination-deck.hidden {
+  display: none;
+}
+
+#destination-stock {
+  left: 10px;
+}
+#destination-stock .stockitem.selected::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("img/destination-selected.png");
+  box-shadow: 0 0 3px 3px #d9ffff;
+  border-radius: 6px;
+}
+
+#visible-train-cards-mini {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: black;
+  border: 2px outset gold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#visible-train-cards-mini .icon.train-car-color {
+  height: 32px;
+  width: 42px;
+  border-radius: 4px;
+  margin: 5px;
+}
+
+.player-table-destinations {
+  position: relative;
+  width: 300px;
+}
+.player-table-destinations .player-table-destinations-column {
+  position: absolute;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+.player-table-destinations .player-table-destinations-column.front {
+  z-index: 51;
+}
+.player-table-destinations .player-table-destinations-column.done {
+  left: 35px;
+}
+.player-table-destinations .player-table-destinations-column .destination-card.hidden-for-animation {
+  visibility: hidden;
+}
+
+#map .destination-card:not(.icon) {
+  position: absolute;
+  z-index: 20;
+}
+
+.destination-card:not(.icon) {
+  position: absolute;
+  left: 0px;
+  width: 250px;
+  height: 161px;
+  background-image: url("img/destinations.jpg");
+  border-radius: 6px;
+  box-shadow: 0 0 8px 1px black;
+  cursor: pointer;
+  pointer-events: all;
+  transform-origin: top left;
+}
+.destination-card:not(.icon).animated {
+  transition: transform 0.5s;
+}
+.destination-card:not(.icon).uncompleted::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("img/destination-todo.png");
+}
+.destination-card:not(.icon).completed {
+  mask: url("img/destination-done-mask.png") no-repeat center/contain;
+  -webkit-mask: url("img/destination-done-mask.png") no-repeat center/contain;
+}
+.destination-card:not(.icon).completed::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("img/destination-done.png");
+}
+
+.done .destination-card:not(.icon) {
+  mask: url("img/destination-done-mask.png") no-repeat center/contain;
+  -webkit-mask: url("img/destination-done-mask.png") no-repeat center/contain;
+}
+.done .destination-card:not(.icon)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("img/destination-done.png");
+}
+
+.player-table-train-cars {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.player-table-train-cars.new-card-animation {
+  overflow: visible;
+}
+.player-table-train-cars.left {
+  flex-direction: column;
+}
+.player-table-train-cars.left .train-car-group {
+  margin: -40px 0;
+  width: 260px;
+  height: 170px;
+}
+.player-table-train-cars.left .train-car-group .train-car-group-counter {
+  margin-top: unset;
+  font-size: 450%;
+}
+.player-table-train-cars.left .train-car-group .train-car-cards {
+  transform: unset;
+}
+
+@keyframes selected-card-animation {
+  from {
+    box-shadow: 0 0 5px 5px white;
+  }
+  to {
+    box-shadow: 0 0 10px 10px white;
+  }
+}
+.train-car-group {
+  position: relative;
+  left: 0px;
+  width: 170px;
+  height: 260px;
+  margin: 0 -20px;
+  transform-origin: top center;
+  user-select: none;
+}
+.train-car-group[draggable=true] {
+  cursor: pointer;
+  touch-action: none;
+}
+.train-car-group.hide {
+  display: none;
+}
+.train-car-group.selected .train-car-card {
+  animation: selected-card-animation 1.5s 1 alternate ease-in-out;
+  animation-iteration-count: infinite;
+}
+.train-car-group .train-car-group-counter {
+  width: 100%;
+  text-align: center;
+  font-size: 600%;
+  color: white;
+  -webkit-text-stroke: 3px black;
+  position: relative;
+  z-index: 1;
+  font-weight: bold;
+  margin-top: 15px;
+  pointer-events: none;
+}
+.train-car-group .train-car-cards {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 161px;
+  pointer-events: none;
+  transform-origin: center center;
+  transform: rotate(90deg) translate(48px, 41px);
+}
+.train-car-group.drag {
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  width: 190px;
+  height: 280px;
+  padding-top: 10px;
+  zoom: 0.5;
+}
+.train-car-group.disabled {
+  filter: contrast(0.6);
+  cursor: not-allowed;
+}
+
+.player-table {
+  display: flex;
+  background: rgba(255, 255, 255, 0.5019607843);
+  z-index: 25;
+}
+.player-table .player-table-train-cars {
+  flex: 1;
+}
+.player-table.left {
+  flex-direction: column-reverse;
+}
+
+#score {
+  display: none;
+  justify-content: center;
+  margin: 10px;
+}
+#score #table-wrapper {
+  background: url("img/score-background.jpg");
+  background-size: 100% 100%;
+  padding: 5px;
+}
+#score #table-wrapper table {
+  border: 2px solid rgba(255, 255, 255, 0.5019607843);
+}
+#score #table-wrapper table tr {
+  height: 27px;
+}
+#score #table-wrapper table tr td {
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.5019607843);
+  text-align: center;
+}
+#score #table-wrapper table tr td.player-name {
+  width: 170px;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  position: relative;
+}
+#score #table-wrapper table tr td.player-name .bonus-card-icons {
+  position: absolute;
+  right: 0;
+  z-index: 25;
+  display: flex;
+}
+#score #table-wrapper table tr td.destinations {
+  width: 100px;
+}
+#score #table-wrapper table tr td.destinations .icons-grid {
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: 25px;
+}
+#score #table-wrapper table tr td.destinations .icons-grid .icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  text-shadow: 0 0 1px white, 0 0 2px white, 0 0 3px white, 0 0 4px white;
+}
+#score #table-wrapper table tr td.destinations .icons-grid .icon.destination-card:not(.icon) {
+  background-size: auto 90%;
+  width: 30px;
+}
+#score #table-wrapper table tr td.destinations .icons-grid .hidden {
+  visibility: hidden;
+}
+#score #table-wrapper table tr td.train {
+  position: relative;
+  overflow: hidden;
+  width: 300px;
+}
+#score #table-wrapper table tr td.train .train-image {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  background: url("img/score-trains.png");
+  width: 556px;
+  height: 20px;
+  transition: right 0.5s;
+}
+#score #table-wrapper table tr td.train .train-image[data-player-color=e3001a] {
+  background-position: 0% 100%;
+}
+#score #table-wrapper table tr td.train .train-image[data-player-color="41a62a"] {
+  background-position: 0% 50%;
+}
+#score #table-wrapper table tr td.train .train-image[data-player-color="0056aa"] {
+  background-position: 0% 25%;
+}
+#score #table-wrapper table tr td.train .train-image[data-player-color=ffed00] {
+  background-position: 0% 0%;
+}
+#score #table-wrapper table tr td.train .train-image[data-player-color=af0ac2] {
+  background-position: 0% 75%;
+}
+#score #table-wrapper table tr td.total {
+  font-weight: bold;
+  color: white;
+  width: 60px;
+}
+#score #table-wrapper table tr.highlight td {
+  color: black;
+  position: relative;
+  z-index: 2;
+}
+#score #table-wrapper table tr.highlight td.player-name {
+  z-index: 3;
+}
+#score #table-wrapper table tr.highlight td::before {
+  position: absolute;
+  content: "";
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  background: url("img/score-highlight.png");
+  background-size: auto 100%;
+}
+#score #table-wrapper table tr.highlight td.player-name::before {
+  left: -28px;
+  right: -8px;
+  background-position: 0% 50%;
+}
+#score #table-wrapper table tr.highlight td.total::before {
+  left: -8px;
+  right: -28px;
+  background-position: 100% 50%;
+}
+
+.bonus-card {
+  width: 250px;
+  height: 161px;
+}
+.bonus-card.globetrotter {
+  background: url("img/bonus-card-globetrotter.png");
+}
+.bonus-card.longest-path {
+  background: url("img/bonus-card-longest-path.png");
+}
+.bonus-card.bonus-card-icon {
+  transform-origin: center center;
+  margin: -90px -106px;
+  animation: bonus-card-animation 1.5s 1 forwards ease-in-out;
+}
+
+@keyframes bonus-card-animation {
+  0% {
+    transform: scale(0.15);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.15);
+  }
+}
+/* make space between buttons on touch devices */
+@media (hover: none) {
+  #page-title .action-button.bgabutton, #page-title .bgabutton {
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+}
+html, .mode_3d #game_play_area_background {
+  background: linear-gradient(90deg, rgb(57, 124, 150) 0%, rgb(21, 104, 134) 100%) #b59958;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+#last-round {
+  margin: 5px -5px -5px;
+  text-align: center;
+  background-color: #900;
+  color: white;
+  text-shadow: 0 0 1px #900, 0 0 5px #900, 0 0 6px #900, 0 0 7px #900;
+}
+#last-round .last-round-text {
+  display: inline-block;
+}
+#last-round .last-round-text.animate {
+  animation: last-round-animation 2s 1 forwards ease-in-out;
+}
+
+@keyframes last-round-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.train-car-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 161px;
+  background-image: url("img/train-cards.jpg");
+  border-radius: 6px;
+  box-shadow: 0 0 8px 1px black;
+  transform-origin: center center;
+}
+.train-car-card.selectable {
+  cursor: pointer;
+}
+.train-car-card.disabled {
+  filter: contrast(0.6);
+  cursor: not-allowed;
+}
+.train-car-card[data-color="0"] {
+  background-position: 0% 50%;
+}
+.train-car-card[data-color="1"] {
+  background-position: 12.5% 50%;
+}
+.train-car-card[data-color="2"] {
+  background-position: 25% 50%;
+}
+.train-car-card[data-color="3"] {
+  background-position: 37.5% 50%;
+}
+.train-car-card[data-color="4"] {
+  background-position: 50% 50%;
+}
+.train-car-card[data-color="5"] {
+  background-position: 62.5% 50%;
+}
+.train-car-card[data-color="6"] {
+  background-position: 75% 50%;
+}
+.train-car-card[data-color="7"] {
+  background-position: 87.5% 50%;
+}
+.train-car-card[data-color="8"] {
+  background-position: 100% 50%;
+}
+.train-car-card.animated {
+  pointer-events: none;
+  transition: transform 0.5s;
+}
+.train-car-card.animated.transform-origin-top-left {
+  transform-origin: top left;
+}
+.train-car-card.animated.from-hidden-pile {
+  background-image: url("img/deck-cardLevel-10.png");
+}
+.train-car-card.tunnel-card {
+  transform: scale(0.1);
+}
+
+.stockitem {
+  border-radius: 6px;
+}
+.stockitem.disabled {
+  filter: contrast(0.6);
+  cursor: not-allowed;
+}
+
+#page-title .color-cards {
+  display: inline-block;
+}
+#page-title .color-cards .icon.train-car-color:not(:first-child) {
+  margin-left: -20px;
+}
+#page-title .icon.train-car-color {
+  margin: -5px 0px;
+}
+
+.dijitTooltipContents .destinations-flex {
+  display: flex;
+  gap: 5px;
+}
+.dijitTooltipContents .destinations-flex .destination-card {
+  position: relative;
+}
+
+.preference_choice .row-data.row-data-large {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.preference_choice .row-data.row-data-large .row-label {
+  white-space: normal;
+}
+.preference_choice .row-data.row-data-large .row-value {
+  flex: 1;
+  margin-left: unset;
+  min-width: 200px;
+}
+
+html[data-color-blind=true] [data-color-blind-player-no]::after {
+  font-size: 120%;
+  display: flex;
+  justify-content: center;
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;
+}
+html[data-color-blind=true] .wagon::after {
+  font-size: 200%;
+}
+html[data-color-blind=true] [data-color-blind-player-no="1"]::after {
+  content: "●";
+}
+html[data-color-blind=true] [data-color-blind-player-no="2"]::after {
+  content: "▲";
+}
+html[data-color-blind=true] [data-color-blind-player-no="3"]::after {
+  content: "■";
+}
+html[data-color-blind=true] [data-color-blind-player-no="4"]::after {
+  content: "◆";
+}
+html[data-color-blind=true] [data-color-blind-player-no="5"]::after {
+  content: "⬟";
+}

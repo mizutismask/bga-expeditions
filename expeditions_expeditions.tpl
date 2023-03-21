@@ -1,44 +1,76 @@
 {OVERALL_GAME_HEADER}
 
-<!-- 
---------
--- BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
--- Expeditions implementation : © <Your name here> <Your email address here>
--- 
--- This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
--- See http://en.boardgamearena.com/#!doc/Studio for more information.
--------
+<div id="score">
+    <div id="table-wrapper">
+        <table>
+            <tbody id="score-table-body">
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    expeditions_expeditions.tpl
-    
-    This is the HTML template of your game.
-    
-    Everything you are writing in this file will be displayed in the HTML page of your game user interface,
-    in the "main game zone" of the screen.
-    
-    You can use in this template:
-    _ variables, with the format {MY_VARIABLE_ELEMENT}.
-    _ HTML block, with the BEGIN/END format
-    
-    See your "view" PHP file to check how to set variables and control blocks
-    
-    Please REMOVE this comment before publishing your game on BGA
--->
+<div id="map-zoom-wrapper">
+    <div id="resized">
+        <div id="main-line">
+            <div id="map-and-borders">
+                <div id="map-zoom" class="disable-scrollbars">
+                    <div id="map"></div>
+                </div>
+                <div id="zoom-button"></div>
+                <div id="map-destination-highlight-shadow"></div>
+            </div>
 
+            <div id="train-car-deck">
+                <div id="train-car-deck-hidden-pile" class="hidden-pile stock train-car-deck-hidden-pile-tooltip">
+                    <div id="train-car-deck-level" class="deck-level"></div>
+                    <div role="button" id="train-car-deck-hidden-pile1" class="button left-radius train-car-deck-hidden-pile-tooltip" data-number="1">1</div>
+                    <div role="button" id="train-car-deck-hidden-pile2" class="button right-radius train-car-deck-hidden-pile-tooltip" data-number="2">2</div>
+                </div>
+                <div id="visible-train-cards">
+                    <div id="visible-train-cards-stock1" class="stock"></div>
+                    <div id="visible-train-cards-stock2" class="stock"></div>
+                    <div id="visible-train-cards-stock3" class="stock"></div>
+                    <div id="visible-train-cards-stock4" class="stock"></div>
+                    <div id="visible-train-cards-stock5" class="stock"></div>
+                </div>
 
-This is your game interface. You can edit this HTML in your ".tpl" file.
+                <div id="destination-deck-hidden-pile" class="hidden-pile stock destination-deck-hidden-pile-tooltip">
+                    <div id="destination-deck-level" class="deck-level"></div>
+                </div>
+                <div id="destination-deck" class="hidden">
+                    <div id="destination-stock"></div>
+                    <div id="visible-train-cards-mini">
+                        <div id="visible-train-cards-mini1" class="train-car-color icon"></div>
+                        <div id="visible-train-cards-mini2" class="train-car-color icon"></div>
+                        <div id="visible-train-cards-mini3" class="train-car-color icon"></div>
+                        <div id="visible-train-cards-mini4" class="train-car-color icon"></div>
+                        <div id="visible-train-cards-mini5" class="train-car-color icon"></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
 
+<audio id="audiosrc_ttr-placed-train-car" src="{GAMETHEMEURL}img/placed-train-car.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-placed-train-car" src="{GAMETHEMEURL}img/placed-train-car.ogg" preload="none" autobuffer></audio>
 
-<script type="text/javascript">
+<audio id="audiosrc_ttr-clear-train-car-cards" src="{GAMETHEMEURL}img/clear-train-car-cards.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-clear-train-car-cards" src="{GAMETHEMEURL}img/clear-train-car-cards.ogg" preload="none" autobuffer></audio>
 
-// Javascript HTML templates
+<audio id="audiosrc_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.ogg" preload="none" autobuffer></audio>
 
-/*
-// Example:
-var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_ID}"></div>';
+<audio id="audiosrc_ttr-completed-end" src="{GAMETHEMEURL}img/completed-end.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-completed-end" src="{GAMETHEMEURL}img/completed-end.ogg" preload="none" autobuffer></audio>
 
-*/
+<audio id="audiosrc_ttr-uncompleted-end" src="{GAMETHEMEURL}img/uncompleted-end.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-uncompleted-end" src="{GAMETHEMEURL}img/uncompleted-end.ogg" preload="none" autobuffer></audio>
 
-</script>  
+<audio id="audiosrc_ttr-longest-line-scoring" src="{GAMETHEMEURL}img/longest-line-scoring.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-longest-line-scoring" src="{GAMETHEMEURL}img/longest-line-scoring.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_ttr-scoring-end" src="{GAMETHEMEURL}img/scoring-end.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_ttr-scoring-end" src="{GAMETHEMEURL}img/scoring-end.ogg" preload="none" autobuffer></audio>
 
 {OVERALL_GAME_FOOTER}

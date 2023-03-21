@@ -24,35 +24,118 @@
  *
  */
 
-$game_options = array(
+$game_options = [
+    110 => [
+        'name' => totranslate('Turn order'),
+        'values' => [
+            1 => [
+                'name' => totranslate('Turn order determined after selecting tickets'),
+                'description' => totranslate('Turn order is not known when selecting tickets'),
+            ],
+            2 => [
+                'name' => totranslate('Turn order determined before selecting tickets'),
+                'description' => totranslate('Turn order is visible when selecting tickets'),
+                'tmdisplay' => totranslate('Turn order determined before selecting tickets'),
+            ],
+        ],
+        'default' => 1,
+    ],
+];
 
-    /*
-    
-    // note: game variant ID should start at 100 (ie: 100, 101, 102, ...). The maximum is 199.
-    100 => array(
-                'name' => totranslate('my game option'),    
-                'values' => array(
+$game_preferences = [
+    206 => [
+        'name' => totranslate('Ask for confirmation when taking new destinations'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 1
+    ],
 
-                            // A simple value for this option:
-                            1 => array( 'name' => totranslate('option 1') )
+    201 => [
+        'name' => totranslate('Show buttons for hidden cards selection'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 2
+    ],
 
-                            // A simple value for this option.
-                            // If this value is chosen, the value of "tmdisplay" is displayed in the game lobby
-                            2 => array( 'name' => totranslate('option 2'), 'tmdisplay' => totranslate('option 2') ),
+    209 => [
+        'name' => totranslate('Ask wanted color for double routes'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 1
+    ],
 
-                            // Another value, with other options:
-                            //  description => this text will be displayed underneath the option when this value is selected to explain what it does
-                            //  beta=true => this option is in beta version right now (there will be a warning)
-                            //  alpha=true => this option is in alpha version right now (there will be a warning, and starting the game will be allowed only in training mode except for the developer)
-                            //  nobeginner=true  =>  this option is not recommended for beginners
-                            //  firstgameonly=true  =>  this option is recommended only for the first game (discovery option)
-                            3 => array( 'name' => totranslate('option 3'), 'description' => totranslate('this option does X'), 'beta' => true, 'nobeginner' => true )
-                        ),
-                'default' => 1
-            ),
+    202 => [
+        'name' => totranslate('Confirm route claim'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Enabled for touch device only')],
+            3 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 2
+    ],
 
-    */
+    207 => [
+        'name' => totranslate('Countdown timer for Confirm button'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 1
+    ],
 
-);
+    203 => [
+        'name' => totranslate('Train car outline'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Automatic')],
+            3 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 2
+    ],
 
+    204 => [
+        'name' => totranslate('Show color-blind indications'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 2
+    ],
 
+    205 => [
+        'name' => totranslate('Deck placement'),
+        'needReload' => false,
+        'values' => [
+            1 => ['name' => totranslate('Train cards top, Destination tickets bottom')],
+            2 => ['name' => totranslate('Destination tickets top, Train cards bottom')],
+        ],
+        'default' => 1
+    ],
+
+    // 206 and 207 already used
+
+    208 => [
+        'name' => totranslate('End of game animations'),
+        'needReload' => true,
+        'values' => [
+            1 => ['name' => totranslate('Enabled')],
+            2 => ['name' => totranslate('Disabled')],
+        ],
+        'default' => 1
+    ],
+
+    // 209 already used
+];

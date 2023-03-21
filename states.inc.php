@@ -1,4 +1,5 @@
 <?php
+
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -49,63 +50,163 @@
 
 //    !! It is not a good idea to modify this file when a game is running !!
 
- 
-$machinestates = array(
+require_once("modules/php/constants.inc.php");
+
+$basicGameStates = [
 
     // The initial state. Please do not modify.
-    1 => array(
+    ST_BGA_GAME_SETUP => [
         "name" => "gameSetup",
-        "description" => "",
+        "description" => clienttranslate("Game setup"),
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => array( "" => 2 )
-    ),
-    
-    // Note: ID=2 => your first state
+        "transitions" => ["" => ST_DEAL_INITIAL_DESTINATIONS]
+    ],
 
-    2 => array(
-    		"name" => "playerTurn",
-    		"description" => clienttranslate('${actplayer} must play a card or pass'),
-    		"descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-    		"type" => "activeplayer",
-    		"possibleactions" => array( "playCard", "pass" ),
-    		"transitions" => array( "playCard" => 2, "pass" => 2 )
-    ),
-    
-/*
-    Examples:
-    
-    2 => array(
-        "name" => "nextPlayer",
-        "description" => '',
-        "type" => "game",
-        "action" => "stNextPlayer",
-        "updateGameProgression" => true,   
-        "transitions" => array( "endGame" => 99, "nextPlayer" => 10 )
-    ),
-    
-    10 => array(
-        "name" => "playerTurn",
-        "description" => clienttranslate('${actplayer} must play a card or pass'),
-        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-        "type" => "activeplayer",
-        "possibleactions" => array( "playCard", "pass" ),
-        "transitions" => array( "playCard" => 2, "pass" => 2 )
-    ), 
-
-*/    
-   
     // Final state.
-    // Please do not modify (and do not overload action/args methods).
-    99 => array(
+    // Please do not modify.
+    ST_END_GAME => [
         "name" => "gameEnd",
         "description" => clienttranslate("End of game"),
         "type" => "manager",
         "action" => "stGameEnd",
-        "args" => "argGameEnd"
-    )
+        "args" => "argGameEnd",
+    ],
+];
 
-);
+$playerActionsGameStates = [
 
+    ST_MULTIPLAYER_CHOOSE_INITIAL_DESTINATIONS_OLD => [
+        "name" => "chooseInitialDestinations",
+        "description" => clienttranslate('Other players must choose destination tickets'),
+        "descriptionmyturn" => clienttranslate('${you} must choose destination tickets (minimum ${minimum})'),
+        "type" => "multipleactiveplayer",
+        "action" => "stChooseInitialDestinationsOld",
+        "args" => "argChooseInitialDestinationsOld",
+        "possibleactions" => ["chooseInitialDestinations"],
+        "transitions" => [
+            "start" => ST_PLAYER_CHOOSE_ACTION,
+        ],
+    ],
 
+    ST_MULTIPLAYER_CHOOSE_INITIAL_DESTINATIONS => [
+        "name" => "multiChooseInitialDestinations",
+        "description" => clienttranslate('Other players must choose destination tickets'),
+        "descriptionmyturn" => '',
+        "type" => "multipleactiveplayer",
+        "initialprivate" => ST_PRIVATE_CHOOSE_INITIAL_DESTINATIONS,
+        "action" => "stChooseInitialDestinations",
+        "possibleactions" => [],
+        "transitions" => [
+            "start" => ST_PLAYER_CHOOSE_ACTION,
+        ],
+    ],
 
+    ST_PRIVATE_CHOOSE_INITIAL_DESTINATIONS => [
+        "name" => "privateChooseInitialDestinations",
+        "descriptionmyturn" => clienttranslate('${you} must choose destination tickets (minimum ${minimum})'),
+        "type" => "private",
+        "args" => "argPrivateChooseInitialDestinations",
+        "possibleactions" => ["chooseInitialDestinations"],
+        "transitions" => [],
+    ],
+
+    ST_PLAYER_CHOOSE_ACTION => [
+        "name" => "chooseAction",
+        "description" => clienttranslate('${actplayer} must draw train car cards, claim a route or draw destination tickets'),
+        "descriptionmyturn" => clienttranslate('${you} must draw train car cards, claim a route or draw destination tickets'),
+        "descriptionNoTrainCarsCards" => clienttranslate('${actplayer} must claim a route or draw destination tickets'),
+        "descriptionmyturnNoTrainCarsCards" => clienttranslate('${you} must claim a route or draw destination tickets'),
+        "type" => "activeplayer",
+        "args" => "argChooseAction",
+        "possibleactions" => [
+            "drawDeckCards",
+            "drawTableCard",
+            "claimRoute",
+            "drawDestinations",
+            "pass",
+        ],
+        "transitions" => [
+            "drawSecondCard" => ST_PLAYER_DRAW_SECOND_CARD,
+            "drawDestinations" => ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS,
+            "tunnel" => ST_PLAYER_CONFIRM_TUNNEL,
+            "nextPlayer" => ST_NEXT_PLAYER,
+        ]
+    ],
+
+    ST_PLAYER_DRAW_SECOND_CARD => [
+        "name" => "drawSecondCard",
+        "description" => clienttranslate('${actplayer} must draw a train car card'),
+        "descriptionmyturn" => clienttranslate('${you} must draw a train car card'),
+        "type" => "activeplayer",
+        "args" => "argDrawSecondCard",
+        "possibleactions" => [
+            "drawSecondDeckCard",
+            "drawSecondTableCard",
+        ],
+        "transitions" => [
+            "nextPlayer" => ST_NEXT_PLAYER,
+        ]
+    ],
+
+    ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS => [
+        "name" => "chooseAdditionalDestinations",
+        "description" => clienttranslate('${actplayer} must choose destination tickets'),
+        "descriptionmyturn" => clienttranslate('${you} must choose destination tickets (minimum ${minimum})'),
+        "type" => "activeplayer",
+        "args" => "argChooseAdditionalDestinations",
+        "possibleactions" => ["chooseAdditionalDestinations"],
+        "transitions" => [
+            "nextPlayer" => ST_NEXT_PLAYER,
+        ],
+    ],
+
+    ST_PLAYER_CONFIRM_TUNNEL => [
+        "name" => "confirmTunnel",
+        "description" => /*TODO MAPS clienttranslate*/ ('${actplayer} must confirm tunnel claim using ${extraCards} extra card(s) ${colors}'),
+        "descriptionmyturn" => /*TODO MAPS clienttranslate*/ ('${you} must confirm tunnel claim using ${extraCards} extra card(s) ${colors}'),
+        "type" => "activeplayer",
+        "args" => "argConfirmTunnel",
+        "possibleactions" => ["claimTunnel", "skipTunnel"],
+        "transitions" => [
+            "nextPlayer" => ST_NEXT_PLAYER,
+        ],
+    ],
+];
+
+$gameGameStates = [
+
+    ST_DEAL_INITIAL_DESTINATIONS => [
+        "name" => "endScore",
+        "description" => "",
+        "type" => "game",
+        "action" => "stDealInitialDestinations",
+        "transitions" => [
+            "" => ST_MULTIPLAYER_CHOOSE_INITIAL_DESTINATIONS,
+        ],
+    ],
+
+    ST_NEXT_PLAYER => [
+        "name" => "nextPlayer",
+        "description" => "",
+        "type" => "game",
+        "action" => "stNextPlayer",
+        "updateGameProgression" => true,
+        "transitions" => [
+            "nextPlayer" => ST_PLAYER_CHOOSE_ACTION,
+            "endScore" => ST_END_SCORE,
+        ],
+    ],
+
+    ST_END_SCORE => [
+        "name" => "endScore",
+        "description" => "",
+        "type" => "game",
+        "action" => "stEndScore",
+        "transitions" => [
+            "endGame" => ST_END_GAME,
+        ],
+    ],
+];
+
+$machinestates = $basicGameStates + $playerActionsGameStates + $gameGameStates;
