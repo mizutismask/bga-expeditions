@@ -22,6 +22,11 @@ class Route {
 	) {}
 }
 
+/**
+ * Named cities : 100 <= id <= 180
+ * Red points :  181 <= id <= 201
+ * Blue points :  202 <= id <= 221
+ */
 const CITIES = [
 	new City(101, 114, 86), //Denali
 	new City(102, 248, 36), //Mackenzie Delta
@@ -104,6 +109,48 @@ const CITIES = [
 	new City(179, 1524, 1271), //Tasmania
 	new City(180, 1648, 1275), //Fiordland National Park
 	new City(100, 818, 211), //Starting point
+
+	new City(181, 0, 134), //
+	new City(182, 0, 664), //
+	new City(183, 0, 1135), //
+	new City(184, 256, 692), //
+	new City(185, 200, 977), //
+	new City(186, 267, 1272), //
+	new City(187, 401, 183), //
+	new City(188, 487, 531), //
+	new City(189, 673, 808), //
+	new City(190, 604, 1074), //
+	new City(191, 844, 809), //
+	new City(192, 825, 1179), //
+	new City(193, 992, 49), //
+	new City(194, 1057, 1040), //
+	new City(195, 1064, 1278), //
+	new City(196, 1280, 155), //
+	new City(197, 1138, 69), //
+	new City(198, 1241, 1084), //
+	new City(199, 1224, 1265), //
+	new City(200, 1337, 811), //
+	new City(201, 627, 677), //
+	new City(202, 110, 1230), //
+	new City(203, 379, 30), //
+	new City(204, 474, 386), //
+	new City(205, 45, 1084), //
+	new City(206, 597, 155), //
+	new City(207, 671, 329), //
+	new City(208, 575, 691), //
+	new City(209, 664, 954), //
+	new City(210, 673, 1187), //
+	new City(211, 735, 1291), //
+	new City(212, 949, 275), //
+	new City(213, 1024, 783), //
+	new City(214, 918, 1283), //
+	new City(215, 1117, 1165), //
+	new City(216, 1377, 277), //
+	new City(217, 1201, 831), //
+	new City(218, 1342, 954), //
+	new City(219, 1369, 1277), //
+	new City(220, 1679, 512), //
+	new City(221, 1690, 783), //
 ];
 
 const ROUTES = [
