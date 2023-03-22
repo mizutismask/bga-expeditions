@@ -58,6 +58,7 @@ class Expeditions extends Table {
 
         $this->destinations = $this->getNew("module.common.deck");
         $this->destinations->init("destination");
+        $this->destinations->autoreshuffle = true;
 
         $this->trainCars = $this->getNew("module.common.deck");
         $this->trainCars->init("traincar");

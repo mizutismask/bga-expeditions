@@ -414,6 +414,11 @@ var Route = /** @class */ (function () {
     }
     return Route;
 }());
+/**
+ * Named cities : 100 <= id <= 180
+ * Red points :  181 <= id <= 201
+ * Blue points :  202 <= id <= 221
+ */
 var CITIES = [
     new City(101, 114, 86),
     new City(102, 248, 36),
@@ -495,20 +500,61 @@ var CITIES = [
     new City(178, 1388, 1145),
     new City(179, 1524, 1271),
     new City(180, 1648, 1275),
-    new City(100, 818, 211), //Starting point
+    new City(100, 818, 211),
+    new City(181, 0, 134),
+    new City(182, 0, 664),
+    new City(183, 0, 1135),
+    new City(184, 256, 692),
+    new City(185, 200, 977),
+    new City(186, 267, 1272),
+    new City(187, 401, 183),
+    new City(188, 487, 531),
+    new City(189, 673, 808),
+    new City(190, 604, 1074),
+    new City(191, 844, 809),
+    new City(192, 825, 1179),
+    new City(193, 992, 49),
+    new City(194, 1057, 1040),
+    new City(195, 1064, 1278),
+    new City(196, 1280, 155),
+    new City(197, 1138, 69),
+    new City(198, 1241, 1084),
+    new City(199, 1224, 1265),
+    new City(200, 1337, 811),
+    new City(201, 627, 677),
+    new City(202, 110, 1230),
+    new City(203, 379, 30),
+    new City(204, 474, 386),
+    new City(205, 45, 1084),
+    new City(206, 597, 155),
+    new City(207, 671, 329),
+    new City(208, 575, 691),
+    new City(209, 664, 954),
+    new City(210, 673, 1187),
+    new City(211, 735, 1291),
+    new City(212, 949, 275),
+    new City(213, 1024, 783),
+    new City(214, 918, 1283),
+    new City(215, 1117, 1165),
+    new City(216, 1377, 277),
+    new City(217, 1201, 831),
+    new City(218, 1342, 954),
+    new City(219, 1369, 1277),
+    new City(220, 1679, 512),
+    new City(221, 1690, 783), //
 ];
 var ROUTES = [
     //routes from the starting point (compass)
     //other routes between cities
-    new Route(1, 100, 129, [new RouteSpace(819, 179, 143, 97)], RED),
+    new Route(1, 100, 129, [new RouteSpace(819, 179, 143, -82)], RED),
     new Route(2, 100, 130, [new RouteSpace(751, 123, 86, 55)], RED),
     new Route(3, 100, 131, [new RouteSpace(727, 238, 80, -13)], RED),
-    new Route(4, 100, 132, [new RouteSpace(813, 241, 77, 94)], RED),
+    new Route(4, 100, 132, [new RouteSpace(813, 318, 78, -86)], RED),
     new Route(5, 100, 133, [new RouteSpace(826, 229, 142, 69)], RED),
     new Route(6, 101, 102, [new RouteSpace(126, 81, 113, -22)], RED),
     new Route(7, 101, 105, [new RouteSpace(116, 101, 98, 90)], RED),
-    new Route(8, 103, 114, [new RouteSpace(623, 35, 133, -21)], RED),
-    new Route(9, 104, 105, [new RouteSpace(207, 197, 78, -13)], RED),
+    new Route(8, 103, 114, [new RouteSpace(501, 83, 133, -21)], RED),
+    new Route(9, 104, 105, [new RouteSpace(133, 213, 78, -13)], RED),
     new Route(10, 104, 109, [new RouteSpace(234, 204, 142, 33)], RED),
     new Route(11, 105, 108, [new RouteSpace(111, 229, 108, 88)], RED),
     new Route(12, 106, 108, [new RouteSpace(122, 340, 84, -60)], RED),
@@ -533,7 +579,7 @@ var ROUTES = [
     new Route(31, 118, 125, [new RouteSpace(86, 853, 179, -9)], RED),
     new Route(32, 119, 122, [new RouteSpace(421, 851, 92, 80)], RED),
     new Route(33, 120, 122, [new RouteSpace(449, 950, 115, -46)], RED),
-    new Route(34, 121, 123, [new RouteSpace(355, 1018, 101, 89)], RED),
+    new Route(34, 121, 123, [new RouteSpace(355, 1019, 101, -90)], RED),
     new Route(35, 122, 123, [new RouteSpace(365, 1027, 85, -43)], RED),
     new Route(36, 123, 127, [new RouteSpace(355, 1049, 159, 75)], RED),
     new Route(37, 124, 125, [new RouteSpace(82, 839, 126, -61)], RED),
@@ -557,10 +603,10 @@ var ROUTES = [
     new Route(55, 142, 143, [new RouteSpace(814, 709, 114, 16)], RED),
     new Route(56, 143, 144, [new RouteSpace(915, 885, 126, -79)], RED),
     new Route(57, 144, 147, [new RouteSpace(927, 903, 141, 2)], RED),
-    new Route(58, 145, 146, [new RouteSpace(811, 104, 88, -70)], RED),
+    new Route(58, 145, 146, [new RouteSpace(811, 1023, 88, -70)], RED),
     new Route(59, 146, 148, [new RouteSpace(821, 1044, 115, 29)], RED),
     new Route(60, 149, 150, [new RouteSpace(1000, 438, 92, -23)], RED),
-    new Route(61, 149, 151, [new RouteSpace(949, 444, 104, 2)], RED),
+    new Route(61, 149, 151, [new RouteSpace(999, 444, 104, 2)], RED),
     new Route(62, 149, 152, [new RouteSpace(987, 457, 133, 59)], RED),
     new Route(63, 150, 153, [new RouteSpace(103, 309, 5, 73)], RED),
     new Route(64, 150, 157, [new RouteSpace(1115, 395, 93, 2)], RED),
@@ -577,7 +623,7 @@ var ROUTES = [
     new Route(75, 159, 167, [new RouteSpace(1438, 181, 144, 8)], RED),
     new Route(76, 159, 168, [new RouteSpace(1433, 168, 125, -58)], RED),
     new Route(77, 160, 167, [new RouteSpace(1523, 319, 116, -58)], RED),
-    new Route(78, 160, 170, [new RouteSpace(154, 337, 161, 4)], RED),
+    new Route(78, 160, 170, [new RouteSpace(1534, 337, 161, 4)], RED),
     new Route(79, 161, 166, [new RouteSpace(1385, 422, 139, -8)], RED),
     new Route(80, 162, 163, [new RouteSpace(1311, 511, 140, 75)], RED),
     new Route(81, 162, 164, [new RouteSpace(1322, 503, 102, 22)], RED),
@@ -588,7 +634,7 @@ var ROUTES = [
     new Route(86, 168, 169, [new RouteSpace(1525, 49, 169, 0)], RED),
     new Route(87, 171, 174, [new RouteSpace(1501, 856, 114, 54)], RED),
     new Route(88, 171, 175, [new RouteSpace(1495, 860, 148, 78)], RED),
-    new Route(89, 172, 173, [new RouteSpace(1594, 719, 145, 43)], RED),
+    new Route(89, 172, 173, [new RouteSpace(1594, 799, 145, 43)], RED),
     new Route(90, 173, 174, [new RouteSpace(1590, 943, 117, -19)], RED),
     new Route(91, 174, 176, [new RouteSpace(1591, 967, 102, 38)], RED),
     new Route(92, 175, 177, [new RouteSpace(1530, 1037, 56, 84)], RED),
@@ -771,7 +817,7 @@ var TtrMap = /** @class */ (function () {
         if (shiftY === void 0) { shiftY = 0; }
         ROUTES.forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
-                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:bottom center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
+                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left top; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
                     to: _this.getCityName(route.to),
                 }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color, "route"), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);

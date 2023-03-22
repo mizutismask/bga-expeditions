@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/objects/destination.php');
+require_once(__DIR__ . '/objects/destination.php');
 
 trait DestinationDeckTrait {
 
@@ -13,35 +13,72 @@ trait DestinationDeckTrait {
         $this->destinations->createCards($destinations, 'deck');
         $this->destinations->shuffle('deck');
     }
-	
+
     /**
      * Pick destination cards for beginning choice.
      */
     public function pickInitialDestinationCards(int $playerId) {
-		return $this->pickDestinationCards($playerId, $this->getInitialDestinationCardNumber());
-    }	
+        $cardsNumber = $this->getInitialDestinationCardNumber();
+        $cards = $this->pickDestinationCards($playerId, $cardsNumber);
+
+        $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
+
+        while ($cardsNumber - count($notFarEnough) < FAR_DESTINATIONS_MINIMUM) {
+            //discard and repick until there is enough far destinations
+            $toDiscard = array_shift($notFarEnough);
+            unset($cards[array_search($toDiscard, $cards)]);
+            $this->destinations->playCard($toDiscard->id);
+
+            $replacements = $this->pickDestinationCards($playerId, 1);
+            $replacement = array_shift($replacements);
+            $cards[] = $replacement;
+            $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
+        }
+        return $cards;
+    }
+    
+    /**
+     * Pick destination cards for beginning choice.
+     */
+    public function pickInitialSharedDestinationCards() {
+        $cards = $this->pickSharedDestinationCards(NUMBER_OF_SHARED_DESTINATION_CARDS);
+        $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
+
+        while (count($notFarEnough) > 0) {
+            //discard and repick until all destinations are far enough
+            $toDiscard = array_shift($notFarEnough);
+            unset($cards[array_search($toDiscard, $cards)]);
+            $this->destinations->playCard($toDiscard->id);
+
+            $replacements = $this->pickSharedDestinationCards(1);
+            $replacement = array_shift($replacements);
+            $cards[] = $replacement;
+            $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
+        }
+        return $cards;
+    }
 
     /**
      * Select kept destination cards for beginning choice. 
      * Unused destination cards are set back on the deck or discarded.
      */
     public function keepInitialDestinationCards(int $playerId, array $ids) {
-		$this->keepDestinationCards($playerId, $ids, $this->getInitialDestinationMinimumKept());
-    }	
-	
+        $this->keepDestinationCards($playerId, $ids, $this->getInitialDestinationMinimumKept());
+    }
+
     /**
      * Pick destination cards for pick destination action.
      */
     public function pickAdditionalDestinationCards(int $playerId) {
-		return $this->pickDestinationCards($playerId, $this->getAdditionalDestinationCardNumber());
-    }	
+        return $this->pickDestinationCards($playerId, $this->getAdditionalDestinationCardNumber());
+    }
 
     /**
      * Select kept destination cards for pick destination action. 
      * Unused destination cards are set back on the deck or discarded.
      */
     public function keepAdditionalDestinationCards(int $playerId, array $ids) {
-		$this->keepDestinationCards($playerId, $ids, ADDITIONAL_DESTINATION_MINIMUM_KEPT);
+        $this->keepDestinationCards($playerId, $ids, ADDITIONAL_DESTINATION_MINIMUM_KEPT);
     }
 
     /**
@@ -74,6 +111,14 @@ trait DestinationDeckTrait {
     }
 
     /**
+     * place a number of destinations cards to shared location.
+     */
+    private function pickSharedDestinationCards(int $number) {
+        $cards = $this->getDestinationsFromDb($this->destinations->pickCardsForLocation($number, 'deck', "shared"));
+        return $cards;
+    }
+
+    /**
      * move selected cards to player hand, and empty pick$playerId.
      */
     private function keepDestinationCards(int $playerId, array $ids, int $minimum) {
@@ -81,7 +126,7 @@ trait DestinationDeckTrait {
             throw new BgaUserException("You must keep at least $minimum cards.");
         }
 
-        if (count($ids) > 0 && $this->getUniqueIntValueFromDB("SELECT count(*) FROM destination WHERE `card_location` != 'pick$playerId' AND `card_id` in (".implode(', ', $ids).")") > 0) {
+        if (count($ids) > 0 && $this->getUniqueIntValueFromDB("SELECT count(*) FROM destination WHERE `card_location` != 'pick$playerId' AND `card_id` in (" . implode(', ', $ids) . ")") > 0) {
             throw new BgaUserException("Selected cards are not available.");
         }
 

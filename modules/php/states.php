@@ -17,7 +17,8 @@ trait StateTrait {
         foreach($playersIds as $playerId) {
             $this->pickInitialDestinationCards($playerId);
         }
-        
+        $this->pickInitialSharedDestinationCards();
+
         $this->gamestate->nextState('');
     }
 

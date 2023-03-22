@@ -16,12 +16,13 @@ define('POINTS_FOR_GLOBETROTTER', 15); // points for maximum completed destinati
 define('MINIMUM_PLAYER_FOR_DOUBLE_ROUTES', 4); // 4 means 2-3 players cant use double routes
 define('NUMBER_OF_LOCOMOTIVE_CARDS', 14);
 define('NUMBER_OF_COLORED_CARDS', 12);
+define('NUMBER_OF_SHARED_DESTINATION_CARDS', 6);
 
 define('EXPANSION', 0); // 0 => base game
-define('CITIES_NOT_SUITABLE_FOR_START', [
+define('CITIES_NOT_FAR_ENOUGH_FROM_START', [
     113, 114, 129, 130, 131, 132, 133, 134, 137, 149, 153, 154,
 ]);
-define('FAR_DESTINATIONS_MINIMUM', 12);
+define('FAR_DESTINATIONS_MINIMUM', 4);
 /* 
  * Colors 
  */
