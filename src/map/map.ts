@@ -248,7 +248,7 @@ class TtrMap {
 					`<div id="${destination}-route${
 						route.id
 					}-space${spaceIndex}" class="route-space" 
-                    style="transform-origin:bottom center; transform: translate(${
+                    style="transform-origin:left center; transform: translate(${
 						space.x + shiftX
 					}px, ${space.y + shiftY}px) rotate(${
 						space.angle
