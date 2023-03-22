@@ -159,7 +159,8 @@ const ROUTES = [
 	new Route(1, 100, 129, [new RouteSpace(819, 179, 143, -82)], RED),
 	new Route(2, 100, 130, [new RouteSpace(751, 123, 86, 55)], RED),
 	new Route(3, 100, 131, [new RouteSpace(727, 238, 80, -13)], RED),
-	new Route(4, 100, 132, [new RouteSpace(813, 318, 74, -78)], RED),
+	new Route(4, 100, 132, [new RouteSpace(813, 318, 78, -86)], RED),
+
 	new Route(5, 100, 133, [new RouteSpace(826, 229, 142, 69)], RED),
 	new Route(6, 101, 102, [new RouteSpace(126, 81, 113, -22)], RED),
 	new Route(7, 101, 105, [new RouteSpace(116, 101, 98, 90)], RED),
