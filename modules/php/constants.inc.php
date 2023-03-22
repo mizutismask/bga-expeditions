@@ -18,7 +18,10 @@ define('NUMBER_OF_LOCOMOTIVE_CARDS', 14);
 define('NUMBER_OF_COLORED_CARDS', 12);
 
 define('EXPANSION', 0); // 0 => base game
-
+define('CITIES_NOT_SUITABLE_FOR_START', [
+    113, 114, 129, 130, 131, 132, 133, 134, 137, 149, 153, 154,
+]);
+define('FAR_DESTINATIONS_MINIMUM', 12);
 /* 
  * Colors 
  */
