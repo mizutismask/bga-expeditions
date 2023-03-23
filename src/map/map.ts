@@ -891,12 +891,6 @@ class TtrMap {
 	}
 
 	public getCityName(cityId: number) {
-		console.log(
-			"getCityName map result",
-			cityId,
-			"=",
-			CITIES_NAMES[cityId - 100]
-		);
 		return CITIES_NAMES[cityId - 100];
 	}
 }

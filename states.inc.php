@@ -149,6 +149,20 @@ $playerActionsGameStates = [
         ]
     ],
 
+    ST_PLAYER_REVEAL_DESTINATION => [
+        "name" => "revealDestination",
+        "description" => clienttranslate('${actplayer} must reveal one destination'),
+        "descriptionmyturn" => clienttranslate('${you} must reveal one of your destinations'),
+        "type" => "activeplayer",
+        "args" => "argRevealDestination",
+        "possibleactions" => [
+            "revealDestination",
+        ],
+        "transitions" => [
+            "nextReveal" => ST_NEXT_REVEAL,
+        ]
+    ],
+
     ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS => [
         "name" => "chooseAdditionalDestinations",
         "description" => clienttranslate('${actplayer} must choose destination tickets'),
@@ -182,7 +196,7 @@ $gameGameStates = [
         "type" => "game",
         "action" => "stDealInitialDestinations",
         "transitions" => [
-            "" => ST_MULTIPLAYER_CHOOSE_INITIAL_DESTINATIONS,
+            "" => ST_NEXT_REVEAL,
         ],
     ],
 
@@ -195,6 +209,18 @@ $gameGameStates = [
         "transitions" => [
             "nextPlayer" => ST_PLAYER_CHOOSE_ACTION,
             "endScore" => ST_END_SCORE,
+        ],
+    ],
+
+    ST_NEXT_REVEAL => [
+        "name" => "nextReveal",
+        "description" => "",
+        "type" => "game",
+        "action" => "stNextReveal",
+        "updateGameProgression" => true,
+        "transitions" => [
+            "nextPlayer" => ST_PLAYER_CHOOSE_ACTION,
+            "nextReveal" => ST_PLAYER_REVEAL_DESTINATION,
         ],
     ],
 

@@ -120,10 +120,26 @@ class Expeditions implements ExpeditionsGame {
 							this.map.setSelectableDestination(destination, true)
 						);
 						this.destinationSelection.setCards(
-							destinations,
-							chooseDestinationsArgs.minimum,
-							this.trainCarSelection.getVisibleColors()
+							destinations);
+						this.destinationSelection.selectionChange();
+					}
+				}
+				break;
+			case "revealDestination":
+				if (args?.args) {
+					const revealDestinationArgs =
+						args.args as EnteringRevealDestinationArgs;
+					const possibleDestinations =
+						revealDestinationArgs._private?.possibleDestinations;
+					const allDestinations = revealDestinationArgs._private?.allDestinations;
+					if (
+						allDestinations &&
+						(this as any).isCurrentPlayerActive()
+					) {
+						possibleDestinations.forEach((destination) =>
+							this.map.setSelectableDestination(destination, true)
 						);
+						this.destinationSelection.setCards(allDestinations);
 						this.destinationSelection.selectionChange();
 					}
 				}

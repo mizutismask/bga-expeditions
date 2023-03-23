@@ -174,6 +174,12 @@ trait UtilTrait {
         return intval(self::getUniqueValueFromDB($sql));
     }
 
+    function getRevealedDestinationsIds(int $playerId) {
+        $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `revealed` = 1";
+        $dbResults = self::getCollectionFromDB($sql);
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+    }
+
     function getCompletedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
@@ -211,5 +217,13 @@ trait UtilTrait {
                 }
             }
         }
+    }
+
+    function getDestinationIds(array $destinations){
+        $ids=[];
+        foreach ($destinations as $dest) {
+            $ids[]=$dest->id;
+        }
+        return $ids;
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
 trait ArgsTrait {
-    
-//////////////////////////////////////////////////////////////////////////////
-//////////// Game state arguments
-////////////
+
+    //////////////////////////////////////////////////////////////////////////////
+    //////////// Game state arguments
+    ////////////
 
     /*
         Here, you can create methods defined as "game state arguments" (see "args" property in states.inc.php).
@@ -14,10 +14,10 @@ trait ArgsTrait {
 
     function argChooseInitialDestinationsOld() {
         $playersIds = $this->getPlayersIds();
-        
+
         $private = [];
 
-        foreach($playersIds as $playerId) {
+        foreach ($playersIds as $playerId) {
             $private[$playerId] = [
                 'destinations' => $this->getPickedDestinationCards($playerId),
             ];
@@ -27,7 +27,6 @@ trait ArgsTrait {
             'minimum' => $this->getInitialDestinationMinimumKept(),
             '_private' => $private,
         ];
-        
     }
 
     function argPrivateChooseInitialDestinations(int $playerId) {
@@ -52,7 +51,7 @@ trait ArgsTrait {
         ];
     }
 
-    function argChooseAction() {        
+    function argChooseAction() {
         $playerId = intval(self::getActivePlayerId());
 
         $trainCarsHand = $this->getTrainCarsFromDb($this->trainCars->getCardsInLocation('hand', $playerId));
@@ -67,17 +66,17 @@ trait ArgsTrait {
 
         $canClaimARoute = false;
         $costForRoute = [];
-        foreach($possibleRoutes as $possibleRoute) {
-            $colorsToTest = $possibleRoute->color > 0 ? [0, $possibleRoute->color] : [0,1,2,3,4,5,6,7,8];
+        foreach ($possibleRoutes as $possibleRoute) {
+            $colorsToTest = $possibleRoute->color > 0 ? [0, $possibleRoute->color] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
             $costByColor = [];
-            foreach($colorsToTest as $colorToTest) {
+            foreach ($colorsToTest as $colorToTest) {
                 $costByColor[$colorToTest] = $this->canPayForRoute($possibleRoute, $trainCarsHand, 99, $colorToTest);
 
                 if (!$canClaimARoute && $costByColor[$colorToTest] != null && count($costByColor[$colorToTest]) <= $realRemainingTrainCars) {
                     $canClaimARoute = true;
                 }
             }
-            $costForRoute[$possibleRoute->id] = array_map(fn($cardCost) => $cardCost == null ? null : array_map(fn($card) => $card->type, $cardCost), $costByColor);
+            $costForRoute[$possibleRoute->id] = array_map(fn ($cardCost) => $cardCost == null ? null : array_map(fn ($card) => $card->type, $cardCost), $costByColor);
         }
 
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
@@ -102,7 +101,6 @@ trait ArgsTrait {
             'maxHiddenCardsPick' => $maxHiddenCardsPick,
             'availableVisibleCards' => $availableVisibleCards,
         ];
-
     }
 
     function argConfirmTunnel() {
@@ -111,7 +109,7 @@ trait ArgsTrait {
         $tunnelAttempt = $this->getGlobalVariable(TUNNEL_ATTEMPT);
 
         $route = $this->ROUTES[$tunnelAttempt->routeId];
-        $remainingTrainCars = $this->getRemainingTrainCarsCount($playerId);        
+        $remainingTrainCars = $this->getRemainingTrainCarsCount($playerId);
         $trainCarsHand = $this->getTrainCarsFromDb($this->trainCars->getCardsInLocation('hand', $playerId));
         $tunnelCost = $this->canPayForRoute($route, $trainCarsHand, $remainingTrainCars, $tunnelAttempt->color, $tunnelAttempt->extraCards);
         $canPay = $tunnelCost != null;
@@ -119,14 +117,28 @@ trait ArgsTrait {
         $extraCards = null;
         if ($canPay) {
             $routeCost = $this->canPayForRoute($route, $trainCarsHand, $remainingTrainCars, $tunnelAttempt->color);
-            $extraCards = array_values(array_filter($tunnelCost, fn($tunnelCard) => !$this->array_some($routeCost, fn($routeCard) => $routeCard->id == $tunnelCard->id)));
+            $extraCards = array_values(array_filter($tunnelCost, fn ($tunnelCard) => !$this->array_some($routeCost, fn ($routeCard) => $routeCard->id == $tunnelCard->id)));
         }
 
         return [
             'tunnelAttempt' => $tunnelAttempt,
             'canPay' => $canPay,
-            'colors' => $extraCards == null ? '' : array_map(fn($card) => $card->type, $extraCards), // for title bar
+            'colors' => $extraCards == null ? '' : array_map(fn ($card) => $card->type, $extraCards), // for title bar
             'extraCards' => $tunnelAttempt->extraCards, // for title bar
+        ];
+    }
+
+    function argRevealDestination() {
+        $playerId = intval(self::getActivePlayerId());
+        return [
+            '_private' => [          // Using "_private" keyword, all data inside this array will be made private
+                'active' => [       // Using "active" keyword inside "_private", you select active player(s)
+                    'allDestinations' => $this->getPickedDestinationCards($playerId),
+                    'possibleDestinations' => $this->getRevealableDestinations(
+                        intval(self::getActivePlayerId())
+                    ),  // will be send only to active player(s)
+                ]
+            ],
         ];
     }
 }

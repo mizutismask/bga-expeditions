@@ -156,7 +156,7 @@ class Expeditions extends Table {
         $this->giveInitialTrainCarCards(array_keys($players));
 
         // Activate first player (which is in general a good idea :) )
-        $this->activeNextPlayer();
+        //$this->activeNextPlayer();
 
         // TODO TEMP card to test
         $this->debugSetup();

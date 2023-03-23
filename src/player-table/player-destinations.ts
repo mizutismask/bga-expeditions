@@ -147,10 +147,10 @@ class PlayerDestinations {
             this.placeCards(this.destinationsDone),
         );
 
-        const height = `${maxBottom + CARD_HEIGHT}px`;
+       /* const height = `${maxBottom + CARD_HEIGHT}px`;
         destinationsDiv.style.height = height;
         document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
-
+*/
         this.game.setDestinationsToConnect(this.destinationsTodo);
     }
 
@@ -163,11 +163,11 @@ class PlayerDestinations {
             const bottom = originalBottom + index * DESTINATION_CARD_SHIFT;
             const card = document.getElementById(`destination-card-${destination.id}`);
             card.parentElement.prepend(card);
-            card.style.bottom = `${bottom}px`;
+            /*card.style.bottom = `${bottom}px`;
 
             if (bottom > maxBottom) {
                 maxBottom = bottom;
-            }
+            }*/
         });
 
         return maxBottom;

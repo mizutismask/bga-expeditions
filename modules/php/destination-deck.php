@@ -34,6 +34,8 @@ trait DestinationDeckTrait {
             $cards[] = $replacement;
             $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
         }
+        $this->keepDestinationCards($playerId, $this->getDestinationIds($cards), $this->getInitialDestinationCardNumber());
+
         return $cards;
     }
     
@@ -55,7 +57,13 @@ trait DestinationDeckTrait {
             $cards[] = $replacement;
             $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
         }
+
         return $cards;
+    }
+
+    public function getRevealableDestinations(int $playerId){
+        $cards = $this->getPickedDestinationCards($playerId);
+        return array_values(array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
     }
 
     /**
@@ -63,7 +71,7 @@ trait DestinationDeckTrait {
      * Unused destination cards are set back on the deck or discarded.
      */
     public function keepInitialDestinationCards(int $playerId, array $ids) {
-        $this->keepDestinationCards($playerId, $ids, $this->getInitialDestinationMinimumKept());
+        $this->keepDestinationCards($playerId, $ids, $this->getInitialDestinationCardNumber());
     }
 
     /**

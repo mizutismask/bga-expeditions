@@ -3,8 +3,7 @@
     width: 300px;
 
     .player-table-destinations-column {
-        position: absolute;
-        left: 0;
+        display: flex;
         width: 250px;
         height: 100%;
         pointer-events: none;
@@ -32,10 +31,8 @@
 }
 
 .destination-card:not(.icon) {
-    position: absolute;
-    left: 0px; 
-    width: 250px; 
-    height: 161px; 
+    width: 150px; 
+    height: 209px; 
     background-image: url("img/destinations.jpg");
     border-radius: 6px;
     box-shadow: 0 0 8px 1px black;

@@ -122,6 +122,13 @@ interface EnteringChooseDestinationsArgs {
     minimum: number;
 }
 
+interface EnteringRevealDestinationArgs {
+	_private?: {
+		allDestinations: Destination[];
+		possibleDestinations: Destination[];
+	};
+}
+
 interface EnteringChooseActionArgs {
     possibleRoutes: Route[];
     costForRoute: { [routeId: number]: { [color: number]: number[] } };

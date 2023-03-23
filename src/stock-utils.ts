@@ -216,7 +216,6 @@ function setupDestinationCardDiv(
 }
 
 function getCityName(cityId: number) {
-	console.log("getCityName result", cityId, "=", CITIES_NAMES[cityId - 100]);
 	return CITIES_NAMES[cityId - 100];
 }
 

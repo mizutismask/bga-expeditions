@@ -735,7 +735,7 @@
 
 #train-car-deck {
   position: relative;
-  width: 250px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   z-index: 7;
@@ -896,8 +896,8 @@
 .animated-destination-card {
   position: absolute;
   left: 0px;
-  width: 250px;
-  height: 161px;
+  width: 150px;
+  height: 209px;
   background-image: url("img/deck-destiLevel-10.png");
   border-radius: 6px;
   box-shadow: 0 0 8px 1px black;
@@ -977,8 +977,7 @@
   width: 300px;
 }
 .player-table-destinations .player-table-destinations-column {
-  position: absolute;
-  left: 0;
+  display: flex;
   width: 250px;
   height: 100%;
   pointer-events: none;
@@ -1000,10 +999,8 @@
 }
 
 .destination-card:not(.icon) {
-  position: absolute;
-  left: 0px;
-  width: 250px;
-  height: 161px;
+  width: 150px;
+  height: 209px;
   background-image: url("img/destinations.jpg");
   border-radius: 6px;
   box-shadow: 0 0 8px 1px black;
@@ -1120,7 +1117,7 @@
   top: 0;
   left: 0;
   width: 250px;
-  height: 161px;
+  height: 209px;
   pointer-events: none;
   transform-origin: center center;
   transform: rotate(90deg) translate(48px, 41px);
@@ -1271,7 +1268,7 @@
 
 .bonus-card {
   width: 250px;
-  height: 161px;
+  height: 209px;
 }
 .bonus-card.globetrotter {
   background: url("img/bonus-card-globetrotter.png");
@@ -1338,8 +1335,8 @@ html, .mode_3d #game_play_area_background {
   position: absolute;
   top: 0;
   left: 0;
-  width: 250px;
-  height: 161px;
+  width: 150px;
+  height: 209px;
   background-image: url("img/train-cards.jpg");
   border-radius: 6px;
   box-shadow: 0 0 8px 1px black;

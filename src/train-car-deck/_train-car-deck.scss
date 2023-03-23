@@ -1,7 +1,7 @@
 
 #train-car-deck {
     position: relative;
-    width: 250px;
+    width: 150px;
     display: flex;
     flex-direction: column;
     z-index: 7;
@@ -136,8 +136,8 @@
 .animated-destination-card {
     position: absolute;
     left: 0px; 
-    width: 250px; 
-    height: 161px; 
+    width: 150px; 
+    height: 209px; 
     background-image: url("img/deck-destiLevel-10.png");
     border-radius: 6px;
     box-shadow: 0 0 8px 1px black;

@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `destination` (
   `card_location` varchar(16) NOT NULL,
   `card_location_arg` int(11) NOT NULL,
   `completed` TINYINT unsigned NOT NULL DEFAULT FALSE,
+  `revealed` TINYINT unsigned NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`card_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
