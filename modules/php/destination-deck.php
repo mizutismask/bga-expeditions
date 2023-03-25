@@ -127,6 +127,13 @@ trait DestinationDeckTrait {
     }
 
     /**
+     * Get shared destination cards.
+     */
+    public function getSharedDestinationCards() {
+        return $this->getDestinationsFromDb($this->destinations->getCardsInLocation("shared"));
+    }
+
+    /**
      * move selected cards to player hand, and empty pick$playerId.
      */
     private function keepDestinationCards(int $playerId, array $ids, int $minimum) {

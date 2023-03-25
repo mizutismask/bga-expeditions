@@ -1,7 +1,7 @@
 
 #train-car-deck {
     position: relative;
-    width: 150px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     z-index: 7;
@@ -27,14 +27,6 @@
             pointer-events: none;
             background-repeat: no-repeat;
             background-position: center;
-        }
-
-        #train-car-deck-level {
-            @for $i from 1 through 10 {
-                &[data-level="#{$i}"] {
-                    background-image: url('img/deck-cardLevel-#{$i}0.png');
-                }
-            }
         }
 
         #destination-deck-level {
@@ -136,7 +128,7 @@
 .animated-destination-card {
     position: absolute;
     left: 0px; 
-    width: 150px; 
+    width: 200px; 
     height: 209px; 
     background-image: url("img/deck-destiLevel-10.png");
     border-radius: 6px;

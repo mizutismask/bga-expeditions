@@ -65,7 +65,7 @@ interface ExpeditionsGamedatas {
 
     // Add here variables you set up in getAllDatas   
     claimedRoutes: ClaimedRoute[];
-    visibleTrainCards: { [spot: number]: TrainCar | null };
+    visibleTrainCards:Destination[];
 
     // private informations for current player only
     handTrainCars: TrainCar[];
@@ -98,7 +98,6 @@ interface ExpeditionsGame extends Game {
     drawDestinations(): void;
     onVisibleTrainCarCardClick(itemId: number): void;
     onHiddenTrainCarDeckClick(number: number): void;
-    askRouteClaimConfirmation(route: Route, color: number): void;
     setActiveDestination(destination: Destination, previousDestination?: Destination): void;
     canClaimRoute(route: Route, cardsColor: number): boolean;
     setHighligthedDestination(destination: Destination | null): void;
@@ -139,7 +138,7 @@ interface EnteringChooseActionArgs {
 }
 
 interface EnteringDrawSecondCardArgs {
-    availableVisibleCards: TrainCar[];
+    availableVisibleCards: Destination[];
     maxHiddenCardsPick: number;
 }
 
@@ -182,7 +181,7 @@ interface NotifTrainCarsPickedArgs {
 }
 
 interface NotifNewCardsOnTableArgs {
-    spotsCards: { [spot: number]: TrainCar | null };
+    spotsCards: { [spot: number]: Destination | null };
     remainingTrainCarsInDeck: number;
     locomotiveRefill: boolean;
 }

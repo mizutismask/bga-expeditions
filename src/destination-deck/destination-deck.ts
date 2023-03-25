@@ -66,16 +66,6 @@ class DestinationSelection {
 				)
 			);
 		});
-		/*
-		this.minimumDestinations = minimumDestinations;
-
-		visibleColors.forEach((color: number, index: number) => {
-			document.getElementById(
-				`visible-train-cards-mini${index}`
-			).dataset.color = "" + color;
-		});*/
-
-		//visible-train-cards-mini to remove everything related, mini cards under right pick color cards bar
 	}
 
 	/**

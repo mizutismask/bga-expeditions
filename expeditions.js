@@ -134,6 +134,7 @@ var CITIES_NAMES = [
     "Fiordland National Park",
 ];
 var DESTINATIONS = [
+    new DestinationCard(100, 100),
     new DestinationCard(101, 101),
     new DestinationCard(102, 102),
     new DestinationCard(103, 103),
@@ -217,6 +218,7 @@ var DESTINATIONS = [
 ];
 function setupDestinationCardDiv(cardDiv, cardUniqueId) {
     var destination = DESTINATIONS.find(function (d) { return d.id == cardUniqueId; });
+    //console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
     cardDiv.title = "".concat(dojo.string.substitute(_("${to}"), {
         to: getCityName(destination.to),
     }));
@@ -807,7 +809,6 @@ var TtrMap = /** @class */ (function () {
         this.resizedDiv = document.getElementById("resized");
         this.mapDiv = document.getElementById("map");
         this.inMapZoomManager = new InMapZoomManager();
-        this.game.setTooltipToClass("train-car-deck-hidden-pile-tooltip", "<strong>".concat(_("Train cars deck"), "</strong><br><br>\n        ").concat(_("Click here to pick one or two hidden train car cards")));
         this.game.setTooltip("destination-deck-hidden-pile", "<strong>".concat(_("Destinations deck"), "</strong><br><br>\n        ").concat(_("Click here to take three new destination cards (keep at least one)")));
     }
     TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
@@ -834,44 +835,12 @@ var TtrMap = /** @class */ (function () {
      * Handle dragging train car cards over a route.
      */
     TtrMap.prototype.routeDragOver = function (e, route) {
-        var cardsColor = Number(this.mapDiv.dataset.dragColor);
-        var overRoute = route;
-        if (cardsColor > 0 && route.color > 0 && cardsColor != route.color) {
-            var otherRoute = ROUTES.find(function (r) {
-                return route.from == r.from && route.to == r.to && route.id != r.id;
-            });
-            if (otherRoute && otherRoute.color == cardsColor) {
-                overRoute = otherRoute;
-            }
-        }
-        var canClaimRoute = this.game.canClaimRoute(overRoute, cardsColor);
-        this.setHoveredRoute(overRoute, canClaimRoute);
-        if (canClaimRoute) {
-            e.preventDefault();
-        }
     };
     /**
      * Handle dropping train car cards over a route.
      */
     TtrMap.prototype.routeDragDrop = function (e, route) {
         e.preventDefault();
-        var mapDiv = document.getElementById("map");
-        if (mapDiv.dataset.dragColor == "") {
-            return;
-        }
-        this.setHoveredRoute(null);
-        var cardsColor = Number(this.mapDiv.dataset.dragColor);
-        mapDiv.dataset.dragColor = "";
-        var overRoute = route;
-        if (cardsColor > 0 && route.color > 0 && cardsColor != route.color) {
-            var otherRoute = ROUTES.find(function (r) {
-                return route.from == r.from && route.to == r.to && route.id != r.id;
-            });
-            if (otherRoute && otherRoute.color == cardsColor) {
-                overRoute = otherRoute;
-            }
-        }
-        this.game.askRouteClaimConfirmation(overRoute, cardsColor);
     };
     /**
      * Bind click events to route space.
@@ -1343,15 +1312,6 @@ var DestinationSelection = /** @class */ (function () {
                     .some(function (item) { return Number(item.id) == destination.id; }));
             });
         });
-        /*
-        this.minimumDestinations = minimumDestinations;
-
-        visibleColors.forEach((color: number, index: number) => {
-            document.getElementById(
-                `visible-train-cards-mini${index}`
-            ).dataset.color = "" + color;
-        });*/
-        //visible-train-cards-mini to remove everything related, mini cards under right pick color cards bar
     };
     /**
      * Hide destination selector.
@@ -1383,123 +1343,64 @@ var DestinationSelection = /** @class */ (function () {
     return DestinationSelection;
 }());
 /**
- * Selection of new train cars.
+ * Stock of shared destinations.
  */
-var VisibleCardSpot = /** @class */ (function () {
+var SharedDestinationDeck = /** @class */ (function () {
     /**
-     * Init stocks and gauges.
+     * Init stock.
      */
-    function VisibleCardSpot(game, spotNumber) {
+    function SharedDestinationDeck(game) {
         this.game = game;
-        this.spotNumber = spotNumber;
-        this.spotDiv = document.getElementById("visible-train-cards-stock".concat(this.spotNumber));
+        this.sharedDestinations = new ebg.stock();
+        this.sharedDestinations.setSelectionAppearance("class");
+        this.sharedDestinations.selectionClass = "selected";
+        this.sharedDestinations.setSelectionMode(0);
+        this.sharedDestinations.create(game, $("shared-destination-stock"), CARD_WIDTH, CARD_HEIGHT);
+        this.sharedDestinations.onItemCreate = function (cardDiv, cardUniqueId) { return setupDestinationCardDiv(cardDiv, Number(cardUniqueId)); };
+        this.sharedDestinations.image_items_per_row = 10;
+        this.sharedDestinations.centerItems = true;
+        this.sharedDestinations.item_margin = 20;
+        //this.sharedDestinations.setOverlap(-1, 20);// = 20; // overlap
+        //this.sharedDestinations.horizontal_overlap = -1; // current bug in stock - this is needed to enable z-index on overlapping items
+        //this.sharedDestinations.item_margin = 0; // has to be 0 if using overlap
+        //this.sharedDestinations.set
+        setupDestinationCards(this.sharedDestinations);
     }
     /**
-     * Set selectable visible cards (locomotive can't be selected if 1 visible card has been picked).
+     * Set visible destination cards.
      */
-    VisibleCardSpot.prototype.setSelectableVisibleCards = function (availableVisibleCards) {
+    SharedDestinationDeck.prototype.setCards = function (destinations) {
         var _this = this;
-        var _a;
-        (_a = this.getCardDiv()) === null || _a === void 0 ? void 0 : _a.classList.toggle('disabled', !availableVisibleCards.some(function (card) { var _a; return card.id == ((_a = _this.card) === null || _a === void 0 ? void 0 : _a.id); }));
-    };
-    /**
-     * Reset visible cards state.
-     */
-    VisibleCardSpot.prototype.removeSelectableVisibleCards = function () {
-        var _a;
-        (_a = this.getCardDiv()) === null || _a === void 0 ? void 0 : _a.classList.remove('disabled');
-    };
-    /**
-     * Set new visible cards.
-     */
-    VisibleCardSpot.prototype.setNewCardOnTable = function (card, fromDeck) {
-        var _this = this;
-        if (this.card) {
-            var oldCardDiv = this.getCardDiv();
-            if (oldCardDiv === null || oldCardDiv === void 0 ? void 0 : oldCardDiv.closest("#visible-train-cards-stock".concat(this.spotNumber))) {
-                oldCardDiv.parentElement.removeChild(oldCardDiv);
-                this.card = null;
-            }
-        }
-        // make sure there is no card remaining on the spot
-        while (this.spotDiv.childElementCount > 0) {
-            this.spotDiv.removeChild(this.spotDiv.firstElementChild);
-        }
-        this.card = card;
-        if (card) { // the card 
-            this.createCard(card);
-            var cardDiv_1 = this.getCardDiv();
-            setupTrainCarCardDiv(cardDiv_1, card.type);
-            cardDiv_1.classList.add('selectable');
-            cardDiv_1.addEventListener('click', function () {
-                if (!cardDiv_1.classList.contains('disabled')) {
-                    _this.game.onVisibleTrainCarCardClick(_this.card.id);
-                }
+        dojo.removeClass("destination-deck", "hidden");
+        destinations.forEach(function (destination) {
+            _this.sharedDestinations.addToStockWithId(destination.type * 100 + destination.type_arg, "" + destination.id);
+            var cardDiv = document.getElementById("shared-destination-stock_item_".concat(destination.id));
+            // when mouse hover destination, highlight it on the map
+            cardDiv.addEventListener("mouseenter", function () {
+                return _this.game.setHighligthedDestination(destination);
             });
-            if (fromDeck) {
-                this.addAnimationFrom(cardDiv_1);
-            }
-        }
-    };
-    /**
-     * Get card div in the spot.
-     */
-    VisibleCardSpot.prototype.getCardDiv = function () {
-        if (!this.card) {
-            return null;
-        }
-        return document.getElementById("train-car-card-".concat(this.card.id));
-    };
-    /**
-     * Create the card in the spot.
-     */
-    VisibleCardSpot.prototype.createCard = function (card) {
-        dojo.place("<div id=\"train-car-card-".concat(card.id, "\" class=\"train-car-card\" data-color=\"").concat(this.card.type, "\"></div>"), this.spotDiv);
-    };
-    /**
-     * Animation when train car cards are picked by another player.
-     */
-    VisibleCardSpot.prototype.moveTrainCarCardToPlayerBoard = function (playerId) {
-        this.createCard(this.card);
-        var cardDiv = this.getCardDiv();
-        if (cardDiv) {
-            animateCardToCounterAndDestroy(this.game, cardDiv, "train-car-card-counter-".concat(playerId, "-wrapper"));
-        }
-    };
-    /**
-     * Get visible card color.
-     */
-    VisibleCardSpot.prototype.getVisibleColor = function () {
-        var _a;
-        return (_a = this.card) === null || _a === void 0 ? void 0 : _a.type;
-    };
-    /**
-     * Add an animation to the card (when it is created).
-     */
-    VisibleCardSpot.prototype.addAnimationFrom = function (card) {
-        if (document.visibilityState === 'hidden' || this.game.instantaneousMode) {
-            return;
-        }
-        var from = document.getElementById('train-car-deck-hidden-pile');
-        var destinationBR = card.getBoundingClientRect();
-        var originBR = from.getBoundingClientRect();
-        var deltaX = destinationBR.left - originBR.left;
-        var deltaY = destinationBR.top - originBR.top;
-        card.style.zIndex = '10';
-        var zoom = this.game.getZoom();
-        card.style.transform = "translate(".concat(-deltaX / zoom, "px, ").concat(-deltaY / zoom, "px)");
-        setTimeout(function () {
-            card.style.transition = "transform 0.5s linear";
-            card.style.transform = null;
+            cardDiv.addEventListener("mouseleave", function () {
+                return _this.game.setHighligthedDestination(null);
+            });
+            // when destinatin is selected, another highlight on the map
+            cardDiv.addEventListener("click", function () {
+                return _this.game.setSelectedDestination(destination, _this.sharedDestinations
+                    .getSelectedItems()
+                    .some(function (item) { return Number(item.id) == destination.id; }));
+            });
         });
-        setTimeout(function () {
-            card.style.zIndex = null;
-            card.style.transition = null;
-        }, 500);
     };
-    return VisibleCardSpot;
+    /**
+     * Hide destination selector.
+     */
+    SharedDestinationDeck.prototype.hide = function () {
+        this.sharedDestinations.removeAll();
+        dojo.addClass("shared-destination-deck", "hidden");
+    };
+    return SharedDestinationDeck;
 }());
 var DBL_CLICK_TIMEOUT = 300;
+var SPOTS_COUNT = 6;
 /**
  * Level of cards in deck indicator.
  */
@@ -1510,45 +1411,35 @@ var Gauge = /** @class */ (function () {
         this.levelDiv = document.getElementById("gauge-".concat(className, "-level"));
     }
     Gauge.prototype.setCount = function (count) {
-        this.levelDiv.style.height = "".concat(100 * count / this.max, "%");
+        this.levelDiv.style.height = "".concat((100 * count) / this.max, "%");
     };
     return Gauge;
 }());
 /**
- * Selection of new train cars.
+ * Selection of new train cars and destination cards.
  */
 var TrainCarSelection = /** @class */ (function () {
     /**
      * Init stocks and gauges.
      */
-    function TrainCarSelection(game, visibleCards, trainCarDeckCount, destinationDeckCount, trainCarDeckMaxCount, destinationDeckMaxCount) {
+    function TrainCarSelection(game, visibleCards, sharedDestinationDeck, destinationDeckCount, destinationDeckMaxCount) {
         var _this = this;
         this.game = game;
-        this.visibleCardsSpots = [];
+        this.visibleCards = [];
         this.dblClickTimeout = null;
-        document.getElementById('destination-deck-hidden-pile').addEventListener('click', function () { return _this.game.drawDestinations(); });
-        document.getElementById('train-car-deck-hidden-pile1').addEventListener('click', function () { return _this.game.onHiddenTrainCarDeckClick(1); });
-        document.getElementById('train-car-deck-hidden-pile2').addEventListener('click', function () { return _this.game.onHiddenTrainCarDeckClick(2); });
-        document.getElementById('train-car-deck-hidden-pile').addEventListener('click', function () {
-            if (_this.dblClickTimeout) {
-                clearTimeout(_this.dblClickTimeout);
-                _this.dblClickTimeout = null;
-                _this.game.onHiddenTrainCarDeckClick(2);
-            }
-            else if (!dojo.hasClass('train-car-deck-hidden-pile', 'buttonselection')) {
-                _this.dblClickTimeout = setTimeout(function () {
-                    _this.game.onHiddenTrainCarDeckClick(1);
-                    _this.dblClickTimeout = null;
-                }, DBL_CLICK_TIMEOUT);
-            }
-        });
-        for (var i = 1; i <= 5; i++) {
+        this.sharedDestinationDeck = sharedDestinationDeck;
+        console.log("const", this.sharedDestinationDeck);
+        document
+            .getElementById("destination-deck-hidden-pile")
+            .addEventListener("click", function () { return _this.game.drawDestinations(); });
+        /*for (let i = 1; i <= SPOTS_COUNT; i++) {
             this.visibleCardsSpots[i] = new VisibleCardSpot(game, i);
-        }
-        this.setNewCardsOnTable(visibleCards, false);
-        this.trainCarGauge = new Gauge('train-car-deck-hidden-pile', 'train-car', trainCarDeckMaxCount);
-        this.destinationGauge = new Gauge('destination-deck-hidden-pile', 'destination', destinationDeckMaxCount);
-        this.setTrainCarCount(trainCarDeckCount);
+        }*/
+        //console.log("new TrainCarSelection", visibleCards);
+        this.visibleCards = Object.values(visibleCards);
+        //	this.setNewCardsOnTable(visibleCards, false);
+        this.setNewSharedCardsOnTable(visibleCards, false);
+        this.destinationGauge = new Gauge("destination-deck-hidden-pile", "destination", destinationDeckMaxCount);
         this.setDestinationCount(destinationDeckCount);
     }
     /**
@@ -1556,42 +1447,44 @@ var TrainCarSelection = /** @class */ (function () {
      */
     TrainCarSelection.prototype.setSelectableTopDeck = function (selectable, number) {
         if (number === void 0) { number = 0; }
-        dojo.toggleClass('train-car-deck-hidden-pile', 'selectable', selectable);
-        dojo.toggleClass('train-car-deck-hidden-pile1', 'hidden', number < 1);
-        dojo.toggleClass('train-car-deck-hidden-pile2', 'hidden', number < 2);
+        /*dojo.toggleClass(
+            "train-car-deck-hidden-pile",
+            "selectable",
+            selectable
+        );*/
     };
     /**
      * Set selectable visible cards (locomotive can't be selected if 1 visible card has been picked).
      */
     TrainCarSelection.prototype.setSelectableVisibleCards = function (availableVisibleCards) {
-        for (var i = 1; i <= 5; i++) {
-            this.visibleCardsSpots[i].setSelectableVisibleCards(availableVisibleCards);
+        for (var i = 1; i <= SPOTS_COUNT; i++) {
+            /*this.visibleCardsSpots[i].setSelectableVisibleCards(
+                availableVisibleCards
+            );*/
         }
     };
     /**
      * Reset visible cards state.
      */
     TrainCarSelection.prototype.removeSelectableVisibleCards = function () {
-        for (var i = 1; i <= 5; i++) {
-            this.visibleCardsSpots[i].removeSelectableVisibleCards();
+        for (var i = 1; i <= SPOTS_COUNT; i++) {
+            /*this.visibleCardsSpots[i].removeSelectableVisibleCards();*/
         }
     };
     /**
      * Set new visible cards.
      */
     TrainCarSelection.prototype.setNewCardsOnTable = function (spotsCards, fromDeck) {
-        var _this = this;
         Object.keys(spotsCards).forEach(function (spot) {
             var card = spotsCards[spot];
-            _this.visibleCardsSpots[spot].setNewCardOnTable(card, fromDeck);
+            /*this.visibleCardsSpots[spot].setNewCardOnTable(card, fromDeck);*/
         });
     };
     /**
-     * Update train car gauge.
+     * Set new visible cards.
      */
-    TrainCarSelection.prototype.setTrainCarCount = function (count) {
-        this.trainCarGauge.setCount(count);
-        document.getElementById("train-car-deck-level").dataset.level = "".concat(Math.min(10, Math.ceil(count / 10)));
+    TrainCarSelection.prototype.setNewSharedCardsOnTable = function (spotsCards, fromDeck) {
+        this.sharedDestinationDeck.setCards(spotsCards);
     };
     /**
      * Update destination gauge.
@@ -1601,16 +1494,12 @@ var TrainCarSelection = /** @class */ (function () {
         document.getElementById("destination-deck-level").dataset.level = "".concat(Math.min(10, Math.ceil(count / 10)));
     };
     /**
-     * Make hidden train car cads selection buttons visible (user preference).
-     */
-    TrainCarSelection.prototype.setCardSelectionButtons = function (visible) {
-        dojo.toggleClass('train-car-deck-hidden-pile', 'buttonselection', visible);
-    };
-    /**
      * Get HTML Element represented by "origin" (0 means invisible, 1 to 5 are visible cards).
      */
     TrainCarSelection.prototype.getStockElement = function (origin) {
-        return origin === 0 ? document.getElementById('train-car-deck-hidden-pile') : document.getElementById("visible-train-cards-stock".concat(origin));
+        return origin === 0
+            ? document.getElementById("train-car-deck-hidden-pile")
+            : document.getElementById("visible-train-cards-stock".concat(origin));
     };
     /**
      * Animation when train car cards are picked by another player.
@@ -1619,12 +1508,14 @@ var TrainCarSelection = /** @class */ (function () {
         var _this = this;
         if (number === void 0) { number = 1; }
         if (from > 0) {
-            this.visibleCardsSpots[from].moveTrainCarCardToPlayerBoard(playerId);
+            /*this.visibleCardsSpots[from].moveTrainCarCardToPlayerBoard(
+                playerId
+            );*/
         }
         else {
             var _loop_1 = function (i) {
                 setTimeout(function () {
-                    dojo.place("\n                    <div id=\"animated-train-car-card-0-".concat(i, "\" class=\"animated train-car-card from-hidden-pile\"></div>\n                    "), document.getElementById('train-car-deck-hidden-pile'));
+                    dojo.place("\n                    <div id=\"animated-train-car-card-0-".concat(i, "\" class=\"animated train-car-card from-hidden-pile\"></div>\n                    "), document.getElementById("train-car-deck-hidden-pile"));
                     animateCardToCounterAndDestroy(_this.game, "animated-train-car-card-0-".concat(i), "train-car-card-counter-".concat(playerId, "-wrapper"));
                 }, 200 * i);
             };
@@ -1640,7 +1531,7 @@ var TrainCarSelection = /** @class */ (function () {
         var _this = this;
         var _loop_2 = function (i) {
             setTimeout(function () {
-                dojo.place("\n                <div id=\"animated-destination-card-".concat(i, "\" class=\"animated-destination-card\"></div>\n                "), 'destination-deck-hidden-pile');
+                dojo.place("\n                <div id=\"animated-destination-card-".concat(i, "\" class=\"animated-destination-card\"></div>\n                "), "destination-deck-hidden-pile");
                 animateCardToCounterAndDestroy(_this.game, "animated-destination-card-".concat(i), "destinations-counter-".concat(playerId, "-wrapper"));
             }, 200 * i);
         };
@@ -1652,48 +1543,52 @@ var TrainCarSelection = /** @class */ (function () {
      * List visible cards colors.
      */
     TrainCarSelection.prototype.getVisibleColors = function () {
-        return this.visibleCardsSpots.map(function (stock) { return stock.getVisibleColor(); });
+        /*return this.visibleCardsSpots.map((stock) => stock.getVisibleColor());//*/
+        return [2];
     };
     /**
      * Animate the 3 visible locomotives (bump) before they are replaced.
      */
     TrainCarSelection.prototype.highlightVisibleLocomotives = function () {
-        this.visibleCardsSpots.filter(function (stock) { return stock.getVisibleColor() === 0; }).forEach(function (stock) {
-            var cardDiv = stock.getCardDiv();
-            if (cardDiv) {
-                cardDiv.classList.remove('highlight-locomotive');
-                cardDiv.classList.add('highlight-locomotive');
-            }
-        });
+        /*	this.visibleCardsSpots
+            .filter((stock) => stock.getVisibleColor() === 0)
+            .forEach((stock) => {
+                const cardDiv = stock.getCardDiv();
+                if (cardDiv) {
+                    cardDiv.classList.remove("highlight-locomotive");
+                    cardDiv.classList.add("highlight-locomotive");
+                }
+            });*/
     };
     /**
      * Show the 3 cards drawn for the tunnel claim. Clear them if called with empty array.
      */
     TrainCarSelection.prototype.showTunnelCards = function (tunnelCards) {
         if (tunnelCards === null || tunnelCards === void 0 ? void 0 : tunnelCards.length) {
-            dojo.place("<div id=\"tunnel-cards\"></div>", 'train-car-deck-hidden-pile');
+            dojo.place("<div id=\"tunnel-cards\"></div>", "train-car-deck-hidden-pile");
             tunnelCards.forEach(function (card, index) {
-                dojo.place("<div id=\"tunnel-card-".concat(index, "\" class=\"train-car-card tunnel-card animated\" data-color=\"").concat(card.type, "\"></div>"), 'tunnel-cards');
+                dojo.place("<div id=\"tunnel-card-".concat(index, "\" class=\"train-car-card tunnel-card animated\" data-color=\"").concat(card.type, "\"></div>"), "tunnel-cards");
                 var element = document.getElementById("tunnel-card-".concat(index));
-                setTimeout(function () { return element.style.transform = "translateY(".concat(55 * (index - 1), "px) scale(0.33)"); });
+                setTimeout(function () {
+                    return (element.style.transform = "translateY(".concat(55 * (index - 1), "px) scale(0.33)"));
+                });
             });
         }
         else {
-            this.game.fadeOutAndDestroy('tunnel-cards');
+            this.game.fadeOutAndDestroy("tunnel-cards");
             //document.getElementById('tunnel-cards')?.remove();
         }
     };
     return TrainCarSelection;
 }());
 /**
- * Player table : train car et destination cards.
+ * Player table : destination cards.
  */
 var PlayerTable = /** @class */ (function () {
-    function PlayerTable(game, player, trainCars, destinations, completedDestinations) {
-        var html = "\n            <div id=\"player-table\" class=\"player-table\">\n                <div id=\"player-table-".concat(player.id, "-destinations\" class=\"player-table-destinations\"></div>\n                <div id=\"player-table-").concat(player.id, "-train-cars\" class=\"player-table-train-cars\"></div>\n            </div>\n        ");
+    function PlayerTable(game, player, destinations, completedDestinations) {
+        var html = "\n            <div id=\"player-table\" class=\"player-table\">\n                <div id=\"player-table-".concat(player.id, "-destinations\" class=\"player-table-destinations\"></div>\n            </div>\n        ");
         dojo.place(html, 'resized');
         this.playerDestinations = new PlayerDestinations(game, player, destinations, completedDestinations);
-        this.playerTrainCars = new PlayerTrainCars(game, player, trainCars);
     }
     /**
      * Place player table to the left or the bottom of the map.
@@ -1707,38 +1602,12 @@ var PlayerTable = /** @class */ (function () {
             document.getElementById('resized').appendChild(playerHandDiv);
         }
         playerHandDiv.classList.toggle('left', left);
-        this.playerTrainCars.setPosition(left);
     };
     PlayerTable.prototype.addDestinations = function (destinations, originStock) {
         this.playerDestinations.addDestinations(destinations, originStock);
     };
     PlayerTable.prototype.markDestinationComplete = function (destination, destinationRoutes) {
         this.playerDestinations.markDestinationComplete(destination, destinationRoutes);
-    };
-    PlayerTable.prototype.addTrainCars = function (trainCars, from) {
-        this.playerTrainCars.addTrainCars(trainCars, from);
-    };
-    PlayerTable.prototype.removeCards = function (removeCards) {
-        this.playerTrainCars.removeCards(removeCards);
-    };
-    PlayerTable.prototype.setDraggable = function (draggable) {
-        this.playerTrainCars.setDraggable(draggable);
-    };
-    PlayerTable.prototype.setSelectable = function (selectable) {
-        this.playerTrainCars.setSelectable(selectable);
-    };
-    PlayerTable.prototype.getPossibleColors = function (route) {
-        return this.playerTrainCars.getPossibleColors(route);
-    };
-    PlayerTable.prototype.setSelectableTrainCarColors = function (route, possibleColors) {
-        if (possibleColors === void 0) { possibleColors = null; }
-        this.playerTrainCars.setSelectableTrainCarColors(route, possibleColors);
-    };
-    PlayerTable.prototype.getSelectedColor = function () {
-        return this.playerTrainCars.getSelectedColor();
-    };
-    PlayerTable.prototype.updateColorBlindRotation = function () {
-        return this.playerTrainCars.updateColorBlindRotation();
     };
     return PlayerTable;
 }());
@@ -1769,7 +1638,11 @@ var PlayerDestinations = /** @class */ (function () {
         var html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-todo\" class=\"player-table-destinations-column todo\"></div>\n        <div id=\"player-table-").concat(player.id, "-destinations-done\" class=\"player-table-destinations-column done\"></div>\n        ");
         dojo.place(html, "player-table-".concat(player.id, "-destinations"));
         this.addDestinations(destinations);
-        destinations.filter(function (destination) { return completedDestinations.some(function (d) { return d.id == destination.id; }); }).forEach(function (destination) {
+        destinations
+            .filter(function (destination) {
+            return completedDestinations.some(function (d) { return d.id == destination.id; });
+        })
+            .forEach(function (destination) {
             return _this.markDestinationComplete(destination);
         });
         // highlight the first "to do" destination
@@ -1786,10 +1659,18 @@ var PlayerDestinations = /** @class */ (function () {
             dojo.place(html, "player-table-".concat(_this.playerId, "-destinations-todo"));
             var card = document.getElementById("destination-card-".concat(destination.id));
             setupDestinationCardDiv(card, destination.type * 100 + destination.type_arg);
-            card.addEventListener('click', function () { return _this.activateNextDestination(_this.destinationsDone.some(function (d) { return d.id == destination.id; }) ? _this.destinationsDone : _this.destinationsTodo); });
+            card.addEventListener("click", function () {
+                return _this.activateNextDestination(_this.destinationsDone.some(function (d) { return d.id == destination.id; })
+                    ? _this.destinationsDone
+                    : _this.destinationsTodo);
+            });
             // highlight destination's cities on the map, on mouse over
-            card.addEventListener('mouseenter', function () { return _this.game.setHighligthedDestination(destination); });
-            card.addEventListener('mouseleave', function () { return _this.game.setHighligthedDestination(null); });
+            card.addEventListener("mouseenter", function () {
+                return _this.game.setHighligthedDestination(destination);
+            });
+            card.addEventListener("mouseleave", function () {
+                return _this.game.setHighligthedDestination(null);
+            });
             if (originStock) {
                 _this.addAnimationFrom(card, document.getElementById("".concat(originStock.container_div.id, "_item_").concat(destination.id)));
             }
@@ -1807,7 +1688,9 @@ var PlayerDestinations = /** @class */ (function () {
             this.destinationsTodo.splice(index, 1);
         }
         this.destinationsDone.push(destination);
-        document.getElementById("player-table-".concat(this.playerId, "-destinations-done")).appendChild(document.getElementById("destination-card-".concat(destination.id)));
+        document
+            .getElementById("player-table-".concat(this.playerId, "-destinations-done"))
+            .appendChild(document.getElementById("destination-card-".concat(destination.id)));
         this.destinationColumnsUpdated();
     };
     /**
@@ -1816,17 +1699,27 @@ var PlayerDestinations = /** @class */ (function () {
     PlayerDestinations.prototype.markDestinationCompleteAnimation = function (destination, destinationRoutes) {
         var _this = this;
         var newDac = new DestinationCompleteAnimation(this.game, destination, destinationRoutes, "destination-card-".concat(destination.id), "destination-card-".concat(destination.id), {
-            start: function (d) { return document.getElementById("destination-card-".concat(d.id)).classList.add('hidden-for-animation'); },
+            start: function (d) {
+                return document
+                    .getElementById("destination-card-".concat(d.id))
+                    .classList.add("hidden-for-animation");
+            },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
-            end: function (d) { return document.getElementById("destination-card-".concat(d.id)).classList.remove('hidden-for-animation'); },
-        }, 'completed');
+            end: function (d) {
+                return document
+                    .getElementById("destination-card-".concat(d.id))
+                    .classList.remove("hidden-for-animation");
+            },
+        }, "completed");
         this.game.addAnimation(newDac);
     };
     /**
      * Mark a destination as complete.
      */
     PlayerDestinations.prototype.markDestinationComplete = function (destination, destinationRoutes) {
-        if (destinationRoutes && !(document.visibilityState === 'hidden' || this.game.instantaneousMode)) {
+        if (destinationRoutes &&
+            !(document.visibilityState === "hidden" ||
+                this.game.instantaneousMode)) {
             this.markDestinationCompleteAnimation(destination, destinationRoutes);
         }
         else {
@@ -1839,26 +1732,46 @@ var PlayerDestinations = /** @class */ (function () {
     PlayerDestinations.prototype.activateNextDestination = function (destinationList) {
         var _this = this;
         var oldSelectedDestination = this.selectedDestination;
-        if (this.selectedDestination && destinationList.some(function (d) { return d.id == _this.selectedDestination.id; }) && destinationList.length > 1) {
-            destinationList.splice.apply(destinationList, __spreadArray([destinationList.length, 0], destinationList.splice(0, 1), false));
+        if (this.selectedDestination &&
+            destinationList.some(function (d) { return d.id == _this.selectedDestination.id; }) &&
+            destinationList.length > 1) {
+            destinationList.splice.apply(destinationList, __spreadArray([destinationList.length,
+                0], destinationList.splice(0, 1), false));
         }
         this.selectedDestination = destinationList[0];
         this.game.setActiveDestination(this.selectedDestination, oldSelectedDestination);
-        document.getElementById("player-table-".concat(this.playerId, "-destinations-todo")).classList.toggle('front', destinationList == this.destinationsTodo);
-        document.getElementById("player-table-".concat(this.playerId, "-destinations-done")).classList.toggle('front', destinationList == this.destinationsDone);
+        document
+            .getElementById("player-table-".concat(this.playerId, "-destinations-todo"))
+            .classList.toggle("front", destinationList == this.destinationsTodo);
+        document
+            .getElementById("player-table-".concat(this.playerId, "-destinations-done"))
+            .classList.toggle("front", destinationList == this.destinationsDone);
         this.destinationColumnsUpdated();
     };
     /**
      * Update destination cards placement when there is a change.
      */
     PlayerDestinations.prototype.destinationColumnsUpdated = function () {
-        var doubleColumn = this.destinationsTodo.length > 0 && this.destinationsDone.length > 0;
+        var doubleColumn = this.destinationsTodo.length > 0 &&
+            this.destinationsDone.length > 0;
         var destinationsDiv = document.getElementById("player-table-".concat(this.playerId, "-destinations"));
         var maxBottom = Math.max(this.placeCards(this.destinationsTodo, doubleColumn ? DESTINATION_CARD_SHIFT : 0), this.placeCards(this.destinationsDone));
         /* const height = `${maxBottom + CARD_HEIGHT}px`;
-         destinationsDiv.style.height = height;
-         document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
- */
+        destinationsDiv.style.height = height;
+        document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
+*/
+        /*	const col1 = document.getElementById(
+                `player-table-${this.playerId}-destinations-todo`
+            );
+            const col2 = document.getElementById(
+                `player-table-${this.playerId}-destinations-todo`
+            );
+            const destinationCount =
+                this.destinationsTodo.length + this.destinationsDone.length;
+            col1.style.width =
+                (this.destinationsTodo.length * 100 / destinationCount) + "%";
+            col2.style.width =
+                (this.destinationsDone.length * 100) / destinationCount + "%";*/
         this.game.setDestinationsToConnect(this.destinationsTodo);
     };
     /**
@@ -1883,18 +1796,19 @@ var PlayerDestinations = /** @class */ (function () {
      * Add an animation to the card (when it is created).
      */
     PlayerDestinations.prototype.addAnimationFrom = function (card, from) {
-        if (document.visibilityState === 'hidden' || this.game.instantaneousMode) {
+        if (document.visibilityState === "hidden" ||
+            this.game.instantaneousMode) {
             return;
         }
         var destinationBR = card.getBoundingClientRect();
         var originBR = from.getBoundingClientRect();
         var deltaX = destinationBR.left - originBR.left;
         var deltaY = destinationBR.top - originBR.top;
-        card.style.zIndex = '10';
+        card.style.zIndex = "10";
         card.style.transition = "transform 0.5s linear";
         var zoom = this.game.getZoom();
         card.style.transform = "translate(".concat(-deltaX / zoom, "px, ").concat(-deltaY / zoom, "px)");
-        setTimeout(function () { return card.style.transform = null; });
+        setTimeout(function () { return (card.style.transform = null); });
         setTimeout(function () {
             card.style.zIndex = null;
             card.style.transition = null;
@@ -1904,267 +1818,14 @@ var PlayerDestinations = /** @class */ (function () {
 }());
 var CROSSHAIR_SIZE = 20;
 /**
- * Player's train car cards.
+ * Colored arrows.
  */
-var PlayerTrainCars = /** @class */ (function () {
-    function PlayerTrainCars(game, player, trainCars) {
+var Arrow = /** @class */ (function () {
+    function Arrow(game, color) {
         this.game = game;
-        this.left = true;
         this.route = null;
-        this.selectable = false;
-        this.selectedColor = null;
-        this.playerId = Number(player.id);
-        this.addTrainCars(trainCars);
     }
-    /**
-     * Add train cars to player's hand.
-     */
-    PlayerTrainCars.prototype.addTrainCars = function (trainCars, from) {
-        var _this = this;
-        trainCars.forEach(function (trainCar) {
-            var group = _this.getGroup(trainCar.type);
-            var deg = Math.round(-4 + Math.random() * 8);
-            var card = document.getElementById("train-car-card-".concat(trainCar.id));
-            var groupTrainCarCards = group.getElementsByClassName('train-car-cards')[0];
-            if (!card) {
-                var html = "\n                <div id=\"train-car-card-".concat(trainCar.id, "\" class=\"train-car-card\" data-color=\"").concat(trainCar.type, "\"></div>\n                ");
-                dojo.place(html, groupTrainCarCards);
-                card = document.getElementById("train-car-card-".concat(trainCar.id));
-            }
-            else {
-                groupTrainCarCards.appendChild(card);
-            }
-            card.dataset.handRotation = "".concat(deg);
-            var degWithColorBlind = _this.left && _this.game.isColorBlindMode() ? 180 + deg : deg;
-            card.style.transform = "rotate(".concat(degWithColorBlind, "deg)");
-            if (from) {
-                var card_1 = document.getElementById("train-car-card-".concat(trainCar.id));
-                _this.addAnimationFrom(card_1, group, from, deg, degWithColorBlind);
-            }
-        });
-        this.updateCounters();
-    };
-    /**
-     * Set player table position.
-     */
-    PlayerTrainCars.prototype.setPosition = function (left) {
-        this.left = left;
-        var div = document.getElementById("player-table-".concat(this.playerId, "-train-cars"));
-        div.classList.toggle('left', left);
-        this.updateCounters(); // to realign
-        this.updateColorBlindRotation();
-    };
-    /**
-     * Rotate 180° on train car cards, if they are on the left, and if color-blind option is on.
-     */
-    PlayerTrainCars.prototype.updateColorBlindRotation = function () {
-        var _this = this;
-        var cards = Array.from(document.getElementById("player-table-".concat(this.playerId, "-train-cars")).getElementsByClassName('train-car-card'));
-        cards.forEach(function (card) {
-            var deg = Number(card.dataset.handRotation);
-            var degWithColorBlind = _this.left && _this.game.isColorBlindMode() ? 180 + deg : deg;
-            card.style.transform = "rotate(".concat(degWithColorBlind, "deg)");
-        });
-    };
-    /**
-     * Remove train cars from player's hand.
-     */
-    PlayerTrainCars.prototype.removeCards = function (removeCards) {
-        var _this = this;
-        removeCards.forEach(function (card) {
-            var div = document.getElementById("train-car-card-".concat(card.id));
-            if (div) {
-                var groupDiv = div.closest('.train-car-group');
-                div.parentElement.removeChild(div);
-                if (!groupDiv.getElementsByClassName('train-car-card').length) {
-                    groupDiv.parentElement.removeChild(groupDiv);
-                }
-                _this.updateCounters();
-            }
-        });
-    };
-    /**
-     * Set if train car cards can be dragged.
-     */
-    PlayerTrainCars.prototype.setDraggable = function (draggable) {
-        var groups = Array.from(document.getElementsByClassName('train-car-group'));
-        groups.forEach(function (groupDiv) { return groupDiv.setAttribute('draggable', draggable.toString()); });
-    };
-    /**
-     * Set if train car cards can be selected by a click.
-     */
-    PlayerTrainCars.prototype.setSelectable = function (selectable) {
-        this.selectable = selectable;
-        if (!selectable && this.selectedColor) {
-            this.deselectColor(this.selectedColor);
-        }
-    };
-    /**
-     * Return a group of cards (cards of the same color).
-     * If it doesn't exists, create it.
-     */
-    PlayerTrainCars.prototype.getGroup = function (type) {
-        var _this = this;
-        var group = document.getElementById("train-car-group-".concat(type));
-        if (!group) {
-            dojo.place("\n            <div id=\"train-car-group-".concat(type, "\" class=\"train-car-group\" data-type=\"").concat(type, "\">\n                <div id=\"train-car-group-").concat(type, "-counter\" class=\"train-car-group-counter\">0</div>\n                <div id=\"train-car-group-").concat(type, "-cards\" class=\"train-car-cards\"></div>\n            </div>\n            "), "player-table-".concat(this.playerId, "-train-cars"), type == 0 ? 'first' : 'last');
-            this.updateCounters();
-            group = document.getElementById("train-car-group-".concat(type));
-            group.addEventListener('dragstart', function (e) {
-                _this.deselectColor(_this.selectedColor);
-                var dt = e.dataTransfer;
-                dt.effectAllowed = 'move';
-                dt.setData('text/plain', '' + type);
-                var mapDiv = document.getElementById('map');
-                mapDiv.dataset.dragColor = '' + type;
-                // we generate a clone of group (without positionning with transform on the group)
-                var groupClone = document.createElement('div');
-                groupClone.classList.add('train-car-group', 'drag');
-                groupClone.innerHTML = group.innerHTML;
-                document.body.appendChild(groupClone);
-                groupClone.offsetHeight;
-                dt.setDragImage(groupClone, -CROSSHAIR_SIZE, -CROSSHAIR_SIZE);
-                setTimeout(function () { return document.body.removeChild(groupClone); });
-                setTimeout(function () {
-                    group.classList.add('hide');
-                }, 0);
-                _this.game.map.addDragOverlay();
-                return true;
-            });
-            group.addEventListener('dragend', function (e) {
-                setTimeout(function () { return group.classList.remove('hide'); }, 50);
-                var mapDiv = document.getElementById('map');
-                mapDiv.dataset.dragColor = '';
-                _this.game.map.removeDragOverlay();
-            });
-            group.addEventListener('click', function () {
-                if (_this.route) {
-                    _this.game.askRouteClaimConfirmation(_this.route, type);
-                }
-                else if (_this.selectable) {
-                    if (_this.selectedColor === type) {
-                        _this.deselectColor(type);
-                    }
-                    else if (_this.selectedColor !== null) {
-                        _this.deselectColor(_this.selectedColor);
-                        _this.selectColor(type);
-                    }
-                    else {
-                        _this.selectColor(type);
-                    }
-                }
-            });
-        }
-        return group;
-    };
-    PlayerTrainCars.prototype.getSelectedColor = function () {
-        return this.selectedColor;
-    };
-    PlayerTrainCars.prototype.selectColor = function (color) {
-        var group = document.getElementById("train-car-group-".concat(color));
-        group === null || group === void 0 ? void 0 : group.classList.add('selected');
-        this.selectedColor = color;
-        this.game.selectedColorChanged(this.selectedColor);
-    };
-    PlayerTrainCars.prototype.deselectColor = function (color) {
-        if (color === null) {
-            return;
-        }
-        var group = document.getElementById("train-car-group-".concat(color));
-        group === null || group === void 0 ? void 0 : group.classList.remove('selected');
-        this.selectedColor = null;
-        this.game.selectedColorChanged(this.selectedColor);
-    };
-    PlayerTrainCars.prototype.getGroups = function () {
-        return Array.from(document.getElementsByClassName('train-car-group'));
-    };
-    /**
-     * Update counters on color groups.
-     */
-    PlayerTrainCars.prototype.updateCounters = function () {
-        var _this = this;
-        var groups = this.getGroups();
-        var middleIndex = (groups.length - 1) / 2;
-        groups.forEach(function (groupDiv, index) {
-            var distanceFromIndex = index - middleIndex;
-            var count = groupDiv.getElementsByClassName('train-car-card').length;
-            groupDiv.dataset.count = '' + count;
-            groupDiv.getElementsByClassName('train-car-group-counter')[0].innerHTML = "".concat(count > 1 ? count : '');
-            var angle = distanceFromIndex * 4;
-            groupDiv.dataset.angle = '' + angle;
-            groupDiv.style.transform = "translate".concat(_this.left ? 'X(-' : 'Y(').concat(Math.pow(Math.abs(distanceFromIndex) * 2, 2), "px) rotate(").concat(angle, "deg)");
-            groupDiv.parentNode.appendChild(groupDiv);
-        });
-    };
-    /**
-     * Add an animation to the card (when it is created).
-     */
-    PlayerTrainCars.prototype.addAnimationFrom = function (card, group, from, deg, degWithColorBlind) {
-        if (document.visibilityState === 'hidden' || this.game.instantaneousMode) {
-            return;
-        }
-        var trainCars = document.getElementById("player-table-".concat(this.playerId, "-train-cars"));
-        trainCars.classList.add('new-card-animation');
-        var destinationBR = card.getBoundingClientRect();
-        var originBR = from.getBoundingClientRect();
-        var deltaX = destinationBR.left - originBR.left;
-        var deltaY = destinationBR.top - originBR.top;
-        card.style.zIndex = '10';
-        card.style.transition = "transform 0.5s linear";
-        var zoom = this.game.getZoom();
-        var angle = -Number(group.dataset.angle);
-        card.style.transform = "rotate(".concat(this.left ? angle : angle - 90, "deg) translate(").concat(-deltaX / zoom, "px, ").concat(-deltaY / zoom, "px)");
-        setTimeout(function () {
-            card.style.transform = "rotate(".concat(deg, "deg)");
-            if (degWithColorBlind != deg) {
-                setTimeout(function () { return card.style.transform = "rotate(".concat(degWithColorBlind, "deg)"); }, 500);
-            }
-        }, 0);
-        setTimeout(function () {
-            card.style.zIndex = null;
-            card.style.transition = null;
-            trainCars.classList.remove('new-card-animation');
-        }, 500);
-    };
-    /**
-     * Get the colors a player can use to claim a given route.
-     */
-    PlayerTrainCars.prototype.getPossibleColors = function (route) {
-        var groups = this.getGroups();
-        var locomotiveGroup = groups.find(function (groupDiv) { return groupDiv.dataset.type == '0'; });
-        var locomotives = locomotiveGroup ? Number(locomotiveGroup.dataset.count) : 0;
-        var possibleColors = [];
-        groups.forEach(function (groupDiv) {
-            var count = Number(groupDiv.dataset.count);
-            if (count + locomotives >= route.spaces.length) {
-                var color = Number(groupDiv.dataset.type);
-                if (color > 0) {
-                    possibleColors.push(color);
-                }
-            }
-        });
-        if (locomotives >= route.spaces.length) {
-            possibleColors.push(0);
-        }
-        return possibleColors;
-    };
-    /**
-     * Get the colors a player can use to claim a given route.
-     */
-    PlayerTrainCars.prototype.setSelectableTrainCarColors = function (route, possibleColors) {
-        this.route = route;
-        var groups = this.getGroups();
-        groups.forEach(function (groupDiv) {
-            if (route) {
-                var color = Number(groupDiv.dataset.type);
-                groupDiv.classList.toggle('disabled', color != 0 && !possibleColors.includes(color));
-            }
-            else {
-                groupDiv.classList.remove('disabled');
-            }
-        });
-    };
-    return PlayerTrainCars;
+    return Arrow;
 }());
 /**
  * End score board.
@@ -2365,11 +2026,12 @@ var Expeditions = /** @class */ (function () {
         this.gamedatas = gamedatas;
         log("gamedatas", gamedatas);
         this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes);
-        this.trainCarSelection = new TrainCarSelection(this, gamedatas.visibleTrainCards, gamedatas.trainCarDeckCount, gamedatas.destinationDeckCount, gamedatas.trainCarDeckMaxCount, gamedatas.destinationDeckMaxCount);
         this.destinationSelection = new DestinationSelection(this);
+        this.sharedDestinations = new SharedDestinationDeck(this);
+        this.trainCarSelection = new TrainCarSelection(this, gamedatas.visibleTrainCards, this.sharedDestinations, gamedatas.destinationDeckCount, gamedatas.destinationDeckMaxCount);
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
-            this.playerTable = new PlayerTable(this, player, gamedatas.handTrainCars, gamedatas.handDestinations, gamedatas.completedDestinations);
+            this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
         }
         this.createPlayerPanels(gamedatas);
         if (gamedatas.lastTurn) {
@@ -2443,13 +2105,10 @@ var Expeditions = /** @class */ (function () {
      * Show selectable routes, and make train car draggable.
      */
     Expeditions.prototype.onEnteringChooseAction = function (args) {
-        var _a, _b;
         this.setGamestateDescription(args.canTakeTrainCarCards ? "" : "NoTrainCarsCards");
         var currentPlayerActive = this.isCurrentPlayerActive();
         this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
-        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setDraggable(currentPlayerActive);
-        (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setSelectable(currentPlayerActive);
     };
     /**
      * Allow to pick a second card (locomotives will be grayed).
@@ -2479,7 +2138,6 @@ var Expeditions = /** @class */ (function () {
     //                 You can use this method to perform some user interface changes at this moment.
     //
     Expeditions.prototype.onLeavingState = function (stateName) {
-        var _a, _b, _c;
         log("Leaving state: " + stateName);
         switch (stateName) {
             case "privateChooseInitialDestinations":
@@ -2501,9 +2159,6 @@ var Expeditions = /** @class */ (function () {
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
-                (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setDraggable(false);
-                (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setSelectable(false);
-                (_c = this.playerTable) === null || _c === void 0 ? void 0 : _c.setSelectableTrainCarColors(null);
                 document
                     .getElementById("destination-deck-hidden-pile")
                     .classList.remove("selectable");
@@ -2609,32 +2264,9 @@ var Expeditions = /** @class */ (function () {
      * Handle user preferences changes.
      */
     Expeditions.prototype.onPreferenceChange = function (prefId, prefValue) {
-        var _a;
         switch (prefId) {
-            case 201: // 1 = buttons, 2 = double click to pick 2 cards
-                dojo.toggleClass("train-car-deck-hidden-pile", "buttonselection", prefValue == 1);
-                break;
             case 203:
                 this.map.setOutline();
-                break;
-            case 204:
-                document.getElementsByTagName("html")[0].dataset.colorBlind = (prefValue == 1).toString();
-                (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.updateColorBlindRotation();
-                break;
-            case 205:
-                document
-                    .getElementById("train-car-deck")
-                    .prepend(document.getElementById(prefValue == 1
-                    ? "train-car-deck-hidden-pile"
-                    : "destination-deck-hidden-pile"));
-                document
-                    .getElementById("train-car-deck")
-                    .append(document.getElementById(prefValue == 1
-                    ? "destination-deck-hidden-pile"
-                    : "train-car-deck-hidden-pile"));
-                document
-                    .getElementById("destination-deck-hidden-pile")
-                    .classList.toggle("top", prefValue == 2);
                 break;
         }
     };
@@ -2789,8 +2421,6 @@ var Expeditions = /** @class */ (function () {
      * Handle route click.
      */
     Expeditions.prototype.clickedRoute = function (route, needToCheckDoubleRoute) {
-        var _this = this;
-        var _a;
         if (!this.isCurrentPlayerActive()) {
             return;
         }
@@ -2798,51 +2428,44 @@ var Expeditions = /** @class */ (function () {
             needToCheckDoubleRoute = this.askDoubleRouteActive();
         }
         var otherRoute = ROUTES.find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
-        var askDoubleRouteColor = needToCheckDoubleRoute &&
-            otherRoute &&
-            otherRoute.color != route.color &&
-            this.canClaimRoute(route, 0) &&
-            this.canClaimRoute(otherRoute, 0);
-        if (askDoubleRouteColor) {
-            var selectedColor = this.playerTable.getSelectedColor();
-            if (selectedColor) {
-                askDoubleRouteColor = false;
-            }
-        }
-        if (askDoubleRouteColor) {
-            this.setActionBarAskDoubleRoad(route, otherRoute);
-            return;
-        }
         if (!this.canClaimRoute(route, 0)) {
             return;
         }
         document
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
-        if (route.color > 0) {
-            this.askRouteClaimConfirmation(route, route.color);
-        }
-        else {
-            var selectedColor = this.playerTable.getSelectedColor();
-            if (selectedColor !== null) {
-                this.askRouteClaimConfirmation(route, selectedColor);
-            }
-            else {
-                var possibleColors = ((_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.getPossibleColors(route)) || [];
-                if (possibleColors.length == 1) {
-                    this.askRouteClaimConfirmation(route, possibleColors[0]);
-                }
-                else if (possibleColors.length > 1) {
-                    possibleColors.forEach(function (color) {
-                        var label = dojo.string.substitute(_("Use ${color}"), {
-                            color: "<div class=\"train-car-color icon\" data-color=\"".concat(color, "\"></div> ").concat(getColor(color, "train-car")),
+        /*
+                const selectedColor = this.playerTable.getSelectedColor();
+        
+                if (selectedColor !== null) {
+                    this.askRouteClaimConfirmation(route, selectedColor);
+                } else {
+                    const possibleColors: number[] =
+                        this.playerTable?.getPossibleColors(route) || [];
+        
+                    if (possibleColors.length == 1) {
+                        this.askRouteClaimConfirmation(route, possibleColors[0]);
+                    } else if (possibleColors.length > 1) {
+                        possibleColors.forEach((color) => {
+                            const label = dojo.string.substitute(_("Use ${color}"), {
+                                color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
+                                    color,
+                                    "train-car"
+                                )}`,
+                            });
+                            (this as any).addActionButton(
+                                `claimRouteWithColor_button${color}`,
+                                label,
+                                () => this.askRouteClaimConfirmation(route, color)
+                            );
                         });
-                        _this.addActionButton("claimRouteWithColor_button".concat(color), label, function () { return _this.askRouteClaimConfirmation(route, color); });
-                    });
-                    this.playerTable.setSelectableTrainCarColors(route, possibleColors);
-                }
-            }
-        }
+        
+                        this.playerTable.setSelectableTrainCarColors(
+                            route,
+                            possibleColors
+                        );
+                    }
+                }*/
     };
     /**
      * Timer for Confirm button
@@ -2909,35 +2532,6 @@ var Expeditions = /** @class */ (function () {
         }
     };
     /**
-     * Sets the action bar (title and buttons) for Confirm route claim.
-     */
-    Expeditions.prototype.setActionBarConfirmRouteClaim = function (route, color) {
-        var _this = this;
-        var chooseActionArgs = this.gamedatas.gamestate
-            .args;
-        var colors = chooseActionArgs.costForRoute[route.id][color].map(function (cardColor) {
-            return "<div class=\"train-car-color icon\" data-color=\"".concat(cardColor, "\"></div>");
-        });
-        var confirmationQuestion = _("Confirm ${color} route from ${from} to ${to} with ${colors} ?")
-            .replace("${color}", getColor(route.color, "route"))
-            .replace("${from}", this.getCityName(route.from))
-            .replace("${to}", this.getCityName(route.to))
-            .replace("${colors}", "<div class=\"color-cards\">".concat(colors.join(""), "</div>"));
-        this.setChooseActionGamestateDescription(confirmationQuestion);
-        document.getElementById("generalactions").innerHTML = "";
-        this.addActionButton("confirmRouteClaim-button", _("Confirm"), function () { return _this.confirmRouteClaim(); });
-        this.addActionButton("cancelRouteClaim-button", _("Cancel"), function () { return _this.cancelRouteClaim(); }, null, null, "gray");
-        this.startActionTimer("confirmRouteClaim-button", ACTION_TIMER_DURATION);
-    };
-    /**
-     * Check if player should be asked for a route claim confirmation.
-     */
-    Expeditions.prototype.confirmRouteClaimActive = function () {
-        var _a;
-        var preferenceValue = Number((_a = this.prefs[202]) === null || _a === void 0 ? void 0 : _a.value);
-        return preferenceValue === 1 || (preferenceValue === 2 && this.isTouch);
-    };
-    /**
      * Check if player should be asked for the color he wants when he clicks on a double route.
      */
     Expeditions.prototype.askDoubleRouteActive = function () {
@@ -2945,64 +2539,8 @@ var Expeditions = /** @class */ (function () {
         var preferenceValue = Number((_a = this.prefs[209]) === null || _a === void 0 ? void 0 : _a.value);
         return preferenceValue === 1;
     };
-    Expeditions.prototype.setActionBarAskDoubleRoad = function (clickedRoute, otherRoute) {
-        var _this = this;
-        var question = _("Which part of the double route do you want to claim?");
-        this.setChooseActionGamestateDescription(question);
-        document.getElementById("generalactions").innerHTML = "";
-        [clickedRoute, otherRoute].forEach(function (route) {
-            _this.addActionButton("claimDoubleRoute".concat(route.id, "-button"), getColor(route.color, "route"), function () { return _this.clickedRoute(route, false); });
-        });
-        this.addActionButton("cancelRouteClaim-button", _("Cancel"), function () { return _this.cancelRouteClaim(); }, null, null, "gray");
-    };
     Expeditions.prototype.getCityName = function (cityId) {
         return CITIES_NAMES[cityId - 100];
-    };
-    /**
-     * Ask confirmation for claimed route.
-     */
-    Expeditions.prototype.askRouteClaimConfirmation = function (route, color) {
-        var selectedColor = this.playerTable.getSelectedColor();
-        if (route.color !== 0 &&
-            selectedColor !== null &&
-            selectedColor !== 0 &&
-            route.color !== selectedColor) {
-            var otherRoute = ROUTES.find(function (r) {
-                return route.from == r.from && route.to == r.to && route.id != r.id;
-            });
-            if (otherRoute.color === selectedColor) {
-                this.askRouteClaimConfirmation(otherRoute, selectedColor);
-            }
-            return;
-        }
-        if (this.confirmRouteClaimActive()) {
-            this.routeToConfirm = { route: route, color: color };
-            this.map.setHoveredRoute(route, true);
-            this.setActionBarConfirmRouteClaim(route, color);
-        }
-        else {
-            this.claimRoute(route.id, color);
-        }
-    };
-    /**
-     * Player cancels claimed route.
-     */
-    Expeditions.prototype.cancelRouteClaim = function () {
-        var _a;
-        this.setActionBarChooseAction(true);
-        this.map.setHoveredRoute(null);
-        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setSelectableTrainCarColors(null);
-        this.routeToConfirm = null;
-        document
-            .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
-            .forEach(function (button) { var _a; return (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(button); });
-    };
-    /**
-     * Player confirms claimed route.
-     */
-    Expeditions.prototype.confirmRouteClaim = function () {
-        this.map.setHoveredRoute(null);
-        this.claimRoute(this.routeToConfirm.route.id, this.routeToConfirm.color);
     };
     /**
      * Apply destination selection (initial objectives).
@@ -3144,7 +2682,7 @@ var Expeditions = /** @class */ (function () {
             ["destinationCompleted", ANIMATION_MS],
             ["points", 1],
             ["destinationsPicked", 1],
-            ["trainCarPicked", ANIMATION_MS],
+            //["trainCarPicked", ANIMATION_MS],
             ["freeTunnel", 2000],
             ["highlightVisibleLocomotives", 1000],
             ["notEnoughTrainCars", 1],
@@ -3160,9 +2698,11 @@ var Expeditions = /** @class */ (function () {
             dojo.subscribe(notif[0], _this, "notif_".concat(notif[0]));
             _this.notifqueue.setSynchronous(notif[0], notif[1]);
         });
-        this.notifqueue.setIgnoreNotificationCheck("trainCarPicked", function (notif) {
-            return notif.args.playerId == _this.getPlayerId() && !notif.args.cards;
-        });
+        /*(this as any).notifqueue.setIgnoreNotificationCheck(
+            "trainCarPicked",
+            (notif: Notif<NotifTrainCarsPickedArgs>) =>
+                notif.args.playerId == this.getPlayerId() && !notif.args.cards
+        );*/
     };
     /**
      * Update player score.
@@ -3188,20 +2728,6 @@ var Expeditions = /** @class */ (function () {
         this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
     };
     /**
-     * Update player train cars.
-     */
-    Expeditions.prototype.notif_trainCarPicked = function (notif) {
-        this.trainCarCardCounters[notif.args.playerId].incValue(notif.args.number);
-        if (notif.args.playerId == this.getPlayerId()) {
-            var cards = notif.args.cards;
-            this.playerTable.addTrainCars(cards, this.trainCarSelection.getStockElement(notif.args.origin));
-        }
-        else {
-            this.trainCarSelection.moveTrainCarCardToPlayerBoard(notif.args.playerId, notif.args.origin, notif.args.number);
-        }
-        this.trainCarSelection.setTrainCarCount(notif.args.remainingTrainCarsInDeck);
-    };
-    /**
      * Update visible cards.
      */
     Expeditions.prototype.notif_newCardsOnTable = function (notif) {
@@ -3210,7 +2736,6 @@ var Expeditions = /** @class */ (function () {
             this.disableNextMoveSound();
         }
         this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);
-        this.trainCarSelection.setTrainCarCount(notif.args.remainingTrainCarsInDeck);
     };
     /**
      * Animate the 3 visible locomotives (bump) before they are replaced.
@@ -3232,9 +2757,6 @@ var Expeditions = /** @class */ (function () {
                 routeId: route.id,
             },
         ], playerId);
-        if (playerId == this.getPlayerId()) {
-            this.playerTable.removeCards(notif.args.removeCards);
-        }
     };
     /**
      * Mark a destination as complete.
@@ -3262,18 +2784,6 @@ var Expeditions = /** @class */ (function () {
      * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
      */
     Expeditions.prototype.notif_notEnoughTrainCars = function () {
-        this.showMessage(_("Not enough train cars left to claim the route."), "error");
-        var animatedElement = document.getElementById("train-car-counter-".concat(this.getPlayerId(), "-wrapper"));
-        animatedElement.classList.remove("animate-low-count");
-        setTimeout(function () { return animatedElement.classList.add("animate-low-count"); }, 1);
-        if (document.getElementById("confirmRouteClaim-button")) {
-            this.cancelRouteClaim();
-        }
-        else {
-            document
-                .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
-                .forEach(function (button) { var _a; return (_a = button.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(button); });
-        }
     };
     /**
      * Show last turn banner.

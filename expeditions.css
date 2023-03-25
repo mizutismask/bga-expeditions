@@ -735,7 +735,7 @@
 
 #train-car-deck {
   position: relative;
-  width: 150px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   z-index: 7;
@@ -760,36 +760,6 @@
   pointer-events: none;
   background-repeat: no-repeat;
   background-position: center;
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="1"] {
-  background-image: url("img/deck-cardLevel-10.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="2"] {
-  background-image: url("img/deck-cardLevel-20.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="3"] {
-  background-image: url("img/deck-cardLevel-30.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="4"] {
-  background-image: url("img/deck-cardLevel-40.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="5"] {
-  background-image: url("img/deck-cardLevel-50.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="6"] {
-  background-image: url("img/deck-cardLevel-60.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="7"] {
-  background-image: url("img/deck-cardLevel-70.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="8"] {
-  background-image: url("img/deck-cardLevel-80.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="9"] {
-  background-image: url("img/deck-cardLevel-90.png");
-}
-#train-car-deck .hidden-pile #train-car-deck-level[data-level="10"] {
-  background-image: url("img/deck-cardLevel-100.png");
 }
 #train-car-deck .hidden-pile #destination-deck-level[data-level="1"] {
   background-image: url("img/deck-destiLevel-10.png");
@@ -896,7 +866,7 @@
 .animated-destination-card {
   position: absolute;
   left: 0px;
-  width: 150px;
+  width: 200px;
   height: 209px;
   background-image: url("img/deck-destiLevel-10.png");
   border-radius: 6px;
@@ -952,24 +922,6 @@
   background: url("img/destination-selected.png");
   box-shadow: 0 0 3px 3px #d9ffff;
   border-radius: 6px;
-}
-
-#visible-train-cards-mini {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: black;
-  border: 2px outset gold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#visible-train-cards-mini .icon.train-car-color {
-  height: 32px;
-  width: 42px;
-  border-radius: 4px;
-  margin: 5px;
 }
 
 .player-table-destinations {

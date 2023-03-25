@@ -222,12 +222,6 @@ class TtrMap {
 
 		this.inMapZoomManager = new InMapZoomManager();
 
-		this.game.setTooltipToClass(
-			`train-car-deck-hidden-pile-tooltip`,
-			`<strong>${_("Train cars deck")}</strong><br><br>
-        ${_("Click here to pick one or two hidden train car cards")}`
-		);
-
 		this.game.setTooltip(
 			`destination-deck-hidden-pile`,
 			`<strong>${_("Destinations deck")}</strong><br><br>
@@ -280,24 +274,7 @@ class TtrMap {
 	 * Handle dragging train car cards over a route.
 	 */
 	private routeDragOver(e: DragEvent, route: Route) {
-		const cardsColor = Number(this.mapDiv.dataset.dragColor);
-
-		let overRoute = route;
-		if (cardsColor > 0 && route.color > 0 && cardsColor != route.color) {
-			const otherRoute = ROUTES.find(
-				(r) =>
-					route.from == r.from && route.to == r.to && route.id != r.id
-			);
-			if (otherRoute && otherRoute.color == cardsColor) {
-				overRoute = otherRoute;
-			}
-		}
-		let canClaimRoute = this.game.canClaimRoute(overRoute, cardsColor);
-
-		this.setHoveredRoute(overRoute, canClaimRoute);
-		if (canClaimRoute) {
-			e.preventDefault();
-		}
+		
 	}
 
 	/**
@@ -306,27 +283,7 @@ class TtrMap {
 	private routeDragDrop(e: DragEvent, route: Route) {
 		e.preventDefault();
 
-		const mapDiv = document.getElementById("map");
-		if (mapDiv.dataset.dragColor == "") {
-			return;
-		}
-
-		this.setHoveredRoute(null);
-		const cardsColor = Number(this.mapDiv.dataset.dragColor);
-		mapDiv.dataset.dragColor = "";
-
-		let overRoute = route;
-		if (cardsColor > 0 && route.color > 0 && cardsColor != route.color) {
-			const otherRoute = ROUTES.find(
-				(r) =>
-					route.from == r.from && route.to == r.to && route.id != r.id
-			);
-			if (otherRoute && otherRoute.color == cardsColor) {
-				overRoute = otherRoute;
-			}
-		}
-
-		this.game.askRouteClaimConfirmation(overRoute, cardsColor);
+		
 	}
 
 	/**

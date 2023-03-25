@@ -20,11 +20,11 @@
         "src/map/map-material.ts",
         "src/map/map.ts",
         "src/destination-deck/destination-deck.ts",
-        "src/train-car-deck/visible-card-spot.ts",
+        "src/destination-deck/shared-destination-deck.ts",
         "src/train-car-deck/train-car-deck.ts",
         "src/player-table/player-table.ts",
         "src/player-table/player-destinations.ts",
-        "src/player-table/player-train-cars.ts",
+        "src/arrows.ts",
         "src/end-score/end-score.ts",
         "src/expeditions.ts",
         "src/define.ts"

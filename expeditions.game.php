@@ -152,8 +152,6 @@ class Expeditions extends Table {
         $this->createDestinations();
 
         $this->createTrainCars();
-        // give 4 to each player
-        $this->giveInitialTrainCarCards(array_keys($players));
 
         // Activate first player (which is in general a good idea :) )
         //$this->activeNextPlayer();
@@ -189,22 +187,16 @@ class Expeditions extends Table {
         // Gather all information about current game situation (visible by player $currentPlayerId).
 
         $result['claimedRoutes'] = $this->getClaimedRoutes();
-        $visibleTrainCards = $this->getVisibleTrainCarCards();
-        $spotsCards = [];
-        foreach ($visibleTrainCards as $visibleTrainCard) {
-            $spotsCards[$visibleTrainCard->location_arg] = $visibleTrainCard;
-        }
-        $result['visibleTrainCards'] = $spotsCards;
+        $result['visibleTrainCards'] = $this->getSharedDestinationCards();
 
         // private data : current player hidden informations
-        $result['handTrainCars'] = $this->getTrainCarsFromDb($this->trainCars->getCardsInLocation('hand', $currentPlayerId));
         $result['handDestinations'] = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand', $currentPlayerId));
         $result['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($currentPlayerId)));
 
         // share informations (for player panels)
         foreach ($result['players'] as $playerId => &$player) {
             $player['playerNo'] = intval($player['playerNo']);
-            $player['trainCarsCount'] = intval($this->trainCars->countCardInLocation('hand', $playerId));
+            //$player['trainCarsCount'] = intval($this->trainCars->countCardInLocation('hand', $playerId));
             $player['destinationsCount'] = intval($this->destinations->countCardInLocation('hand', $playerId));
             $player['remainingTrainCarsCount'] = $this->getRemainingTrainCarsCount($playerId);
 

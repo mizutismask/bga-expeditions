@@ -123,6 +123,7 @@ const CITIES_NAMES = [
 	"Fiordland National Park",
 ];
 const DESTINATIONS = [
+	new DestinationCard(100, 100),
 	new DestinationCard(101, 101),
 	new DestinationCard(102, 102),
 	new DestinationCard(103, 103),
@@ -209,7 +210,9 @@ function setupDestinationCardDiv(
 	cardDiv: HTMLDivElement,
 	cardUniqueId: number
 ) {
+	
 	const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
+	//console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
 	cardDiv.title = `${dojo.string.substitute(_("${to}"), {
 		to: getCityName(destination.to),
 	})}`;

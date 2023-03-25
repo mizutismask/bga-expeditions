@@ -12,6 +12,7 @@ class Expeditions implements ExpeditionsGame {
 	public map: TtrMap;
 	private trainCarSelection: TrainCarSelection;
 	private destinationSelection: DestinationSelection;
+	private sharedDestinations: SharedDestinationDeck;
 	private playerTable: PlayerTable = null;
 	private endScore: EndScore;
 
@@ -57,22 +58,22 @@ class Expeditions implements ExpeditionsGame {
 			Object.values(gamedatas.players),
 			gamedatas.claimedRoutes
 		);
+
+		this.destinationSelection = new DestinationSelection(this);
+		this.sharedDestinations = new SharedDestinationDeck(this);
+		
 		this.trainCarSelection = new TrainCarSelection(
 			this,
-			gamedatas.visibleTrainCards,
-			gamedatas.trainCarDeckCount,
+			gamedatas.visibleTrainCards,this.sharedDestinations,
 			gamedatas.destinationDeckCount,
-			gamedatas.trainCarDeckMaxCount,
 			gamedatas.destinationDeckMaxCount
 		);
-		this.destinationSelection = new DestinationSelection(this);
 
 		const player = gamedatas.players[this.getPlayerId()];
 		if (player) {
 			this.playerTable = new PlayerTable(
 				this,
 				player,
-				gamedatas.handTrainCars,
 				gamedatas.handDestinations,
 				gamedatas.completedDestinations
 			);
@@ -87,7 +88,7 @@ class Expeditions implements ExpeditionsGame {
 			// score or end
 			this.onEnteringEndScore(true);
 		}
-
+		
 		this.setupNotifications();
 		this.setupPreferences();
 
@@ -119,8 +120,7 @@ class Expeditions implements ExpeditionsGame {
 						destinations.forEach((destination) =>
 							this.map.setSelectableDestination(destination, true)
 						);
-						this.destinationSelection.setCards(
-							destinations);
+						this.destinationSelection.setCards(destinations);
 						this.destinationSelection.selectionChange();
 					}
 				}
@@ -131,7 +131,8 @@ class Expeditions implements ExpeditionsGame {
 						args.args as EnteringRevealDestinationArgs;
 					const possibleDestinations =
 						revealDestinationArgs._private?.possibleDestinations;
-					const allDestinations = revealDestinationArgs._private?.allDestinations;
+					const allDestinations =
+						revealDestinationArgs._private?.allDestinations;
 					if (
 						allDestinations &&
 						(this as any).isCurrentPlayerActive()
@@ -180,9 +181,6 @@ class Expeditions implements ExpeditionsGame {
 		);
 
 		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
-
-		this.playerTable?.setDraggable(currentPlayerActive);
-		this.playerTable?.setSelectable(currentPlayerActive);
 	}
 
 	/**
@@ -258,9 +256,6 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
-				this.playerTable?.setDraggable(false);
-				this.playerTable?.setSelectable(false);
-				this.playerTable?.setSelectableTrainCarColors(null);
 				document
 					.getElementById("destination-deck-hidden-pile")
 					.classList.remove("selectable");
@@ -408,44 +403,8 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	private onPreferenceChange(prefId: number, prefValue: number) {
 		switch (prefId) {
-			case 201: // 1 = buttons, 2 = double click to pick 2 cards
-				dojo.toggleClass(
-					"train-car-deck-hidden-pile",
-					"buttonselection",
-					prefValue == 1
-				);
-				break;
 			case 203:
 				this.map.setOutline();
-				break;
-			case 204:
-				document.getElementsByTagName("html")[0].dataset.colorBlind = (
-					prefValue == 1
-				).toString();
-				this.playerTable?.updateColorBlindRotation();
-				break;
-			case 205:
-				document
-					.getElementById("train-car-deck")
-					.prepend(
-						document.getElementById(
-							prefValue == 1
-								? "train-car-deck-hidden-pile"
-								: "destination-deck-hidden-pile"
-						)
-					);
-				document
-					.getElementById("train-car-deck")
-					.append(
-						document.getElementById(
-							prefValue == 1
-								? "destination-deck-hidden-pile"
-								: "train-car-deck-hidden-pile"
-						)
-					);
-				document
-					.getElementById("destination-deck-hidden-pile")
-					.classList.toggle("top", prefValue == 2);
 				break;
 		}
 	}
@@ -698,23 +657,6 @@ class Expeditions implements ExpeditionsGame {
 		const otherRoute = ROUTES.find(
 			(r) => route.from == r.from && route.to == r.to && route.id != r.id
 		);
-		let askDoubleRouteColor =
-			needToCheckDoubleRoute &&
-			otherRoute &&
-			otherRoute.color != route.color &&
-			this.canClaimRoute(route, 0) &&
-			this.canClaimRoute(otherRoute, 0);
-		if (askDoubleRouteColor) {
-			const selectedColor = this.playerTable.getSelectedColor();
-			if (selectedColor) {
-				askDoubleRouteColor = false;
-			}
-		}
-
-		if (askDoubleRouteColor) {
-			this.setActionBarAskDoubleRoad(route, otherRoute);
-			return;
-		}
 
 		if (!this.canClaimRoute(route, 0)) {
 			return;
@@ -723,44 +665,38 @@ class Expeditions implements ExpeditionsGame {
 		document
 			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
 			.forEach((button) => button.parentElement.removeChild(button));
-		if (route.color > 0) {
-			this.askRouteClaimConfirmation(route, route.color);
+/*
+		const selectedColor = this.playerTable.getSelectedColor();
+
+		if (selectedColor !== null) {
+			this.askRouteClaimConfirmation(route, selectedColor);
 		} else {
-			const selectedColor = this.playerTable.getSelectedColor();
+			const possibleColors: number[] =
+				this.playerTable?.getPossibleColors(route) || [];
 
-			if (selectedColor !== null) {
-				this.askRouteClaimConfirmation(route, selectedColor);
-			} else {
-				const possibleColors: number[] =
-					this.playerTable?.getPossibleColors(route) || [];
-
-				if (possibleColors.length == 1) {
-					this.askRouteClaimConfirmation(route, possibleColors[0]);
-				} else if (possibleColors.length > 1) {
-					possibleColors.forEach((color) => {
-						const label = dojo.string.substitute(
-							_("Use ${color}"),
-							{
-								color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
-									color,
-									"train-car"
-								)}`,
-							}
-						);
-						(this as any).addActionButton(
-							`claimRouteWithColor_button${color}`,
-							label,
-							() => this.askRouteClaimConfirmation(route, color)
-						);
+			if (possibleColors.length == 1) {
+				this.askRouteClaimConfirmation(route, possibleColors[0]);
+			} else if (possibleColors.length > 1) {
+				possibleColors.forEach((color) => {
+					const label = dojo.string.substitute(_("Use ${color}"), {
+						color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
+							color,
+							"train-car"
+						)}`,
 					});
-
-					this.playerTable.setSelectableTrainCarColors(
-						route,
-						possibleColors
+					(this as any).addActionButton(
+						`claimRouteWithColor_button${color}`,
+						label,
+						() => this.askRouteClaimConfirmation(route, color)
 					);
-				}
+				});
+
+				this.playerTable.setSelectableTrainCarColors(
+					route,
+					possibleColors
+				);
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -845,56 +781,6 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
-	 * Sets the action bar (title and buttons) for Confirm route claim.
-	 */
-	private setActionBarConfirmRouteClaim(route: Route, color: number) {
-		const chooseActionArgs = this.gamedatas.gamestate
-			.args as EnteringChooseActionArgs;
-		const colors = chooseActionArgs.costForRoute[route.id][color].map(
-			(cardColor) =>
-				`<div class="train-car-color icon" data-color="${cardColor}"></div>`
-		);
-		const confirmationQuestion = _(
-			"Confirm ${color} route from ${from} to ${to} with ${colors} ?"
-		)
-			.replace("${color}", getColor(route.color, "route"))
-			.replace("${from}", this.getCityName(route.from))
-			.replace("${to}", this.getCityName(route.to))
-			.replace(
-				"${colors}",
-				`<div class="color-cards">${colors.join("")}</div>`
-			);
-		this.setChooseActionGamestateDescription(confirmationQuestion);
-
-		document.getElementById(`generalactions`).innerHTML = "";
-		(this as any).addActionButton(
-			`confirmRouteClaim-button`,
-			_("Confirm"),
-			() => this.confirmRouteClaim()
-		);
-		(this as any).addActionButton(
-			`cancelRouteClaim-button`,
-			_("Cancel"),
-			() => this.cancelRouteClaim(),
-			null,
-			null,
-			"gray"
-		);
-		this.startActionTimer(
-			`confirmRouteClaim-button`,
-			ACTION_TIMER_DURATION
-		);
-	}
-
-	/**
-	 * Check if player should be asked for a route claim confirmation.
-	 */
-	private confirmRouteClaimActive() {
-		const preferenceValue = Number((this as any).prefs[202]?.value);
-		return preferenceValue === 1 || (preferenceValue === 2 && this.isTouch);
-	}
-
-	/**
 	 * Check if player should be asked for the color he wants when he clicks on a double route.
 	 */
 	private askDoubleRouteActive() {
@@ -902,87 +788,8 @@ class Expeditions implements ExpeditionsGame {
 		return preferenceValue === 1;
 	}
 
-	private setActionBarAskDoubleRoad(clickedRoute: Route, otherRoute: Route) {
-		const question = _(
-			"Which part of the double route do you want to claim?"
-		);
-		this.setChooseActionGamestateDescription(question);
-
-		document.getElementById(`generalactions`).innerHTML = "";
-		[clickedRoute, otherRoute].forEach((route) => {
-			(this as any).addActionButton(
-				`claimDoubleRoute${route.id}-button`,
-				getColor(route.color, "route"),
-				() => this.clickedRoute(route, false)
-			);
-		});
-		(this as any).addActionButton(
-			`cancelRouteClaim-button`,
-			_("Cancel"),
-			() => this.cancelRouteClaim(),
-			null,
-			null,
-			"gray"
-		);
-	}
-
 	public getCityName(cityId: number) {
 		return CITIES_NAMES[cityId - 100];
-	}
-
-	/**
-	 * Ask confirmation for claimed route.
-	 */
-	public askRouteClaimConfirmation(route: Route, color: number) {
-		const selectedColor = this.playerTable.getSelectedColor();
-		if (
-			route.color !== 0 &&
-			selectedColor !== null &&
-			selectedColor !== 0 &&
-			route.color !== selectedColor
-		) {
-			const otherRoute = ROUTES.find(
-				(r) =>
-					route.from == r.from && route.to == r.to && route.id != r.id
-			);
-			if (otherRoute.color === selectedColor) {
-				this.askRouteClaimConfirmation(otherRoute, selectedColor);
-			}
-			return;
-		}
-
-		if (this.confirmRouteClaimActive()) {
-			this.routeToConfirm = { route, color };
-			this.map.setHoveredRoute(route, true);
-			this.setActionBarConfirmRouteClaim(route, color);
-		} else {
-			this.claimRoute(route.id, color);
-		}
-	}
-
-	/**
-	 * Player cancels claimed route.
-	 */
-	public cancelRouteClaim() {
-		this.setActionBarChooseAction(true);
-		this.map.setHoveredRoute(null);
-		this.playerTable?.setSelectableTrainCarColors(null);
-		this.routeToConfirm = null;
-
-		document
-			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
-			.forEach((button) => button.parentElement?.removeChild(button));
-	}
-
-	/**
-	 * Player confirms claimed route.
-	 */
-	public confirmRouteClaim() {
-		this.map.setHoveredRoute(null);
-		this.claimRoute(
-			this.routeToConfirm.route.id,
-			this.routeToConfirm.color
-		);
 	}
 
 	/**
@@ -1160,7 +967,7 @@ class Expeditions implements ExpeditionsGame {
 			["destinationCompleted", ANIMATION_MS],
 			["points", 1],
 			["destinationsPicked", 1],
-			["trainCarPicked", ANIMATION_MS],
+			//["trainCarPicked", ANIMATION_MS],
 			["freeTunnel", 2000],
 			["highlightVisibleLocomotives", 1000],
 			["notEnoughTrainCars", 1],
@@ -1172,17 +979,17 @@ class Expeditions implements ExpeditionsGame {
 			["globetrotterWinner", skipEndOfGameAnimations ? 1 : 1500],
 			["highlightWinnerScore", 1],
 		];
-
+		
 		notifs.forEach((notif) => {
 			dojo.subscribe(notif[0], this, `notif_${notif[0]}`);
 			(this as any).notifqueue.setSynchronous(notif[0], notif[1]);
 		});
 
-		(this as any).notifqueue.setIgnoreNotificationCheck(
+		/*(this as any).notifqueue.setIgnoreNotificationCheck(
 			"trainCarPicked",
 			(notif: Notif<NotifTrainCarsPickedArgs>) =>
 				notif.args.playerId == this.getPlayerId() && !notif.args.cards
-		);
+		);*/
 	}
 
 	/**
@@ -1219,31 +1026,6 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
-	 * Update player train cars.
-	 */
-	notif_trainCarPicked(notif: Notif<NotifTrainCarsPickedArgs>) {
-		this.trainCarCardCounters[notif.args.playerId].incValue(
-			notif.args.number
-		);
-		if (notif.args.playerId == this.getPlayerId()) {
-			const cards = notif.args.cards;
-			this.playerTable.addTrainCars(
-				cards,
-				this.trainCarSelection.getStockElement(notif.args.origin)
-			);
-		} else {
-			this.trainCarSelection.moveTrainCarCardToPlayerBoard(
-				notif.args.playerId,
-				notif.args.origin,
-				notif.args.number
-			);
-		}
-		this.trainCarSelection.setTrainCarCount(
-			notif.args.remainingTrainCarsInDeck
-		);
-	}
-
-	/**
 	 * Update visible cards.
 	 */
 	notif_newCardsOnTable(notif: Notif<NotifNewCardsOnTableArgs>) {
@@ -1253,9 +1035,6 @@ class Expeditions implements ExpeditionsGame {
 		}
 
 		this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);
-		this.trainCarSelection.setTrainCarCount(
-			notif.args.remainingTrainCarsInDeck
-		);
 	}
 
 	/**
@@ -1283,9 +1062,6 @@ class Expeditions implements ExpeditionsGame {
 			],
 			playerId
 		);
-		if (playerId == this.getPlayerId()) {
-			this.playerTable.removeCards(notif.args.removeCards);
-		}
 	}
 
 	/**
@@ -1321,23 +1097,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
 	 */
 	notif_notEnoughTrainCars() {
-		(this as any).showMessage(
-			_("Not enough train cars left to claim the route."),
-			"error"
-		);
-		const animatedElement = document.getElementById(
-			`train-car-counter-${this.getPlayerId()}-wrapper`
-		);
-		animatedElement.classList.remove("animate-low-count");
-		setTimeout(() => animatedElement.classList.add("animate-low-count"), 1);
-
-		if (document.getElementById(`confirmRouteClaim-button`)) {
-			this.cancelRouteClaim();
-		} else {
-			document
-				.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
-				.forEach((button) => button.parentElement?.removeChild(button));
-		}
+		
 	}
 
 	/**
