@@ -32,7 +32,7 @@ class Destination extends DestinationCard {
         $this->type = intval($dbCard['type']);
         $this->type_arg = intval($dbCard['type_arg']);
 
-        $destinationCard = $DESTINATIONS[$this->type][$this->type_arg];
+        $destinationCard = $DESTINATIONS[$this->type][100+$this->type_arg];
         $this->to = $destinationCard->to;
     } 
 }
