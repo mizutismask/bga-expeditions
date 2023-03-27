@@ -1186,7 +1186,7 @@ var TtrMap = /** @class */ (function () {
             div.removeAttribute("data-revealed-by");
         }
         else {
-            div.dataset.revealedBy = "player" + player.playerNo;
+            div.dataset.revealedBy = player.color;
         }
     };
     /**

@@ -483,22 +483,22 @@
 .city[data-revealed-by=shared] {
   border-color: white;
 }
-.city[data-revealed-by=player1] {
+.city[data-revealed-by=df3e33] {
   border-color: #df3e33;
 }
-.city[data-revealed-by=player2] {
+.city[data-revealed-by=30b0e1] {
   border-color: #30b0e1;
 }
-.city[data-revealed-by=player3] {
+.city[data-revealed-by=77bd25] {
   border-color: #77bd25;
 }
-.city[data-revealed-by=player4] {
+.city[data-revealed-by=eca51c] {
   border-color: #eca51c;
 }
-.city[data-revealed-by=player5] {
+.city[data-revealed-by=df74b2] {
   border-color: #df74b2;
 }
-.city[data-revealed-by=player6] {
+.city[data-revealed-by=d8d7d7] {
   border-color: #d8d7d7;
 }
 

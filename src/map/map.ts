@@ -763,7 +763,7 @@ class TtrMap {
 		if (div.dataset.revealedBy) {
 			div.removeAttribute("data-revealed-by");
 		} else {
-			div.dataset.revealedBy = "player" + player.playerNo;
+			div.dataset.revealedBy = player.color;
 		}
 	}
 
