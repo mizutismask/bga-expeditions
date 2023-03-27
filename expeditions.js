@@ -2193,6 +2193,9 @@ var Expeditions = /** @class */ (function () {
                     this.addActionButton("chooseInitialDestinations_button", _("Keep selected destinations"), function () { return _this.chooseInitialDestinations(); });
                     this.destinationSelection.selectionChange();
                     break;
+                case "revealDestination":
+                    this.addActionButton("revealDestination_button", _("Reveal this destination"), function () { return _this.doRevealDestination(); });
+                    break;
                 case "chooseAction":
                     var chooseActionArgs = args;
                     if (chooseActionArgs.maxDestinationsPick) {
@@ -2366,6 +2369,9 @@ var Expeditions = /** @class */ (function () {
         if (!this.isCurrentPlayerActive()) {
             return;
         }
+        this.destinationToReveal == destination
+            ? (this.destinationToReveal = null)
+            : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), destination);
     };
@@ -2572,6 +2578,19 @@ var Expeditions = /** @class */ (function () {
         this.takeAction("chooseInitialDestinations", {
             destinationsIds: destinationsIds.join(","),
         });
+    };
+    /**
+     * Apply destination reveal.
+     */
+    Expeditions.prototype.doRevealDestination = function () {
+        if (!this.checkAction("revealDestination")) {
+            return;
+        }
+        if (this.destinationToReveal) {
+            this.takeAction("revealDestination", {
+                destinationId: this.destinationToReveal.id,
+            });
+        }
     };
     /**
      * Pick destinations.

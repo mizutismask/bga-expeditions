@@ -47,6 +47,16 @@ class action_expeditions extends APP_GameAction {
         self::ajaxResponse();
     }
 
+    public function revealDestination() {
+        self::setAjaxMode();
+
+        $destinationId = self::getArg("destinationId", AT_posint, true);
+        $this->game->revealDestination($destinationId);
+
+        self::ajaxResponse();
+    }
+    
+
     public function chooseAdditionalDestinations() {
         self::setAjaxMode();
 

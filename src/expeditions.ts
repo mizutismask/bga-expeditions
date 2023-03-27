@@ -14,6 +14,7 @@ class Expeditions implements ExpeditionsGame {
 	private destinationSelection: DestinationSelection;
 	private sharedDestinations: SharedDestinationDeck;
 	private playerTable: PlayerTable = null;
+	private destinationToReveal;
 	private endScore: EndScore;
 
 	private trainCarCounters: Counter[] = [];
@@ -289,6 +290,13 @@ class Expeditions implements ExpeditionsGame {
 						() => this.chooseInitialDestinations()
 					);
 					this.destinationSelection.selectionChange();
+					break;
+				case "revealDestination":
+					(this as any).addActionButton(
+						"revealDestination_button",
+						_("Reveal this destination"),
+						() => this.doRevealDestination()
+					);
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
@@ -566,6 +574,9 @@ class Expeditions implements ExpeditionsGame {
 		if (!(this as any).isCurrentPlayerActive()) {
 			return;
 		}
+		this.destinationToReveal == destination
+			? (this.destinationToReveal = null)
+			: (this.destinationToReveal = destination);
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), destination);
 	}
@@ -820,6 +831,20 @@ class Expeditions implements ExpeditionsGame {
 		});
 	}
 
+	/**
+	 * Apply destination reveal.
+	 */
+	public doRevealDestination() {
+		if (!(this as any).checkAction("revealDestination")) {
+			return;
+		}
+
+		if (this.destinationToReveal) {
+			this.takeAction("revealDestination", {
+				destinationId: this.destinationToReveal.id,
+			});
+		}
+	}
 	/**
 	 * Pick destinations.
 	 */

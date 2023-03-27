@@ -174,6 +174,10 @@ trait UtilTrait {
         return intval(self::getUniqueValueFromDB($sql));
     }
 
+    function getUniqueBoolValueFromDB(string $sql) {
+        return boolval(self::getUniqueValueFromDB($sql));
+    }
+
     function getRevealedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `revealed` = 1";
         $dbResults = self::getCollectionFromDB($sql);

@@ -25,6 +25,16 @@ trait ActionTrait {
         $this->gamestate->setPlayerNonMultiactive($playerId, 'start');
         self::giveExtraTime($playerId);
     }
+
+    public function revealDestination(int $id) {
+        self::checkAction('revealDestination');
+
+        $playerId = intval(self::getCurrentPlayerId());
+        $this->revealDestinationCard($playerId, $id);
+        
+        self::giveExtraTime($playerId);
+        $this->gamestate->nextState('nextReveal'); 
+    }
     
     public function chooseAdditionalDestinations(array $ids) {
         self::checkAction('chooseAdditionalDestinations'); 

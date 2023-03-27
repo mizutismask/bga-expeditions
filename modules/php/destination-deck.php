@@ -38,7 +38,7 @@ trait DestinationDeckTrait {
 
         return $cards;
     }
-    
+
     /**
      * Pick destination cards for beginning choice.
      */
@@ -61,7 +61,7 @@ trait DestinationDeckTrait {
         return $cards;
     }
 
-    public function getRevealableDestinations(int $playerId){
+    public function getRevealableDestinations(int $playerId) {
         $cards = $this->getPickedDestinationCards($playerId);
         return array_values(array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
     }
@@ -108,6 +108,24 @@ trait DestinationDeckTrait {
         }
 
         return $remaining;
+    }
+
+    public function revealDestinationCard($playerId, $id) {
+        $dest = $this->getDestinationFromDb($this->destinations->getCard($id));
+        if ($dest->location != "hand" || $dest->location_arg != $playerId || $this->isDestinationRevealed($id)) {
+            throw new BgaUserException("You can't reveal this card.");
+        }
+        $this->DbQuery("UPDATE destination SET `revealed` = true WHERE `card_id` = $id");
+
+        $this->notifyAllPlayers('destinationRevealed', clienttranslate('${player_name} reveals ${destination.to}'), [
+            'playerId' => $playerId,
+            'player_name' => $this->getPlayerName($playerId),
+            'destination' => $dest,
+        ]);
+    }
+
+    private function isDestinationRevealed($destinationId) {
+        return $this->getUniqueBoolValueFromDB("SELECT `revealed` FROM destination WHERE `card_id` = $destinationId");
     }
 
     /**

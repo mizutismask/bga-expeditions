@@ -104,7 +104,7 @@ interface ExpeditionsGame extends Game {
 	): void;
 	canClaimRoute(route: Route, cardsColor: number): boolean;
 	setHighligthedDestination(destination: Destination | null): void;
-	revealDestination(destination: Destination | null): void;
+	revealDestination(destination: Destination): void;
 	setSelectedDestination(destination: Destination, visible: boolean): void;
 	addAnimation(animation: WagonsAnimation): void;
 	endAnimation(ended: WagonsAnimation): void;
