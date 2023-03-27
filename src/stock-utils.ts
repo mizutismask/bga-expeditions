@@ -206,10 +206,7 @@ const DESTINATIONS = [
 	new DestinationCard(180, 180),
 ];
 
-function setupDestinationCardDiv(
-	cardDiv: HTMLDivElement,
-	cardUniqueId: number
-) {
+function setupDestinationCardDiv(cardDiv: HTMLDivElement, cardUniqueId: number) {
 	const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
 	//console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
 	cardDiv.title = `${dojo.string.substitute(_("${to}"), {
@@ -231,8 +228,7 @@ function getBackgroundInlineStyleForDestination(destination: Destination) {
 
 	const imagePosition = destination.type_arg - 1;
 	const row = Math.floor(imagePosition / IMAGE_ITEMS_PER_ROW);
-	const xBackgroundPercent =
-		(imagePosition - row * IMAGE_ITEMS_PER_ROW) * 100;
+	const xBackgroundPercent = (imagePosition - row * IMAGE_ITEMS_PER_ROW) * 100;
 	const yBackgroundPercent = row * 100;
 	return `background-image: url('${g_gamethemeurl}img/${file}'); background-position: -${xBackgroundPercent}% -${yBackgroundPercent}%;`;
 }

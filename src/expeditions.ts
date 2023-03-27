@@ -29,9 +29,7 @@ class Expeditions implements ExpeditionsGame {
 	private originalTextChooseAction: string;
 	private actionTimerId = null;
 
-	private TOOLTIP_DELAY = document.body.classList.contains("touch-device")
-		? 1500
-		: undefined;
+	private TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
 
 	constructor() {}
 
@@ -114,15 +112,11 @@ class Expeditions implements ExpeditionsGame {
 			case "chooseInitialDestinations":
 			case "chooseAdditionalDestinations":
 				if (args?.args) {
-					const chooseDestinationsArgs =
-						args.args as EnteringChooseDestinationsArgs;
+					const chooseDestinationsArgs = args.args as EnteringChooseDestinationsArgs;
 					const destinations =
-						chooseDestinationsArgs.destinations ||
-						chooseDestinationsArgs._private?.destinations;
+						chooseDestinationsArgs.destinations || chooseDestinationsArgs._private?.destinations;
 					if (destinations && (this as any).isCurrentPlayerActive()) {
-						destinations.forEach((destination) =>
-							this.map.setSelectableDestination(destination, true)
-						);
+						destinations.forEach((destination) => this.map.setSelectableDestination(destination, true));
 						this.destinationSelection.setCards(destinations);
 						this.destinationSelection.selectionChange();
 					}
@@ -130,16 +124,10 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "revealDestination":
 				if (args?.args) {
-					const revealDestinationArgs =
-						args.args as EnteringRevealDestinationArgs;
-					const possibleDestinations =
-						revealDestinationArgs._private?.possibleDestinations;
-					const allDestinations =
-						revealDestinationArgs._private?.allDestinations;
-					if (
-						allDestinations &&
-						(this as any).isCurrentPlayerActive()
-					) {
+					const revealDestinationArgs = args.args as EnteringRevealDestinationArgs;
+					const possibleDestinations = revealDestinationArgs._private?.possibleDestinations;
+					const allDestinations = revealDestinationArgs._private?.allDestinations;
+					if (allDestinations && (this as any).isCurrentPlayerActive()) {
 						possibleDestinations.forEach((destination) =>
 							this.map.setSelectableDestination(destination, true)
 						);
@@ -149,19 +137,13 @@ class Expeditions implements ExpeditionsGame {
 				}
 				break;
 			case "chooseAction":
-				this.onEnteringChooseAction(
-					args.args as EnteringChooseActionArgs
-				);
+				this.onEnteringChooseAction(args.args as EnteringChooseActionArgs);
 				break;
 			case "drawSecondCard":
-				this.onEnteringDrawSecondCard(
-					args.args as EnteringDrawSecondCardArgs
-				);
+				this.onEnteringDrawSecondCard(args.args as EnteringDrawSecondCardArgs);
 				break;
 			case "confirmTunnel":
-				this.onEnteringConfirmTunnel(
-					args.args as EnteringConfirmTunnelArgs
-				);
+				this.onEnteringConfirmTunnel(args.args as EnteringConfirmTunnelArgs);
 				break;
 			case "endScore":
 				this.onEnteringEndScore();
@@ -173,15 +155,10 @@ class Expeditions implements ExpeditionsGame {
 	 * Show selectable routes, and make train car draggable.
 	 */
 	private onEnteringChooseAction(args: EnteringChooseActionArgs) {
-		this.setGamestateDescription(
-			args.canTakeTrainCarCards ? "" : "NoTrainCarsCards"
-		);
+		this.setGamestateDescription(args.canTakeTrainCarCards ? "" : "NoTrainCarsCards");
 
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
-		this.trainCarSelection.setSelectableTopDeck(
-			currentPlayerActive,
-			args.maxHiddenCardsPick
-		);
+		this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
 
 		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 	}
@@ -190,19 +167,12 @@ class Expeditions implements ExpeditionsGame {
 	 * Allow to pick a second card (locomotives will be grayed).
 	 */
 	private onEnteringDrawSecondCard(args: EnteringDrawSecondCardArgs) {
-		this.trainCarSelection.setSelectableTopDeck(
-			(this as any).isCurrentPlayerActive(),
-			args.maxHiddenCardsPick
-		);
-		this.trainCarSelection.setSelectableVisibleCards(
-			args.availableVisibleCards
-		);
+		this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
+		this.trainCarSelection.setSelectableVisibleCards(args.availableVisibleCards);
 	}
 
 	private onEnteringConfirmTunnel(args: EnteringConfirmTunnelArgs) {
-		const route = ROUTES.find(
-			(route) => route.id == args.tunnelAttempt.routeId
-		);
+		const route = ROUTES.find((route) => route.id == args.tunnelAttempt.routeId);
 		this.map.setHoveredRoute(route, true);
 		this.trainCarSelection.showTunnelCards(args.tunnelAttempt.tunnelCards);
 	}
@@ -218,12 +188,7 @@ class Expeditions implements ExpeditionsGame {
 
 		document.getElementById("score").style.display = "flex";
 
-		this.endScore = new EndScore(
-			this,
-			Object.values(this.gamedatas.players),
-			fromReload,
-			this.gamedatas.bestScore
-		);
+		this.endScore = new EndScore(this, Object.values(this.gamedatas.players), fromReload, this.gamedatas.bestScore);
 	}
 
 	// onLeavingState: this method is called each time we are leaving a game state.
@@ -243,33 +208,22 @@ class Expeditions implements ExpeditionsGame {
 				const mapDiv = document.getElementById("map");
 				mapDiv
 					.querySelectorAll(`.city[data-selectable]`)
-					.forEach(
-						(city: HTMLElement) =>
-							(city.dataset.selectable = "false")
-					);
+					.forEach((city: HTMLElement) => (city.dataset.selectable = "false"));
 				mapDiv
 					.querySelectorAll(`.city[data-selected]`)
-					.forEach(
-						(city: HTMLElement) => (city.dataset.selected = "false")
-					);
+					.forEach((city: HTMLElement) => (city.dataset.selected = "false"));
 				break;
 			case "multiChooseInitialDestinations":
-				(
-					Array.from(
-						document.getElementsByClassName("player-turn-order")
-					) as HTMLDivElement[]
-				).forEach((elem) => elem.remove());
+				(Array.from(document.getElementsByClassName("player-turn-order")) as HTMLDivElement[]).forEach((elem) =>
+					elem.remove()
+				);
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
-				document
-					.getElementById("destination-deck-hidden-pile")
-					.classList.remove("selectable");
-				(
-					Array.from(
-						document.getElementsByClassName("train-car-group hide")
-					) as HTMLDivElement[]
-				).forEach((group) => group.classList.remove("hide"));
+				document.getElementById("destination-deck-hidden-pile").classList.remove("selectable");
+				(Array.from(document.getElementsByClassName("train-car-group hide")) as HTMLDivElement[]).forEach(
+					(group) => group.classList.remove("hide")
+				);
 				break;
 			case "drawSecondCard":
 				this.trainCarSelection.removeSelectableVisibleCards();
@@ -296,18 +250,14 @@ class Expeditions implements ExpeditionsGame {
 					this.destinationSelection.selectionChange();
 					break;
 				case "revealDestination":
-					(this as any).addActionButton(
-						"revealDestination_button",
-						_("Reveal this destination"),
-						() => this.doRevealDestination()
+					(this as any).addActionButton("revealDestination_button", _("Reveal this destination"), () =>
+						this.doRevealDestination()
 					);
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
 					if (chooseActionArgs.maxDestinationsPick) {
-						document
-							.getElementById("destination-deck-hidden-pile")
-							.classList.add("selectable");
+						document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
 					}
 					this.setActionBarChooseAction(false);
 					break;
@@ -317,25 +267,14 @@ class Expeditions implements ExpeditionsGame {
 						_("Keep selected destinations"),
 						() => this.chooseAdditionalDestinations()
 					);
-					dojo.addClass(
-						"chooseAdditionalDestinations_button",
-						"disabled"
-					);
+					dojo.addClass("chooseAdditionalDestinations_button", "disabled");
 					break;
 				case "confirmTunnel":
 					const confirmTunnelArgs = args as EnteringConfirmTunnelArgs;
 					const confirmLabel =
 						/* TODO MAPS _*/ "Confirm tunnel claim" +
-						(confirmTunnelArgs.canPay
-							? ""
-							: ` (${
-									/* TODO MAPS _*/ "You don't have enough cards"
-							  })`);
-					(this as any).addActionButton(
-						"claimTunnel_button",
-						confirmLabel,
-						() => this.claimTunnel()
-					);
+						(confirmTunnelArgs.canPay ? "" : ` (${/* TODO MAPS _*/ "You don't have enough cards"})`);
+					(this as any).addActionButton("claimTunnel_button", confirmLabel, () => this.claimTunnel());
 					(this as any).addActionButton(
 						"skipTunnel_button",
 						/* TODO MAPS _*/ "Skip tunnel claim",
@@ -359,26 +298,21 @@ class Expeditions implements ExpeditionsGame {
 
 	public getDestinationsByPlayer(destinations: Destination[]) {
 		const destinationsByPlayer = this.groupBy(destinations, (p) => p.location_arg);
-		const typedDestinationsByPlayer = new Map<
-			ExpeditionsPlayer,
-			Destination[]
-		>();
-		Object.entries(destinationsByPlayer).forEach(
-			(e) => {
-				const [playerId, destinations] = e;
-				typedDestinationsByPlayer.set(this.gamedatas.players[playerId], destinations);
-			}
-		);
+		const typedDestinationsByPlayer = new Map<ExpeditionsPlayer, Destination[]>();
+		Object.entries(destinationsByPlayer).forEach((e) => {
+			const [playerId, destinations] = e;
+			typedDestinationsByPlayer.set(this.gamedatas.players[playerId], destinations);
+		});
 		return typedDestinationsByPlayer;
 	}
 
 	public groupBy<T>(arr: T[], fn: (item: T) => any) {
-    return arr.reduce<Record<string, T[]>>((prev, curr) => {
-        const groupKey = fn(curr);
-        const group = prev[groupKey] || [];
-        group.push(curr);
-        return { ...prev, [groupKey]: group };
-    }, {});
+		return arr.reduce<Record<string, T[]>>((prev, curr) => {
+			const groupKey = fn(curr);
+			const group = prev[groupKey] || [];
+			group.push(curr);
+			return { ...prev, [groupKey]: group };
+		}, {});
 	}
 
 	public isGlobetrotterBonusActive(): boolean {
@@ -393,20 +327,13 @@ class Expeditions implements ExpeditionsGame {
 		(this as any).addTooltipHtml(id, html, this.TOOLTIP_DELAY);
 	}
 	public setTooltipToClass(className: string, html: string) {
-		(this as any).addTooltipHtmlToClass(
-			className,
-			html,
-			this.TOOLTIP_DELAY
-		);
+		(this as any).addTooltipHtmlToClass(className, html, this.TOOLTIP_DELAY);
 	}
 
 	private setGamestateDescription(property: string = "") {
-		const originalState =
-			this.gamedatas.gamestates[this.gamedatas.gamestate.id];
-		this.gamedatas.gamestate.description =
-			originalState["description" + property];
-		this.gamedatas.gamestate.descriptionmyturn =
-			originalState["descriptionmyturn" + property];
+		const originalState = this.gamedatas.gamestates[this.gamedatas.gamestate.id];
+		this.gamedatas.gamestate.description = originalState["description" + property];
+		this.gamedatas.gamestate.descriptionmyturn = originalState["descriptionmyturn" + property];
 		(this as any).updatePageTitle();
 	}
 
@@ -430,10 +357,7 @@ class Expeditions implements ExpeditionsGame {
 		dojo.query(".preference_control").connect("onchange", onchange);
 
 		// Call onPreferenceChange() now
-		dojo.forEach(
-			dojo.query("#ingame_menu_content .preference_control"),
-			(el) => onchange({ target: el })
-		);
+		dojo.forEach(dojo.query("#ingame_menu_content .preference_control"), (el) => onchange({ target: el }));
 	}
 
 	/**
@@ -456,10 +380,7 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	public getPlayerScore(playerId: number): number {
-		return (
-			(this as any).scoreCtrl[playerId]?.getValue() ??
-			Number(this.gamedatas.players[playerId].score)
-		);
+		return (this as any).scoreCtrl[playerId]?.getValue() ?? Number(this.gamedatas.players[playerId].score);
 	}
 
 	public isDoubleRouteForbidden(): boolean {
@@ -473,36 +394,26 @@ class Expeditions implements ExpeditionsGame {
 		Object.values(gamedatas.players).forEach((player) => {
 			const playerId = Number(player.id);
 
-			document.getElementById(
-				`overall_player_board_${player.id}`
-			).dataset.playerColor = player.color;
+			document.getElementById(`overall_player_board_${player.id}`).dataset.playerColor = player.color;
 
 			// public counters
 			dojo.place(
 				`<div class="counters">
-                <div id="train-car-counter-${
-					player.id
-				}-wrapper" class="counter train-car-counter">
-                    <div class="icon train" data-player-color="${
-						player.color
-					}" data-color-blind-player-no="${player.playerNo}"></div> 
+                <div id="train-car-counter-${player.id}-wrapper" class="counter train-car-counter">
+                    <div class="icon train" data-player-color="${player.color}" data-color-blind-player-no="${
+					player.playerNo
+				}"></div> 
                     <span id="train-car-counter-${player.id}"></span>
                 </div>
-                <div id="train-car-card-counter-${
-					player.id
-				}-wrapper" class="counter train-car-card-counter">
+                <div id="train-car-card-counter-${player.id}-wrapper" class="counter train-car-card-counter">
                     <div class="icon train-car-card-icon"></div> 
                     <span id="train-car-card-counter-${player.id}"></span>
                 </div>
-                <div id="destinations-counter-${
-					player.id
-				}-wrapper" class="counter destinations-counter">
+                <div id="destinations-counter-${player.id}-wrapper" class="counter destinations-counter">
                     <div class="icon destination-card"></div> 
                     <span id="completed-destinations-counter-${player.id}">${
 					this.getPlayerId() !== playerId ? "?" : ""
-				}</span>/<span id="destination-card-counter-${
-					player.id
-				}"></span>
+				}</span>/<span id="destination-card-counter-${player.id}"></span>
                 </div>
             </div>`,
 				`player_board_${player.id}`
@@ -519,29 +430,21 @@ class Expeditions implements ExpeditionsGame {
 			this.trainCarCardCounters[playerId] = trainCarCardCounter;
 
 			const destinationCardCounter = new ebg.counter();
-			destinationCardCounter.create(
-				`destination-card-counter-${player.id}`
-			);
+			destinationCardCounter.create(`destination-card-counter-${player.id}`);
 			destinationCardCounter.setValue(player.destinationsCount);
 			this.destinationCardCounters[playerId] = destinationCardCounter;
 
 			// private counters
 			if (this.getPlayerId() === playerId) {
 				this.completedDestinationsCounter = new ebg.counter();
-				this.completedDestinationsCounter.create(
-					`completed-destinations-counter-${player.id}`
-				);
-				this.completedDestinationsCounter.setValue(
-					gamedatas.completedDestinations.length
-				);
+				this.completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
+				this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
 			}
 
 			if (gamedatas.showTurnOrder && gamedatas.gamestate.id < 30) {
 				// don't show turn order if game is already started (refresh or TB game)
 				dojo.place(
-					`<div class="player-turn-order">${_(
-						"Player ${number}"
-					).replace(
+					`<div class="player-turn-order">${_("Player ${number}").replace(
 						"${number}",
 						`<strong>${player.playerNo}</strong>`
 					)}</div>`,
@@ -552,10 +455,7 @@ class Expeditions implements ExpeditionsGame {
 
 		this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
 		this.setTooltipToClass("train-car-card-counter", _("Train cars cards"));
-		this.setTooltipToClass(
-			"destinations-counter",
-			_("Completed / Total destination cards")
-		);
+		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
 	}
 
 	/**
@@ -568,10 +468,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Highlight active destination.
 	 */
-	public setActiveDestination(
-		destination: Destination,
-		previousDestination: Destination = null
-	): void {
+	public setActiveDestination(destination: Destination, previousDestination: Destination = null): void {
 		this.map.setActiveDestination(destination, previousDestination);
 	}
 
@@ -580,12 +477,8 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	public canClaimRoute(route: Route, cardsColor: number): boolean {
 		return (
-			(route.color == 0 ||
-				cardsColor == 0 ||
-				route.color == cardsColor) &&
-			(
-				this.gamedatas.gamestate.args as EnteringChooseActionArgs
-			).possibleRoutes.some((pr) => pr.id == route.id)
+			(route.color == 0 || cardsColor == 0 || route.color == cardsColor) &&
+			(this.gamedatas.gamestate.args as EnteringChooseActionArgs).possibleRoutes.some((pr) => pr.id == route.id)
 		);
 	}
 
@@ -613,10 +506,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Sets a player marker on the destination.
 	 */
-	public showRevealedDestination(
-		player: ExpeditionsPlayer,
-		destination: Destination
-	): void {
+	public showRevealedDestination(player: ExpeditionsPlayer, destination: Destination): void {
 		if (player.id != this.getCurrentPlayer().id) {
 			this.map.setHighligthedDestination(destination);
 			this.map.revealDestination(player, destination);
@@ -630,10 +520,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Highlight cities of selected destination.
 	 */
-	public setSelectedDestination(
-		destination: Destination,
-		visible: boolean
-	): void {
+	public setSelectedDestination(destination: Destination, visible: boolean): void {
 		this.map.setSelectedDestination(destination, visible);
 	}
 
@@ -690,10 +577,7 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	public selectedColorChanged(selectedColor: number | null) {
-		if (
-			!(this as any).isCurrentPlayerActive() ||
-			this.gamedatas.gamestate.name !== "chooseAction"
-		) {
+		if (!(this as any).isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "chooseAction") {
 			return;
 		}
 
@@ -703,10 +587,7 @@ class Expeditions implements ExpeditionsGame {
 		} else {
 			this.map.setSelectableRoutes(
 				true,
-				args.possibleRoutes.filter(
-					(route) =>
-						route.color === selectedColor || route.color === 0
-				)
+				args.possibleRoutes.filter((route) => route.color === selectedColor || route.color === 0)
 			);
 		}
 	}
@@ -723,9 +604,7 @@ class Expeditions implements ExpeditionsGame {
 			needToCheckDoubleRoute = this.askDoubleRouteActive();
 		}
 
-		const otherRoute = ROUTES.find(
-			(r) => route.from == r.from && route.to == r.to && route.id != r.id
-		);
+		const otherRoute = ROUTES.find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
 
 		if (!this.canClaimRoute(route, 0)) {
 			return;
@@ -789,28 +668,22 @@ class Expeditions implements ExpeditionsGame {
 			if (button == null) {
 				window.clearInterval(this.actionTimerId);
 			} else if (_actionTimerSeconds-- > 1) {
-				button.innerHTML =
-					_actionTimerLabel + " (" + _actionTimerSeconds + ")";
+				button.innerHTML = _actionTimerLabel + " (" + _actionTimerSeconds + ")";
 			} else {
 				window.clearInterval(this.actionTimerId);
 				button.click();
 			}
 		};
 		actionTimerFunction();
-		this.actionTimerId = window.setInterval(
-			() => actionTimerFunction(),
-			1000
-		);
+		this.actionTimerId = window.setInterval(() => actionTimerFunction(), 1000);
 	}
 
 	private setChooseActionGamestateDescription(newText?: string) {
 		if (!this.originalTextChooseAction) {
-			this.originalTextChooseAction =
-				document.getElementById("pagemaintitletext").innerHTML;
+			this.originalTextChooseAction = document.getElementById("pagemaintitletext").innerHTML;
 		}
 
-		document.getElementById("pagemaintitletext").innerHTML =
-			newText ?? this.originalTextChooseAction;
+		document.getElementById("pagemaintitletext").innerHTML = newText ?? this.originalTextChooseAction;
 	}
 
 	/**
@@ -825,8 +698,7 @@ class Expeditions implements ExpeditionsGame {
 			window.clearInterval(this.actionTimerId);
 		}
 
-		const chooseActionArgs = this.gamedatas.gamestate
-			.args as EnteringChooseActionArgs;
+		const chooseActionArgs = this.gamedatas.gamestate.args as EnteringChooseActionArgs;
 		(this as any).addActionButton(
 			"drawDestinations_button",
 			dojo.string.substitute(_("Draw ${number} destination tickets"), {
@@ -837,15 +709,9 @@ class Expeditions implements ExpeditionsGame {
 			null,
 			"red"
 		);
-		dojo.toggleClass(
-			"drawDestinations_button",
-			"disabled",
-			!chooseActionArgs.maxDestinationsPick
-		);
+		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
 		if (chooseActionArgs.canPass) {
-			(this as any).addActionButton("pass_button", _("Pass"), () =>
-				this.pass()
-			);
+			(this as any).addActionButton("pass_button", _("Pass"), () => this.pass());
 		}
 	}
 
@@ -869,8 +735,7 @@ class Expeditions implements ExpeditionsGame {
 			return;
 		}
 
-		const destinationsIds =
-			this.destinationSelection.getSelectedDestinationsIds();
+		const destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
 
 		this.takeAction("chooseInitialDestinations", {
 			destinationsIds: destinationsIds.join(","),
@@ -902,12 +767,9 @@ class Expeditions implements ExpeditionsGame {
 		const confirmation = (this as any).prefs[206]?.value !== 2;
 
 		if (confirmation && this.gamedatas.gamestate.args.maxDestinationsPick) {
-			(this as any).confirmationDialog(
-				_("Are you sure you want to take new destinations?"),
-				() => {
-					this.takeAction("drawDestinations");
-				}
-			);
+			(this as any).confirmationDialog(_("Are you sure you want to take new destinations?"), () => {
+				this.takeAction("drawDestinations");
+			});
 		} else {
 			this.takeAction("drawDestinations");
 		}
@@ -921,8 +783,7 @@ class Expeditions implements ExpeditionsGame {
 			return;
 		}
 
-		const destinationsIds =
-			this.destinationSelection.getSelectedDestinationsIds();
+		const destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
 
 		this.takeAction("chooseAdditionalDestinations", {
 			destinationsIds: destinationsIds.join(","),
@@ -933,10 +794,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Pick hidden train car(s).
 	 */
 	public onHiddenTrainCarDeckClick(number: number) {
-		const action =
-			this.gamedatas.gamestate.name === "drawSecondCard"
-				? "drawSecondDeckCard"
-				: "drawDeckCards";
+		const action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondDeckCard" : "drawDeckCards";
 
 		if (!(this as any).checkAction(action)) {
 			return;
@@ -951,10 +809,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Pick visible train car.
 	 */
 	public onVisibleTrainCarCardClick(id: number) {
-		const action =
-			this.gamedatas.gamestate.name === "drawSecondCard"
-				? "drawSecondTableCard"
-				: "drawTableCard";
+		const action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondTableCard" : "drawTableCard";
 
 		if (!(this as any).checkAction(action)) {
 			return;
@@ -1015,12 +870,7 @@ class Expeditions implements ExpeditionsGame {
 	public takeAction(action: string, data?: any) {
 		data = data || {};
 		data.lock = true;
-		(this as any).ajaxcall(
-			`/expeditions/expeditions/${action}.html`,
-			data,
-			this,
-			() => {}
-		);
+		(this as any).ajaxcall(`/expeditions/expeditions/${action}.html`, data, this, () => {});
 	}
 
 	private isFastEndScoring() {
@@ -1088,35 +938,21 @@ class Expeditions implements ExpeditionsGame {
 	 * Update player score.
 	 */
 	notif_destinationRevealed(notif: Notif<NotifDestinationRevealedArgs>) {
-		this.showRevealedDestination(
-			this.gamedatas.players[notif.args.playerId],
-			notif.args.destination
-		);
+		this.showRevealedDestination(this.gamedatas.players[notif.args.playerId], notif.args.destination);
 	}
 
 	/**
 	 * Update player destinations.
 	 */
 	notif_destinationsPicked(notif: Notif<NotifDestinationsPickedArgs>) {
-		this.destinationCardCounters[notif.args.playerId].incValue(
-			notif.args.number
-		);
-		const destinations =
-			notif.args._private?.[this.getPlayerId()]?.destinations;
+		this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
+		const destinations = notif.args._private?.[this.getPlayerId()]?.destinations;
 		if (destinations) {
-			this.playerTable.addDestinations(
-				destinations,
-				this.destinationSelection.destinations
-			);
+			this.playerTable.addDestinations(destinations, this.destinationSelection.destinations);
 		} else {
-			this.trainCarSelection.moveDestinationCardToPlayerBoard(
-				notif.args.playerId,
-				notif.args.number
-			);
+			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
-		this.trainCarSelection.setDestinationCount(
-			notif.args.remainingDestinationsInDeck
-		);
+		this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
 	}
 
 	/**
@@ -1165,10 +1001,7 @@ class Expeditions implements ExpeditionsGame {
 		const destination: Destination = notif.args.destination;
 		this.completedDestinationsCounter.incValue(1);
 		this.gamedatas.completedDestinations.push(destination);
-		this.playerTable.markDestinationComplete(
-			destination,
-			notif.args.destinationRoutes
-		);
+		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
 
 		playSound(`ttr-completed-in-game`);
 		(this as any).disableNextMoveSound();
@@ -1178,10 +1011,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Show the 3 cards when attempting a tunnel (case withno extra cards required, play automatically).
 	 */
 	notif_freeTunnel(notif: Notif<NotifFreeTunnelArgs>) {
-		if (
-			document.visibilityState !== "hidden" &&
-			!(this as any).instantaneousMode
-		) {
+		if (document.visibilityState !== "hidden" && !(this as any).instantaneousMode) {
 			this.trainCarSelection.showTunnelCards(notif.args.tunnelCards);
 			setTimeout(() => this.trainCarSelection.showTunnelCards([]), 2000);
 		}
@@ -1198,9 +1028,7 @@ class Expeditions implements ExpeditionsGame {
 	notif_lastTurn(animate: boolean = true) {
 		dojo.place(
 			`<div id="last-round">
-            <span class="last-round-text ${animate ? "animate" : ""}">${_(
-				"This is the final round!"
-			)}</span>
+            <span class="last-round-text ${animate ? "animate" : ""}">${_("This is the final round!")}</span>
         </div>`,
 			"page-title"
 		);
@@ -1230,9 +1058,7 @@ class Expeditions implements ExpeditionsGame {
 			player.completedDestinations.push(notif.args.destination);
 		} else {
 			player.uncompletedDestinations.push(notif.args.destination);
-			document
-				.getElementById(`destination-card-${notif.args.destination.id}`)
-				?.classList.add("uncompleted");
+			document.getElementById(`destination-card-${notif.args.destination.id}`)?.classList.add("uncompleted");
 		}
 		this.endScore?.updateDestinationsTooltip(player);
 	}
@@ -1241,10 +1067,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Add Globetrotter badge for end score.
 	 */
 	notif_globetrotterWinner(notif: Notif<NotifBadgeArgs>) {
-		this.endScore?.setGlobetrotterWinner(
-			notif.args.playerId,
-			notif.args.length
-		);
+		this.endScore?.setGlobetrotterWinner(notif.args.playerId, notif.args.length);
 	}
 
 	/**
@@ -1263,10 +1086,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Add longest path badge for end score.
 	 */
 	notif_longestPathWinner(notif: Notif<NotifBadgeArgs>) {
-		this.endScore?.setLongestPathWinner(
-			notif.args.playerId,
-			notif.args.length
-		);
+		this.endScore?.setLongestPathWinner(notif.args.playerId, notif.args.length);
 	}
 
 	/**
@@ -1289,25 +1109,16 @@ class Expeditions implements ExpeditionsGame {
 				}
 				if (typeof args.colors == "object") {
 					args.colors = args.colors
-						.map(
-							(color) =>
-								`<div class="train-car-color icon" data-color="${color}"></div>`
-						)
+						.map((color) => `<div class="train-car-color icon" data-color="${color}"></div>`)
 						.join("");
 				}
 
 				// make cities names in bold
-				["from", "to", "count", "extraCards", "pickedCards"].forEach(
-					(field) => {
-						if (
-							args[field] !== null &&
-							args[field] !== undefined &&
-							args[field][0] != "<"
-						) {
-							args[field] = `<strong>${_(args[field])}</strong>`;
-						}
+				["from", "to", "count", "extraCards", "pickedCards"].forEach((field) => {
+					if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
+						args[field] = `<strong>${_(args[field])}</strong>`;
 					}
-				);
+				});
 
 				["you", "actplayer", "player_name"].forEach((field) => {
 					if (

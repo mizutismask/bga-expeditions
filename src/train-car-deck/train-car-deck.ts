@@ -16,9 +16,7 @@ class Gauge {
 			containerId
 		);
 
-		this.levelDiv = document.getElementById(
-			`gauge-${className}-level`
-		) as HTMLDivElement;
+		this.levelDiv = document.getElementById(`gauge-${className}-level`) as HTMLDivElement;
 	}
 
 	public setCount(count: number) {
@@ -60,11 +58,7 @@ class TrainCarSelection {
 		this.visibleCards = Object.values(visibleCards);
 		//	this.setNewCardsOnTable(visibleCards, false);
 		this.setNewSharedCardsOnTable(visibleCards, false);
-		this.destinationGauge = new Gauge(
-			"destination-deck-hidden-pile",
-			"destination",
-			destinationDeckMaxCount
-		);
+		this.destinationGauge = new Gauge("destination-deck-hidden-pile", "destination", destinationDeckMaxCount);
 		this.setDestinationCount(destinationDeckCount);
 	}
 
@@ -102,10 +96,7 @@ class TrainCarSelection {
 	/**
 	 * Set new visible cards.
 	 */
-	public setNewCardsOnTable(
-		spotsCards: { [spot: number]: Destination | null },
-		fromDeck: boolean
-	) {
+	public setNewCardsOnTable(spotsCards: { [spot: number]: Destination | null }, fromDeck: boolean) {
 		Object.keys(spotsCards).forEach((spot) => {
 			const card = spotsCards[spot];
 			/*this.visibleCardsSpots[spot].setNewCardOnTable(card, fromDeck);*/
@@ -114,10 +105,7 @@ class TrainCarSelection {
 	/**
 	 * Set new visible cards.
 	 */
-	public setNewSharedCardsOnTable(
-		spotsCards: Destination[],
-		fromDeck: boolean
-	) {
+	public setNewSharedCardsOnTable(spotsCards: Destination[], fromDeck: boolean) {
 		this.sharedDestinationDeck.setCards(spotsCards);
 		this.game.showSharedDestinations(spotsCards);
 	}
@@ -127,9 +115,7 @@ class TrainCarSelection {
 	 */
 	public setDestinationCount(count: number) {
 		this.destinationGauge.setCount(count);
-		document.getElementById(
-			`destination-deck-level`
-		).dataset.level = `${Math.min(10, Math.ceil(count / 10))}`;
+		document.getElementById(`destination-deck-level`).dataset.level = `${Math.min(10, Math.ceil(count / 10))}`;
 	}
 
 	/**
@@ -144,11 +130,7 @@ class TrainCarSelection {
 	/**
 	 * Animation when train car cards are picked by another player.
 	 */
-	public moveTrainCarCardToPlayerBoard(
-		playerId: number,
-		from: number,
-		number: number = 1
-	) {
+	public moveTrainCarCardToPlayerBoard(playerId: number, from: number, number: number = 1) {
 		if (from > 0) {
 			/*this.visibleCardsSpots[from].moveTrainCarCardToPlayerBoard(
 				playerId
@@ -223,22 +205,14 @@ class TrainCarSelection {
 	 */
 	public showTunnelCards(tunnelCards: TrainCar[]) {
 		if (tunnelCards?.length) {
-			dojo.place(
-				`<div id="tunnel-cards"></div>`,
-				"train-car-deck-hidden-pile"
-			);
+			dojo.place(`<div id="tunnel-cards"></div>`, "train-car-deck-hidden-pile");
 			tunnelCards.forEach((card, index) => {
 				dojo.place(
 					`<div id="tunnel-card-${index}" class="train-car-card tunnel-card animated" data-color="${card.type}"></div>`,
 					"tunnel-cards"
 				);
 				const element = document.getElementById(`tunnel-card-${index}`);
-				setTimeout(
-					() =>
-						(element.style.transform = `translateY(${
-							55 * (index - 1)
-						}px) scale(0.33)`)
-				);
+				setTimeout(() => (element.style.transform = `translateY(${55 * (index - 1)}px) scale(0.33)`));
 			});
 		} else {
 			(this.game as any).fadeOutAndDestroy("tunnel-cards");

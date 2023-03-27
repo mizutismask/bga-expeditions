@@ -1,13 +1,13 @@
 interface StockItems {
-    id: string;
-    type: number;
-    loc?: string;
+	id: string;
+	type: number;
+	loc?: string;
 }
 
 interface StockItemType {
-    weight: number;
-    image: string;
-    image_position: number;
+	weight: number;
+	image: string;
+	image_position: number;
 }
 
 interface Stock {
@@ -17,12 +17,7 @@ interface Stock {
 	container_div: HTMLDivElement;
 	item_margin: number;
 
-	create: (
-		game: Game,
-		$div: any,
-		cardwidth: number,
-		cardheight: number
-	) => void;
+	create: (game: Game, $div: any, cardwidth: number, cardheight: number) => void;
 	setSelectionMode: (selectionMode: number) => void;
 	centerItems: boolean;
 	image_items_per_row: number;
@@ -30,17 +25,8 @@ interface Stock {
 	setSelectionAppearance: (appearance: string) => void;
 	onItemCreate: ($itemDiv: any, itemType, itemDivId: string) => void;
 	addToStock: (cardUniqueId: number) => void;
-	addToStockWithId: (
-		cardUniqueId: number,
-		cardId: string,
-		from?: string
-	) => void;
-	addItemType: (
-		cardUniqueId: number,
-		cardWeight: number,
-		cardsurl: string,
-		imagePosition: number
-	) => void;
+	addToStockWithId: (cardUniqueId: number, cardId: string, from?: string) => void;
+	addItemType: (cardUniqueId: number, cardWeight: number, cardsurl: string, imagePosition: number) => void;
 	getSelectedItems: () => StockItems[];
 	unselectAll: () => void;
 	removeAll: () => void;

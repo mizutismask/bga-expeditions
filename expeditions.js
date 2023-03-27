@@ -666,17 +666,12 @@ var InMapZoomManager = /** @class */ (function () {
         this.mapZoomDiv = document.getElementById("map-zoom");
         this.mapDiv = document.getElementById("map");
         // Attach the handler
-        this.mapDiv.addEventListener("mousedown", function (e) {
-            return _this.mouseDownHandler(e);
-        });
+        this.mapDiv.addEventListener("mousedown", function (e) { return _this.mouseDownHandler(e); });
         document.addEventListener("mousemove", function (e) { return _this.mouseMoveHandler(e); });
         document.addEventListener("mouseup", function (e) { return _this.mouseUpHandler(); });
-        document
-            .getElementById("zoom-button")
-            .addEventListener("click", function () { return _this.toggleZoom(); });
+        document.getElementById("zoom-button").addEventListener("click", function () { return _this.toggleZoom(); });
         this.mapDiv.addEventListener("dragover", function (e) {
-            if (e.offsetX !== _this.dragClientX ||
-                e.offsetY !== _this.dragClientY) {
+            if (e.offsetX !== _this.dragClientX || e.offsetY !== _this.dragClientY) {
                 _this.dragClientX = e.offsetX;
                 _this.dragClientY = e.offsetY;
                 _this.dragOverMouseMoved(e.offsetX, e.offsetY);
@@ -717,14 +712,9 @@ var InMapZoomManager = /** @class */ (function () {
         this.mapDiv.style.cursor = this.zoomed ? "grab" : "default";
         if (this.zoomed) {
             if (scrollRatioX && scrollRatioY) {
-                this.mapZoomDiv.scrollLeft =
-                    (this.mapZoomDiv.scrollWidth -
-                        this.mapZoomDiv.clientWidth) *
-                        scrollRatioX;
+                this.mapZoomDiv.scrollLeft = (this.mapZoomDiv.scrollWidth - this.mapZoomDiv.clientWidth) * scrollRatioX;
                 this.mapZoomDiv.scrollTop =
-                    (this.mapZoomDiv.scrollHeight -
-                        this.mapZoomDiv.clientHeight) *
-                        scrollRatioY;
+                    (this.mapZoomDiv.scrollHeight - this.mapZoomDiv.clientHeight) * scrollRatioY;
             }
         }
         else {
@@ -795,12 +785,8 @@ var TtrMap = /** @class */ (function () {
         this.crosshairShift = 0;
         // map border
         dojo.place("\n            <div id=\"cities\"></div>\n            <div id=\"route-spaces\"></div>\n            <div id=\"train-cars\"></div>\n        ", "map", "first");
-        SIDES.forEach(function (side) {
-            return dojo.place("<div class=\"side ".concat(side, "\"></div>"), "map-and-borders");
-        });
-        CORNERS.forEach(function (corner) {
-            return dojo.place("<div class=\"corner ".concat(corner, "\"></div>"), "map-and-borders");
-        });
+        SIDES.forEach(function (side) { return dojo.place("<div class=\"side ".concat(side, "\"></div>"), "map-and-borders"); });
+        CORNERS.forEach(function (corner) { return dojo.place("<div class=\"corner ".concat(corner, "\"></div>"), "map-and-borders"); });
         CITIES.forEach(function (city) {
             return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(getCityName(city.id), "\"\n            ></div>"), "cities");
         });
@@ -847,15 +833,9 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSpaceClickEvents = function (spaceDiv, route) {
         var _this = this;
-        spaceDiv.addEventListener("dragenter", function (e) {
-            return _this.routeDragOver(e, route);
-        });
-        spaceDiv.addEventListener("dragover", function (e) {
-            return _this.routeDragOver(e, route);
-        });
-        spaceDiv.addEventListener("dragleave", function (e) {
-            return _this.setHoveredRoute(null);
-        });
+        spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
+        spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
+        spaceDiv.addEventListener("dragleave", function (e) { return _this.setHoveredRoute(null); });
         spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
         spaceDiv.addEventListener("click", function () { return _this.game.clickedRoute(route); });
     };
@@ -864,15 +844,9 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSpaceDragEvents = function (spaceDiv, route) {
         var _this = this;
-        spaceDiv.addEventListener("dragenter", function (e) {
-            return _this.routeDragOver(e, route);
-        });
-        spaceDiv.addEventListener("dragover", function (e) {
-            return _this.routeDragOver(e, route);
-        });
-        spaceDiv.addEventListener("dragleave", function (e) {
-            return _this.setHoveredRoute(null);
-        });
+        spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
+        spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
+        spaceDiv.addEventListener("dragleave", function (e) { return _this.setHoveredRoute(null); });
         spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
     };
     /**
@@ -882,11 +856,7 @@ var TtrMap = /** @class */ (function () {
         dojo.query(".route-space").removeClass("selectable");
         if (selectable) {
             possibleRoutes.forEach(function (route) {
-                return ROUTES.find(function (r) { return r.id == route.id; }).spaces.forEach(function (_, index) {
-                    var _a;
-                    return (_a = document
-                        .getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("selectable");
-                });
+                return ROUTES.find(function (r) { return r.id == route.id; }).spaces.forEach(function (_, index) { var _a; return (_a = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("selectable"); });
             });
         }
     };
@@ -901,11 +871,7 @@ var TtrMap = /** @class */ (function () {
             var player = _this.players.find(function (player) { return Number(player.id) == claimedRoute.playerId; });
             _this.setWagons(route, player, fromPlayerId, false);
             if (_this.game.isDoubleRouteForbidden()) {
-                var otherRoute_1 = ROUTES.find(function (r) {
-                    return route.from == r.from &&
-                        route.to == r.to &&
-                        route.id != r.id;
-                });
+                var otherRoute_1 = ROUTES.find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
                 otherRoute_1 === null || otherRoute_1 === void 0 ? void 0 : otherRoute_1.spaces.forEach(function (space, spaceIndex) {
                     var spaceDiv = document.getElementById("route-spaces-route".concat(otherRoute_1.id, "-space").concat(spaceIndex));
                     if (spaceDiv) {
@@ -919,9 +885,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.animateWagonFromCounter = function (playerId, wagonId, toX, toY) {
         var wagon = document.getElementById(wagonId);
         var wagonBR = wagon.getBoundingClientRect();
-        var fromBR = document
-            .getElementById("train-car-counter-".concat(playerId, "-wrapper"))
-            .getBoundingClientRect();
+        var fromBR = document.getElementById("train-car-counter-".concat(playerId, "-wrapper")).getBoundingClientRect();
         var zoom = this.game.getZoom();
         var fromX = (fromBR.x - wagonBR.x) / zoom;
         var fromY = (fromBR.y - wagonBR.y) / zoom;
@@ -951,8 +915,7 @@ var TtrMap = /** @class */ (function () {
         var x = space.x;
         var y = space.y;
         var EASE_WEIGHT = 0.75;
-        var angleOnOne = (Math.acos((-2 * angle) / 180 + 1) / Math.PI) * EASE_WEIGHT +
-            (angle / 180) * (1 - EASE_WEIGHT);
+        var angleOnOne = (Math.acos((-2 * angle) / 180 + 1) / Math.PI) * EASE_WEIGHT + (angle / 180) * (1 - EASE_WEIGHT);
         var angleClassNumber = Math.round(angleOnOne * 36);
         var alreadyPlacedWagons = Array.from(document.querySelectorAll(".wagon"));
         var xy = x + y;
@@ -1021,20 +984,11 @@ var TtrMap = /** @class */ (function () {
             // not a double route
             return false;
         }
-        var routeAvgX = route.spaces
-            .map(function (space) { return space.x; })
-            .reduce(function (a, b) { return a + b; }, 0);
-        var routeAvgY = route.spaces
-            .map(function (space) { return space.y; })
-            .reduce(function (a, b) { return a + b; }, 0);
-        var otherRouteAvgX = otherRoute.spaces
-            .map(function (space) { return space.x; })
-            .reduce(function (a, b) { return a + b; }, 0);
-        var otherRouteAvgY = otherRoute.spaces
-            .map(function (space) { return space.y; })
-            .reduce(function (a, b) { return a + b; }, 0);
-        if (Math.abs(routeAvgX - otherRouteAvgX) >
-            Math.abs(routeAvgY - otherRouteAvgY)) {
+        var routeAvgX = route.spaces.map(function (space) { return space.x; }).reduce(function (a, b) { return a + b; }, 0);
+        var routeAvgY = route.spaces.map(function (space) { return space.y; }).reduce(function (a, b) { return a + b; }, 0);
+        var otherRouteAvgX = otherRoute.spaces.map(function (space) { return space.x; }).reduce(function (a, b) { return a + b; }, 0);
+        var otherRouteAvgY = otherRoute.spaces.map(function (space) { return space.y; }).reduce(function (a, b) { return a + b; }, 0);
+        if (Math.abs(routeAvgX - otherRouteAvgX) > Math.abs(routeAvgY - otherRouteAvgY)) {
             // not mostly horizontal
             return false;
         }
@@ -1054,8 +1008,7 @@ var TtrMap = /** @class */ (function () {
             setTimeout(function () { return _this.setAutoZoom(); }, 200);
             return;
         }
-        var screenRatio = document.getElementById("game_play_area").clientWidth /
-            (window.innerHeight - 80);
+        var screenRatio = document.getElementById("game_play_area").clientWidth / (window.innerHeight - 80);
         var leftDistance = Math.abs(LEFT_RATIO - screenRatio);
         var bottomDistance = Math.abs(BOTTOM_RATIO - screenRatio);
         var left = leftDistance < bottomDistance || this.game.isSpectator;
@@ -1065,8 +1018,7 @@ var TtrMap = /** @class */ (function () {
         var horizontalScale = document.getElementById("game_play_area").clientWidth / gameWidth;
         var verticalScale = (window.innerHeight - 80) / gameHeight;
         this.scale = Math.min(1, horizontalScale, verticalScale);
-        this.resizedDiv.style.transform =
-            this.scale === 1 ? "" : "scale(".concat(this.scale, ")");
+        this.resizedDiv.style.transform = this.scale === 1 ? "" : "scale(".concat(this.scale, ")");
         this.resizedDiv.style.marginBottom = "-".concat((1 - this.scale) * gameHeight, "px");
         this.setOutline();
     };
@@ -1085,14 +1037,10 @@ var TtrMap = /** @class */ (function () {
             if (previousDestination.id === destination.id) {
                 return;
             }
-            [previousDestination.to].forEach(function (city) {
-                return (document.getElementById("city".concat(city)).dataset.selectedDestination = "false");
-            });
+            [previousDestination.to].forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.selectedDestination = "false"); });
         }
         if (destination) {
-            [destination.to].forEach(function (city) {
-                return (document.getElementById("city".concat(city)).dataset.selectedDestination = "true");
-            });
+            [destination.to].forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.selectedDestination = "true"); });
         }
     };
     /**
@@ -1113,16 +1061,12 @@ var TtrMap = /** @class */ (function () {
         }
         else {
             ROUTES.forEach(function (r) {
-                return [r.from, r.to].forEach(function (city) {
-                    return (document.getElementById("city".concat(city)).dataset.hovered = "false");
-                });
+                return [r.from, r.to].forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.hovered = "false"); });
             });
             // remove phantom wagons
             this.mapDiv
                 .querySelectorAll(".wagon.phantom")
-                .forEach(function (spaceDiv) {
-                return spaceDiv.parentElement.removeChild(spaceDiv);
-            });
+                .forEach(function (spaceDiv) { return spaceDiv.parentElement.removeChild(spaceDiv); });
         }
     };
     /**
@@ -1131,8 +1075,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.setSelectableDestination = function (destination, visible) {
         [destination.to].forEach(function (city) {
             console.log("search ", "city".concat(city));
-            document.getElementById("city".concat(city)).dataset.selectable =
-                "" + visible;
+            document.getElementById("city".concat(city)).dataset.selectable = "" + visible;
         });
     };
     /**
@@ -1140,8 +1083,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSelectedDestination = function (destination, visible) {
         [destination.to].forEach(function (city) {
-            document.getElementById("city".concat(city)).dataset.selected =
-                "" + visible;
+            document.getElementById("city".concat(city)).dataset.selected = "" + visible;
         });
     };
     /**
@@ -1153,10 +1095,7 @@ var TtrMap = /** @class */ (function () {
             .forEach(function (city) { return (city.dataset.toConnect = "false"); });
         var cities = [];
         destinations.forEach(function (destination) { return cities.push(destination.to); });
-        cities.forEach(function (city) {
-            return (document.getElementById("city".concat(city)).dataset.toConnect =
-                "true");
-        });
+        cities.forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.toConnect = "true"); });
     };
     /**
      * Highlight destination (on destination mouse over).
@@ -1173,10 +1112,7 @@ var TtrMap = /** @class */ (function () {
         else {
             cities = [shadow.dataset.to];
         }
-        cities.forEach(function (city) {
-            return (document.getElementById("city".concat(city)).dataset.highlight =
-                visible);
-        });
+        cities.forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.highlight = visible); });
     };
     /**
      * Sets a player token next to the destination.
@@ -1188,8 +1124,7 @@ var TtrMap = /** @class */ (function () {
         }
         else {
             div.dataset.revealedBy = player.color;
-            document.getElementById("city".concat(destination.to)).dataset.toConnect =
-                "true";
+            document.getElementById("city".concat(destination.to)).dataset.toConnect = "true";
         }
     };
     /**
@@ -1198,10 +1133,8 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.showRevealedDestinations = function (destinationsByPlayer) {
         destinationsByPlayer.forEach(function (destinations, player) {
             destinations.forEach(function (d) {
-                document.getElementById("city".concat(d.to)).dataset.revealedBy =
-                    player.color;
-                document.getElementById("city".concat(d.to)).dataset.toConnect =
-                    "true";
+                document.getElementById("city".concat(d.to)).dataset.revealedBy = player.color;
+                document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
             });
         });
     };
@@ -1211,8 +1144,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.showSharedDestinations = function (destinations) {
         console.log("showSharedDestinations", destinations);
         destinations.forEach(function (d) {
-            document.getElementById("city".concat(d.to)).dataset.revealedBy =
-                "shared";
+            document.getElementById("city".concat(d.to)).dataset.revealedBy = "shared";
             document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
         });
     };
@@ -1225,14 +1157,10 @@ var TtrMap = /** @class */ (function () {
             this.crosshairTarget.id = "map-drag-target";
             this.crosshairTarget.style.left = e.offsetX + "px";
             this.crosshairTarget.style.top = e.offsetY + "px";
-            this.crosshairTarget.style.width =
-                this.crosshairHalfSize * 2 + "px";
-            this.crosshairTarget.style.height =
-                this.crosshairHalfSize * 2 + "px";
-            this.crosshairTarget.style.marginLeft =
-                -(this.crosshairHalfSize + this.crosshairShift) + "px";
-            this.crosshairTarget.style.marginTop =
-                -(this.crosshairHalfSize + this.crosshairShift) + "px";
+            this.crosshairTarget.style.width = this.crosshairHalfSize * 2 + "px";
+            this.crosshairTarget.style.height = this.crosshairHalfSize * 2 + "px";
+            this.crosshairTarget.style.marginLeft = -(this.crosshairHalfSize + this.crosshairShift) + "px";
+            this.crosshairTarget.style.marginTop = -(this.crosshairHalfSize + this.crosshairShift) + "px";
             this.dragOverlay.appendChild(this.crosshairTarget);
         }
     };
@@ -1240,8 +1168,7 @@ var TtrMap = /** @class */ (function () {
      * Move the crosshair target.
      */
     TtrMap.prototype.overlayDragMove = function (e) {
-        if (this.crosshairTarget &&
-            e.target.id === this.dragOverlay.id) {
+        if (this.crosshairTarget && e.target.id === this.dragOverlay.id) {
             this.crosshairTarget.style.left = e.offsetX + "px";
             this.crosshairTarget.style.top = e.offsetY + "px";
         }
@@ -1262,9 +1189,7 @@ var TtrMap = /** @class */ (function () {
         var touchDevice = "ontouchstart" in window;
         this.crosshairShift = touchDevice ? this.crosshairHalfSize : 0;
         this.createRouteSpaces(id, 100 + this.crosshairShift, 100 + this.crosshairShift);
-        this.dragOverlay.addEventListener("dragenter", function (e) {
-            return _this.overlayDragEnter(e);
-        });
+        this.dragOverlay.addEventListener("dragenter", function (e) { return _this.overlayDragEnter(e); });
         var debounceTimer = null;
         var lastEvent = null;
         this.dragOverlay.addEventListener("dragover", function (e) {
@@ -1291,9 +1216,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.setOutline = function () {
         var _a, _b;
         var preference = Number((_a = this.game.prefs[203]) === null || _a === void 0 ? void 0 : _a.value);
-        var outline = preference === 1 ||
-            (preference === 2 &&
-                ((_b = this.mapDiv) === null || _b === void 0 ? void 0 : _b.getBoundingClientRect().width) < 1000);
+        var outline = preference === 1 || (preference === 2 && ((_b = this.mapDiv) === null || _b === void 0 ? void 0 : _b.getBoundingClientRect().width) < 1000);
         this.mapDiv.dataset.bigShadows = outline.toString();
     };
     TtrMap.prototype.getCityName = function (cityId) {
@@ -1612,9 +1535,7 @@ var TrainCarSelection = /** @class */ (function () {
             tunnelCards.forEach(function (card, index) {
                 dojo.place("<div id=\"tunnel-card-".concat(index, "\" class=\"train-car-card tunnel-card animated\" data-color=\"").concat(card.type, "\"></div>"), "tunnel-cards");
                 var element = document.getElementById("tunnel-card-".concat(index));
-                setTimeout(function () {
-                    return (element.style.transform = "translateY(".concat(55 * (index - 1), "px) scale(0.33)"));
-                });
+                setTimeout(function () { return (element.style.transform = "translateY(".concat(55 * (index - 1), "px) scale(0.33)")); });
             });
         }
         else {
@@ -1630,7 +1551,7 @@ var TrainCarSelection = /** @class */ (function () {
 var PlayerTable = /** @class */ (function () {
     function PlayerTable(game, player, destinations, completedDestinations) {
         var html = "\n            <div id=\"player-table\" class=\"player-table\">\n                <div id=\"player-table-".concat(player.id, "-destinations\" class=\"player-table-destinations\"></div>\n            </div>\n        ");
-        dojo.place(html, 'resized');
+        dojo.place(html, "resized");
         this.playerDestinations = new PlayerDestinations(game, player, destinations, completedDestinations);
     }
     /**
@@ -1639,12 +1560,12 @@ var PlayerTable = /** @class */ (function () {
     PlayerTable.prototype.setPosition = function (left) {
         var playerHandDiv = document.getElementById("player-table");
         if (left) {
-            document.getElementById('main-line').prepend(playerHandDiv);
+            document.getElementById("main-line").prepend(playerHandDiv);
         }
         else {
-            document.getElementById('resized').appendChild(playerHandDiv);
+            document.getElementById("resized").appendChild(playerHandDiv);
         }
-        playerHandDiv.classList.toggle('left', left);
+        playerHandDiv.classList.toggle("left", left);
     };
     PlayerTable.prototype.addDestinations = function (destinations, originStock) {
         this.playerDestinations.addDestinations(destinations, originStock);
@@ -1682,12 +1603,8 @@ var PlayerDestinations = /** @class */ (function () {
         dojo.place(html, "player-table-".concat(player.id, "-destinations"));
         this.addDestinations(destinations);
         destinations
-            .filter(function (destination) {
-            return completedDestinations.some(function (d) { return d.id == destination.id; });
-        })
-            .forEach(function (destination) {
-            return _this.markDestinationComplete(destination);
-        });
+            .filter(function (destination) { return completedDestinations.some(function (d) { return d.id == destination.id; }); })
+            .forEach(function (destination) { return _this.markDestinationComplete(destination); });
         // highlight the first "to do" destination
         this.activateNextDestination(this.destinationsTodo);
     }
@@ -1702,16 +1619,10 @@ var PlayerDestinations = /** @class */ (function () {
             dojo.place(html, "player-table-".concat(_this.playerId, "-destinations-todo"));
             var card = document.getElementById("destination-card-".concat(destination.id));
             setupDestinationCardDiv(card, destination.type * 100 + destination.type_arg);
-            card.addEventListener("click", function () {
-                return _this.game.revealDestination(destination);
-            });
+            card.addEventListener("click", function () { return _this.game.revealDestination(destination); });
             // highlight destination's cities on the map, on mouse over
-            card.addEventListener("mouseenter", function () {
-                return _this.game.setHighligthedDestination(destination);
-            });
-            card.addEventListener("mouseleave", function () {
-                return _this.game.setHighligthedDestination(null);
-            });
+            card.addEventListener("mouseenter", function () { return _this.game.setHighligthedDestination(destination); });
+            card.addEventListener("mouseleave", function () { return _this.game.setHighligthedDestination(null); });
             if (originStock) {
                 _this.addAnimationFrom(card, document.getElementById("".concat(originStock.container_div.id, "_item_").concat(destination.id)));
             }
@@ -1740,16 +1651,10 @@ var PlayerDestinations = /** @class */ (function () {
     PlayerDestinations.prototype.markDestinationCompleteAnimation = function (destination, destinationRoutes) {
         var _this = this;
         var newDac = new DestinationCompleteAnimation(this.game, destination, destinationRoutes, "destination-card-".concat(destination.id), "destination-card-".concat(destination.id), {
-            start: function (d) {
-                return document
-                    .getElementById("destination-card-".concat(d.id))
-                    .classList.add("hidden-for-animation");
-            },
+            start: function (d) { return document.getElementById("destination-card-".concat(d.id)).classList.add("hidden-for-animation"); },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
             end: function (d) {
-                return document
-                    .getElementById("destination-card-".concat(d.id))
-                    .classList.remove("hidden-for-animation");
+                return document.getElementById("destination-card-".concat(d.id)).classList.remove("hidden-for-animation");
             },
         }, "completed");
         this.game.addAnimation(newDac);
@@ -1758,9 +1663,7 @@ var PlayerDestinations = /** @class */ (function () {
      * Mark a destination as complete.
      */
     PlayerDestinations.prototype.markDestinationComplete = function (destination, destinationRoutes) {
-        if (destinationRoutes &&
-            !(document.visibilityState === "hidden" ||
-                this.game.instantaneousMode)) {
+        if (destinationRoutes && !(document.visibilityState === "hidden" || this.game.instantaneousMode)) {
             this.markDestinationCompleteAnimation(destination, destinationRoutes);
         }
         else {
@@ -1776,8 +1679,7 @@ var PlayerDestinations = /** @class */ (function () {
         if (this.selectedDestination &&
             destinationList.some(function (d) { return d.id == _this.selectedDestination.id; }) &&
             destinationList.length > 1) {
-            destinationList.splice.apply(destinationList, __spreadArray([destinationList.length,
-                0], destinationList.splice(0, 1), false));
+            destinationList.splice.apply(destinationList, __spreadArray([destinationList.length, 0], destinationList.splice(0, 1), false));
         }
         this.selectedDestination = destinationList[0];
         this.game.setActiveDestination(this.selectedDestination, oldSelectedDestination);
@@ -1793,8 +1695,7 @@ var PlayerDestinations = /** @class */ (function () {
      * Update destination cards placement when there is a change.
      */
     PlayerDestinations.prototype.destinationColumnsUpdated = function () {
-        var doubleColumn = this.destinationsTodo.length > 0 &&
-            this.destinationsDone.length > 0;
+        var doubleColumn = this.destinationsTodo.length > 0 && this.destinationsDone.length > 0;
         var destinationsDiv = document.getElementById("player-table-".concat(this.playerId, "-destinations"));
         var maxBottom = Math.max(this.placeCards(this.destinationsTodo, doubleColumn ? DESTINATION_CARD_SHIFT : 0), this.placeCards(this.destinationsDone));
         /* const height = `${maxBottom + CARD_HEIGHT}px`;
@@ -1802,17 +1703,17 @@ var PlayerDestinations = /** @class */ (function () {
         document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
 */
         /*	const col1 = document.getElementById(
-                `player-table-${this.playerId}-destinations-todo`
-            );
-            const col2 = document.getElementById(
-                `player-table-${this.playerId}-destinations-todo`
-            );
-            const destinationCount =
-                this.destinationsTodo.length + this.destinationsDone.length;
-            col1.style.width =
-                (this.destinationsTodo.length * 100 / destinationCount) + "%";
-            col2.style.width =
-                (this.destinationsDone.length * 100) / destinationCount + "%";*/
+            `player-table-${this.playerId}-destinations-todo`
+        );
+        const col2 = document.getElementById(
+            `player-table-${this.playerId}-destinations-todo`
+        );
+        const destinationCount =
+            this.destinationsTodo.length + this.destinationsDone.length;
+        col1.style.width =
+            (this.destinationsTodo.length * 100 / destinationCount) + "%";
+        col2.style.width =
+            (this.destinationsDone.length * 100) / destinationCount + "%";*/
         this.game.setDestinationsToConnect(this.destinationsTodo);
     };
     /**
@@ -1837,8 +1738,7 @@ var PlayerDestinations = /** @class */ (function () {
      * Add an animation to the card (when it is created).
      */
     PlayerDestinations.prototype.addAnimationFrom = function (card, from) {
-        if (document.visibilityState === "hidden" ||
-            this.game.instantaneousMode) {
+        if (document.visibilityState === "hidden" || this.game.instantaneousMode) {
             return;
         }
         var destinationBR = card.getBoundingClientRect();
@@ -2056,9 +1956,7 @@ var Expeditions = /** @class */ (function () {
         this.isTouch = window.matchMedia("(hover: none)").matches;
         this.routeToConfirm = null;
         this.actionTimerId = null;
-        this.TOOLTIP_DELAY = document.body.classList.contains("touch-device")
-            ? 1500
-            : undefined;
+        this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
     }
     /*
         setup:
@@ -2113,12 +2011,9 @@ var Expeditions = /** @class */ (function () {
             case "chooseAdditionalDestinations":
                 if (args === null || args === void 0 ? void 0 : args.args) {
                     var chooseDestinationsArgs = args.args;
-                    var destinations = chooseDestinationsArgs.destinations ||
-                        ((_a = chooseDestinationsArgs._private) === null || _a === void 0 ? void 0 : _a.destinations);
+                    var destinations = chooseDestinationsArgs.destinations || ((_a = chooseDestinationsArgs._private) === null || _a === void 0 ? void 0 : _a.destinations);
                     if (destinations && this.isCurrentPlayerActive()) {
-                        destinations.forEach(function (destination) {
-                            return _this.map.setSelectableDestination(destination, true);
-                        });
+                        destinations.forEach(function (destination) { return _this.map.setSelectableDestination(destination, true); });
                         this.destinationSelection.setCards(destinations);
                         this.destinationSelection.selectionChange();
                     }
@@ -2129,8 +2024,7 @@ var Expeditions = /** @class */ (function () {
                     var revealDestinationArgs = args.args;
                     var possibleDestinations = (_b = revealDestinationArgs._private) === null || _b === void 0 ? void 0 : _b.possibleDestinations;
                     var allDestinations = (_c = revealDestinationArgs._private) === null || _c === void 0 ? void 0 : _c.allDestinations;
-                    if (allDestinations &&
-                        this.isCurrentPlayerActive()) {
+                    if (allDestinations && this.isCurrentPlayerActive()) {
                         possibleDestinations.forEach(function (destination) {
                             return _this.map.setSelectableDestination(destination, true);
                         });
@@ -2202,21 +2096,19 @@ var Expeditions = /** @class */ (function () {
                 var mapDiv = document.getElementById("map");
                 mapDiv
                     .querySelectorAll(".city[data-selectable]")
-                    .forEach(function (city) {
-                    return (city.dataset.selectable = "false");
-                });
+                    .forEach(function (city) { return (city.dataset.selectable = "false"); });
                 mapDiv
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = "false"); });
                 break;
             case "multiChooseInitialDestinations":
-                Array.from(document.getElementsByClassName("player-turn-order")).forEach(function (elem) { return elem.remove(); });
+                Array.from(document.getElementsByClassName("player-turn-order")).forEach(function (elem) {
+                    return elem.remove();
+                });
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
-                document
-                    .getElementById("destination-deck-hidden-pile")
-                    .classList.remove("selectable");
+                document.getElementById("destination-deck-hidden-pile").classList.remove("selectable");
                 Array.from(document.getElementsByClassName("train-car-group hide")).forEach(function (group) { return group.classList.remove("hide"); });
                 break;
             case "drawSecondCard":
@@ -2240,14 +2132,14 @@ var Expeditions = /** @class */ (function () {
                     this.destinationSelection.selectionChange();
                     break;
                 case "revealDestination":
-                    this.addActionButton("revealDestination_button", _("Reveal this destination"), function () { return _this.doRevealDestination(); });
+                    this.addActionButton("revealDestination_button", _("Reveal this destination"), function () {
+                        return _this.doRevealDestination();
+                    });
                     break;
                 case "chooseAction":
                     var chooseActionArgs = args;
                     if (chooseActionArgs.maxDestinationsPick) {
-                        document
-                            .getElementById("destination-deck-hidden-pile")
-                            .classList.add("selectable");
+                        document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
                     }
                     this.setActionBarChooseAction(false);
                     break;
@@ -2259,10 +2151,7 @@ var Expeditions = /** @class */ (function () {
                     var confirmTunnelArgs = args;
                     var confirmLabel = 
                     /* TODO MAPS _*/ "Confirm tunnel claim" +
-                        (confirmTunnelArgs.canPay
-                            ? ""
-                            : " (".concat(
-                            /* TODO MAPS _*/ "You don't have enough cards", ")"));
+                        (confirmTunnelArgs.canPay ? "" : " (".concat(/* TODO MAPS _*/ "You don't have enough cards", ")"));
                     this.addActionButton("claimTunnel_button", confirmLabel, function () { return _this.claimTunnel(); });
                     this.addActionButton("skipTunnel_button", 
                     /* TODO MAPS _*/ "Skip tunnel claim", function () { return _this.skipTunnel(); }, null, null, "gray");
@@ -2310,10 +2199,8 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.setGamestateDescription = function (property) {
         if (property === void 0) { property = ""; }
         var originalState = this.gamedatas.gamestates[this.gamedatas.gamestate.id];
-        this.gamedatas.gamestate.description =
-            originalState["description" + property];
-        this.gamedatas.gamestate.descriptionmyturn =
-            originalState["descriptionmyturn" + property];
+        this.gamedatas.gamestate.description = originalState["description" + property];
+        this.gamedatas.gamestate.descriptionmyturn = originalState["descriptionmyturn" + property];
         this.updatePageTitle();
     };
     /**
@@ -2356,7 +2243,7 @@ var Expeditions = /** @class */ (function () {
     };
     Expeditions.prototype.getPlayerScore = function (playerId) {
         var _a, _b;
-        return ((_b = (_a = this.scoreCtrl[playerId]) === null || _a === void 0 ? void 0 : _a.getValue()) !== null && _b !== void 0 ? _b : Number(this.gamedatas.players[playerId].score));
+        return (_b = (_a = this.scoreCtrl[playerId]) === null || _a === void 0 ? void 0 : _a.getValue()) !== null && _b !== void 0 ? _b : Number(this.gamedatas.players[playerId].score);
     };
     Expeditions.prototype.isDoubleRouteForbidden = function () {
         return Object.values(this.gamedatas.players).length <= 3;
@@ -2416,9 +2303,7 @@ var Expeditions = /** @class */ (function () {
      * Check if a route can be claimed with dragged cards.
      */
     Expeditions.prototype.canClaimRoute = function (route, cardsColor) {
-        return ((route.color == 0 ||
-            cardsColor == 0 ||
-            route.color == cardsColor) &&
+        return ((route.color == 0 || cardsColor == 0 || route.color == cardsColor) &&
             this.gamedatas.gamestate.args.possibleRoutes.some(function (pr) { return pr.id == route.id; }));
     };
     /**
@@ -2505,8 +2390,7 @@ var Expeditions = /** @class */ (function () {
         }
     };
     Expeditions.prototype.selectedColorChanged = function (selectedColor) {
-        if (!this.isCurrentPlayerActive() ||
-            this.gamedatas.gamestate.name !== "chooseAction") {
+        if (!this.isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "chooseAction") {
             return;
         }
         var args = this.gamedatas.gamestate.args;
@@ -2514,9 +2398,7 @@ var Expeditions = /** @class */ (function () {
             this.map.setSelectableRoutes(true, args.possibleRoutes);
         }
         else {
-            this.map.setSelectableRoutes(true, args.possibleRoutes.filter(function (route) {
-                return route.color === selectedColor || route.color === 0;
-            }));
+            this.map.setSelectableRoutes(true, args.possibleRoutes.filter(function (route) { return route.color === selectedColor || route.color === 0; }));
         }
     };
     /**
@@ -2590,8 +2472,7 @@ var Expeditions = /** @class */ (function () {
                 window.clearInterval(_this.actionTimerId);
             }
             else if (_actionTimerSeconds-- > 1) {
-                button.innerHTML =
-                    _actionTimerLabel + " (" + _actionTimerSeconds + ")";
+                button.innerHTML = _actionTimerLabel + " (" + _actionTimerSeconds + ")";
             }
             else {
                 window.clearInterval(_this.actionTimerId);
@@ -2603,11 +2484,9 @@ var Expeditions = /** @class */ (function () {
     };
     Expeditions.prototype.setChooseActionGamestateDescription = function (newText) {
         if (!this.originalTextChooseAction) {
-            this.originalTextChooseAction =
-                document.getElementById("pagemaintitletext").innerHTML;
+            this.originalTextChooseAction = document.getElementById("pagemaintitletext").innerHTML;
         }
-        document.getElementById("pagemaintitletext").innerHTML =
-            newText !== null && newText !== void 0 ? newText : this.originalTextChooseAction;
+        document.getElementById("pagemaintitletext").innerHTML = newText !== null && newText !== void 0 ? newText : this.originalTextChooseAction;
     };
     /**
      * Sets the action bar (title and buttons) for Choose action.
@@ -2621,16 +2500,13 @@ var Expeditions = /** @class */ (function () {
         if (this.actionTimerId) {
             window.clearInterval(this.actionTimerId);
         }
-        var chooseActionArgs = this.gamedatas.gamestate
-            .args;
+        var chooseActionArgs = this.gamedatas.gamestate.args;
         this.addActionButton("drawDestinations_button", dojo.string.substitute(_("Draw ${number} destination tickets"), {
             number: chooseActionArgs.maxDestinationsPick,
         }), function () { return _this.drawDestinations(); }, null, null, "red");
         dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
         if (chooseActionArgs.canPass) {
-            this.addActionButton("pass_button", _("Pass"), function () {
-                return _this.pass();
-            });
+            this.addActionButton("pass_button", _("Pass"), function () { return _this.pass(); });
         }
     };
     /**
@@ -2704,9 +2580,7 @@ var Expeditions = /** @class */ (function () {
      * Pick hidden train car(s).
      */
     Expeditions.prototype.onHiddenTrainCarDeckClick = function (number) {
-        var action = this.gamedatas.gamestate.name === "drawSecondCard"
-            ? "drawSecondDeckCard"
-            : "drawDeckCards";
+        var action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondDeckCard" : "drawDeckCards";
         if (!this.checkAction(action)) {
             return;
         }
@@ -2718,9 +2592,7 @@ var Expeditions = /** @class */ (function () {
      * Pick visible train car.
      */
     Expeditions.prototype.onVisibleTrainCarCardClick = function (id) {
-        var action = this.gamedatas.gamestate.name === "drawSecondCard"
-            ? "drawSecondTableCard"
-            : "drawTableCard";
+        var action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondTableCard" : "drawTableCard";
         if (!this.checkAction(action)) {
             return;
         }
@@ -2896,8 +2768,7 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.notif_freeTunnel = function (notif) {
         var _this = this;
-        if (document.visibilityState !== "hidden" &&
-            !this.instantaneousMode) {
+        if (document.visibilityState !== "hidden" && !this.instantaneousMode) {
             this.trainCarSelection.showTunnelCards(notif.args.tunnelCards);
             setTimeout(function () { return _this.trainCarSelection.showTunnelCards([]); }, 2000);
         }
@@ -2934,8 +2805,7 @@ var Expeditions = /** @class */ (function () {
         }
         else {
             player.uncompletedDestinations.push(notif.args.destination);
-            (_b = document
-                .getElementById("destination-card-".concat(notif.args.destination.id))) === null || _b === void 0 ? void 0 : _b.classList.add("uncompleted");
+            (_b = document.getElementById("destination-card-".concat(notif.args.destination.id))) === null || _b === void 0 ? void 0 : _b.classList.add("uncompleted");
         }
         (_c = this.endScore) === null || _c === void 0 ? void 0 : _c.updateDestinationsTooltip(player);
     };
@@ -2979,16 +2849,12 @@ var Expeditions = /** @class */ (function () {
                 }
                 if (typeof args.colors == "object") {
                     args.colors = args.colors
-                        .map(function (color) {
-                        return "<div class=\"train-car-color icon\" data-color=\"".concat(color, "\"></div>");
-                    })
+                        .map(function (color) { return "<div class=\"train-car-color icon\" data-color=\"".concat(color, "\"></div>"); })
                         .join("");
                 }
                 // make cities names in bold
                 ["from", "to", "count", "extraCards", "pickedCards"].forEach(function (field) {
-                    if (args[field] !== null &&
-                        args[field] !== undefined &&
-                        args[field][0] != "<") {
+                    if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
                         args[field] = "<strong>".concat(_(args[field]), "</strong>");
                     }
                 });
