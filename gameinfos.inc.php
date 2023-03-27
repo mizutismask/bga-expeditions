@@ -13,32 +13,32 @@
 $gameinfos = [
 
     // Name of the game in English (will serve as the basis for translation) 
-    'game_name' => "Ticket to Ride",
+    'game_name' => "Expeditions: around the world",
 
     // Game designer (or game designers, separated by commas)
-    'designer' => 'Alan R. Moon',
+    'designer' => 'Wolfgang Kramer',
 
     // Game artist (or game artists, separated by commas)
-    'artist' => 'Cyrille Daujean, Julien Delval',
+    'artist' => 'Yann Valéani',
 
     // Year of FIRST publication of this game. Can be negative.
-    'year' => 2004,
+    'year' => 2023,
 
     // Game publisher (use empty string if there is no publisher)
-    'publisher' => 'Days of Wonder',
+    'publisher' => 'Super Meeple',
 
     // Url of game publisher website
-    'publisher_website' => 'http://www.daysofwonder.com/',
+    'publisher_website' => 'https://www.supermeeple.com/',
 
     // Board Game Geek ID of the publisher
-    'publisher_bgg_id' => 1027,
+    'publisher_bgg_id' => 29409,
 
     // Board game geek ID of the game
-    'bgg_id' => 9209,
+    'bgg_id' => 7388989,
 
 
     // Players configuration that can be played (ex: 2 to 4 players)
-    'players' => [2, 3, 4, 5],
+    'players' => [2, 3, 4, 5, 6],
 
     // Suggest players to play with this number of players. Must be null if there is no such advice, or if there is only one possible player configuration.
     // NB: the automatic lobby will try first the lowest number of players if this is not specified. So you _have to_ specify this parameter if the lowest player number is not compatible with the default options.
@@ -50,7 +50,7 @@ $gameinfos = [
 
 
     // Estimated game duration, in minutes (used only for the launch, afterward the real duration is computed)
-    'estimated_duration' => 30,
+    'estimated_duration' => 40,
 
     // Time in second add to a player when "giveExtraTime" is called (speed profile = fast)
     'fast_additional_time' => 30,
@@ -87,19 +87,19 @@ $gameinfos = [
     'language_dependency' => false,
 
     // Complexity of the game, from 0 (extremely simple) to 5 (extremely complex)
-    'complexity' => 2,
+    'complexity' => 1,
 
     // Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-    'luck' => 3,
+    'luck' => 0,
 
     // Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-    'strategy' => 3,
+    'strategy' => 4,
 
     // Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
-    'diplomacy' => 2,
+    'diplomacy' => 3,
 
     // Colors attributed to players
-    'player_colors' => ['e3001a', '41a62a', '0056aa', 'ffed00', 'af0ac2'],
+    'player_colors' => ['df3e33', '30b0e1', '77bd25', 'eca51c', 'df74b2', 'd8d7d7'],
 
     // Favorite colors support : if set to "true", support attribution of favorite colors based on player's preferences (see reattributeColorsBasedOnPreferences PHP method)
     // NB: this parameter is used only to flag games supporting this feature; you must use (or not use) reattributeColorsBasedOnPreferences PHP method to actually enable or disable the feature.
@@ -131,18 +131,8 @@ $gameinfos = [
     // Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
     // A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
     'presentation' => [ // description from https://www.daysofwonder.com/expeditions/en/
-        totranslate("Ticket to Ride is a cross-country train adventure where players collect cards of various types of train cars that enable them to claim railway routes connecting cities in various countries around the world."),
+        totranslate("Depart on an expedition around the world! Discover unusual and unexplored places, new cultures, new exotic animals, and sumptuous landscapes! Three different expeditions depart from Northern Europe, but each player participates in all three expeditions, trying to influence their progress in order to achieve their own objectives and score victory points. An interactive, fun, and even instructive game! For everyone!"),
     ],
-
-    // Games categories
-    //  You can attribute a maximum of FIVE "tags" for your game.
-    //  Each tag has a specific ID (ex: 22 for the category "Prototype", 101 for the tag "Science-fiction theme game")
-    //  Please see the "Game meta information" entry in the BGA Studio documentation for a full list of available tags:
-    //  http://en.doc.boardgamearena.com/Game_meta-information:_gameinfos.inc.php
-    //  IMPORTANT: this list should be ORDERED, with the most important tag first.
-    //  IMPORTANT: it is mandatory that the FIRST tag is 1, 2, 3 and 4 (= game category)
-    'tags' => [2, 11, 20, 102],
-
 
     //////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)
 
