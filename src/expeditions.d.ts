@@ -6,45 +6,44 @@ declare const _;
 declare const g_gamethemeurl;
 
 interface Card {
-    id: number;
-    type: number;
-    type_arg: number;
-    location: string;
-    location_arg: number;
+	id: number;
+	type: number;
+	type_arg: number;
+	location: string;
+	location_arg: number;
 }
 
-interface TrainCar extends Card {
-}
+interface TrainCar extends Card {}
 
 interface Destination extends Card {
-    from: number;
-    to: number;
+	from: number;
+	to: number;
 }
 
 interface Route {
-    id: number;
-    from: number;
-    to: number;
-    spaces: RouteSpace[];
-    number?: number;
-    color: number;
+	id: number;
+	from: number;
+	to: number;
+	spaces: RouteSpace[];
+	number?: number;
+	color: number;
 }
 
 interface ClaimedRoute {
-    routeId: number;
-    playerId: number;
+	routeId: number;
+	playerId: number;
 }
 
 interface ExpeditionsPlayer extends Player {
-    playerNo: number;
-    trainCarsCount: number;
-    destinationsCount: number;
-    remainingTrainCarsCount: number;
+	playerNo: number;
+	trainCarsCount: number;
+	destinationsCount: number;
+	remainingTrainCarsCount: number;
 
-    // for end score
-    completedDestinations?: Destination[];
-    uncompletedDestinations?: Destination[];
-    longestPathLength: number;
+	// for end score
+	completedDestinations?: Destination[];
+	uncompletedDestinations?: Destination[];
+	longestPathLength: number;
 }
 
 /**
@@ -52,37 +51,37 @@ interface ExpeditionsPlayer extends Player {
  */
 
 interface ExpeditionsGamedatas {
-    current_player_id: string;
-    decision: {decision_type: string};
-    game_result_neutralized: string;
-    gamestate: Gamestate;
-    gamestates: { [gamestateId: number]: Gamestate };
-    neutralized_player_id: string;
-    notifications: {last_packet_id: string, move_nbr: string}
-    playerorder: (string | number)[];
-    players: { [playerId: number]: ExpeditionsPlayer };
-    tablespeed: string;
+	current_player_id: string;
+	decision: { decision_type: string };
+	game_result_neutralized: string;
+	gamestate: Gamestate;
+	gamestates: { [gamestateId: number]: Gamestate };
+	neutralized_player_id: string;
+	notifications: { last_packet_id: string; move_nbr: string };
+	playerorder: (string | number)[];
+	players: { [playerId: number]: ExpeditionsPlayer };
+	tablespeed: string;
 
-    // Add here variables you set up in getAllDatas   
-    claimedRoutes: ClaimedRoute[];
-    visibleTrainCards:Destination[];
+	// Add here variables you set up in getAllDatas
+	claimedRoutes: ClaimedRoute[];
+	visibleTrainCards: Destination[];
 
-    // private informations for current player only
-    handTrainCars: TrainCar[];
-    handDestinations: Destination[];
-    completedDestinations: Destination[];
+	// private informations for current player only
+	handTrainCars: TrainCar[];
+	handDestinations: Destination[];
+	completedDestinations: Destination[];
 
-    // counters
-    trainCarDeckCount: number;
-    destinationDeckCount: number;
-    trainCarDeckMaxCount: number;
-    destinationDeckMaxCount: number;
-    lastTurn: boolean;
-    bestScore: number;
+	// counters
+	trainCarDeckCount: number;
+	destinationDeckCount: number;
+	trainCarDeckMaxCount: number;
+	destinationDeckMaxCount: number;
+	lastTurn: boolean;
+	bestScore: number;
 
-    isGlobetrotterBonusActive: boolean;
-    isLongestPathBonusActive: boolean;
-    showTurnOrder: boolean;
+	isGlobetrotterBonusActive: boolean;
+	isLongestPathBonusActive: boolean;
+	showTurnOrder: boolean;
 }
 
 interface ExpeditionsGame extends Game {
@@ -105,6 +104,7 @@ interface ExpeditionsGame extends Game {
 	canClaimRoute(route: Route, cardsColor: number): boolean;
 	setHighligthedDestination(destination: Destination | null): void;
 	revealDestination(destination: Destination): void;
+	showSharedDestinations(destinations: Destination[]): void;
 	setSelectedDestination(destination: Destination, visible: boolean): void;
 	addAnimation(animation: WagonsAnimation): void;
 	endAnimation(ended: WagonsAnimation): void;
@@ -118,11 +118,11 @@ interface ExpeditionsGame extends Game {
 }
 
 interface EnteringChooseDestinationsArgs {
-    _private?: {
-        destinations: Destination[];
-    };
-    destinations?: Destination[];
-    minimum: number;
+	_private?: {
+		destinations: Destination[];
+	};
+	destinations?: Destination[];
+	minimum: number;
 }
 
 interface EnteringRevealDestinationArgs {
@@ -133,101 +133,100 @@ interface EnteringRevealDestinationArgs {
 }
 
 interface EnteringChooseActionArgs {
-    possibleRoutes: Route[];
-    costForRoute: { [routeId: number]: { [color: number]: number[] } };
-    maxHiddenCardsPick: number;
-    maxDestinationsPick: number;
-    canTakeTrainCarCards: boolean;
-    canPass: boolean;
+	possibleRoutes: Route[];
+	costForRoute: { [routeId: number]: { [color: number]: number[] } };
+	maxHiddenCardsPick: number;
+	maxDestinationsPick: number;
+	canTakeTrainCarCards: boolean;
+	canPass: boolean;
 }
 
 interface EnteringDrawSecondCardArgs {
-    availableVisibleCards: Destination[];
-    maxHiddenCardsPick: number;
+	availableVisibleCards: Destination[];
+	maxHiddenCardsPick: number;
 }
 
-interface TunnelAttempt {    
-    routeId: number;
-    color: number;
-    extraCards: number;
-    tunnelCards: TrainCar[];
+interface TunnelAttempt {
+	routeId: number;
+	color: number;
+	extraCards: number;
+	tunnelCards: TrainCar[];
 }
 
 interface EnteringConfirmTunnelArgs {
-    tunnelAttempt: TunnelAttempt;
-    canPay: boolean;
+	tunnelAttempt: TunnelAttempt;
+	canPay: boolean;
 }
 
 interface NotifPointsArgs {
-    playerId: number;
-    points: number;
+	playerId: number;
+	points: number;
 }
 
 interface NotifDestinationsPickedArgs {
-    playerId: number;
-    number: number;
-    count: number;
-    remainingDestinationsInDeck: number;
-    _private: {
-        [playerId: number]: {
-            destinations: Destination[];
-        };
-    };
+	playerId: number;
+	number: number;
+	count: number;
+	remainingDestinationsInDeck: number;
+	_private: {
+		[playerId: number]: {
+			destinations: Destination[];
+		};
+	};
 }
 
 interface NotifTrainCarsPickedArgs {
-    playerId: number;
-    count: number;
-    number: number;
-    remainingTrainCarsInDeck: number;
-    cards?: TrainCar[];
-    origin: number; // 0 for hidden, else spot number
+	playerId: number;
+	count: number;
+	number: number;
+	remainingTrainCarsInDeck: number;
+	cards?: TrainCar[];
+	origin: number; // 0 for hidden, else spot number
 }
 
 interface NotifNewCardsOnTableArgs {
-    spotsCards: { [spot: number]: Destination | null };
-    remainingTrainCarsInDeck: number;
-    locomotiveRefill: boolean;
+	spotsCards: { [spot: number]: Destination | null };
+	remainingTrainCarsInDeck: number;
+	locomotiveRefill: boolean;
 }
 
 interface NotifClaimedRouteArgs {
-    playerId: number;
-    route: Route;
-    removeCards: TrainCar[];
+	playerId: number;
+	route: Route;
+	removeCards: TrainCar[];
 }
 
 interface NotifDestinationCompletedArgs {
-    playerId: number;
-    destination: Destination;
-    destinationRoutes: Route[];
+	playerId: number;
+	destination: Destination;
+	destinationRoutes: Route[];
 }
 
 interface NotifFreeTunnelArgs {
-    tunnelCards: TrainCar[];
+	tunnelCards: TrainCar[];
 }
 
 interface NotifBestScoreArgs {
-    bestScore: number;
+	bestScore: number;
 }
 
 interface NotifScorePointArgs {
-    playerId: number;
-    points: number;
+	playerId: number;
+	points: number;
 }
 
 interface NotifScoreDestinationArgs {
-    playerId: number;
-    points: number;
+	playerId: number;
+	points: number;
 }
 
 interface NotifLongestPathArgs {
-    playerId: number;
-    length: number;
-    routes: Route[];
+	playerId: number;
+	length: number;
+	routes: Route[];
 }
 
-
 interface NotifBadgeArgs {
-    playerId: number;
-    length: number;
+	playerId: number;
+	length: number;
 }

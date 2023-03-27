@@ -715,7 +715,9 @@ class TtrMap {
 	 */
 	public setDestinationsToConnect(destinations: Destination[]): void {
 		this.mapDiv
-			.querySelectorAll(`.city[data-to-connect]`)
+			.querySelectorAll(
+				`.city[data-to-connect]:not([data-revealed-by="shared"])`
+			)
 			.forEach((city: HTMLElement) => (city.dataset.toConnect = "false"));
 		const cities = [];
 		destinations.forEach((destination) => cities.push(destination.to));
@@ -757,14 +759,27 @@ class TtrMap {
 		player: ExpeditionsPlayer,
 		destination: Destination
 	) {
-		const div = document.getElementById(
-			`city${destination.to}`
-		);
+		const div = document.getElementById(`city${destination.to}`);
 		if (div.dataset.revealedBy) {
 			div.removeAttribute("data-revealed-by");
 		} else {
 			div.dataset.revealedBy = "player" + player.playerNo;
 		}
+	}
+
+	/**
+	 * Sets a marker to indicate that the destination is shared.
+	 */
+	public showSharedDestinations(destinations: Destination[]) {
+		console.log("showSharedDestinations", destinations);
+
+		destinations.forEach(
+			(d) =>{
+				document.getElementById(`city${d.to}`).dataset.revealedBy =
+					"shared";
+				document.getElementById(`city${d.to}`).dataset.toConnect =
+					"true";
+			});
 	}
 
 	/**

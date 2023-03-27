@@ -45,9 +45,9 @@ class TrainCarSelection {
 		destinationDeckCount: number,
 		destinationDeckMaxCount: number
 	) {
-        this.sharedDestinationDeck = sharedDestinationDeck;
-        console.log("const", this.sharedDestinationDeck);
-        
+		this.sharedDestinationDeck = sharedDestinationDeck;
+		console.log("const", this.sharedDestinationDeck);
+
 		document
 			.getElementById("destination-deck-hidden-pile")
 			.addEventListener("click", () => this.game.drawDestinations());
@@ -119,6 +119,7 @@ class TrainCarSelection {
 		fromDeck: boolean
 	) {
 		this.sharedDestinationDeck.setCards(spotsCards);
+		this.game.showSharedDestinations(spotsCards);
 	}
 
 	/**

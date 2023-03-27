@@ -1148,7 +1148,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setDestinationsToConnect = function (destinations) {
         this.mapDiv
-            .querySelectorAll(".city[data-to-connect]")
+            .querySelectorAll(".city[data-to-connect]:not([data-revealed-by=\"shared\"])")
             .forEach(function (city) { return (city.dataset.toConnect = "false"); });
         var cities = [];
         destinations.forEach(function (destination) { return cities.push(destination.to); });
@@ -1188,6 +1188,18 @@ var TtrMap = /** @class */ (function () {
         else {
             div.dataset.revealedBy = "player" + player.playerNo;
         }
+    };
+    /**
+     * Sets a marker to indicate that the destination is shared.
+     */
+    TtrMap.prototype.showSharedDestinations = function (destinations) {
+        console.log("showSharedDestinations", destinations);
+        destinations.forEach(function (d) {
+            document.getElementById("city".concat(d.to)).dataset.revealedBy =
+                "shared";
+            document.getElementById("city".concat(d.to)).dataset.toConnect =
+                "true";
+        });
     };
     /**
      * Create the crosshair target when drag starts over the drag overlay.
@@ -1496,6 +1508,7 @@ var TrainCarSelection = /** @class */ (function () {
      */
     TrainCarSelection.prototype.setNewSharedCardsOnTable = function (spotsCards, fromDeck) {
         this.sharedDestinationDeck.setCards(spotsCards);
+        this.game.showSharedDestinations(spotsCards);
     };
     /**
      * Update destination gauge.
@@ -2374,6 +2387,9 @@ var Expeditions = /** @class */ (function () {
             : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), destination);
+    };
+    Expeditions.prototype.showSharedDestinations = function (destinations) {
+        this.map.showSharedDestinations(destinations);
     };
     /**
      * Highlight cities of selected destination.

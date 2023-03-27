@@ -480,6 +480,9 @@
   box-sizing: border-box;
   border: 4px solid;
 }
+.city[data-revealed-by=shared] {
+  border-color: white;
+}
 .city[data-revealed-by=player1] {
   border-color: #df3e33;
 }

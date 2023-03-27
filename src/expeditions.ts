@@ -14,7 +14,7 @@ class Expeditions implements ExpeditionsGame {
 	private destinationSelection: DestinationSelection;
 	private sharedDestinations: SharedDestinationDeck;
 	private playerTable: PlayerTable = null;
-	private destinationToReveal;
+	private destinationToReveal: Destination;
 	private endScore: EndScore;
 
 	private trainCarCounters: Counter[] = [];
@@ -579,6 +579,10 @@ class Expeditions implements ExpeditionsGame {
 			: (this.destinationToReveal = destination);
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), destination);
+	}
+
+	public showSharedDestinations(destinations: Destination[]): void {
+		this.map.showSharedDestinations(destinations);
 	}
 
 	/**

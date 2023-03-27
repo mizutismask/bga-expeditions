@@ -267,6 +267,9 @@
     box-sizing: border-box;
     border: 4px solid;
   }
+  &[data-revealed-by="shared"] {
+    border-color: white; //shared destination
+  }
   &[data-revealed-by="player1"] {
     border-color: #df3e33;
   }
