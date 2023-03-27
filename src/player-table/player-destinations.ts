@@ -63,12 +63,8 @@ class PlayerDestinations {
 				destination.type * 100 + destination.type_arg
 			);
 
-			card.addEventListener("click", () =>
-				this.activateNextDestination(
-					this.destinationsDone.some((d) => d.id == destination.id)
-						? this.destinationsDone
-						: this.destinationsTodo
-				)
+            card.addEventListener("click", () =>
+                this.game.revealDestination(destination)
 			);
 
 			// highlight destination's cities on the map, on mouse over

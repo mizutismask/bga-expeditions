@@ -834,8 +834,7 @@ var TtrMap = /** @class */ (function () {
     /**
      * Handle dragging train car cards over a route.
      */
-    TtrMap.prototype.routeDragOver = function (e, route) {
-    };
+    TtrMap.prototype.routeDragOver = function (e, route) { };
     /**
      * Handle dropping train car cards over a route.
      */
@@ -1177,6 +1176,18 @@ var TtrMap = /** @class */ (function () {
             return (document.getElementById("city".concat(city)).dataset.highlight =
                 visible);
         });
+    };
+    /**
+     * Sets a player token next to the destination.
+     */
+    TtrMap.prototype.revealDestination = function (player, destination) {
+        var div = document.getElementById("city".concat(destination.to));
+        if (div.dataset.revealedBy) {
+            div.removeAttribute("data-revealed-by");
+        }
+        else {
+            div.dataset.revealedBy = "player" + player.playerNo;
+        }
     };
     /**
      * Create the crosshair target when drag starts over the drag overlay.
@@ -1660,9 +1671,7 @@ var PlayerDestinations = /** @class */ (function () {
             var card = document.getElementById("destination-card-".concat(destination.id));
             setupDestinationCardDiv(card, destination.type * 100 + destination.type_arg);
             card.addEventListener("click", function () {
-                return _this.activateNextDestination(_this.destinationsDone.some(function (d) { return d.id == destination.id; })
-                    ? _this.destinationsDone
-                    : _this.destinationsTodo);
+                return _this.game.revealDestination(destination);
             });
             // highlight destination's cities on the map, on mouse over
             card.addEventListener("mouseenter", function () {
@@ -2351,6 +2360,16 @@ var Expeditions = /** @class */ (function () {
         this.map.setHighligthedDestination(destination);
     };
     /**
+     * Sets or remove a player marker on the destination.
+     */
+    Expeditions.prototype.revealDestination = function (destination) {
+        if (!this.isCurrentPlayerActive()) {
+            return;
+        }
+        this.map.setHighligthedDestination(destination);
+        this.map.revealDestination(this.getCurrentPlayer(), destination);
+    };
+    /**
      * Highlight cities of selected destination.
      */
     Expeditions.prototype.setSelectedDestination = function (destination, visible) {
@@ -2435,37 +2454,37 @@ var Expeditions = /** @class */ (function () {
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
         /*
-                const selectedColor = this.playerTable.getSelectedColor();
-        
-                if (selectedColor !== null) {
-                    this.askRouteClaimConfirmation(route, selectedColor);
-                } else {
-                    const possibleColors: number[] =
-                        this.playerTable?.getPossibleColors(route) || [];
-        
-                    if (possibleColors.length == 1) {
-                        this.askRouteClaimConfirmation(route, possibleColors[0]);
-                    } else if (possibleColors.length > 1) {
-                        possibleColors.forEach((color) => {
-                            const label = dojo.string.substitute(_("Use ${color}"), {
-                                color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
-                                    color,
-                                    "train-car"
-                                )}`,
-                            });
-                            (this as any).addActionButton(
-                                `claimRouteWithColor_button${color}`,
-                                label,
-                                () => this.askRouteClaimConfirmation(route, color)
-                            );
-                        });
-        
-                        this.playerTable.setSelectableTrainCarColors(
-                            route,
-                            possibleColors
-                        );
-                    }
-                }*/
+        const selectedColor = this.playerTable.getSelectedColor();
+
+        if (selectedColor !== null) {
+            this.askRouteClaimConfirmation(route, selectedColor);
+        } else {
+            const possibleColors: number[] =
+                this.playerTable?.getPossibleColors(route) || [];
+
+            if (possibleColors.length == 1) {
+                this.askRouteClaimConfirmation(route, possibleColors[0]);
+            } else if (possibleColors.length > 1) {
+                possibleColors.forEach((color) => {
+                    const label = dojo.string.substitute(_("Use ${color}"), {
+                        color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
+                            color,
+                            "train-car"
+                        )}`,
+                    });
+                    (this as any).addActionButton(
+                        `claimRouteWithColor_button${color}`,
+                        label,
+                        () => this.askRouteClaimConfirmation(route, color)
+                    );
+                });
+
+                this.playerTable.setSelectableTrainCarColors(
+                    route,
+                    possibleColors
+                );
+            }
+        }*/
     };
     /**
      * Timer for Confirm button
@@ -2783,8 +2802,7 @@ var Expeditions = /** @class */ (function () {
     /**
      * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
      */
-    Expeditions.prototype.notif_notEnoughTrainCars = function () {
-    };
+    Expeditions.prototype.notif_notEnoughTrainCars = function () { };
     /**
      * Show last turn banner.
      */
@@ -2873,9 +2891,9 @@ var Expeditions = /** @class */ (function () {
                 });
                 ["you", "actplayer", "player_name"].forEach(function (field) {
                     if (typeof args[field] === "string" &&
-                        args[field].indexOf("#ffed00;") !== -1 &&
+                        args[field].indexOf("#df74b2;") !== -1 &&
                         args[field].indexOf("text-shadow") === -1) {
-                        args[field] = args[field].replace("#ffed00;", "#ffed00; text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;");
+                        args[field] = args[field].replace("#df74b2;", "#df74b2; text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;");
                     }
                 });
             }

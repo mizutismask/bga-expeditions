@@ -61,10 +61,11 @@ class Expeditions implements ExpeditionsGame {
 
 		this.destinationSelection = new DestinationSelection(this);
 		this.sharedDestinations = new SharedDestinationDeck(this);
-		
+
 		this.trainCarSelection = new TrainCarSelection(
 			this,
-			gamedatas.visibleTrainCards,this.sharedDestinations,
+			gamedatas.visibleTrainCards,
+			this.sharedDestinations,
 			gamedatas.destinationDeckCount,
 			gamedatas.destinationDeckMaxCount
 		);
@@ -88,7 +89,7 @@ class Expeditions implements ExpeditionsGame {
 			// score or end
 			this.onEnteringEndScore(true);
 		}
-		
+
 		this.setupNotifications();
 		this.setupPreferences();
 
@@ -559,6 +560,17 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
+	 * Sets or remove a player marker on the destination.
+	 */
+	public revealDestination(destination: Destination): void {
+		if (!(this as any).isCurrentPlayerActive()) {
+			return;
+		}
+		this.map.setHighligthedDestination(destination);
+		this.map.revealDestination(this.getCurrentPlayer(), destination);
+	}
+
+	/**
 	 * Highlight cities of selected destination.
 	 */
 	public setSelectedDestination(
@@ -665,7 +677,7 @@ class Expeditions implements ExpeditionsGame {
 		document
 			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
 			.forEach((button) => button.parentElement.removeChild(button));
-/*
+		/*
 		const selectedColor = this.playerTable.getSelectedColor();
 
 		if (selectedColor !== null) {
@@ -979,7 +991,7 @@ class Expeditions implements ExpeditionsGame {
 			["globetrotterWinner", skipEndOfGameAnimations ? 1 : 1500],
 			["highlightWinnerScore", 1],
 		];
-		
+
 		notifs.forEach((notif) => {
 			dojo.subscribe(notif[0], this, `notif_${notif[0]}`);
 			(this as any).notifqueue.setSynchronous(notif[0], notif[1]);
@@ -1096,9 +1108,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
 	 */
-	notif_notEnoughTrainCars() {
-		
-	}
+	notif_notEnoughTrainCars() {}
 
 	/**
 	 * Show last turn banner.
@@ -1220,12 +1230,12 @@ class Expeditions implements ExpeditionsGame {
 				["you", "actplayer", "player_name"].forEach((field) => {
 					if (
 						typeof args[field] === "string" &&
-						args[field].indexOf("#ffed00;") !== -1 &&
+						args[field].indexOf("#df74b2;") !== -1 &&
 						args[field].indexOf("text-shadow") === -1
 					) {
 						args[field] = args[field].replace(
-							"#ffed00;",
-							"#ffed00; text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;"
+							"#df74b2;",
+							"#df74b2; text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;"
 						);
 					}
 				});

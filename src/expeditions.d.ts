@@ -86,31 +86,35 @@ interface ExpeditionsGamedatas {
 }
 
 interface ExpeditionsGame extends Game {
-    map: TtrMap;
+	map: TtrMap;
 
-    clickedRoute(route: Route): void;
-    setPlayerTablePosition(left: boolean): void;
-    getZoom(): number;
-    getCurrentPlayer(): ExpeditionsPlayer;
-    setDestinationsToConnect(destinations: Destination[]): void;
-    getPlayerId(): number;
-    getPlayerScore(playerId: number): number;
-    drawDestinations(): void;
-    onVisibleTrainCarCardClick(itemId: number): void;
-    onHiddenTrainCarDeckClick(number: number): void;
-    setActiveDestination(destination: Destination, previousDestination?: Destination): void;
-    canClaimRoute(route: Route, cardsColor: number): boolean;
-    setHighligthedDestination(destination: Destination | null): void;
-    setSelectedDestination(destination: Destination, visible: boolean): void;
-    addAnimation(animation: WagonsAnimation): void;
-    endAnimation(ended: WagonsAnimation): void;
-    isColorBlindMode(): boolean;
-    isDoubleRouteForbidden(): boolean;
-    selectedColorChanged(selectedColor: number | null): void;
-    setTooltip(id: string, html: string): void;
-    setTooltipToClass(className: string, html: string): void;
-    isGlobetrotterBonusActive(): boolean;
-    isLongestPathBonusActive(): boolean;
+	clickedRoute(route: Route): void;
+	setPlayerTablePosition(left: boolean): void;
+	getZoom(): number;
+	getCurrentPlayer(): ExpeditionsPlayer;
+	setDestinationsToConnect(destinations: Destination[]): void;
+	getPlayerId(): number;
+	getPlayerScore(playerId: number): number;
+	drawDestinations(): void;
+	onVisibleTrainCarCardClick(itemId: number): void;
+	onHiddenTrainCarDeckClick(number: number): void;
+	setActiveDestination(
+		destination: Destination,
+		previousDestination?: Destination
+	): void;
+	canClaimRoute(route: Route, cardsColor: number): boolean;
+	setHighligthedDestination(destination: Destination | null): void;
+	revealDestination(destination: Destination | null): void;
+	setSelectedDestination(destination: Destination, visible: boolean): void;
+	addAnimation(animation: WagonsAnimation): void;
+	endAnimation(ended: WagonsAnimation): void;
+	isColorBlindMode(): boolean;
+	isDoubleRouteForbidden(): boolean;
+	selectedColorChanged(selectedColor: number | null): void;
+	setTooltip(id: string, html: string): void;
+	setTooltipToClass(className: string, html: string): void;
+	isGlobetrotterBonusActive(): boolean;
+	isLongestPathBonusActive(): boolean;
 }
 
 interface EnteringChooseDestinationsArgs {

@@ -273,17 +273,13 @@ class TtrMap {
 	/**
 	 * Handle dragging train car cards over a route.
 	 */
-	private routeDragOver(e: DragEvent, route: Route) {
-		
-	}
+	private routeDragOver(e: DragEvent, route: Route) {}
 
 	/**
 	 * Handle dropping train car cards over a route.
 	 */
 	private routeDragDrop(e: DragEvent, route: Route) {
 		e.preventDefault();
-
-		
 	}
 
 	/**
@@ -752,6 +748,23 @@ class TtrMap {
 				(document.getElementById(`city${city}`).dataset.highlight =
 					visible)
 		);
+	}
+
+	/**
+	 * Sets a player token next to the destination.
+	 */
+	public revealDestination(
+		player: ExpeditionsPlayer,
+		destination: Destination
+	) {
+		const div = document.getElementById(
+			`city${destination.to}`
+		);
+		if (div.dataset.revealedBy) {
+			div.removeAttribute("data-revealed-by");
+		} else {
+			div.dataset.revealedBy = "player" + player.playerNo;
+		}
 	}
 
 	/**

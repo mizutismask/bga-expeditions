@@ -210,7 +210,6 @@ function setupDestinationCardDiv(
 	cardDiv: HTMLDivElement,
 	cardUniqueId: number
 ) {
-	
 	const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
 	//console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
 	cardDiv.title = `${dojo.string.substitute(_("${to}"), {
