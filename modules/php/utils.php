@@ -102,6 +102,9 @@ trait UtilTrait {
         if (!$dbObject || !array_key_exists('id', $dbObject)) {
             throw new BgaSystemException("Destination doesn't exists ".json_encode($dbObject));
         }
+
+    //self::dump('************type_arg*******', $dbObject["type_arg"]);
+        //self::dump('*******************', $this->DESTINATIONS[$dbObject["type"]][$dbObject["type_arg"]]);
         return new Destination($dbObject, $this->DESTINATIONS);
     }
 
@@ -178,7 +181,7 @@ trait UtilTrait {
         return boolval(self::getUniqueValueFromDB($sql));
     }
 
-    function getRevealedDestinationsIds(int $playerId) {
+    function getRevealedDestinationsIdsByPlayer(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `revealed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
@@ -188,6 +191,12 @@ trait UtilTrait {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
         return array_map(fn($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+    }
+
+    function getRevealedDestinationsIds() {
+        $sql = "SELECT `card_id` FROM `destination` WHERE `revealed` = 1";
+        $dbResults = self::getCollectionFromDB($sql);
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
     function getUnompletedDestinationsIds(int $playerId) {

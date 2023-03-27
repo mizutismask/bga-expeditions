@@ -786,7 +786,7 @@ var TtrMap = /** @class */ (function () {
     /**
      * Place map corner illustration and borders, cities, routes, and bind events.
      */
-    function TtrMap(game, players, claimedRoutes) {
+    function TtrMap(game, players, claimedRoutes, revealedDestinations) {
         this.game = game;
         this.players = players;
         this.dragOverlay = null;
@@ -805,6 +805,7 @@ var TtrMap = /** @class */ (function () {
             return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(getCityName(city.id), "\"\n            ></div>"), "cities");
         });
         this.createRouteSpaces("route-spaces");
+        this.showRevealedDestinations(revealedDestinations);
         this.setClaimedRoutes(claimedRoutes, null);
         this.resizedDiv = document.getElementById("resized");
         this.mapDiv = document.getElementById("map");
@@ -1148,7 +1149,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setDestinationsToConnect = function (destinations) {
         this.mapDiv
-            .querySelectorAll(".city[data-to-connect]:not([data-revealed-by=\"shared\"])")
+            .querySelectorAll(".city[data-to-connect]:not([data-revealed-by])")
             .forEach(function (city) { return (city.dataset.toConnect = "false"); });
         var cities = [];
         destinations.forEach(function (destination) { return cities.push(destination.to); });
@@ -1187,7 +1188,22 @@ var TtrMap = /** @class */ (function () {
         }
         else {
             div.dataset.revealedBy = player.color;
+            document.getElementById("city".concat(destination.to)).dataset.toConnect =
+                "true";
         }
+    };
+    /**
+     * Sets a marker on all revealed destinations to indicate to which player the destination belongs.
+     */
+    TtrMap.prototype.showRevealedDestinations = function (destinationsByPlayer) {
+        destinationsByPlayer.forEach(function (destinations, player) {
+            destinations.forEach(function (d) {
+                document.getElementById("city".concat(d.to)).dataset.revealedBy =
+                    player.color;
+                document.getElementById("city".concat(d.to)).dataset.toConnect =
+                    "true";
+            });
+        });
     };
     /**
      * Sets a marker to indicate that the destination is shared.
@@ -1197,8 +1213,7 @@ var TtrMap = /** @class */ (function () {
         destinations.forEach(function (d) {
             document.getElementById("city".concat(d.to)).dataset.revealedBy =
                 "shared";
-            document.getElementById("city".concat(d.to)).dataset.toConnect =
-                "true";
+            document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
         });
     };
     /**
@@ -1396,6 +1411,10 @@ var SharedDestinationDeck = /** @class */ (function () {
         var _this = this;
         dojo.removeClass("destination-deck", "hidden");
         destinations.forEach(function (destination) {
+            /*console.log(
+                "add shared",
+                destination.type * 100 + destination.type_arg
+            );*/
             _this.sharedDestinations.addToStockWithId(destination.type * 100 + destination.type_arg, "" + destination.id);
             var cardDiv = document.getElementById("shared-destination-stock_item_".concat(destination.id));
             // when mouse hover destination, highlight it on the map
@@ -2011,6 +2030,17 @@ var EndScore = /** @class */ (function () {
     };
     return EndScore;
 }());
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var ANIMATION_MS = 500;
 var SCORE_MS = 1500;
 var isDebug = window.location.host == "studio.boardgamearena.com";
@@ -2047,7 +2077,7 @@ var Expeditions = /** @class */ (function () {
         log("Starting game setup");
         this.gamedatas = gamedatas;
         log("gamedatas", gamedatas);
-        this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes);
+        this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinations));
         this.destinationSelection = new DestinationSelection(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.trainCarSelection = new TrainCarSelection(this, gamedatas.visibleTrainCards, this.sharedDestinations, gamedatas.destinationDeckCount, gamedatas.destinationDeckMaxCount);
@@ -2162,6 +2192,9 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.onLeavingState = function (stateName) {
         log("Leaving state: " + stateName);
         switch (stateName) {
+            case "revealDestination":
+                this.map.setHighligthedDestination(null);
+                break;
             case "privateChooseInitialDestinations":
             case "chooseInitialDestinations":
             case "chooseAdditionalDestinations":
@@ -2243,6 +2276,25 @@ var Expeditions = /** @class */ (function () {
     ///////////////////////////////////////////////////
     //// Utility methods
     ///////////////////////////////////////////////////
+    Expeditions.prototype.getDestinationsByPlayer = function (destinations) {
+        var _this = this;
+        var destinationsByPlayer = this.groupBy(destinations, function (p) { return p.location_arg; });
+        var typedDestinationsByPlayer = new Map();
+        Object.entries(destinationsByPlayer).forEach(function (e) {
+            var playerId = e[0], destinations = e[1];
+            typedDestinationsByPlayer.set(_this.gamedatas.players[playerId], destinations);
+        });
+        return typedDestinationsByPlayer;
+    };
+    Expeditions.prototype.groupBy = function (arr, fn) {
+        return arr.reduce(function (prev, curr) {
+            var _a;
+            var groupKey = fn(curr);
+            var group = prev[groupKey] || [];
+            group.push(curr);
+            return __assign(__assign({}, prev), (_a = {}, _a[groupKey] = group, _a));
+        }, {});
+    };
     Expeditions.prototype.isGlobetrotterBonusActive = function () {
         return this.gamedatas.isGlobetrotterBonusActive;
     };
@@ -2387,6 +2439,15 @@ var Expeditions = /** @class */ (function () {
             : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), destination);
+    };
+    /**
+     * Sets a player marker on the destination.
+     */
+    Expeditions.prototype.showRevealedDestination = function (player, destination) {
+        if (player.id != this.getCurrentPlayer().id) {
+            this.map.setHighligthedDestination(destination);
+            this.map.revealDestination(player, destination);
+        }
     };
     Expeditions.prototype.showSharedDestinations = function (destinations) {
         this.map.showSharedDestinations(destinations);
@@ -2742,6 +2803,7 @@ var Expeditions = /** @class */ (function () {
             ["notEnoughTrainCars", 1],
             ["lastTurn", 1],
             ["bestScore", 1],
+            ["destinationRevealed", 1],
             ["scoreDestination", skipEndOfGameAnimations ? 1 : 2000],
             ["longestPath", skipEndOfGameAnimations ? 1 : 2000],
             ["longestPathWinner", skipEndOfGameAnimations ? 1 : 1500],
@@ -2765,6 +2827,12 @@ var Expeditions = /** @class */ (function () {
         var _a;
         this.setPoints(notif.args.playerId, notif.args.points);
         (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setPoints(notif.args.playerId, notif.args.points);
+    };
+    /**
+     * Update player score.
+     */
+    Expeditions.prototype.notif_destinationRevealed = function (notif) {
+        this.showRevealedDestination(this.gamedatas.players[notif.args.playerId], notif.args.destination);
     };
     /**
      * Update player destinations.

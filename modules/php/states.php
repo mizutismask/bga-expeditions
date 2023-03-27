@@ -65,7 +65,7 @@ trait StateTrait {
     function stNextReveal() {
         $playerId = self::activeNextPlayer();
         $nextState = 'nextPlayer';
-        if (count($this->getRevealedDestinationsIds($playerId)) < DESTINATIONS_TO_REVEAL_COUNT) {
+        if (count($this->getRevealedDestinationsIdsByPlayer($playerId)) < DESTINATIONS_TO_REVEAL_COUNT) {
             self::giveExtraTime($playerId);
             $nextState = 'nextReveal';
         }

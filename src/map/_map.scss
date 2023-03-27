@@ -265,27 +265,27 @@
   &[data-revealed-by] {
     border-radius: 50px;
     box-sizing: border-box;
-    border: 4px solid;
+    border: 8px solid;
   }
   &[data-revealed-by="shared"] {
-    border-color: white; //shared destination
+    border-color: black; //shared destination
   }
-  &[data-revealed-by="player1"] {
+  &[data-revealed-by="df3e33"] {
     border-color: #df3e33;
   }
-  &[data-revealed-by="player2"] {
+  &[data-revealed-by="30b0e1"] {
     border-color: #30b0e1;
   }
-  &[data-revealed-by="player3"] {
+  &[data-revealed-by="77bd25"] {
     border-color: #77bd25;
   }
-  &[data-revealed-by="player4"] {
+  &[data-revealed-by="eca51c"] {
     border-color: #eca51c;
   }
-  &[data-revealed-by="player5"] {
+  &[data-revealed-by="df74b2"] {
     border-color: #df74b2;
   }
-  &[data-revealed-by="player6"] {
+  &[data-revealed-by="d8d7d7"] {
     border-color: #d8d7d7;
   }
 }

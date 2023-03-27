@@ -65,6 +65,7 @@ interface ExpeditionsGamedatas {
 	// Add here variables you set up in getAllDatas
 	claimedRoutes: ClaimedRoute[];
 	visibleTrainCards: Destination[];
+	revealedDestinations: Destination[];
 
 	// private informations for current player only
 	handTrainCars: TrainCar[];
@@ -161,6 +162,11 @@ interface EnteringConfirmTunnelArgs {
 interface NotifPointsArgs {
 	playerId: number;
 	points: number;
+}
+
+interface NotifDestinationRevealedArgs {
+	playerId: number;
+	destination: Destination;
 }
 
 interface NotifDestinationsPickedArgs {

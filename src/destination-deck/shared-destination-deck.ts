@@ -42,6 +42,11 @@ class SharedDestinationDeck {
 		dojo.removeClass("destination-deck", "hidden");
 
 		destinations.forEach((destination) => {
+			/*console.log(
+				"add shared",
+				destination.type * 100 + destination.type_arg
+			);*/
+			
 			this.sharedDestinations.addToStockWithId(
 				destination.type * 100 + destination.type_arg,
 				"" + destination.id

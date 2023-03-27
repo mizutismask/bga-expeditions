@@ -181,7 +181,8 @@ class TtrMap {
 	constructor(
 		private game: ExpeditionsGame,
 		private players: ExpeditionsPlayer[],
-		claimedRoutes: ClaimedRoute[]
+		claimedRoutes: ClaimedRoute[],
+		revealedDestinations: Map<ExpeditionsPlayer, Destination[]>
 	) {
 		// map border
 		dojo.place(
@@ -214,7 +215,7 @@ class TtrMap {
 		);
 
 		this.createRouteSpaces("route-spaces");
-
+		this.showRevealedDestinations(revealedDestinations);
 		this.setClaimedRoutes(claimedRoutes, null);
 
 		this.resizedDiv = document.getElementById("resized") as HTMLDivElement;
@@ -716,7 +717,7 @@ class TtrMap {
 	public setDestinationsToConnect(destinations: Destination[]): void {
 		this.mapDiv
 			.querySelectorAll(
-				`.city[data-to-connect]:not([data-revealed-by="shared"])`
+				`.city[data-to-connect]:not([data-revealed-by])`
 			)
 			.forEach((city: HTMLElement) => (city.dataset.toConnect = "false"));
 		const cities = [];
@@ -764,7 +765,23 @@ class TtrMap {
 			div.removeAttribute("data-revealed-by");
 		} else {
 			div.dataset.revealedBy = player.color;
+			document.getElementById(`city${destination.to}`).dataset.toConnect =
+				"true";
 		}
+	}
+
+	/**
+	 * Sets a marker on all revealed destinations to indicate to which player the destination belongs.
+	 */
+	public showRevealedDestinations(destinationsByPlayer:Map<ExpeditionsPlayer, Destination[]>) {
+		destinationsByPlayer.forEach(function (destinations, player) {
+			destinations.forEach((d) => {
+				document.getElementById(`city${d.to}`).dataset.revealedBy =
+					player.color;
+				document.getElementById(`city${d.to}`).dataset.toConnect =
+					"true";
+			});
+		});
 	}
 
 	/**
@@ -773,13 +790,11 @@ class TtrMap {
 	public showSharedDestinations(destinations: Destination[]) {
 		console.log("showSharedDestinations", destinations);
 
-		destinations.forEach(
-			(d) =>{
-				document.getElementById(`city${d.to}`).dataset.revealedBy =
-					"shared";
-				document.getElementById(`city${d.to}`).dataset.toConnect =
-					"true";
-			});
+		destinations.forEach((d) => {
+			document.getElementById(`city${d.to}`).dataset.revealedBy =
+				"shared";
+			document.getElementById(`city${d.to}`).dataset.toConnect = "true";
+		});
 	}
 
 	/**

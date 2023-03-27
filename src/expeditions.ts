@@ -57,7 +57,8 @@ class Expeditions implements ExpeditionsGame {
 		this.map = new TtrMap(
 			this,
 			Object.values(gamedatas.players),
-			gamedatas.claimedRoutes
+			gamedatas.claimedRoutes,
+			this.getDestinationsByPlayer(this.gamedatas.revealedDestinations)
 		);
 
 		this.destinationSelection = new DestinationSelection(this);
@@ -232,6 +233,9 @@ class Expeditions implements ExpeditionsGame {
 		log("Leaving state: " + stateName);
 
 		switch (stateName) {
+			case "revealDestination":
+				this.map.setHighligthedDestination(null);
+				break;
 			case "privateChooseInitialDestinations":
 			case "chooseInitialDestinations":
 			case "chooseAdditionalDestinations":
@@ -352,6 +356,31 @@ class Expeditions implements ExpeditionsGame {
 	//// Utility methods
 
 	///////////////////////////////////////////////////
+
+	public getDestinationsByPlayer(destinations: Destination[]) {
+		const destinationsByPlayer = this.groupBy(destinations, (p) => p.location_arg);
+		const typedDestinationsByPlayer = new Map<
+			ExpeditionsPlayer,
+			Destination[]
+		>();
+		Object.entries(destinationsByPlayer).forEach(
+			(e) => {
+				const [playerId, destinations] = e;
+				typedDestinationsByPlayer.set(this.gamedatas.players[playerId], destinations);
+			}
+		);
+		return typedDestinationsByPlayer;
+	}
+
+	public groupBy<T>(arr: T[], fn: (item: T) => any) {
+    return arr.reduce<Record<string, T[]>>((prev, curr) => {
+        const groupKey = fn(curr);
+        const group = prev[groupKey] || [];
+        group.push(curr);
+        return { ...prev, [groupKey]: group };
+    }, {});
+	}
+
 	public isGlobetrotterBonusActive(): boolean {
 		return this.gamedatas.isGlobetrotterBonusActive;
 	}
@@ -579,6 +608,19 @@ class Expeditions implements ExpeditionsGame {
 			: (this.destinationToReveal = destination);
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), destination);
+	}
+
+	/**
+	 * Sets a player marker on the destination.
+	 */
+	public showRevealedDestination(
+		player: ExpeditionsPlayer,
+		destination: Destination
+	): void {
+		if (player.id != this.getCurrentPlayer().id) {
+			this.map.setHighligthedDestination(destination);
+			this.map.revealDestination(player, destination);
+		}
 	}
 
 	public showSharedDestinations(destinations: Destination[]): void {
@@ -1014,6 +1056,7 @@ class Expeditions implements ExpeditionsGame {
 			["notEnoughTrainCars", 1],
 			["lastTurn", 1],
 			["bestScore", 1],
+			["destinationRevealed", 1],
 			["scoreDestination", skipEndOfGameAnimations ? 1 : 2000],
 			["longestPath", skipEndOfGameAnimations ? 1 : 2000],
 			["longestPathWinner", skipEndOfGameAnimations ? 1 : 1500],
@@ -1039,6 +1082,16 @@ class Expeditions implements ExpeditionsGame {
 	notif_points(notif: Notif<NotifPointsArgs>) {
 		this.setPoints(notif.args.playerId, notif.args.points);
 		this.endScore?.setPoints(notif.args.playerId, notif.args.points);
+	}
+
+	/**
+	 * Update player score.
+	 */
+	notif_destinationRevealed(notif: Notif<NotifDestinationRevealedArgs>) {
+		this.showRevealedDestination(
+			this.gamedatas.players[notif.args.playerId],
+			notif.args.destination
+		);
 	}
 
 	/**
