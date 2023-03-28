@@ -74,6 +74,7 @@ define('SHOW_TURN_ORDER', 'SHOW_TURN_ORDER');
  */
 
 define('LAST_TURN', 'LAST_TURN');
+define('TICKETS_USED', 'TICKETS_USED');
 
 /*
  * Global variables (objects)

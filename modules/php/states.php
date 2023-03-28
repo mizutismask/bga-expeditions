@@ -37,6 +37,8 @@ trait StateTrait {
         self::incStat(1, 'turnsNumber');
         self::incStat(1, 'turnsNumber', $playerId);
 
+        $this->setGameStateValue(TICKETS_USED, 0);
+
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 
         // check if it was last action from player who started last turn

@@ -113,8 +113,8 @@ $playerActionsGameStates = [
 
     ST_PLAYER_CHOOSE_ACTION => [
         "name" => "chooseAction",
-        "description" => clienttranslate('${actplayer} must draw train car cards, claim a route or draw destination tickets'),
-        "descriptionmyturn" => clienttranslate('${you} must draw train car cards, claim a route or draw destination tickets'),
+        "description" => clienttranslate('${actplayer} must start/continue an expedition or use tickets'),
+        "descriptionmyturn" => clienttranslate('${you} must start/continue an expedition or use tickets'),
         "descriptionNoTrainCarsCards" => clienttranslate('${actplayer} must claim a route or draw destination tickets'),
         "descriptionmyturnNoTrainCarsCards" => clienttranslate('${you} must claim a route or draw destination tickets'),
         "type" => "activeplayer",
@@ -124,6 +124,7 @@ $playerActionsGameStates = [
             "drawTableCard",
             "claimRoute",
             "drawDestinations",
+            "useTicket",
             "pass",
         ],
         "transitions" => [
