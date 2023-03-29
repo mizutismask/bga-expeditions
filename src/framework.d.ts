@@ -23,25 +23,27 @@ interface Notif<T> {
 
 /* TODO repace Function by (..params) => void */
 interface Dojo {
-    place: (html: string, nodeId: string | HTMLElement, action?: string) => void;
-    style: Function;
-    hitch: Function;
-    hasClass: (nodeId: string, className: string) => boolean;
-    addClass: (nodeId: string, className: string) => void;
-    removeClass: (nodeId: string, className?: string) => void;
-    toggleClass: (nodeId: string, className: string, forceValue?: boolean) => void;
-    connect: Function;
-    disconnect: Function;
-    query: Function;
-    subscribe: Function;
-    string: any;
-    fx: any;
-    marginBox: Function;
-    fadeIn: Function;
-    trim: Function;
-    stopEvent: (evt) => void;
-    destroy: (nodeId: string) => void;
-    forEach: Function;
+    attr: Function;
+	create: Function;
+	place: (html: string, nodeId: string | HTMLElement, action?: string) => void;
+	style: Function;
+	hitch: Function;
+	hasClass: (nodeId: string, className: string) => boolean;
+	addClass: (nodeId: string, className: string) => void;
+	removeClass: (nodeId: string, className?: string) => void;
+	toggleClass: (nodeId: string, className: string, forceValue?: boolean) => void;
+	connect: Function;
+	disconnect: Function;
+	query: Function;
+	subscribe: Function;
+	string: any;
+	fx: any;
+	marginBox: Function;
+	fadeIn: Function;
+	trim: Function;
+	stopEvent: (evt) => void;
+	destroy: (nodeId: string) => void;
+	forEach: Function;
 }
 
 type Gamestate = any; // TODO

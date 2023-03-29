@@ -120,6 +120,39 @@ html, .mode_3d #game_play_area_background {
     }
 }
 
+ /* Makes the svg arrow to change color */
+.arrow{
+    width: 36px;
+    height: 17;
+    background-color: black;
+    overflow: hidden;
+    color: transparent;
+
+    /* Store the SVG in a variable so it's easy to re-use */
+    --svg: url('data:image/svg+xml,\
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 0 20 9.379">\
+        <path d="M22.838,0.798C22.75,1.672,23.986,3,23.986,3S12.338,3,11.781,3C9.91,3,9.988,4.326,10.006,4.521\
+	C9.988,4.712,9.91,6,11.781,6c0.557,0,12.205,0,12.205,0s-1.236,1.85-1.148,2.725C23.059,10.938,29.924,7,29.996,5\
+	C29.924,2,23.059-1.417,22.838,0.798z"/>\
+    </svg>');
+
+    /* Chrome, still requires prefix in 2022 */
+    -webkit-mask: var(--svg);
+
+    /* Firefox and Safari */
+    mask: var(--svg);
+
+    &.blue{
+        background-color: blue;
+    }
+    &.red {
+        background-color: red;
+    }
+    &.yellow {
+        background-color: rgb(252, 252, 56);
+    }
+}
+
 .dijitTooltipContents {
     .destinations-flex {
         display: flex;

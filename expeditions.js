@@ -30,6 +30,7 @@ function setupDestinationCards(stock) {
 var BLUE = 1;
 var YELLOW = 2;
 var RED = 3;
+var COLORS = [BLUE, YELLOW, RED];
 function getColor(color, type) {
     switch (color) {
         case 1:
@@ -407,6 +408,7 @@ var RouteSpace = /** @class */ (function () {
 }());
 var Route = /** @class */ (function () {
     function Route(id, from, to, spaces, color) {
+        if (color === void 0) { color = 0; }
         this.id = id;
         this.from = from;
         this.to = to;
@@ -547,104 +549,115 @@ var CITIES = [
 var ROUTES = [
     //routes from the starting point (compass)
     //other routes between cities
-    new Route(1, 100, 129, [new RouteSpace(819, 179, 143, -82)], RED),
-    new Route(2, 100, 130, [new RouteSpace(751, 123, 86, 55)], RED),
-    new Route(3, 100, 131, [new RouteSpace(727, 238, 80, -13)], RED),
-    new Route(4, 100, 132, [new RouteSpace(813, 318, 78, -86)], RED),
-    new Route(5, 100, 133, [new RouteSpace(826, 229, 142, 69)], RED),
-    new Route(6, 101, 102, [new RouteSpace(126, 81, 113, -22)], RED),
-    new Route(7, 101, 105, [new RouteSpace(116, 101, 98, 90)], RED),
-    new Route(8, 103, 114, [new RouteSpace(501, 83, 133, -21)], RED),
-    new Route(9, 104, 105, [new RouteSpace(133, 213, 78, -13)], RED),
-    new Route(10, 104, 109, [new RouteSpace(234, 204, 142, 33)], RED),
-    new Route(11, 105, 108, [new RouteSpace(111, 229, 108, 88)], RED),
-    new Route(12, 106, 108, [new RouteSpace(122, 340, 84, -60)], RED),
-    new Route(13, 106, 109, [new RouteSpace(188, 254, 165, 13)], RED),
-    new Route(14, 107, 110, [new RouteSpace(263, 429, 126, 45)], RED),
-    new Route(15, 107, 112, [new RouteSpace(250, 546, 93, -7)], RED),
-    new Route(16, 108, 111, [new RouteSpace(116, 369, 139, 76)], RED),
-    new Route(17, 109, 110, [new RouteSpace(263, 406, 132, -46)], RED),
-    new Route(18, 110, 111, [new RouteSpace(169, 503, 103, -46)], RED),
-    new Route(19, 111, 112, [new RouteSpace(169, 523, 56, 24)], RED),
-    new Route(20, 112, 124, [new RouteSpace(162, 703, 158, -67)], RED),
-    new Route(21, 112, 115, [new RouteSpace(242, 559, 133, 33)], RED),
-    new Route(22, 113, 131, [new RouteSpace(550, 251, 147, -3)], RED),
-    new Route(23, 114, 130, [new RouteSpace(651, 37, 100, 39)], RED),
-    new Route(24, 115, 116, [new RouteSpace(378, 652, 90, 42)], RED),
-    new Route(25, 115, 117, [new RouteSpace(367, 657, 98, 77)], RED),
-    new Route(26, 116, 119, [new RouteSpace(426, 824, 92, -70)], RED),
-    new Route(27, 116, 120, [new RouteSpace(467, 735, 122, 61)], RED),
-    new Route(28, 117, 118, [new RouteSpace(293, 818, 95, -29)], RED),
-    new Route(29, 117, 121, [new RouteSpace(363, 885, 110, -77)], RED),
-    new Route(30, 118, 121, [new RouteSpace(289, 833, 82, 47)], RED),
-    new Route(31, 118, 125, [new RouteSpace(86, 853, 179, -9)], RED),
-    new Route(32, 119, 122, [new RouteSpace(421, 851, 92, 80)], RED),
-    new Route(33, 120, 122, [new RouteSpace(449, 950, 115, -46)], RED),
-    new Route(34, 121, 123, [new RouteSpace(355, 1019, 101, -90)], RED),
-    new Route(35, 122, 123, [new RouteSpace(365, 1027, 85, -43)], RED),
-    new Route(36, 123, 127, [new RouteSpace(355, 1049, 159, 75)], RED),
-    new Route(37, 124, 125, [new RouteSpace(82, 839, 126, -61)], RED),
-    new Route(38, 125, 126, [new RouteSpace(65, 1020, 154, -86)], RED),
-    new Route(39, 127, 128, [new RouteSpace(412, 1227, 157, 23)], RED),
-    new Route(40, 130, 131, [new RouteSpace(711, 228, 108, -78)], RED),
-    new Route(41, 133, 134, [new RouteSpace(775, 397, 95, -11)], RED),
-    new Route(42, 133, 137, [new RouteSpace(891, 393, 44, 62)], RED),
-    new Route(43, 133, 149, [new RouteSpace(898, 384, 87, 35)], RED),
-    new Route(44, 134, 136, [new RouteSpace(769, 410, 105, 61)], RED),
-    new Route(45, 134, 137, [new RouteSpace(776, 402, 131, 16)], RED),
-    new Route(46, 134, 138, [new RouteSpace(701, 533, 133, -66)], RED),
-    new Route(47, 136, 139, [new RouteSpace(838, 527, 10, 39)], RED),
-    new Route(48, 136, 142, [new RouteSpace(800, 688, 159, -81)], RED),
-    new Route(49, 136, 137, [new RouteSpace(838, 505, 84, -34)], RED),
-    new Route(50, 137, 140, [new RouteSpace(930, 457, 135, 61)], RED),
-    new Route(51, 138, 141, [new RouteSpace(697, 659, 97, -88)], RED),
-    new Route(52, 139, 143, [new RouteSpace(934, 617, 113, 89)], RED),
-    new Route(53, 140, 143, [new RouteSpace(949, 731, 138, -67)], RED),
-    new Route(54, 141, 142, [new RouteSpace(712, 679, 76, 16)], RED),
-    new Route(55, 142, 143, [new RouteSpace(814, 709, 114, 16)], RED),
-    new Route(56, 143, 144, [new RouteSpace(915, 885, 126, -79)], RED),
-    new Route(57, 144, 147, [new RouteSpace(927, 903, 141, 2)], RED),
-    new Route(58, 145, 146, [new RouteSpace(811, 1023, 88, -70)], RED),
-    new Route(59, 146, 148, [new RouteSpace(821, 1044, 115, 29)], RED),
-    new Route(60, 149, 150, [new RouteSpace(1000, 438, 92, -23)], RED),
-    new Route(61, 149, 151, [new RouteSpace(999, 444, 104, 2)], RED),
-    new Route(62, 149, 152, [new RouteSpace(987, 457, 133, 59)], RED),
-    new Route(63, 150, 153, [new RouteSpace(103, 309, 5, 73)], RED),
-    new Route(64, 150, 157, [new RouteSpace(1115, 395, 93, 2)], RED),
-    new Route(65, 151, 152, [new RouteSpace(1073, 569, 116, -67)], RED),
-    new Route(66, 151, 162, [new RouteSpace(1136, 450, 161, 15)], RED),
-    new Route(67, 153, 156, [new RouteSpace(1083, 284, 91, -22)], RED),
-    new Route(68, 154, 155, [new RouteSpace(1045, 155, 157, -37)], RED),
-    new Route(69, 155, 156, [new RouteSpace(1183, 63, 167, 90)], RED),
-    new Route(70, 155, 158, [new RouteSpace(1199, 49, 151, 9)], RED),
-    new Route(71, 157, 161, [new RouteSpace(1239, 400, 115, 13)], RED),
-    new Route(72, 157, 162, [new RouteSpace(1238, 409, 94, 53)], RED),
-    new Route(73, 158, 159, [new RouteSpace(1375, 93, 83, 59)], RED),
-    new Route(74, 158, 168, [new RouteSpace(1377, 77, 119, -11)], RED),
-    new Route(75, 159, 167, [new RouteSpace(1438, 181, 144, 8)], RED),
-    new Route(76, 159, 168, [new RouteSpace(1433, 168, 125, -58)], RED),
-    new Route(77, 160, 167, [new RouteSpace(1523, 319, 116, -58)], RED),
-    new Route(78, 160, 170, [new RouteSpace(1534, 337, 161, 4)], RED),
-    new Route(79, 161, 166, [new RouteSpace(1385, 422, 139, -8)], RED),
-    new Route(80, 162, 163, [new RouteSpace(1311, 511, 140, 75)], RED),
-    new Route(81, 162, 164, [new RouteSpace(1322, 503, 102, 22)], RED),
-    new Route(82, 163, 164, [new RouteSpace(1357, 646, 107, -50)], RED),
-    new Route(83, 163, 165, [new RouteSpace(1367, 656, 108, -14)], RED),
-    new Route(84, 164, 166, [new RouteSpace(1443, 535, 151, -54)], RED),
-    new Route(85, 165, 172, [new RouteSpace(1497, 635, 160, 63)], RED),
-    new Route(86, 168, 169, [new RouteSpace(1525, 49, 169, 0)], RED),
-    new Route(87, 171, 174, [new RouteSpace(1501, 856, 114, 54)], RED),
-    new Route(88, 171, 175, [new RouteSpace(1495, 860, 148, 78)], RED),
-    new Route(89, 172, 173, [new RouteSpace(1594, 799, 145, 43)], RED),
-    new Route(90, 173, 174, [new RouteSpace(1590, 943, 117, -19)], RED),
-    new Route(91, 174, 176, [new RouteSpace(1591, 967, 102, 38)], RED),
-    new Route(92, 175, 177, [new RouteSpace(1530, 1037, 56, 84)], RED),
-    new Route(93, 177, 178, [new RouteSpace(1404, 1143, 122, -14)], RED),
-    new Route(94, 177, 179, [new RouteSpace(1525, 1255, 129, -86)], RED),
-    new Route(95, 179, 180, [new RouteSpace(1543, 1270, 93, 2)], RED),
+    new Route(1, 100, 129, [new RouteSpace(819, 179, 143, -82)]),
+    new Route(2, 100, 130, [new RouteSpace(751, 123, 86, 55)]),
+    new Route(3, 100, 131, [new RouteSpace(727, 238, 80, -13)]),
+    new Route(4, 100, 132, [new RouteSpace(813, 318, 78, -86)]),
+    new Route(5, 100, 133, [new RouteSpace(826, 229, 142, 69)]),
+    new Route(6, 101, 102, [new RouteSpace(126, 81, 113, -22)]),
+    new Route(7, 101, 105, [new RouteSpace(116, 101, 98, 90)]),
+    new Route(8, 103, 114, [new RouteSpace(501, 83, 133, -21)]),
+    new Route(9, 104, 105, [new RouteSpace(133, 213, 78, -13)]),
+    new Route(10, 104, 109, [new RouteSpace(234, 204, 142, 33)]),
+    new Route(11, 105, 108, [new RouteSpace(111, 229, 108, 88)]),
+    new Route(12, 106, 108, [new RouteSpace(122, 340, 84, -60)]),
+    new Route(13, 106, 109, [new RouteSpace(188, 254, 165, 13)]),
+    new Route(14, 107, 110, [new RouteSpace(263, 429, 126, 45)]),
+    new Route(15, 107, 112, [new RouteSpace(250, 546, 93, -7)]),
+    new Route(16, 108, 111, [new RouteSpace(116, 369, 139, 76)]),
+    new Route(17, 109, 110, [new RouteSpace(263, 406, 132, -46)]),
+    new Route(18, 110, 111, [new RouteSpace(169, 503, 103, -46)]),
+    new Route(19, 111, 112, [new RouteSpace(169, 523, 56, 24)]),
+    new Route(20, 112, 124, [new RouteSpace(162, 703, 158, -67)]),
+    new Route(21, 112, 115, [new RouteSpace(242, 559, 133, 33)]),
+    new Route(22, 113, 131, [new RouteSpace(550, 251, 147, -3)]),
+    new Route(23, 114, 130, [new RouteSpace(651, 37, 100, 39)]),
+    new Route(24, 115, 116, [new RouteSpace(378, 652, 90, 42)]),
+    new Route(25, 115, 117, [new RouteSpace(367, 657, 98, 77)]),
+    new Route(26, 116, 119, [new RouteSpace(426, 824, 92, -70)]),
+    new Route(27, 116, 120, [new RouteSpace(467, 735, 122, 61)]),
+    new Route(28, 117, 118, [new RouteSpace(293, 818, 95, -29)]),
+    new Route(29, 117, 121, [new RouteSpace(363, 885, 110, -77)]),
+    new Route(30, 118, 121, [new RouteSpace(289, 833, 82, 47)]),
+    new Route(31, 118, 125, [new RouteSpace(86, 853, 179, -9)]),
+    new Route(32, 119, 122, [new RouteSpace(421, 851, 92, 80)]),
+    new Route(33, 120, 122, [new RouteSpace(449, 950, 115, -46)]),
+    new Route(34, 121, 123, [new RouteSpace(355, 1019, 101, -90)]),
+    new Route(35, 122, 123, [new RouteSpace(365, 1027, 85, -43)]),
+    new Route(36, 123, 127, [new RouteSpace(355, 1049, 159, 75)]),
+    new Route(37, 124, 125, [new RouteSpace(82, 839, 126, -61)]),
+    new Route(38, 125, 126, [new RouteSpace(65, 1020, 154, -86)]),
+    new Route(39, 127, 128, [new RouteSpace(412, 1227, 157, 23)]),
+    new Route(40, 130, 131, [new RouteSpace(711, 228, 108, -78)]),
+    new Route(41, 133, 134, [new RouteSpace(775, 397, 95, -11)]),
+    new Route(42, 133, 137, [new RouteSpace(891, 393, 44, 62)]),
+    new Route(43, 133, 149, [new RouteSpace(898, 384, 87, 35)]),
+    new Route(44, 134, 136, [new RouteSpace(769, 410, 105, 61)]),
+    new Route(45, 134, 137, [new RouteSpace(776, 402, 131, 16)]),
+    new Route(46, 134, 138, [new RouteSpace(701, 533, 133, -66)]),
+    new Route(47, 136, 139, [new RouteSpace(838, 527, 10, 39)]),
+    new Route(48, 136, 142, [new RouteSpace(800, 688, 159, -81)]),
+    new Route(49, 136, 137, [new RouteSpace(838, 505, 84, -34)]),
+    new Route(50, 137, 140, [new RouteSpace(930, 457, 135, 61)]),
+    new Route(51, 138, 141, [new RouteSpace(697, 659, 97, -88)]),
+    new Route(52, 139, 143, [new RouteSpace(934, 617, 113, 89)]),
+    new Route(53, 140, 143, [new RouteSpace(949, 731, 138, -67)]),
+    new Route(54, 141, 142, [new RouteSpace(712, 679, 76, 16)]),
+    new Route(55, 142, 143, [new RouteSpace(814, 709, 114, 16)]),
+    new Route(56, 143, 144, [new RouteSpace(915, 885, 126, -79)]),
+    new Route(57, 144, 147, [new RouteSpace(927, 903, 141, 2)]),
+    new Route(58, 145, 146, [new RouteSpace(811, 1023, 88, -70)]),
+    new Route(59, 146, 148, [new RouteSpace(821, 1044, 115, 29)]),
+    new Route(60, 149, 150, [new RouteSpace(1000, 438, 92, -23)]),
+    new Route(61, 149, 151, [new RouteSpace(999, 444, 104, 2)]),
+    new Route(62, 149, 152, [new RouteSpace(987, 457, 133, 59)]),
+    new Route(63, 150, 153, [new RouteSpace(103, 309, 5, 73)]),
+    new Route(64, 150, 157, [new RouteSpace(1115, 395, 93, 2)]),
+    new Route(65, 151, 152, [new RouteSpace(1073, 569, 116, -67)]),
+    new Route(66, 151, 162, [new RouteSpace(1136, 450, 161, 15)]),
+    new Route(67, 153, 156, [new RouteSpace(1083, 284, 91, -22)]),
+    new Route(68, 154, 155, [new RouteSpace(1045, 155, 157, -37)]),
+    new Route(69, 155, 156, [new RouteSpace(1183, 63, 167, 90)]),
+    new Route(70, 155, 158, [new RouteSpace(1199, 49, 151, 9)]),
+    new Route(71, 157, 161, [new RouteSpace(1239, 400, 115, 13)]),
+    new Route(72, 157, 162, [new RouteSpace(1238, 409, 94, 53)]),
+    new Route(73, 158, 159, [new RouteSpace(1375, 93, 83, 59)]),
+    new Route(74, 158, 168, [new RouteSpace(1377, 77, 119, -11)]),
+    new Route(75, 159, 167, [new RouteSpace(1438, 181, 144, 8)]),
+    new Route(76, 159, 168, [new RouteSpace(1433, 168, 125, -58)]),
+    new Route(77, 160, 167, [new RouteSpace(1523, 319, 116, -58)]),
+    new Route(78, 160, 170, [new RouteSpace(1534, 337, 161, 4)]),
+    new Route(79, 161, 166, [new RouteSpace(1385, 422, 139, -8)]),
+    new Route(80, 162, 163, [new RouteSpace(1311, 511, 140, 75)]),
+    new Route(81, 162, 164, [new RouteSpace(1322, 503, 102, 22)]),
+    new Route(82, 163, 164, [new RouteSpace(1357, 646, 107, -50)]),
+    new Route(83, 163, 165, [new RouteSpace(1367, 656, 108, -14)]),
+    new Route(84, 164, 166, [new RouteSpace(1443, 535, 151, -54)]),
+    new Route(85, 165, 172, [new RouteSpace(1497, 635, 160, 63)]),
+    new Route(86, 168, 169, [new RouteSpace(1525, 49, 169, 0)]),
+    new Route(87, 171, 174, [new RouteSpace(1501, 856, 114, 54)]),
+    new Route(88, 171, 175, [new RouteSpace(1495, 860, 148, 78)]),
+    new Route(89, 172, 173, [new RouteSpace(1594, 799, 145, 43)]),
+    new Route(90, 173, 174, [new RouteSpace(1590, 943, 117, -19)]),
+    new Route(91, 174, 176, [new RouteSpace(1591, 967, 102, 38)]),
+    new Route(92, 175, 177, [new RouteSpace(1530, 1037, 56, 84)]),
+    new Route(93, 177, 178, [new RouteSpace(1404, 1143, 122, -14)]),
+    new Route(94, 177, 179, [new RouteSpace(1525, 1255, 129, -86)]),
+    new Route(95, 179, 180, [new RouteSpace(1543, 1270, 93, 2)]),
     //routes from red points
     //routes from blue points
 ];
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var DRAG_AUTO_ZOOM_DELAY = 2000;
 var SIDES = ["left", "right", "top", "bottom"];
 var CORNERS = ["bottom-left", "bottom-right", "top-left", "top-right"];
@@ -798,11 +811,28 @@ var TtrMap = /** @class */ (function () {
         this.inMapZoomManager = new InMapZoomManager();
         this.game.setTooltip("destination-deck-hidden-pile", "<strong>".concat(_("Destinations deck"), "</strong><br><br>\n        ").concat(_("Click here to take three new destination cards (keep at least one)")));
     }
+    /**
+     * Creates 3 instances of each road, 1 per color.
+     */
+    TtrMap.prototype.getAllRoutes = function () {
+        var baseRoutes = ROUTES;
+        var allRoutes = [];
+        baseRoutes.forEach(function (route, baseId) {
+            COLORS.forEach(function (color) {
+                var copy = __assign({}, route);
+                copy.id = parseInt(color.toString() + baseId);
+                copy.color = color;
+                allRoutes.push(copy);
+            });
+        });
+        console.log("allRoutes", allRoutes);
+        return allRoutes;
+    };
     TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
         var _this = this;
         if (shiftX === void 0) { shiftX = 0; }
         if (shiftY === void 0) { shiftY = 0; }
-        ROUTES.forEach(function (route) {
+        this.getAllRoutes().forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
                 dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
@@ -853,10 +883,17 @@ var TtrMap = /** @class */ (function () {
      * Highlight selectable route spaces.
      */
     TtrMap.prototype.setSelectableRoutes = function (selectable, possibleRoutes) {
+        var _this = this;
         dojo.query(".route-space").removeClass("selectable");
         if (selectable) {
             possibleRoutes.forEach(function (route) {
-                return ROUTES.find(function (r) { return r.id == route.id; }).spaces.forEach(function (_, index) { var _a; return (_a = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("selectable"); });
+                return _this.getAllRoutes()
+                    .find(function (r) { return r.id == route.id; })
+                    .spaces.forEach(function (_, index) {
+                    var _a;
+                    return (_a = document
+                        .getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("selectable");
+                });
             });
         }
     };
@@ -867,7 +904,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.setClaimedRoutes = function (claimedRoutes, fromPlayerId) {
         var _this = this;
         claimedRoutes.forEach(function (claimedRoute) {
-            var route = ROUTES.find(function (r) { return r.id == claimedRoute.routeId; });
+            var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
             var player = _this.players.find(function (player) { return Number(player.id) == claimedRoute.playerId; });
             _this.setWagons(route, player, fromPlayerId, false);
             if (_this.game.isDoubleRouteForbidden()) {
@@ -979,7 +1016,7 @@ var TtrMap = /** @class */ (function () {
      * Check if the route is mostly horizontal, and the lowest from a double route
      */
     TtrMap.prototype.isLowestFromDoubleHorizontalRoute = function (route) {
-        var otherRoute = ROUTES.find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
+        var otherRoute = this.getAllRoutes().find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
         if (!otherRoute) {
             // not a double route
             return false;
@@ -1060,7 +1097,7 @@ var TtrMap = /** @class */ (function () {
             }
         }
         else {
-            ROUTES.forEach(function (r) {
+            this.getAllRoutes().forEach(function (r) {
                 return [r.from, r.to].forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.hovered = "false"); });
             });
             // remove phantom wagons
@@ -1930,17 +1967,6 @@ var EndScore = /** @class */ (function () {
     };
     return EndScore;
 }());
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var ANIMATION_MS = 500;
 var SCORE_MS = 1500;
 var isDebug = window.location.host == "studio.boardgamearena.com";
@@ -2165,6 +2191,34 @@ var Expeditions = /** @class */ (function () {
     ///////////////////////////////////////////////////
     //// Utility methods
     ///////////////////////////////////////////////////
+    /**
+     * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
+     * need to make a choice of resources or tokens.
+     */
+    Expeditions.prototype.addImageActionButton = function (id, div, color, tooltip, handler) {
+        if (color === void 0) { color = "gray"; }
+        // this will actually make a transparent button
+        this.addActionButton(id, div, handler, "", false, color);
+        // remove boarder, for images it better without
+        dojo.style(id, "border", "none");
+        // but add shadow style (box-shadow, see css)
+        dojo.addClass(id, "shadow bgaimagebutton");
+        // you can also add addition styles, such as background
+        if (tooltip)
+            dojo.attr(id, "title", tooltip);
+        return $(id);
+    };
+    Expeditions.prototype.createDiv = function (classes, id, value) {
+        if (id === void 0) { id = ""; }
+        if (value === void 0) { value = ""; }
+        if (typeof value == "undefined")
+            value = "";
+        var node = dojo.create("div", { class: classes, innerHTML: value });
+        if (id)
+            node.id = id;
+        console.log("node", node.outerHTML);
+        return node.outerHTML;
+    };
     Expeditions.prototype.getDestinationsByPlayer = function (destinations) {
         var _this = this;
         var destinationsByPlayer = this.groupBy(destinations, function (p) { return p.location_arg; });
@@ -2246,7 +2300,7 @@ var Expeditions = /** @class */ (function () {
         return (_b = (_a = this.scoreCtrl[playerId]) === null || _a === void 0 ? void 0 : _a.getValue()) !== null && _b !== void 0 ? _b : Number(this.gamedatas.players[playerId].score);
     };
     Expeditions.prototype.isDoubleRouteForbidden = function () {
-        return Object.values(this.gamedatas.players).length <= 3;
+        return false;
     };
     /**
      * Place counters on player panels.
@@ -2504,6 +2558,15 @@ var Expeditions = /** @class */ (function () {
         this.addActionButton("drawDestinations_button", dojo.string.substitute(_("Draw ${number} destination tickets"), {
             number: chooseActionArgs.maxDestinationsPick,
         }), function () { return _this.drawDestinations(); }, null, null, "red");
+        this.addImageActionButton("placeBlueArrow_button", this.createDiv("arrow blue"), 
+        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+        "blue", _("Continue the blue expedition"), function () { });
+        this.addImageActionButton("placeYellowArrow_button", this.createDiv("arrow yellow"), 
+        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+        "blue", _("Continue the yellow expedition"), function () { });
+        this.addImageActionButton("placeRedArrow_button", this.createDiv("arrow red"), 
+        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+        "blue", _("Continue the blue expedition"), function () { });
         dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
         if (chooseActionArgs.canPass) {
             this.addActionButton("pass_button", _("Pass"), function () { return _this.pass(); });

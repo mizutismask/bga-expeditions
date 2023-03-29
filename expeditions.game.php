@@ -52,7 +52,9 @@ class Expeditions extends Table {
         $this->initGameStateLabels([
             LAST_TURN => 10, // last turn is the id of the player starting last turn, 0 if it's not last turn
             TICKETS_USED => 11, // used tickets count for active player during his turn
-
+            REMAINING_YELLOW_ARROWS => 12,
+            REMAINING_BLUE_ARROWS => 13,
+            REMAINING_RED_ARROWS => 14,
             // options
             SHOW_TURN_ORDER => 110, // last turn is the id of the player starting last turn, 0 if it's not last turn
         ]);
@@ -105,6 +107,10 @@ class Expeditions extends Table {
         // Init global values with their initial values
         $this->setGameStateInitialValue(LAST_TURN, 0);
         $this->setGameStateInitialValue(TICKETS_USED, 0);
+        $this->setGameStateInitialValue(REMAINING_BLUE_ARROWS, $this->getInitialTrainCarsNumber());
+        $this->setGameStateInitialValue(REMAINING_YELLOW_ARROWS, $this->getInitialTrainCarsNumber());
+        $this->setGameStateInitialValue(REMAINING_RED_ARROWS, $this->getInitialTrainCarsNumber());
+        
 
         // Init game statistics
         // 10+ : other

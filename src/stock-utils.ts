@@ -20,6 +20,8 @@ const BLUE = 1;
 const YELLOW = 2;
 const RED = 3;
 
+const COLORS= [BLUE,YELLOW,RED];
+
 function getColor(color: number, type: "route" | "train-car") {
 	switch (color) {
 		case 1:

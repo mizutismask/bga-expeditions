@@ -295,7 +295,30 @@ class Expeditions implements ExpeditionsGame {
 	//// Utility methods
 
 	///////////////////////////////////////////////////
+	/**
+	 * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
+	 * need to make a choice of resources or tokens.
+	 */
+	public addImageActionButton(id: string, div: string, color: string = "gray", tooltip: string, handler) {
+		// this will actually make a transparent button
+		(this as any).addActionButton(id, div, handler, "", false, color);
+		// remove boarder, for images it better without
+		dojo.style(id, "border", "none");
+		// but add shadow style (box-shadow, see css)
+		dojo.addClass(id, "shadow bgaimagebutton");
+		// you can also add addition styles, such as background
+		if (tooltip) dojo.attr(id, "title", tooltip);
+		return $(id);
+	}
 
+	public createDiv(classes: string, id: string = "", value: string = "") {
+		if (typeof value == "undefined") value = "";
+		var node: HTMLElement = dojo.create("div", { class: classes, innerHTML: value });
+		if (id) node.id = id;
+		console.log("node", node.outerHTML);
+		
+		return node.outerHTML;
+	}
 	public getDestinationsByPlayer(destinations: Destination[]) {
 		const destinationsByPlayer = this.groupBy(destinations, (p) => p.location_arg);
 		const typedDestinationsByPlayer = new Map<ExpeditionsPlayer, Destination[]>();
@@ -384,7 +407,7 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	public isDoubleRouteForbidden(): boolean {
-		return Object.values(this.gamedatas.players).length <= 3;
+		return false;
 	}
 
 	/**
@@ -709,6 +732,32 @@ class Expeditions implements ExpeditionsGame {
 			null,
 			"red"
 		);
+
+		this.addImageActionButton(
+			"placeBlueArrow_button",
+			this.createDiv("arrow blue"),
+			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+			"blue",
+			_("Continue the blue expedition"),
+			() => {}
+		);
+		this.addImageActionButton(
+			"placeYellowArrow_button",
+			this.createDiv("arrow yellow"),
+			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+			"blue",
+			_("Continue the yellow expedition"),
+			() => {}
+		);
+		this.addImageActionButton(
+			"placeRedArrow_button",
+			this.createDiv("arrow red"),
+			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+			"blue",
+			_("Continue the blue expedition"),
+			() => {}
+		);
+
 		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
 		if (chooseActionArgs.canPass) {
 			(this as any).addActionButton("pass_button", _("Pass"), () => this.pass());

@@ -27,15 +27,10 @@ define('FAR_DESTINATIONS_MINIMUM', 4);
 /* 
  * Colors 
  */
-define('GRAY', 0);
-define('PINK', 1);
-define('WHITE', 2);
-define('BLUE', 3);
-define('YELLOW', 4);
-define('ORANGE', 5);
-define('BLACK', 6);
-define('RED', 7);
-define('GREEN', 8);
+define('BLUE', 1);
+define('YELLOW', 2);
+define('RED', 3);
+define('COLORS', [BLUE, YELLOW, RED]);
 
 /*
  * State constants
@@ -75,9 +70,15 @@ define('SHOW_TURN_ORDER', 'SHOW_TURN_ORDER');
 
 define('LAST_TURN', 'LAST_TURN');
 define('TICKETS_USED', 'TICKETS_USED');
+define('REMAINING_BLUE_ARROWS', 'REMAINING_BLUE_ARROWS');
+define('REMAINING_YELLOW_ARROWS', 'REMAINING_YELLOW_ARROWS');
+define('REMAINING_RED_ARROWS', 'REMAINING_RED_ARROWS');
 
 /*
  * Global variables (objects)
  */
 
 define('TUNNEL_ATTEMPT', 'TUNNEL_ATTEMPT');
+define('LAST_BLUE_ROUTE', 'LAST_BLUE_ROUTE');
+define('LAST_YELLOW_ROUTE', 'LAST_YELLOW_ROUTE');
+define('LAST_RED_ROUTE', 'LAST_RED_ROUTE');

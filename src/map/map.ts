@@ -205,12 +205,31 @@ class TtrMap {
 		);
 	}
 
+	/**
+	 * Creates 3 instances of each road, 1 per color.
+	 */
+	private getAllRoutes(): Route[] {
+		const baseRoutes = ROUTES;
+		const allRoutes: Route[] = [];
+		baseRoutes.forEach((route, baseId) => {
+			COLORS.forEach((color) => {
+				let copy: Route = { ...route };
+				copy.id = parseInt(color.toString() + baseId);
+				copy.color = color;
+				allRoutes.push(copy);
+			});
+		});
+		console.log("allRoutes", allRoutes);
+		
+		return allRoutes;
+	}
+
 	private createRouteSpaces(
 		destination: "route-spaces" | "map-drag-overlay",
 		shiftX: number = 0,
 		shiftY: number = 0
 	) {
-		ROUTES.forEach((route) =>
+		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
 				dojo.place(
 					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
@@ -276,9 +295,13 @@ class TtrMap {
 
 		if (selectable) {
 			possibleRoutes.forEach((route) =>
-				ROUTES.find((r) => r.id == route.id).spaces.forEach((_, index) =>
-					document.getElementById(`route-spaces-route${route.id}-space${index}`)?.classList.add("selectable")
-				)
+				this.getAllRoutes()
+					.find((r) => r.id == route.id)
+					.spaces.forEach((_, index) =>
+						document
+							.getElementById(`route-spaces-route${route.id}-space${index}`)
+							?.classList.add("selectable")
+					)
 			);
 		}
 	}
@@ -289,7 +312,7 @@ class TtrMap {
 	 */
 	public setClaimedRoutes(claimedRoutes: ClaimedRoute[], fromPlayerId: number) {
 		claimedRoutes.forEach((claimedRoute) => {
-			const route = ROUTES.find((r) => r.id == claimedRoute.routeId);
+			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
 			const player = this.players.find((player) => Number(player.id) == claimedRoute.playerId);
 			this.setWagons(route, player, fromPlayerId, false);
 
@@ -447,7 +470,9 @@ class TtrMap {
 	 * Check if the route is mostly horizontal, and the lowest from a double route
 	 */
 	private isLowestFromDoubleHorizontalRoute(route: Route) {
-		const otherRoute = ROUTES.find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
+		const otherRoute = this.getAllRoutes().find(
+			(r) => route.from == r.from && route.to == r.to && route.id != r.id
+		);
 		if (!otherRoute) {
 			// not a double route
 			return false;
@@ -545,7 +570,7 @@ class TtrMap {
 				this.setWagons(route, this.game.getCurrentPlayer(), null, true);
 			}
 		} else {
-			ROUTES.forEach((r) =>
+			this.getAllRoutes().forEach((r) =>
 				[r.from, r.to].forEach((city) => (document.getElementById(`city${city}`).dataset.hovered = "false"))
 			);
 

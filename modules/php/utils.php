@@ -138,7 +138,7 @@ trait UtilTrait {
     }
 
     function getClaimedRoutes($playerId = null) {
-        $sql = "SELECT route_id, player_id FROM claimed_routes ";
+        $sql = "SELECT route_id, player_id, reverse_direction FROM claimed_routes ";
         if ($playerId !== null) {
             $sql .= "WHERE player_id = $playerId ";
         }

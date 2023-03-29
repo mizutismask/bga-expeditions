@@ -98,7 +98,10 @@ interface ExpeditionsGame extends Game {
 	drawDestinations(): void;
 	onVisibleTrainCarCardClick(itemId: number): void;
 	onHiddenTrainCarDeckClick(number: number): void;
-	setActiveDestination(destination: Destination, previousDestination?: Destination): void;
+	setActiveDestination(
+		destination: Destination,
+		previousDestination?: Destination
+	): void;
 	canClaimRoute(route: Route, cardsColor: number): boolean;
 	setHighligthedDestination(destination: Destination | null): void;
 	revealDestination(destination: Destination): void;

@@ -66,19 +66,7 @@ trait ArgsTrait {
 
         $canClaimARoute = false;
         $costForRoute = [];
-        foreach ($possibleRoutes as $possibleRoute) {
-            $colorsToTest = $possibleRoute->color > 0 ? [0, $possibleRoute->color] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
-            $costByColor = [];
-            foreach ($colorsToTest as $colorToTest) {
-                $costByColor[$colorToTest] = $this->canPayForRoute($possibleRoute, $trainCarsHand, 99, $colorToTest);
-
-                if (!$canClaimARoute && $costByColor[$colorToTest] != null && count($costByColor[$colorToTest]) <= $realRemainingTrainCars) {
-                    $canClaimARoute = true;
-                }
-            }
-            $costForRoute[$possibleRoute->id] = array_map(fn ($cardCost) => $cardCost == null ? null : array_map(fn ($card) => $card->type, $cardCost), $costByColor);
-        }
-
+        
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
         $canPass = !$canClaimARoute && $maxDestinationsPick == 0 && $canTakeTrainCarCards == 0;

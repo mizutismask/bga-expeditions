@@ -41,9 +41,11 @@ CREATE TABLE IF NOT EXISTS `destination` (
   PRIMARY KEY (`card_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+--normal direction is from->to, reverse is to->from
 CREATE TABLE IF NOT EXISTS `claimed_routes` (
   `route_id` TINYINT unsigned NOT NULL,
   `player_id` int(11) NOT NULL,
+  `reverse_direction` TINYINT unsigned NOT NULL DEFAULT FALSE, 
   PRIMARY KEY (`route_id`, `player_id`)
 ) ENGINE=InnoDB;
 
