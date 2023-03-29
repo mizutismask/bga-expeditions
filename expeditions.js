@@ -2560,17 +2560,27 @@ var Expeditions = /** @class */ (function () {
         }), function () { return _this.drawDestinations(); }, null, null, "red");
         this.addImageActionButton("placeBlueArrow_button", this.createDiv("arrow blue"), 
         //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the blue expedition"), function () { });
+        "blue", _("Continue the blue expedition"), function () {
+            _this.selectArrowColor(BLUE);
+        });
         this.addImageActionButton("placeYellowArrow_button", this.createDiv("arrow yellow"), 
         //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the yellow expedition"), function () { });
+        "blue", _("Continue the yellow expedition"), function () {
+            _this.selectArrowColor(YELLOW);
+        });
         this.addImageActionButton("placeRedArrow_button", this.createDiv("arrow red"), 
         //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the blue expedition"), function () { });
+        "blue", _("Continue the blue expedition"), function () {
+            _this.selectArrowColor(RED);
+        });
         dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
         if (chooseActionArgs.canPass) {
             this.addActionButton("pass_button", _("Pass"), function () { return _this.pass(); });
         }
+    };
+    Expeditions.prototype.selectArrowColor = function (color) {
+        this.selectedArrowColor = color;
+        this.selectedColorChanged(color);
     };
     /**
      * Check if player should be asked for the color he wants when he clicks on a double route.

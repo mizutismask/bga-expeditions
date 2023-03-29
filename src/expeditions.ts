@@ -16,6 +16,7 @@ class Expeditions implements ExpeditionsGame {
 	private playerTable: PlayerTable = null;
 	private destinationToReveal: Destination;
 	private endScore: EndScore;
+	private selectedArrowColor: number;
 
 	private trainCarCounters: Counter[] = [];
 	private trainCarCardCounters: Counter[] = [];
@@ -316,7 +317,7 @@ class Expeditions implements ExpeditionsGame {
 		var node: HTMLElement = dojo.create("div", { class: classes, innerHTML: value });
 		if (id) node.id = id;
 		console.log("node", node.outerHTML);
-		
+
 		return node.outerHTML;
 	}
 	public getDestinationsByPlayer(destinations: Destination[]) {
@@ -739,7 +740,9 @@ class Expeditions implements ExpeditionsGame {
 			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
 			"blue",
 			_("Continue the blue expedition"),
-			() => {}
+			() => {
+				this.selectArrowColor(BLUE);
+			}
 		);
 		this.addImageActionButton(
 			"placeYellowArrow_button",
@@ -747,7 +750,9 @@ class Expeditions implements ExpeditionsGame {
 			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
 			"blue",
 			_("Continue the yellow expedition"),
-			() => {}
+			() => {
+				this.selectArrowColor(YELLOW);
+			}
 		);
 		this.addImageActionButton(
 			"placeRedArrow_button",
@@ -755,7 +760,9 @@ class Expeditions implements ExpeditionsGame {
 			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
 			"blue",
 			_("Continue the blue expedition"),
-			() => {}
+			() => {
+				this.selectArrowColor(RED);
+			}
 		);
 
 		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
@@ -764,6 +771,10 @@ class Expeditions implements ExpeditionsGame {
 		}
 	}
 
+	private selectArrowColor(color: number) {
+		this.selectedArrowColor = color;
+		this.selectedColorChanged(color);
+	}
 	/**
 	 * Check if player should be asked for the color he wants when he clicks on a double route.
 	 */

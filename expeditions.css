@@ -1403,7 +1403,7 @@ html, .mode_3d #game_play_area_background {
 /* Makes the svg arrow to change color */
 .arrow {
   width: 36px;
-  height: 17;
+  height: 17px;
   background-color: black;
   overflow: hidden;
   color: transparent;
