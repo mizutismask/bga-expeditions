@@ -60,7 +60,7 @@ trait ArgsTrait {
         $remainingTrainCars = 99;
         $realRemainingTrainCars = $this->getRemainingTrainCarsCount($playerId);
 
-        $possibleRoutes = $this->claimableRoutes($playerId, $trainCarsHand, $remainingTrainCars);
+        $possibleRoutes = $this->claimableRoutes($playerId);
         $maxHiddenCardsPick = min(2, $this->getRemainingTrainCarCardsInDeck(true));
         $maxDestinationsPick = min($this->getAdditionalDestinationCardNumber(), $this->getRemainingDestinationCardsInDeck());
 

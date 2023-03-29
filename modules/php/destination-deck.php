@@ -117,14 +117,15 @@ trait DestinationDeckTrait {
         }
         $this->DbQuery("UPDATE destination SET `revealed` = true WHERE `card_id` = $id");
 
-        $this->notifyAllPlayers('destinationRevealed', clienttranslate('${player_name} reveals ${destination.to}'), [
+        $this->notifyAllPlayers('destinationRevealed', clienttranslate('${player_name} reveals ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'destination' => $dest,
+            'to' => $this->CITIES[$dest->to],
         ]);
     }
 
-    private function isDestinationRevealed($destinationId) {
+    public function isDestinationRevealed($destinationId) {
         return $this->getUniqueBoolValueFromDB("SELECT `revealed` FROM destination WHERE `card_id` = $destinationId");
     }
 

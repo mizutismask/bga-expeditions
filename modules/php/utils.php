@@ -1,18 +1,28 @@
 <?php
 
-require_once(__DIR__.'/objects/train-car.php');
-require_once(__DIR__.'/objects/destination.php');
-require_once(__DIR__.'/objects/route.php');
+require_once(__DIR__ . '/objects/train-car.php');
+require_once(__DIR__ . '/objects/destination.php');
+require_once(__DIR__ . '/objects/route.php');
 
 trait UtilTrait {
 
-//////////////////////////////////////////////////////////////////////////////
-//////////// Utility functions
-////////////
+    //////////////////////////////////////////////////////////////////////////////
+    //////////// Utility functions
+    ////////////
+    function getColorName(int $color) {
+        switch ($color) {
+            case BLUE:
+                return clienttranslate("blue");
+            case YELLOW:
+                return clienttranslate("yellow");
+            case RED:
+                return clienttranslate("red");
+        }
+    }
 
     function array_find(array $array, callable $fn) {
         foreach ($array as $value) {
-            if($fn($value)) {
+            if ($fn($value)) {
                 return $value;
             }
         }
@@ -21,7 +31,7 @@ trait UtilTrait {
 
     function array_find_index(array $array, callable $fn) {
         foreach ($array as $index => $value) {
-            if($fn($value)) {
+            if ($fn($value)) {
                 return $index;
             }
         }
@@ -30,16 +40,16 @@ trait UtilTrait {
 
     function array_some(array $array, callable $fn) {
         foreach ($array as $value) {
-            if($fn($value)) {
+            if ($fn($value)) {
                 return true;
             }
         }
         return false;
     }
-        
+
     function array_every(array $array, callable $fn) {
         foreach ($array as $value) {
-            if(!$fn($value)) {
+            if (!$fn($value)) {
                 return false;
             }
         }
@@ -83,7 +93,7 @@ trait UtilTrait {
             return null;
         }
         if (!$dbObject || !array_key_exists('id', $dbObject)) {
-            throw new BgaSystemException("Train car doesn't exists ".json_encode($dbObject));
+            throw new BgaSystemException("Train car doesn't exists " . json_encode($dbObject));
         }
         return new TrainCar($dbObject);
     }
@@ -92,34 +102,34 @@ trait UtilTrait {
      * Transforms a TrainCar Db object array to TrainCar class array.
      */
     function getTrainCarsFromDb(array $dbObjects) {
-        return array_map(fn($dbObject) => $this->getTrainCarFromDb($dbObject), array_values($dbObjects));
+        return array_map(fn ($dbObject) => $this->getTrainCarFromDb($dbObject), array_values($dbObjects));
     }
 
     /**
      * Transforms a Destination Db object to Destination class.
-     */    
+     */
     function getDestinationFromDb($dbObject) {
         if (!$dbObject || !array_key_exists('id', $dbObject)) {
-            throw new BgaSystemException("Destination doesn't exists ".json_encode($dbObject));
+            throw new BgaSystemException("Destination doesn't exists " . json_encode($dbObject));
         }
 
-    //self::dump('************type_arg*******', $dbObject["type_arg"]);
+        //self::dump('************type_arg*******', $dbObject["type_arg"]);
         //self::dump('*******************', $this->DESTINATIONS[$dbObject["type"]][$dbObject["type_arg"]]);
         return new Destination($dbObject, $this->DESTINATIONS);
     }
 
     /**
      * Transforms a Destination Db object array to Destination class array.
-     */    
+     */
     function getDestinationsFromDb(array $dbObjects) {
-        return array_map(fn($dbObject) => $this->getDestinationFromDb($dbObject), array_values($dbObjects));
+        return array_map(fn ($dbObject) => $this->getDestinationFromDb($dbObject), array_values($dbObjects));
     }
 
     function getInitialTrainCarsNumber() {
         return TRAIN_CARS_PER_PLAYER;
     }
 
-    function getInitialTicketsNumber(){
+    function getInitialTicketsNumber() {
         return TICKETS_PER_PLAYER;
     }
 
@@ -134,7 +144,7 @@ trait UtilTrait {
     function getNonZombiePlayersIds() {
         $sql = "SELECT player_id FROM player WHERE player_eliminated = 0 AND player_zombie = 0 ORDER BY player_no";
         $dbResults = self::getCollectionFromDB($sql);
-        return array_map(fn($dbResult) => intval($dbResult['player_id']), array_values($dbResults));
+        return array_map(fn ($dbResult) => intval($dbResult['player_id']), array_values($dbResults));
     }
 
     function getClaimedRoutes($playerId = null) {
@@ -143,7 +153,7 @@ trait UtilTrait {
             $sql .= "WHERE player_id = $playerId ";
         }
         $dbResults = self::getCollectionFromDB($sql);
-        return array_map(fn($dbResult) => new ClaimedRoute($dbResult), array_values($dbResults));
+        return array_map(fn ($dbResult) => new ClaimedRoute($dbResult), array_values($dbResults));
     }
 
     function getPlayersIds() {
@@ -181,6 +191,11 @@ trait UtilTrait {
         return boolval(self::getUniqueValueFromDB($sql));
     }
 
+    /* function isDestinationRevealed(int $destinationId) {
+        $sql = "SELECT `revealed` FROM `destination` WHERE `card_id` =  $destinationId";
+        return $this->getUniqueBoolValueFromDB($sql);
+    }*/
+
     function getRevealedDestinationsIdsByPlayer(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `revealed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
@@ -190,7 +205,13 @@ trait UtilTrait {
     function getCompletedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
-        return array_map(fn($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+    }
+
+    function getAllCompletedDestinationsIds() {
+        $sql = "SELECT `card_id` FROM `destination` WHERE `completed` = 1";
+        $dbResults = self::getCollectionFromDB($sql);
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
     function getRevealedDestinationsIds() {
@@ -202,40 +223,63 @@ trait UtilTrait {
     function getUnompletedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 0";
         $dbResults = self::getCollectionFromDB($sql);
-        return array_map(fn($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
-    function checkCompletedDestinations(int $playerId) {
-        $handDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand', $playerId));
-        $alreadyCompleted = $this->getCompletedDestinationsIds($playerId);
+    function checkCompletedDestinations(int $playerId, Route $claimedRoute, bool $reverseDirection) {
 
-        foreach($handDestinations as $destination) {
-            if (!in_array($destination->id, $alreadyCompleted)) {
-                $destinationRoutes = $this->getDestinationRoutes($playerId, $destination);
-                if ($destinationRoutes != null) {
-                    self::DbQuery("UPDATE `destination` SET `completed` = 1 where `card_id` = $destination->id");
+        $target = $reverseDirection ? $claimedRoute->from : $claimedRoute->to;
 
-                    self::notifyPlayer($playerId, 'destinationCompleted', clienttranslate('${you} reached a new destination: ${to}'), [
-                        'playerId' => $playerId,
-                        'player_name' => $this->getPlayerName($playerId),
-                        'destination' => $destination,
-                        'to' => $this->CITIES[$destination->to],
-                        'you' => clienttranslate('You'),
-                        'i18n' => ['you'],
-                        'destinationRoutes' => $destinationRoutes,
-                    ]);
+        $handDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand'));
+        $sharedDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('shared'));
 
-                    self::incStat(1, 'completedDestinations');
-                    self::incStat(1, 'completedDestinations', $playerId);
-                }
+        foreach ($handDestinations as $destination) {
+            if ($destination->to == $target) {
+                $this->completeDestination($destination->location_arg, $destination, false);
+            }
+        }
+        foreach ($sharedDestinations as $destination) {
+            if ($destination->to == $target) {
+                $this->completeDestination($playerId, $destination, true);
             }
         }
     }
 
-    function getDestinationIds(array $destinations){
-        $ids=[];
+    function completeDestination(int $playerId, Destination $destination, bool $shared) {
+        self::DbQuery("UPDATE `destination` SET `completed` = 1 where `card_id` = $destination->id");
+
+        $ownerId = $shared ? $playerId : $destination->location_arg;
+        $this->incScore($ownerId, 1);
+        $revealed = $this->isDestinationRevealed($destination->id);
+        if ($revealed) {
+            $this->incScore($ownerId, 1);
+        }
+
+        if ($shared) {
+            //move the card to the hand ?
+        }
+
+        $msg = $shared ?
+            clienttranslate('${player_name} reached a new shared destination: ${to}') :
+            clienttranslate('${player_name} reached a new destination: ${to}');
+
+        self::notifyAllPlayers('destinationCompleted', $msg, [
+            'playerId' => $ownerId,
+            'player_name' => $this->getPlayerName($ownerId),
+            'destination' => $destination,
+            'to' => $this->CITIES[$destination->to],
+            'revealed' => $revealed,
+            'destinationRoutes' => [],
+        ]);
+
+        self::incStat(1, 'completedDestinations');
+        self::incStat(1, 'completedDestinations', $ownerId);
+    }
+
+    function getDestinationIds(array $destinations) {
+        $ids = [];
         foreach ($destinations as $dest) {
-            $ids[]=$dest->id;
+            $ids[] = $dest->id;
         }
         return $ids;
     }

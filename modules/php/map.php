@@ -29,7 +29,7 @@ trait MapTrait {
      * - it is not already claimed
      * - it's the beginning or the continuing of an expedition of the same color
      */
-    public function claimableRoutes(int $playerId, array $trainCarsHand, int $remainingTrainCars) {
+    public function claimableRoutes(int $playerId) {
         $claimableRoutes=[];
         foreach (COLORS as $color) {
             $lastRoute = null;

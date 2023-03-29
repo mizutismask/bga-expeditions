@@ -2459,19 +2459,23 @@ var Expeditions = /** @class */ (function () {
      * Handle route click.
      */
     Expeditions.prototype.clickedRoute = function (route, needToCheckDoubleRoute) {
+        var _this = this;
         if (!this.isCurrentPlayerActive()) {
             return;
         }
         if (needToCheckDoubleRoute === undefined) {
             needToCheckDoubleRoute = this.askDoubleRouteActive();
         }
-        var otherRoute = ROUTES.find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
+        //const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
         if (!this.canClaimRoute(route, 0)) {
             return;
         }
         document
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
+        this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
+            return _this.claimRoute(route.id, _this.selectedArrowColor);
+        });
         /*
         const selectedColor = this.playerTable.getSelectedColor();
 

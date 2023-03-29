@@ -628,7 +628,7 @@ class Expeditions implements ExpeditionsGame {
 			needToCheckDoubleRoute = this.askDoubleRouteActive();
 		}
 
-		const otherRoute = ROUTES.find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
+		//const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
 
 		if (!this.canClaimRoute(route, 0)) {
 			return;
@@ -637,6 +637,10 @@ class Expeditions implements ExpeditionsGame {
 		document
 			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
 			.forEach((button) => button.parentElement.removeChild(button));
+
+		(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () =>
+			this.claimRoute(route.id, this.selectedArrowColor)
+		);
 		/*
 		const selectedColor = this.playerTable.getSelectedColor();
 
