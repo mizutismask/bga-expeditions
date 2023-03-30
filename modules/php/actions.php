@@ -159,13 +159,23 @@ trait ActionTrait {
     }
 
     function applyClaimRoute(int $playerId, int $routeId, int $color, int $extraCardCost = 0) {
-        $route = $this->getAllRoutes()[$routeId];
-        $reverseDirection = 0;
+        $route = $this->getRoute($routeId);
+        //self::dump('*******************applyClaimRoute', $routeId);
+        // self::dump('*******************', $route);
+        $reverseDirection = $this->guessDirection($route);
+        $rdIntValue =  intval($this->guessDirection($route));
+        //self::dump('**************reverseDirection*****', $reverseDirection);
         // save claimed route
-        self::DbQuery("INSERT INTO `claimed_routes` (`route_id`, `player_id`,`reverse_direction`) VALUES ($routeId, $playerId, $reverseDirection)");
+        self::DbQuery("INSERT INTO `claimed_routes` (`route_id`, `player_id`,`reverse_direction`) VALUES ($routeId, $playerId, $rdIntValue)");
 
         $remainingArrows = $this->getRemainingArrows($color);
         $this->setRemainingArrows($color, $remainingArrows - 1);
+
+        $this->setLastClaimedRoute(new ClaimedRoute([
+            'route_id' => $routeId,
+            'player_id' => $playerId,
+            'reverse_direction' => $reverseDirection,
+        ]), $color);
 
         self::incStat(1, 'claimedRoutes');
         self::incStat(1, 'claimedRoutes', $playerId);
@@ -176,8 +186,8 @@ trait ActionTrait {
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'route' => $route,
-            'from' => $this->CITIES[$route->from],
-            'to' => $this->CITIES[$route->to],
+            'from' => $reverseDirection ? $this->CITIES[$route->to] : $this->CITIES[$route->from],
+            'to' => $reverseDirection ? $this->CITIES[$route->from] : $this->CITIES[$route->to],
             'color' => $this->getColorName($color),
         ]);
 
@@ -187,6 +197,25 @@ trait ActionTrait {
         //$this->checkVisibleTrainCarCards();
 
         $this->gamestate->nextState('nextPlayer');
+    }
+
+    function guessDirection(Route $claimedRoute): bool {
+        $reversed = false;
+        $previous = $this->getLastClaimedRoute($claimedRoute->color);
+        if ($previous) {
+            $previousRoute = $this->getRoute($previous->routeId);
+            $this->logRoute("previousRoute", $previousRoute, $previous->reverseDirection);
+            $junction = $previousRoute->to == $claimedRoute->from ? $claimedRoute->from : $claimedRoute->to;
+            $end = $junction == $claimedRoute->from ? $claimedRoute->to : $claimedRoute->from;
+            $reversed = $junction > $end;
+        } else {
+            self::dump('*******************No previous route of color', $claimedRoute->color);
+        }
+        return $reversed;
+    }
+
+    function logRoute(string $msg, Route $route, bool $reverse) {
+        self::dump('*******************' . $msg, "from " . ($reverse ? $route->to : $route->from) . " to " . ($reverse ? $route->from : $route->to));
     }
 
     function pass() {
@@ -239,7 +268,7 @@ trait ActionTrait {
     }
 
 
-    private function getRemainingArrows($color) {
+    public function getRemainingArrows($color) {
         switch ($color) {
             case BLUE:
                 return intval($this->getGameStateValue(REMAINING_BLUE_ARROWS));
@@ -250,7 +279,7 @@ trait ActionTrait {
         }
     }
 
-    private function setRemainingArrows($color, $value) {
+    public function setRemainingArrows($color, $value) {
         switch ($color) {
             case BLUE:
                 return $this->setGameStateValue(REMAINING_BLUE_ARROWS, $value);
@@ -260,10 +289,41 @@ trait ActionTrait {
                 return $this->setGameStateValue(REMAINING_RED_ARROWS, $value);
         }
     }
-    
+
+    public function setLastClaimedRoute(ClaimedRoute $value, int $color) {
+        switch ($color) {
+            case BLUE:
+                return $this->setGlobalVariable(LAST_BLUE_ROUTE, $value);
+            case YELLOW:
+                return $this->setGlobalVariable(LAST_YELLOW_ROUTE, $value);
+            case RED:
+                return $this->setGlobalVariable(LAST_RED_ROUTE, $value);
+        }
+    }
+
+    /**
+     * @return the last ClaimedRoute of the color if existing.
+     */
+    public function getLastClaimedRoute(int $color): ?ClaimedRoute {
+        $arrayData = null;
+        switch ($color) {
+            case BLUE:
+                $arrayData = $this->getGlobalVariable(LAST_BLUE_ROUTE, false);
+                break;
+            case YELLOW:
+                $arrayData = $this->getGlobalVariable(LAST_YELLOW_ROUTE, false);
+                break;
+            case RED:
+                $arrayData = $this->getGlobalVariable(LAST_RED_ROUTE, false);
+                break;
+        }
+        $casted = $this->getClaimedRouteFromGlobal($arrayData);
+        self::dump('*****************$getLastClaimedRoute**', $casted);
+        return $casted;
+    }
+
     function incGlobalVariable(string $globalVariableName, int $value) {
         $old = $this->getGameStateValue($globalVariableName);
         $this->setGameStateValue($globalVariableName, $old + $value);
     }
-
 }

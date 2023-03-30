@@ -17,7 +17,7 @@ class Route {
     public bool $tunnel;
     public int $locomotives;
 
-    public function __construct(int $from, int $to, int $number=1, int $color = 0, bool $tunnel = false, int $locomotives = 0) {
+    public function __construct(int $from, int $to, int $color, int $number = 1, bool $tunnel = false, int $locomotives = 0) {
         $this->from = $from;
         $this->to = $to;
         $this->number = $number;
@@ -33,9 +33,8 @@ class ClaimedRoute {
     public bool $reverseDirection;
 
     public function __construct(array $db) {
-        $this->routeId = intval($db['route_id']);
-        $this->playerId = intval($db['player_id']);
-        $this->reverseDirection = boolval($db['reverse_direction']);
-    } 
+        array_key_exists('route_id', $db) ? $this->routeId = intval($db['route_id']) : null;
+        array_key_exists('player_id', $db) ? $this->playerId = intval($db['player_id']) : null;
+        array_key_exists('reverse_direction', $db) ? $this->reverseDirection = boolval($db['reverse_direction']) : null;
+    }
 }
-?>

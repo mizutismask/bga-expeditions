@@ -30,28 +30,19 @@ trait MapTrait {
      * - it's the beginning or the continuing of an expedition of the same color
      */
     public function claimableRoutes(int $playerId) {
-        $claimableRoutes=[];
+        $claimableRoutes = [];
         foreach (COLORS as $color) {
-            $lastRoute = null;
-            switch ($color) {
-                case BLUE:
-                    $lastRoute = $this->getGlobalVariable(LAST_BLUE_ROUTE);
-                    break;
-                case YELLOW:
-                    $lastRoute = $this->getGlobalVariable(LAST_YELLOW_ROUTE);
-                    break;
-                case RED:
-                    $lastRoute = $this->getGlobalVariable(LAST_RED_ROUTE);
-            }
-            if (!$lastRoute) {
+            $lastClaimedRoute = $this->getLastClaimedRoute($color);
+            if (!$lastClaimedRoute) {
                 $connectedRoutes = $this->getRoutesConnectedToCity(100, $color); //starting point
             } else {
-                $connectedRoutes = $this->getRoutesConnectedToCity($lastRoute->reverseDirection ? $lastRoute->from : $lastRoute->to, $color);
+                $lastRoute = $this->getRoute($lastClaimedRoute->routeId);
+                $connectedRoutes = $this->getRoutesConnectedToCity($lastClaimedRoute->reverseDirection ? $lastRoute->from : $lastRoute->to, $color);
             }
             // remove routes already claimed
             $claimedRoutes = $this->getClaimedRoutes();
             $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
-            $claimableRoutes=array_merge($claimableRoutes, array_filter($connectedRoutes, fn ($route) => !in_array($route->id, $claimedRoutesIds)));
+            $claimableRoutes = array_merge($claimableRoutes, array_filter($connectedRoutes, fn ($route) => !in_array($route->id, $claimedRoutesIds)));
         }
         return $claimableRoutes;
     }
@@ -105,21 +96,16 @@ trait MapTrait {
         }
     }
 
-    /**
-     * Creates 3 instances of each road, 1 per color.
-     */
     public function getAllRoutes() {
-        $baseRoutes = $this->ROUTES;
-        $allRoutes = [];
-        foreach ($baseRoutes as $baseId => $route) {
-            for ($i = BLUE; $i <= RED; $i++) {
-                $copy = clone $route;
-                $copy->id = intval($i . $baseId);
-                $copy->color = $i;
-                $allRoutes[] = $copy;
-            }
-        }
+        $allRoutes = $this->ROUTES;
+        array_walk($allRoutes, function (&$route, $id) {
+            $route->id = $id;
+        });
         return $allRoutes;
+    }
+
+    public function getRoute(int $routeId) {
+        return $this->ROUTES[$routeId];
     }
 
     private function isDoubleRouteAllowed() {
@@ -211,12 +197,11 @@ trait MapTrait {
 
     private function getRoutesConnectedToCity(int $city, int $color = 0) {
         $allRoutes = $this->getAllRoutes();
-
         $connectedRoutes = array_values(array_filter(
             $allRoutes,
             fn ($route) => ($route->from == $city || $route->to == $city) && (!$color || $route->color == $color)
         ));
-
+        //self::dump('*******************getRoutesConnectedToCity connectedRoutes', $connectedRoutes);
         return $connectedRoutes;
     }
 

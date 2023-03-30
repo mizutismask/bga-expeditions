@@ -205,23 +205,12 @@ class TtrMap {
 		);
 	}
 
-	/**
-	 * Creates 3 instances of each road, 1 per color.
-	 */
 	private getAllRoutes(): Route[] {
-		const baseRoutes = ROUTES;
-		const allRoutes: Route[] = [];
-		baseRoutes.forEach((route, baseId) => {
-			COLORS.forEach((color) => {
-				let copy: Route = { ...route };
-				copy.id = parseInt(color.toString() + baseId);
-				copy.color = color;
-				allRoutes.push(copy);
-			});
-		});
-		console.log("allRoutes", allRoutes);
-		
-		return allRoutes;
+		return ROUTES;
+	}
+
+	private getRoute(routeId:number): Route {
+		return ROUTES[routeId];
 	}
 
 	private createRouteSpaces(
@@ -391,7 +380,7 @@ class TtrMap {
 			x += 10 * Math.abs(Math.sin((angle * Math.PI) / 180));
 			y += 10 * Math.abs(Math.cos((angle * Math.PI) / 180));
 		}
-
+		//todo replace by route.color
 		const wagonHtml = `<div id="${id}" class="wagon angle${angleClassNumber} ${phantom ? "phantom" : ""} ${
 			space.top ? "top" : ""
 		}" data-player-color="${player.color}" data-color-blind-player-no="${

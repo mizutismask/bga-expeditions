@@ -125,6 +125,24 @@ trait UtilTrait {
         return array_map(fn ($dbObject) => $this->getDestinationFromDb($dbObject), array_values($dbObjects));
     }
 
+    /**
+     * Transforms a ClaimedRoute json decoded object to ClaimedRoute class.
+     */
+    function getClaimedRouteFromGlobal($dbObject) {
+        //self::dump('*******************getClaimedRouteFromGlobal', $dbObject);
+        if ($dbObject === null
+        ) {
+            return null;
+        }
+        if (!$dbObject) {
+            throw new BgaSystemException("Claimed route doesn't exists " . json_encode($dbObject));
+        }
+
+        $class = new ClaimedRoute([]);
+        foreach ($dbObject as $key => $value) $class->{$key} = $value;
+        return $class;
+    }
+
     function getInitialTrainCarsNumber() {
         return TRAIN_CARS_PER_PLAYER;
     }
