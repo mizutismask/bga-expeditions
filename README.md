@@ -1,6 +1,6 @@
 # What is this project ?
 
-This project is an adaptation for BoardGameArena of game Ticket to Ride edited by Days of Wonder.
+This project is an adaptation for BoardGameArena of the game Expeditions: around the world published by Super Meeple.
 You can play here : https://boardgamearena.com
 
 # How to install the auto-build stack
@@ -45,10 +45,9 @@ go on tests dir and start execute file, for example `php ./expeditions.game.test
 
 # Points of rules
 
-If there is a lot of locomotives remaining in a small set of available cards (for example 3 locomotives in 5 visible cards, no card in discard), we attempt 3 times to replace and if there is still 3 locomotives, we log and let them visible (to avoid an infinite loop).
-In case the player cannot pick destination cards nor train car cards, and cannot claim a route, we let him pass.
-What if he can only construct ? Does he have to ? -> probably yes, no issue here
-What if he can only pick destinations ? Does he have to ? -> asked, can be a negative move for the player
+Location claiming requires no action from players on bga.
+In case of cycle, can I continue the expedition from the compass ? Yes
+In case of cycle with the last arrow of any color, can player use tickets to remove this arrow ? No
 
 # About other maps
 
