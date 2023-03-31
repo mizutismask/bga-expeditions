@@ -691,23 +691,14 @@
 .wagon.angle35 {
   background-position: 100% 100%;
 }
-.wagon[data-player-color=df3e33] {
+.wagon[data-player-color="3"] {
   background-image: url("img/wagons-red.png"), url("img/wagons-shadow.png");
 }
-.wagon[data-player-color="30b0e1"] {
+.wagon[data-player-color="1"] {
   background-image: url("img/wagons-blue.png"), url("img/wagons-shadow.png");
 }
-.wagon[data-player-color="77bd25"] {
-  background-image: url("img/wagons-green.png"), url("img/wagons-shadow.png");
-}
-.wagon[data-player-color=eca51c] {
-  background-image: url("img/wagons-orange.png"), url("img/wagons-shadow.png");
-}
-.wagon[data-player-color=df74b2] {
-  background-image: url("img/wagons-pink.png"), url("img/wagons-shadow.png");
-}
-.wagon[data-player-color=d8d7d7] {
-  background-image: url("img/wagons-grey.png"), url("img/wagons-shadow.png");
+.wagon[data-player-color="2"] {
+  background-image: url("img/wagons-yellow.png"), url("img/wagons-shadow.png");
 }
 .wagon.phantom {
   opacity: 0.5;
@@ -722,23 +713,14 @@
   z-index: 11;
 }
 
-#map[data-big-shadows=true] .wagon[data-player-color=df3e33] {
+#map[data-big-shadows=true] .wagon[data-player-color="3"] {
   background-image: url("img/wagons-red.png"), url("img/wagons-shadow-big.png");
 }
-#map[data-big-shadows=true] .wagon[data-player-color="30b0e1"] {
+#map[data-big-shadows=true] .wagon[data-player-color="1"] {
   background-image: url("img/wagons-blue.png"), url("img/wagons-shadow-big.png");
 }
-#map[data-big-shadows=true] .wagon[data-player-color="77bd25"] {
-  background-image: url("img/wagons-green.png"), url("img/wagons-shadow-big.png");
-}
-#map[data-big-shadows=true] .wagon[data-player-color=eca51c] {
-  background-image: url("img/wagons-orange.png"), url("img/wagons-shadow-big.png");
-}
-#map[data-big-shadows=true] .wagon[data-player-color=df74b2] {
-  background-image: url("img/wagons-pink.png"), url("img/wagons-shadow-big.png");
-}
-#map[data-big-shadows=true] .wagon[data-player-color=d8d7d7] {
-  background-image: url("img/wagons-grey.png"), url("img/wagons-shadow-big.png");
+#map[data-big-shadows=true] .wagon[data-player-color="2"] {
+  background-image: url("img/wagons-yellow.png"), url("img/wagons-shadow-big.png");
 }
 
 #longest-path-animation {

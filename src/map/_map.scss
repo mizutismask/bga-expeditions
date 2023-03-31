@@ -368,7 +368,7 @@
   }
 
   
-  @each $name, $color in $player-colors {
+  @each $name, $color in $wagon-colors {
     &[data-player-color="#{$color}"] {
       background-image: url('img/wagons-#{$name}.png'), url('img/wagons-shadow.png');
     }
@@ -393,7 +393,7 @@
 
 #map[data-big-shadows="true"] {
   .wagon {
-    @each $name, $color in $player-colors {
+    @each $name, $color in $wagon-colors {
       &[data-player-color="#{$color}"] {
         background-image: url('img/wagons-#{$name}.png'), url('img/wagons-shadow-big.png');
       }

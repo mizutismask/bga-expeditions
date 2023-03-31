@@ -1,6 +1,11 @@
 // old colors (classic BGA colors) : $player-colors: ("red": "ff0000", "green": "008000", "blue": "0000ff", "yellow": "ffa500", "purple": "982fff");
 // new colors (from end score train image)
 $player-colors: ("red": "df3e33", "blue": "30b0e1", "green": "77bd25", "orange": "eca51c", "pink": "df74b2", "grey": "d8d7d7");
+$wagon-colors: (
+    "red": "3",
+    "blue": "1",
+    "yellow": "2",
+);
 
 @import 'playerboards';
 @import 'map/map';

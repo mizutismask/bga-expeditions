@@ -380,10 +380,9 @@ class TtrMap {
 			x += 10 * Math.abs(Math.sin((angle * Math.PI) / 180));
 			y += 10 * Math.abs(Math.cos((angle * Math.PI) / 180));
 		}
-		//todo replace by route.color
 		const wagonHtml = `<div id="${id}" class="wagon angle${angleClassNumber} ${phantom ? "phantom" : ""} ${
 			space.top ? "top" : ""
-		}" data-player-color="${player.color}" data-color-blind-player-no="${
+		}" data-player-color="${route.color}" data-color-blind-player-no="${
 			player.playerNo
 		}" data-xy="${xy}" style="transform: translate(${x}px, ${y}px)"></div>`;
 		// we consider a wagon must be more visible than another if its X + Y is > as the other

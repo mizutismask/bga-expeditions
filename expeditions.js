@@ -1128,8 +1128,7 @@ var TtrMap = /** @class */ (function () {
             x += 10 * Math.abs(Math.sin((angle * Math.PI) / 180));
             y += 10 * Math.abs(Math.cos((angle * Math.PI) / 180));
         }
-        //todo replace by route.color
-        var wagonHtml = "<div id=\"".concat(id, "\" class=\"wagon angle").concat(angleClassNumber, " ").concat(phantom ? "phantom" : "", " ").concat(space.top ? "top" : "", "\" data-player-color=\"").concat(player.color, "\" data-color-blind-player-no=\"").concat(player.playerNo, "\" data-xy=\"").concat(xy, "\" style=\"transform: translate(").concat(x, "px, ").concat(y, "px)\"></div>");
+        var wagonHtml = "<div id=\"".concat(id, "\" class=\"wagon angle").concat(angleClassNumber, " ").concat(phantom ? "phantom" : "", " ").concat(space.top ? "top" : "", "\" data-player-color=\"").concat(route.color, "\" data-color-blind-player-no=\"").concat(player.playerNo, "\" data-xy=\"").concat(xy, "\" style=\"transform: translate(").concat(x, "px, ").concat(y, "px)\"></div>");
         // we consider a wagon must be more visible than another if its X + Y is > as the other
         if (!alreadyPlacedWagons.length) {
             dojo.place(wagonHtml, "train-cars");
