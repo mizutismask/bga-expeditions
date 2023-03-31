@@ -216,7 +216,7 @@ trait ActionTrait {
         if ($loop) {
             $this->setGameStateValue(NEW_LOOP_COLOR, $claimedRoute->color);
 
-            self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop with the ${color} expedition. A new arrow can be placed to continue this expedition.'), [
+            self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop with the ${color} expedition. A new arrow can be placed to continue it from any point.'), [
                 'playerId' => $playerId,
                 'player_name' => $this->getPlayerName($playerId),
                 'color' => $this->getColorName($claimedRoute->color),
@@ -230,8 +230,9 @@ trait ActionTrait {
         $previous = $this->getLastClaimedRoute($claimedRoute->color);
         if ($previous) {
             $previousRoute = $this->getRoute($previous->routeId);
+            $previousTo = $previous->reverseDirection ? $previousRoute->from : $previousRoute->to;
             $this->logRoute("previousRoute", $previousRoute, $previous->reverseDirection);
-            $junction = $previousRoute->to == $claimedRoute->from ? $claimedRoute->from : $claimedRoute->to;
+            $junction = $previousTo == $claimedRoute->from ? $claimedRoute->from : $claimedRoute->to;
             $end = $junction == $claimedRoute->from ? $claimedRoute->to : $claimedRoute->from;
             $reversed = $junction > $end;
         } else {
