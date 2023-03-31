@@ -31,20 +31,26 @@ trait MapTrait {
      */
     public function claimableRoutes(int $playerId) {
         $claimableRoutes = [];
-        foreach (COLORS as $color) {
-            $lastClaimedRoute = $this->getLastClaimedRoute($color);
-            if (!$lastClaimedRoute) {
-                $connectedRoutes = $this->getRoutesConnectedToCity(100, $color); //starting point
-            } else {
-                $lastRoute = $this->getRoute($lastClaimedRoute->routeId);
-                $connectedRoutes = $this->getRoutesConnectedToCity($lastClaimedRoute->reverseDirection ? $lastRoute->from : $lastRoute->to, $color);
+        $connectedRoutes = [];
+        $loopColor = $this->getGamestateValue(NEW_LOOP_COLOR);
+        if ($loopColor) {
+            $connectedRoutes = $this->getRoutesOnExpedition($loopColor);
+        } else {
+            foreach (COLORS as $color) {
+                $lastClaimedRoute = $this->getLastClaimedRoute($color);
+                if (!$lastClaimedRoute) {
+                    $connectedRoutes = array_merge($connectedRoutes,  $this->getRoutesConnectedToCity(100, $color)); //starting point
+                } else {
+                    $lastRoute = $this->getRoute($lastClaimedRoute->routeId);
+                    $connectedRoutes = array_merge($connectedRoutes,  $this->getRoutesConnectedToCity($lastClaimedRoute->reverseDirection ? $lastRoute->from : $lastRoute->to, $color));
+                }
             }
-            // remove routes already claimed
-            $claimedRoutes = $this->getClaimedRoutes();
-            $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
-            $claimableRoutes = array_merge($claimableRoutes, array_filter($connectedRoutes, fn ($route) => !in_array($route->id, $claimedRoutesIds)));
         }
-        return $claimableRoutes;
+        // remove routes already claimed
+        $claimedRoutes = $this->getClaimedRoutes();
+        $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
+        $claimableRoutes = array_filter($connectedRoutes, fn ($route) => !in_array($route->id, $claimedRoutesIds));
+        return array_values($claimableRoutes);
     }
 
     /**
@@ -203,6 +209,29 @@ trait MapTrait {
         ));
         //self::dump('*******************getRoutesConnectedToCity connectedRoutes', $connectedRoutes);
         return $connectedRoutes;
+    }
+
+    private function getRoutesOnExpedition(int $color) {
+        $routes = $this->getClaimedRoutes();
+        $routes = array_filter($routes, fn ($route) => ($this->getRoute($route->routeId)->color == $color));
+        //self::dump('*******************getRoutesOnExpedition color', $color);
+        //self::dump('*******************getRoutesOnExpedition', $routes);
+
+        $cities = [];
+        foreach ($routes as $route) {
+            $details = $this->getRoute($route->routeId);
+            $cities[] = $details->from;
+            $cities[] = $details->to;
+        }
+        $cities = array_unique($cities);
+        //self::dump('*******************cities', $cities);
+
+        $availableRoutes = [];
+        foreach ($cities as $city) {
+            $availableRoutes = array_merge($availableRoutes, $this->getRoutesConnectedToCity($city, $color));
+        }
+        //self::dump('*******************availableRoutes', $availableRoutes);
+        return array_values($availableRoutes);
     }
 
     // return an array of ConnectedCity
