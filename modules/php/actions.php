@@ -192,11 +192,37 @@ trait ActionTrait {
         ]);
 
         $this->checkCompletedDestinations($playerId, $route, $reverseDirection);
+        $loop = $this->checkLoop($playerId, $route, $reverseDirection);
 
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
         //$this->checkVisibleTrainCarCards();
+        if (!$loop) {
+            $this->gamestate->nextState('nextPlayer');
+        }
+    }
 
-        $this->gamestate->nextState('nextPlayer');
+    /**
+     * Searches if there is a claimed route of the same color connected to the point of the new arrow
+     */
+    private function checkLoop($playerId, Route $claimedRoute, $reverseDirection): bool {
+        $loop = false;
+        $target = $reverseDirection ? $claimedRoute->from : $claimedRoute->to;
+        $connectedRoutes = $this->getRoutesConnectedToCity($target, $claimedRoute->color);
+        $claimedRoutes = $this->getClaimedRoutes();
+        $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
+        $claimedConnectedRoutes = array_filter($connectedRoutes, fn ($route) => in_array($route->id, $claimedRoutesIds) && $route->id !== $claimedRoute->id);
+        //self::dump('*******************loop with', $claimedConnectedRoutes);
+        $loop = !empty($claimedConnectedRoutes);
+        if ($loop) {
+            $this->setGameStateValue(NEW_LOOP_COLOR, $claimedRoute->color);
+
+            self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop with the ${color} expedition. A new arrow can be placed to continue this expedition.'), [
+                'playerId' => $playerId,
+                'player_name' => $this->getPlayerName($playerId),
+                'color' => $this->getColorName($claimedRoute->color),
+            ]);
+        }
+        return $loop;
     }
 
     function guessDirection(Route $claimedRoute): bool {

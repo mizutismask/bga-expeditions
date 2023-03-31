@@ -55,6 +55,7 @@ class Expeditions extends Table {
             REMAINING_YELLOW_ARROWS => 12,
             REMAINING_BLUE_ARROWS => 13,
             REMAINING_RED_ARROWS => 14,
+            NEW_LOOP_COLOR => 15,
             // options
             SHOW_TURN_ORDER => 110, // last turn is the id of the player starting last turn, 0 if it's not last turn
         ]);
@@ -110,7 +111,7 @@ class Expeditions extends Table {
         $this->setGameStateInitialValue(REMAINING_BLUE_ARROWS, $this->getInitialTrainCarsNumber());
         $this->setGameStateInitialValue(REMAINING_YELLOW_ARROWS, $this->getInitialTrainCarsNumber());
         $this->setGameStateInitialValue(REMAINING_RED_ARROWS, $this->getInitialTrainCarsNumber());
-        
+        $this->setGameStateInitialValue(NEW_LOOP_COLOR, 0);
 
         // Init game statistics
         // 10+ : other
