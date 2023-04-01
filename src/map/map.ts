@@ -209,7 +209,7 @@ class TtrMap {
 		return ROUTES;
 	}
 
-	private getRoute(routeId:number): Route {
+	private getRoute(routeId: number): Route {
 		return ROUTES[routeId];
 	}
 
@@ -734,6 +734,6 @@ class TtrMap {
 	}
 
 	public getCityName(cityId: number) {
-		return CITIES_NAMES[cityId - 100];
+		return cityId - 100 < CITIES_NAMES.length ? CITIES_NAMES[cityId - 100] : "unknown";
 	}
 }
