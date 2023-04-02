@@ -130,7 +130,8 @@ trait UtilTrait {
      */
     function getClaimedRouteFromGlobal($dbObject) {
         //self::dump('*******************getClaimedRouteFromGlobal', $dbObject);
-        if ($dbObject === null
+        if (
+            $dbObject === null
         ) {
             return null;
         }
@@ -300,5 +301,38 @@ trait UtilTrait {
             $ids[] = $dest->id;
         }
         return $ids;
+    }
+
+    /**
+     * Locations are not only green cities, but also blue and red points.
+     */
+    function getLocationColor(int $cityId): int {
+        $color = 0;
+        if ($cityId >= 100 && $cityId <= 180) {
+            $color = GREEN_CITY;
+        } else if ($cityId >= 181 && $cityId <= 201) {
+            $color = RED_CITY;
+        } else if ($cityId >= 182 && $cityId <= 221) {
+            $color = BLUE_CITY;
+        } else {
+            throw new BgaSystemException("This city is not from any color " . $cityId);
+        }
+        return $color;
+    }
+
+    function getLocationName(int $cityId) {
+        $color = $this->getLocationColor($cityId);
+        switch ($color) {
+            case RED_CITY:
+                return clienttranslate("red point");
+            case BLUE_CITY:
+                return clienttranslate("blue point");
+            case GREEN_CITY:
+                return $this->CITIES[$cityId];
+        }
+    }
+
+    function dbIncField(String $table, String $field, int $value, String $pkfield, String $key) {
+        $this->DbQuery("UPDATE $table SET $field = $field+$value WHERE $pkfield = '$key'");
     }
 }

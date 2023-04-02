@@ -32,6 +32,9 @@ define('YELLOW', 2);
 define('RED', 3);
 define('COLORS', [BLUE, YELLOW, RED]);
 
+define('BLUE_CITY', 1);
+define('GREEN_CITY', 2);
+define('RED_CITY', 3);
 /*
  * State constants
  */

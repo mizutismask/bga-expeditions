@@ -159,6 +159,9 @@ trait ActionTrait {
     }
 
     function applyClaimRoute(int $playerId, int $routeId, int $color, int $extraCardCost = 0) {
+        if ($this->getGameStateValue(NEW_LOOP_COLOR)) {
+            $this->setGameStateValue(NEW_LOOP_COLOR, 0);
+        }
         $route = $this->getRoute($routeId);
         //self::dump('*******************applyClaimRoute', $routeId);
         // self::dump('*******************', $route);
@@ -186,19 +189,49 @@ trait ActionTrait {
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'route' => $route,
-            'from' => $reverseDirection ? $this->CITIES[$route->to] : $this->CITIES[$route->from],
-            'to' => $reverseDirection ? $this->CITIES[$route->from] : $this->CITIES[$route->to],
+            'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
+            'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($color),
         ]);
 
-        $this->checkCompletedDestinations($playerId, $route, $reverseDirection);
+        $targetColor = $this->getLocationColor($reverseDirection ? $route->from : $route->to);
         $loop = $this->checkLoop($playerId, $route, $reverseDirection);
+        $continuesPlaying = false;
+        switch ($targetColor) {
+            case GREEN_CITY:
+                $this->checkCompletedDestinations($playerId, $route, $reverseDirection);
+                break;
+            case RED_CITY:
+                $this->earnTicket($playerId);
+                $continuesPlaying = true;
+                break;
+            case BLUE_CITY:
+                if ($this->getRemainingArrows($color) == 0) {
+                    self::notifyAllPlayers('msg', clienttranslate('There are no more {$color} arrows, so ${player_name} can not use the benefit of the blue location.'), [
+                        'playerId' => $playerId,
+                        'player_name' => $this->getPlayerName($playerId),
+                        'color' => $this->getColorName($color),
+                    ]);
+                } else {
+                    $continuesPlaying = true;
+                }
+                break;
+        }
 
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
         //$this->checkVisibleTrainCarCards();
-        if (!$loop) {
+        self::dump('**************continuesPlaying****', $continuesPlaying);
+        if (!$loop && !$continuesPlaying) {
             $this->gamestate->nextState('nextPlayer');
         }
+    }
+
+    private function earnTicket(int $playerId) {
+        $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
+        self::notifyAllPlayers('msg', clienttranslate('${player_name} gains 1 ticket'), [
+            'playerId' => $playerId,
+            'player_name' => $this->getPlayerName($playerId),
+        ]);
     }
 
     /**
