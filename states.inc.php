@@ -131,6 +131,7 @@ $playerActionsGameStates = [
             "drawSecondCard" => ST_PLAYER_DRAW_SECOND_CARD,
             "drawDestinations" => ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS,
             "tunnel" => ST_PLAYER_CONFIRM_TUNNEL,
+            "useTicket" => ST_PLAYER_USE_TICKET,
             "nextPlayer" => ST_NEXT_PLAYER,
         ]
     ],
@@ -186,6 +187,22 @@ $playerActionsGameStates = [
         "transitions" => [
             "nextPlayer" => ST_NEXT_PLAYER,
         ],
+    ],
+    ST_PLAYER_USE_TICKET => [
+        "name" => "useTicket",
+        "description" => clienttranslate('${actplayer} chooses to place another arrow, remove the last one of any expedition or exchange a card'),
+        "descriptionmyturn" => clienttranslate('${you} can place another arrow, remove the last one of any expedition or exchange a card'),
+        "type" => "activeplayer",
+        "args" => "argUseTicket",
+        "possibleactions" => [
+            "unclaimRoute",
+            "exchangeCard",
+            "claimRoute"
+        ],
+        "transitions" => [
+            "continue" => ST_PLAYER_CHOOSE_ACTION,
+            "nextPlayer" => ST_NEXT_PLAYER,
+        ]
     ],
 ];
 

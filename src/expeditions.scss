@@ -1,227 +1,243 @@
 // old colors (classic BGA colors) : $player-colors: ("red": "ff0000", "green": "008000", "blue": "0000ff", "yellow": "ffa500", "purple": "982fff");
 // new colors (from end score train image)
-$player-colors: ("red": "df3e33", "blue": "30b0e1", "green": "77bd25", "orange": "eca51c", "pink": "df74b2", "grey": "d8d7d7");
+$player-colors: (
+	"red": "df3e33",
+	"blue": "30b0e1",
+	"green": "77bd25",
+	"orange": "eca51c",
+	"pink": "df74b2",
+	"grey": "d8d7d7",
+);
 $wagon-colors: (
-    "red": "3",
-    "blue": "1",
-    "yellow": "2",
+	"red": "3",
+	"blue": "1",
+	"yellow": "2",
 );
 
-@import 'playerboards';
-@import 'map/map';
-@import 'train-car-deck/train-car-deck';
-@import 'destination-deck/destination-deck';
-@import 'player-table/player-table';
-@import 'end-score/end-score';
+@import "playerboards";
+@import "map/map";
+@import "train-car-deck/train-car-deck";
+@import "destination-deck/destination-deck";
+@import "player-table/player-table";
+@import "end-score/end-score";
 
 /* make space between buttons on touch devices */
 @media (hover: none) {
-    #page-title .action-button.bgabutton, #page-title .bgabutton {
-      margin-bottom: 8px;
-      margin-top: 8px;
-    }
-  }
-  
+	#page-title .action-button.bgabutton,
+	#page-title .bgabutton {
+		margin-bottom: 8px;
+		margin-top: 8px;
+	}
+}
+
 $background: linear-gradient(90deg, rgba(57, 124, 150, 1) 0%, rgba(21, 104, 134, 1) 100%);
 
-html, .mode_3d #game_play_area_background {
-    background: $background #b59958;
-    background-repeat: no-repeat;
-    background-size: 100%;
+html,
+.mode_3d #game_play_area_background {
+	background: $background #b59958;
+	background-repeat: no-repeat;
+	background-size: 100%;
 }
 
 #last-round {
-    margin: 5px -5px -5px;
-    text-align: center;
-    background-color: #900;
-    color: white;
-    text-shadow: 0 0 1px #900, 0 0 5px #900, 0 0 6px #900, 0 0 7px #900;
+	margin: 5px -5px -5px;
+	text-align: center;
+	background-color: #900;
+	color: white;
+	text-shadow: 0 0 1px #900, 0 0 5px #900, 0 0 6px #900, 0 0 7px #900;
 
-    .last-round-text {
-        display: inline-block;
+	.last-round-text {
+		display: inline-block;
 
-        &.animate {
-            animation: last-round-animation 2s 1 forwards ease-in-out;
-        }
-    }
+		&.animate {
+			animation: last-round-animation 2s 1 forwards ease-in-out;
+		}
+	}
 }
 
 @keyframes last-round-animation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(3);
-  }
-  100% { 
-    transform: scale(1);
-  }
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(3);
+	}
+	100% {
+		transform: scale(1);
+	}
 }
 
 .train-car-card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 150px; 
-    height: 209px; 
-    background-image: url("img/train-cards.jpg");
-    border-radius: 6px;
-    box-shadow: 0 0 8px 1px black;
-    transform-origin: center center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+	height: 209px;
+	background-image: url("img/train-cards.jpg");
+	border-radius: 6px;
+	box-shadow: 0 0 8px 1px black;
+	transform-origin: center center;
 
-    &.selectable {
-        cursor: pointer;
-    }
-    
-    &.disabled {
-        filter: contrast(0.6);
-        cursor: not-allowed;
-    }
+	&.selectable {
+		cursor: pointer;
+	}
 
-    @for $i from 0 through 8 {
-        &[data-color="#{$i}"] {
-            background-position: #{$i * 12.5%} 50%;
-        }
-    }
+	&.disabled {
+		filter: contrast(0.6);
+		cursor: not-allowed;
+	}
 
-    &.animated {
-        pointer-events: none;
-        transition: transform 0.5s;
+	@for $i from 0 through 8 {
+		&[data-color="#{$i}"] {
+			background-position: #{$i * 12.5%} 50%;
+		}
+	}
 
-        &.transform-origin-top-left {
-            transform-origin: top left;
-        }
-    
-        &.from-hidden-pile {
-            background-image: url("img/deck-cardLevel-10.png");
-        }
-    }
+	&.animated {
+		pointer-events: none;
+		transition: transform 0.5s;
 
-    &.tunnel-card {
-        transform: scale(0.1);
-    }
+		&.transform-origin-top-left {
+			transform-origin: top left;
+		}
+
+		&.from-hidden-pile {
+			background-image: url("img/deck-cardLevel-10.png");
+		}
+	}
+
+	&.tunnel-card {
+		transform: scale(0.1);
+	}
 }
 
 .stockitem {
-    border-radius: 6px;
-    
-    &.disabled {
-        filter: contrast(0.6);
-        cursor: not-allowed;
-    }
+	border-radius: 6px;
+
+	&.disabled {
+		filter: contrast(0.6);
+		cursor: not-allowed;
+	}
 }
 
 #page-title {
-    .color-cards {
-        display: inline-block;
+	.color-cards {
+		display: inline-block;
 
-        .icon.train-car-color:not(:first-child) {
-            margin-left: -20px;
-        }
-    }
+		.icon.train-car-color:not(:first-child) {
+			margin-left: -20px;
+		}
+	}
 
-    .icon.train-car-color {
-        margin: -5px 0px;
-    }
+	.icon.train-car-color {
+		margin: -5px 0px;
+	}
 }
 
- /* Makes the svg arrow to change color */
-.arrow{
-    width: 36px;
-    height: 17px;
-    background-color: black;
-    overflow: hidden;
-    color: transparent;
+/* Makes the svg arrow to change color */
+.arrow {
+	width: 36px;
+	height: 17px;
+	background-color: black;
+	overflow: hidden;
+	color: transparent;
 
-    /* Store the SVG in a variable so it's easy to re-use */
-    --svg: url('data:image/svg+xml,\
+	/* Store the SVG in a variable so it's easy to re-use */
+	--svg: url('data:image/svg+xml,\
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 0 20 9.379">\
         <path d="M22.838,0.798C22.75,1.672,23.986,3,23.986,3S12.338,3,11.781,3C9.91,3,9.988,4.326,10.006,4.521\
 	C9.988,4.712,9.91,6,11.781,6c0.557,0,12.205,0,12.205,0s-1.236,1.85-1.148,2.725C23.059,10.938,29.924,7,29.996,5\
 	C29.924,2,23.059-1.417,22.838,0.798z"/>\
     </svg>');
 
-    /* Chrome, still requires prefix in 2022 */
-    -webkit-mask: var(--svg);
+	/* Chrome, still requires prefix in 2022 */
+	-webkit-mask: var(--svg);
 
-    /* Firefox and Safari */
-    mask: var(--svg);
+	/* Firefox and Safari */
+	mask: var(--svg);
 
-    &.blue{
-        background-color: blue;
-    }
-    &.red {
-        background-color: red;
-    }
-    &.yellow {
-        background-color: rgb(252, 252, 56);
-    }
+	&.blue {
+		background-color: blue;
+	}
+	&.red {
+		background-color: red;
+	}
+	&.yellow {
+		background-color: rgb(252, 252, 56);
+	}
+}
+
+.expTicket {
+	width: 50px;
+	height: 29px;
+	background: url("img/ticket.png") no-repeat;
+    background-size: cover;
 }
 
 .dijitTooltipContents {
-    .destinations-flex {
-        display: flex;
-        gap: 5px;
+	.destinations-flex {
+		display: flex;
+		gap: 5px;
 
-        .destination-card {
-            position: relative;
-        }
-    }
+		.destination-card {
+			position: relative;
+		}
+	}
 }
 
 // hack to move to the framework
 .preference_choice .row-data.row-data-large {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
 
-    .row-label {
-        white-space: normal;
-    }
-    
-    .row-value {
-        flex: 1;
-        margin-left: unset;
-        min-width: 200px;
-    }
+	.row-label {
+		white-space: normal;
+	}
+
+	.row-value {
+		flex: 1;
+		margin-left: unset;
+		min-width: 200px;
+	}
 }
 
 html[data-color-blind="true"] {
-    [data-color-blind-player-no]::after {
-        font-size: 120%;
-        display: flex;
-        justify-content: center;
-        color: white;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        align-items: center;
-        text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;
-    }
+	[data-color-blind-player-no]::after {
+		font-size: 120%;
+		display: flex;
+		justify-content: center;
+		color: white;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;
+	}
 
-    .wagon::after {
-        font-size: 200%;
-    }
+	.wagon::after {
+		font-size: 200%;
+	}
 
-    [data-color-blind-player-no="1"]::after {
-      content: '●'; // circle
-    }
+	[data-color-blind-player-no="1"]::after {
+		content: "●"; // circle
+	}
 
-    [data-color-blind-player-no="2"]::after {
-      content: '▲'; // triangle
-    }
+	[data-color-blind-player-no="2"]::after {
+		content: "▲"; // triangle
+	}
 
-    [data-color-blind-player-no="3"]::after {
-      content: '■'; // square
-    }
+	[data-color-blind-player-no="3"]::after {
+		content: "■"; // square
+	}
 
-    [data-color-blind-player-no="4"]::after {
-      content: '◆'; // diamond
-    }
+	[data-color-blind-player-no="4"]::after {
+		content: "◆"; // diamond
+	}
 
-    [data-color-blind-player-no="5"]::after {
-      content: '⬟'; // pentagon
-    }
+	[data-color-blind-player-no="5"]::after {
+		content: "⬟"; // pentagon
+	}
 }

@@ -769,7 +769,21 @@ class Expeditions implements ExpeditionsGame {
 			}
 		);
 
+		this.addImageActionButton(
+			"useTicket_button",
+			this.createDiv("expTicket", "expTicket"),
+			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+			"blue",
+			_("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"),
+			() => {
+				this.useTicket();
+			}
+		);
+		$("expTicket").parentElement.style.padding= "0";
+
+		//dojo.toggleClass("placeRedArrow_button", "disabled", chooseActionArgs.remainingArrows[RED] > 0);
 		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
+		dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
 		if (chooseActionArgs.canPass) {
 			(this as any).addActionButton("pass_button", _("Pass"), () => this.pass());
 		}
@@ -896,6 +910,17 @@ class Expeditions implements ExpeditionsGame {
 			routeId,
 			color,
 		});
+	}
+
+	/**
+	 * Use ticket.
+	 */
+	public useTicket() {
+		if (!(this as any).checkAction("useTicket")) {
+			return;
+		}
+
+		this.takeAction("useTicket");
 	}
 
 	/**

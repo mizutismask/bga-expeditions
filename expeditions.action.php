@@ -149,4 +149,12 @@ class action_expeditions extends APP_GameAction {
 
         self::ajaxResponse();
     }
+
+    public function useTicket() {
+        self::setAjaxMode();
+
+        $this->game->useTicket();
+
+        self::ajaxResponse();
+    }
 }

@@ -140,6 +140,7 @@ interface EnteringChooseActionArgs {
 	maxDestinationsPick: number;
 	canTakeTrainCarCards: boolean;
 	canPass: boolean;
+	canUseTicket:boolean;
 }
 
 interface EnteringDrawSecondCardArgs {

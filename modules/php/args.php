@@ -70,7 +70,7 @@ trait ArgsTrait {
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
         $canPass = !$canClaimARoute && $maxDestinationsPick == 0 && $canTakeTrainCarCards == 0;
-        $canUseTicket = self::getGameStateValue(TICKETS_USED)<2;
+        $canUseTicket = self::getGameStateValue(TICKETS_USED)<2 && $this->getRemainingTicketsCount($playerId)>0;
         return [
             'possibleRoutes' => $possibleRoutes,
             'costForRoute' => $costForRoute,
@@ -89,6 +89,12 @@ trait ArgsTrait {
         return [
             'maxHiddenCardsPick' => $maxHiddenCardsPick,
             'availableVisibleCards' => $availableVisibleCards,
+        ];
+    }
+
+    function argUseTicket(){
+        return [
+            'possibleRoutes' => [],
         ];
     }
 

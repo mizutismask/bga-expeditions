@@ -160,6 +160,10 @@ trait UtilTrait {
         return $this->getUniqueIntValueFromDB("SELECT `player_remaining_train_cars` FROM player WHERE player_id = $playerId");
     }
 
+    function getRemainingTicketsCount(int $playerId) {
+        return $this->getUniqueIntValueFromDB("SELECT `player_remaining_tickets` FROM player WHERE player_id = $playerId");
+    }
+
     function getNonZombiePlayersIds() {
         $sql = "SELECT player_id FROM player WHERE player_eliminated = 0 AND player_zombie = 0 ORDER BY player_no";
         $dbResults = self::getCollectionFromDB($sql);

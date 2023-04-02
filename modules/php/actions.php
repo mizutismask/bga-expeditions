@@ -134,6 +134,30 @@ trait ActionTrait {
         $this->gamestate->nextState('drawDestinations');
     }
 
+    public function useTicket() {
+        self::checkAction('useTicket');
+
+        $playerId = intval(self::getActivePlayerId());
+
+        if ($this->getRemainingTicketsCount($playerId) == 0) {
+            throw new BgaUserException(self::_("You don't have any ticket"));
+        }
+        if (self::getGameStateValue(TICKETS_USED) == 2) {
+            throw new BgaUserException(self::_("You've already used 2 tickets on this turn"));
+        }
+
+        $this->dbIncField("player", "player_remaining_tickets", -1, "player_id", $playerId);
+        self::notifyAllPlayers('msg', clienttranslate('${player_name} uses 1 ticket'), [
+            'playerId' => $playerId,
+            'player_name' => $this->getPlayerName($playerId),
+        ]);
+        $this->incGameStateValue(TICKETS_USED, 1);
+
+        self::incStat(1, 'drawDestinationsAction', $playerId);
+
+        $this->gamestate->nextState('useTicket');
+    }
+
     public function claimRoute(int $routeId, int $color) {
         self::checkAction('claimRoute');
 

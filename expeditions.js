@@ -3082,7 +3082,15 @@ var Expeditions = /** @class */ (function () {
         "blue", _("Continue the blue expedition"), function () {
             _this.selectArrowColor(RED);
         });
+        this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), 
+        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
+        "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
+            _this.useTicket();
+        });
+        $("expTicket").parentElement.style.padding = "0";
+        //dojo.toggleClass("placeRedArrow_button", "disabled", chooseActionArgs.remainingArrows[RED] > 0);
         dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
+        dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
         if (chooseActionArgs.canPass) {
             this.addActionButton("pass_button", _("Pass"), function () { return _this.pass(); });
         }
@@ -3193,6 +3201,15 @@ var Expeditions = /** @class */ (function () {
             routeId: routeId,
             color: color,
         });
+    };
+    /**
+     * Use ticket.
+     */
+    Expeditions.prototype.useTicket = function () {
+        if (!this.checkAction("useTicket")) {
+            return;
+        }
+        this.takeAction("useTicket");
     };
     /**
      * Pass (in case of no possible action).
