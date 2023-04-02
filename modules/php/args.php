@@ -66,11 +66,11 @@ trait ArgsTrait {
 
         $canClaimARoute = false;
         $costForRoute = [];
-        
+
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
-        $canPass = !$canClaimARoute && $maxDestinationsPick == 0 && $canTakeTrainCarCards == 0;
-        $canUseTicket = self::getGameStateValue(TICKETS_USED)<2 && $this->getRemainingTicketsCount($playerId)>0;
+        $canPass = true;
+        $canUseTicket = self::getGameStateValue(TICKETS_USED) < 2 && $this->getRemainingTicketsCount($playerId) > 0;
         return [
             'possibleRoutes' => $possibleRoutes,
             'costForRoute' => $costForRoute,
@@ -79,6 +79,7 @@ trait ArgsTrait {
             'canTakeTrainCarCards' => $canTakeTrainCarCards,
             'canUseTicket' => $canUseTicket,
             'canPass' => $canPass,
+            'remainingArrows' => [BLUE=> $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]
         ];
     }
 
@@ -92,7 +93,7 @@ trait ArgsTrait {
         ];
     }
 
-    function argUseTicket(){
+    function argUseTicket() {
         return [
             'possibleRoutes' => [],
         ];

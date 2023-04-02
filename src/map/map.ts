@@ -228,7 +228,7 @@ class TtrMap {
                     title="${dojo.string.substitute(_("${from} to ${to}"), {
 						from: this.getCityName(route.from),
 						to: this.getCityName(route.to),
-					})}, ${(route.spaces as any).length} ${getColor(route.color, "route")}"
+					})}, ${(route.spaces as any).length} ${getColor(route.color)}"
                     data-route="${route.id}" data-color="${route.color}"
                 ></div>`,
 					destination

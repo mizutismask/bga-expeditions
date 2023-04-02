@@ -22,7 +22,7 @@ const RED = 3;
 
 const COLORS= [BLUE,YELLOW,RED];
 
-function getColor(color: number, type: "route" | "train-car") {
+function getColor(color: number) {
 	switch (color) {
 		case 1:
 			return _("Blue");
@@ -34,7 +34,7 @@ function getColor(color: number, type: "route" | "train-car") {
 }
 
 function setupTrainCarCardDiv(cardDiv: HTMLDivElement, cardTypeId) {
-	cardDiv.title = getColor(Number(cardTypeId), "train-car");
+	cardDiv.title = getColor(Number(cardTypeId));
 }
 
 class DestinationCard {

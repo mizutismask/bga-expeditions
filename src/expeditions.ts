@@ -738,36 +738,27 @@ class Expeditions implements ExpeditionsGame {
 			"red"
 		);
 
-		this.addImageActionButton(
-			"placeBlueArrow_button",
-			this.createDiv("arrow blue"),
-			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-			"blue",
-			_("Continue the blue expedition"),
-			() => {
-				this.selectArrowColor(BLUE);
-			}
-		);
-		this.addImageActionButton(
-			"placeYellowArrow_button",
-			this.createDiv("arrow yellow"),
-			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-			"blue",
-			_("Continue the yellow expedition"),
-			() => {
-				this.selectArrowColor(YELLOW);
-			}
-		);
-		this.addImageActionButton(
-			"placeRedArrow_button",
-			this.createDiv("arrow red"),
-			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-			"blue",
-			_("Continue the blue expedition"),
-			() => {
-				this.selectArrowColor(RED);
-			}
-		);
+		COLORS.forEach((color) => {
+			let colorName = getColor(color);
+			let label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
+				colorName: `${colorName}`,
+			});
+
+			(this as any).addImageActionButton(
+				"placeArrow_button_" + colorName,
+				this.createDiv("arrow " + colorName.toLowerCase()),
+				colorName,
+				label,
+				() => {
+					this.selectArrowColor(color);
+				}
+			);
+			dojo.toggleClass(
+				"placeArrow_button_" + colorName,
+				"disabled",
+				chooseActionArgs.remainingArrows[color] == 0
+			);
+		});
 
 		this.addImageActionButton(
 			"useTicket_button",
@@ -779,13 +770,13 @@ class Expeditions implements ExpeditionsGame {
 				this.useTicket();
 			}
 		);
-		$("expTicket").parentElement.style.padding= "0";
+		$("expTicket").parentElement.style.padding = "0";
 
 		//dojo.toggleClass("placeRedArrow_button", "disabled", chooseActionArgs.remainingArrows[RED] > 0);
 		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
 		dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
 		if (chooseActionArgs.canPass) {
-			(this as any).addActionButton("pass_button", _("Pass"), () => this.pass());
+			(this as any).addActionButton("pass_button", _("End my turn"), () => this.pass());
 		}
 	}
 

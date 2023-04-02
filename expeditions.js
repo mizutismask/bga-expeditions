@@ -31,7 +31,7 @@ var BLUE = 1;
 var YELLOW = 2;
 var RED = 3;
 var COLORS = [BLUE, YELLOW, RED];
-function getColor(color, type) {
+function getColor(color) {
     switch (color) {
         case 1:
             return _("Blue");
@@ -42,7 +42,7 @@ function getColor(color, type) {
     }
 }
 function setupTrainCarCardDiv(cardDiv, cardTypeId) {
-    cardDiv.title = getColor(Number(cardTypeId), "train-car");
+    cardDiv.title = getColor(Number(cardTypeId));
 }
 var DestinationCard = /** @class */ (function () {
     function DestinationCard(id, to) {
@@ -1331,7 +1331,7 @@ var TtrMap = /** @class */ (function () {
                 dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
                     to: _this.getCityName(route.to),
-                }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color, "route"), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
+                }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
                 var spaceDiv = document.getElementById("".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex));
                 if (destination == "route-spaces") {
                     _this.setSpaceClickEvents(spaceDiv, route);
@@ -3067,20 +3067,15 @@ var Expeditions = /** @class */ (function () {
         this.addActionButton("drawDestinations_button", dojo.string.substitute(_("Draw ${number} destination tickets"), {
             number: chooseActionArgs.maxDestinationsPick,
         }), function () { return _this.drawDestinations(); }, null, null, "red");
-        this.addImageActionButton("placeBlueArrow_button", this.createDiv("arrow blue"), 
-        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the blue expedition"), function () {
-            _this.selectArrowColor(BLUE);
-        });
-        this.addImageActionButton("placeYellowArrow_button", this.createDiv("arrow yellow"), 
-        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the yellow expedition"), function () {
-            _this.selectArrowColor(YELLOW);
-        });
-        this.addImageActionButton("placeRedArrow_button", this.createDiv("arrow red"), 
-        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Continue the blue expedition"), function () {
-            _this.selectArrowColor(RED);
+        COLORS.forEach(function (color) {
+            var colorName = getColor(color);
+            var label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
+                colorName: "".concat(colorName),
+            });
+            _this.addImageActionButton("placeArrow_button_" + colorName, _this.createDiv("arrow " + colorName.toLowerCase()), colorName, label, function () {
+                _this.selectArrowColor(color);
+            });
+            dojo.toggleClass("placeArrow_button_" + colorName, "disabled", chooseActionArgs.remainingArrows[color] == 0);
         });
         this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), 
         //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
@@ -3092,7 +3087,7 @@ var Expeditions = /** @class */ (function () {
         dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
         dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
         if (chooseActionArgs.canPass) {
-            this.addActionButton("pass_button", _("Pass"), function () { return _this.pass(); });
+            this.addActionButton("pass_button", _("End my turn"), function () { return _this.pass(); });
         }
     };
     Expeditions.prototype.selectArrowColor = function (color) {
