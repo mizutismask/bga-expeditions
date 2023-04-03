@@ -294,9 +294,6 @@ trait UtilTrait {
             'revealed' => $revealed,
             'destinationRoutes' => [],
         ]);
-
-        self::incStat(1, 'completedDestinations');
-        self::incStat(1, 'completedDestinations', $ownerId);
     }
 
     function getDestinationIds(array $destinations) {

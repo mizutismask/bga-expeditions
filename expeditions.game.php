@@ -114,47 +114,16 @@ class Expeditions extends Table {
         $this->setGameStateInitialValue(NEW_LOOP_COLOR, 0);
 
         // Init game statistics
-        // 10+ : other
         $this->initStat('table', 'turnsNumber', 0);
         $this->initStat('player', 'turnsNumber', 0);
-        $this->initStat('table', 'pointsWithClaimedRoutes', 0);
-        $this->initStat('player', 'pointsWithClaimedRoutes', 0);
-        $this->initStat('table', 'pointsWithDestinations', 0);
-        $this->initStat('player', 'pointsWithDestinations', 0);
-        $this->initStat('table', 'pointsWithCompletedDestinations', 0);
-        $this->initStat('player', 'pointsWithCompletedDestinations', 0);
-        $this->initStat('table', 'pointsLostWithUncompletedDestinations', 0);
-        $this->initStat('player', 'pointsLostWithUncompletedDestinations', 0);
-        // 20+ : train car cards
-        $this->initStat('table', 'collectedTrainCarCards', 0);
-        $this->initStat('player', 'collectedTrainCarCards', 0);
-        $this->initStat('table', 'collectedHiddenTrainCarCards', 0);
-        $this->initStat('player', 'collectedHiddenTrainCarCards', 0);
-        $this->initStat('table', 'collectedVisibleTrainCarCards', 0);
-        $this->initStat('player', 'collectedVisibleTrainCarCards', 0);
-        $this->initStat('table', 'collectedVisibleLocomotives', 0);
-        $this->initStat('player', 'collectedVisibleLocomotives', 0);
-        $this->initStat('table', 'visibleCardsReplaced', 0);
-        // 30+ : destination cards
-        $this->initStat('table', 'drawDestinationsAction', 0);
-        $this->initStat('player', 'drawDestinationsAction', 0);
-        $this->initStat('table', 'completedDestinations', 0);
-        $this->initStat('player', 'completedDestinations', 0);
-        //$this->initStat('table', 'uncompletedDestinations', 0); // only computed at the end
-        //$this->initStat('player', 'uncompletedDestinations', 0); // only computed at the end
-        $this->initStat('player', 'keptInitialDestinationCards', 0); // player only
-        $this->initStat('player', 'keptAdditionalDestinationCards', 0); // player only
-        // 40+ : train cars (meeples)
-        $this->initStat('table', 'claimedRoutes', 0);
-        $this->initStat('player', 'claimedRoutes', 0);
-        $this->initStat('table', 'playedTrainCars', 0);
-        $this->initStat('player', 'playedTrainCars', 0);
-        //$this->initStat('table', 'averageClaimedRouteLength', 0); // only computed at the end
-        //$this->initStat('player', 'averageClaimedRouteLength', 0); // only computed at the end
-        //$this->initStat('table', 'longestPath', 0); // only computed at the end
-        //$this->initStat('player', 'longestPath', 0); // only computed at the end
-        $this->initStat('player', 'longestPathBonus', 0);
-        // TODO1910 $this->initStat('player', 'globetrotterBonus', 0);
+        $this->initStat('player', STAT_POINTS_WITH_COMPLETED_DESTINATIONS, 0);
+        $this->initStat('player', STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS, 0);
+        $this->initStat('player', STAT_LOOPS, 0);
+        $this->initStat('player', STAT_TICKETS_USED, 0);
+        $this->initStat('player', STAT_TICKETS_EARNED, 0);
+        $this->initStat('player', STAT_RED_LOCATIONS_REACHED, 0);
+        $this->initStat('player', STAT_BLUE_LOCATIONS_REACHED, 0);
+        $this->initStat('player', STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, 0);
 
         // setup the initial game situation here
 

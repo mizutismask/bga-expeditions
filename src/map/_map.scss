@@ -389,6 +389,11 @@
   &.highlight {
     z-index: 11;
   }
+
+  &.removable {
+    pointer-events: auto;
+    cursor: crosshair;
+  }
 }
 
 #map[data-big-shadows="true"] {

@@ -48,126 +48,60 @@
 */
 
 $commonStats = [
-    // 10+ : other
     "turnsNumber" => [
         "id" => 10,
         "name" => totranslate("Number of turns"),
         "type" => "int"
-    ],
-    "pointsWithClaimedRoutes" => [
-        "id" => 11,
-        "name" => totranslate("Points with claimed routes"),
-        "type" => "int"
-    ],
-    "pointsWithDestinations" => [
-        "id" => 12,
-        "name" => totranslate("Points with destinations"),
-        "type" => "int"
-    ],
-    "pointsWithCompletedDestinations" => [
-        "id" => 13,
-        "name" => totranslate("Points with completed destinations"),
-        "type" => "int"
-    ],
-    "pointsLostWithUncompletedDestinations" => [
-        "id" => 14,
-        "name" => totranslate("Points lost with uncompleted destinations"),
-        "type" => "int"
-    ],
-
-    // 20+ : train car cards
-    "collectedTrainCarCards" => [
-        "id" => 20,
-        "name" => totranslate("Collected train car cards"),
-        "type" => "int"
-    ],
-    "collectedHiddenTrainCarCards" => [
-        "id" => 21,
-        "name" => totranslate("Collected train car cards (hidden)"),
-        "type" => "int"
-    ],
-    "collectedVisibleTrainCarCards" => [
-        "id" => 22,
-        "name" => totranslate("Collected train car cards (visible)"),
-        "type" => "int"
-    ],
-    "collectedVisibleLocomotives" => [
-        "id" => 23,
-        "name" => totranslate("Collected visible locomotives"),
-        "type" => "int"
-    ],
-
-    // 30+ : destination cards
-    "drawDestinationsAction" => [
-        "id" => 30,
-        "name" => totranslate("Draw destination action"),
-        "type" => "int"
-    ],
-    "completedDestinations" => [
-        "id" => 31,
-        "name" => totranslate("Completed destinations"),
-        "type" => "int"
-    ],
-    "uncompletedDestinations" => [
-        "id" => 32,
-        "name" => totranslate("Uncompleted destinations"),
-        "type" => "int"
-    ],
-
-    // 40+ : train cars (meeples)
-    "claimedRoutes" => [
-        "id" => 40,
-        "name" => totranslate("Claimed routes"),
-        "type" => "int"
-    ],
-    "playedTrainCars" => [
-        "id" => 41,
-        "name" => totranslate("Played train cars"),
-        "type" => "int"
-    ],
-    "averageClaimedRouteLength" => [ // playedTrainCars / claimedRoutes
-        "id" => 42,
-        "name" => totranslate("Average claimed route length"),
-        "type" => "float"
-    ],
-    "longestPath" => [
-        "id" => 43,
-        "name" => totranslate("Longest continuous path"),
-        "type" => "int"
-    ],
+    ], 
 ];
 
 $stats_type = [
 
     // Statistics global to table
-    "table" => $commonStats + [
-        // 20+ : train car cards
-        "visibleCardsReplaced" => [
-            "id" => 24,
-            "name" => totranslate("Visible cards replaced (three locomotives)"),
-            "type" => "int"
-        ],
-    ],
+    "table" => $commonStats + [ ],
 
     // Statistics existing for each player
     "player" => $commonStats + [
-        // 30+ : destination cards     
-        "keptInitialDestinationCards" => [
-            "id" => 33,
-            "name" => totranslate("Kept initial destination cards"),
-            "type" => "int"
-        ],
+        
         "keptAdditionalDestinationCards" => [
-            "id" => 34,
+            "id" => 20,
             "name" => totranslate("Kept additional destination cards"),
             "type" => "int"
         ],
-
-        // 40+ : train cars (meeples)
-        "longestPathBonus" => [
-            "id" => 44,
-            "name" => totranslate("Longest Continuous Path bonus"),
-            "type" => "bool"
+        "pointsWithCompletedDestinations" => [
+            "id" => 21,
+            "name" => totranslate("Points with completed destinations"),
+            "type" => "int"
+        ],
+        "pointsLostWithUncompletedDestinations" => [
+            "id" => 22,
+            "name" => totranslate("Points lost with uncompleted destinations"),
+            "type" => "int"
+        ],
+        "redLocationsReached" => [
+            "id" => 23,
+            "name" => totranslate("Red locations reached"),
+            "type" => "int"
+        ],
+        "blueLocationsReached" => [
+            "id" => 24,
+            "name" => totranslate("Blue locations reached"),
+            "type" => "int"
+        ],
+        "ticketsUsed" => [
+            "id" => 25,
+            "name" => totranslate("Tickets used"),
+            "type" => "int"
+        ],
+        "loops" => [
+            "id" => 26,
+            "name" => totranslate("Loops"),
+            "type" => "int"
+        ],
+        "ticketsEarned" => [
+            "id" => 27,
+            "name" => totranslate("Tickets earned"),
+            "type" => "int"
         ],
     ],
 

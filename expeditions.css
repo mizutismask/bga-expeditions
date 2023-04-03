@@ -711,6 +711,10 @@
 .wagon.highlight {
   z-index: 11;
 }
+.wagon.removable {
+  pointer-events: auto;
+  cursor: crosshair;
+}
 
 #map[data-big-shadows=true] .wagon[data-player-color="3"] {
   background-image: url("img/wagons-red.png"), url("img/wagons-shadow-big.png");

@@ -83,8 +83,19 @@ define('NEW_LOOP_COLOR', 'NEW_LOOP_COLOR');
 /*
  * Global variables (objects)
  */
-
 define('TUNNEL_ATTEMPT', 'TUNNEL_ATTEMPT');
 define('LAST_BLUE_ROUTE', 'LAST_BLUE_ROUTE');
 define('LAST_YELLOW_ROUTE', 'LAST_YELLOW_ROUTE');
 define('LAST_RED_ROUTE', 'LAST_RED_ROUTE');
+
+/*
+    Stats
+*/
+define('STAT_KEPT_ADDITIONAL_DESTINATION_CARDS', 'keptAdditionalDestinationCards');
+define('STAT_POINTS_WITH_COMPLETED_DESTINATIONS', 'pointsWithCompletedDestinations');
+define('STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS', 'pointsLostWithUncompletedDestinations');
+define('STAT_RED_LOCATIONS_REACHED', 'redLocationsReached');
+define('STAT_BLUE_LOCATIONS_REACHED', 'blueLocationsReached');
+define('STAT_TICKETS_EARNED', 'ticketsEarned');
+define('STAT_TICKETS_USED', 'ticketsUsed');
+define('STAT_LOOPS', 'loops');

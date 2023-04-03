@@ -205,7 +205,7 @@ class TtrMap {
 		);
 	}
 
-	private getAllRoutes(): Route[] {
+	public getAllRoutes(): Route[] {
 		return ROUTES;
 	}
 
@@ -292,6 +292,24 @@ class TtrMap {
 							?.classList.add("selectable")
 					)
 			);
+		}
+	}
+
+	/**
+	 * Highlight removable route wagons.
+	 */
+	public setRemovableRoutes(removable: boolean, routes: Route[]) {
+		dojo.query(".wagon").removeClass("removable");
+		if (removable) {
+			routes.forEach((route) => {
+				this.getAllRoutes()
+					.find((r) => r.id == route.id)
+					.spaces.forEach((_, index) =>
+						document
+							.getElementById(`wagon-route${route.id}-space${index}`)
+							?.classList.add("removable")
+					);
+			});
 		}
 	}
 
@@ -452,6 +470,7 @@ class TtrMap {
 				)
 			);
 		}
+		console.log("after", this.getAllRoutes());
 	}
 
 	/**

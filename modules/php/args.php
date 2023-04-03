@@ -62,24 +62,22 @@ trait ArgsTrait {
 
         $possibleRoutes = $this->claimableRoutes($playerId);
         $maxHiddenCardsPick = min(2, $this->getRemainingTrainCarCardsInDeck(true));
-        $maxDestinationsPick = min($this->getAdditionalDestinationCardNumber(), $this->getRemainingDestinationCardsInDeck());
-
+       
         $canClaimARoute = false;
         $costForRoute = [];
 
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
-        $canPass = true;
+        $canPass = true; //todo check if arrow placed
         $canUseTicket = self::getGameStateValue(TICKETS_USED) < 2 && $this->getRemainingTicketsCount($playerId) > 0;
         return [
             'possibleRoutes' => $possibleRoutes,
             'costForRoute' => $costForRoute,
             'maxHiddenCardsPick' => $maxHiddenCardsPick,
-            'maxDestinationsPick' => $maxDestinationsPick,
             'canTakeTrainCarCards' => $canTakeTrainCarCards,
             'canUseTicket' => $canUseTicket,
             'canPass' => $canPass,
-            'remainingArrows' => [BLUE=> $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]
+            'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]
         ];
     }
 
@@ -94,8 +92,17 @@ trait ArgsTrait {
     }
 
     function argUseTicket() {
+        $playerId = intval(self::getActivePlayerId());
         return [
-            'possibleRoutes' => [],
+            'possibleRoutes' => $this->claimableRoutes($playerId),
+            'unclaimableRoutes' => array_map(
+                fn ($claimedRoute) => $this->getRoute($claimedRoute->routeId),array_values(
+                array_filter(
+                    [$this->getLastClaimedRoute(BLUE), $this->getLastClaimedRoute(YELLOW), $this->getLastClaimedRoute(RED)],
+                    fn ($route) => $route != null)
+                )
+            ),
+            'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]
         ];
     }
 

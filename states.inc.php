@@ -190,8 +190,8 @@ $playerActionsGameStates = [
     ],
     ST_PLAYER_USE_TICKET => [
         "name" => "useTicket",
-        "description" => clienttranslate('${actplayer} chooses to place another arrow, remove the last one of any expedition or exchange a card'),
-        "descriptionmyturn" => clienttranslate('${you} can place another arrow, remove the last one of any expedition or exchange a card'),
+        "description" => clienttranslate('${actplayer} chooses to place another arrow, remove the last one of any expedition or trade a card'),
+        "descriptionmyturn" => clienttranslate('${you} can place another arrow, remove the last one of any expedition or trade a card'),
         "type" => "activeplayer",
         "args" => "argUseTicket",
         "possibleactions" => [

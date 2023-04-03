@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A DestinationCard is the graphic representation of a card (informations on it : from, to and points).
+ * A DestinationCard is the graphic representation of a card (informations on it : to, description).
  */
 class DestinationCard {
     public int $to;

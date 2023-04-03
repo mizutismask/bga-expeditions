@@ -137,10 +137,15 @@ interface EnteringChooseActionArgs {
 	possibleRoutes: Route[];
 	costForRoute: { [routeId: number]: { [color: number]: number[] } };
 	maxHiddenCardsPick: number;
-	maxDestinationsPick: number;
 	canTakeTrainCarCards: boolean;
 	canPass: boolean;
 	canUseTicket: boolean;
+	remainingArrows: { [color: number]: number };
+}
+
+interface EnteringUseTicketArgs {
+	possibleRoutes: Route[];
+	unclaimableRoutes: Route[];
 	remainingArrows: { [color: number]: number };
 }
 

@@ -140,6 +140,9 @@ class Expeditions implements ExpeditionsGame {
 			case "chooseAction":
 				this.onEnteringChooseAction(args.args as EnteringChooseActionArgs);
 				break;
+			case "useTicket":
+				this.onEnteringUseTicket(args.args as EnteringUseTicketArgs);
+				break;
 			case "drawSecondCard":
 				this.onEnteringDrawSecondCard(args.args as EnteringDrawSecondCardArgs);
 				break;
@@ -150,6 +153,16 @@ class Expeditions implements ExpeditionsGame {
 				this.onEnteringEndScore();
 				break;
 		}
+	}
+	/**
+	 * Show selectable routes, and unclaimable routes.
+	 */
+	private onEnteringUseTicket(args: EnteringUseTicketArgs) {
+		const currentPlayerActive = (this as any).isCurrentPlayerActive();
+		//this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
+
+		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+		this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
 	}
 
 	/**
@@ -257,10 +270,11 @@ class Expeditions implements ExpeditionsGame {
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
-					if (chooseActionArgs.maxDestinationsPick) {
-						document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
-					}
+					document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
 					this.setActionBarChooseAction(false);
+					break;
+				case "useTicket":
+					this.setActionBarUseTicket(false);
 					break;
 				case "chooseAdditionalDestinations":
 					(this as any).addActionButton(
@@ -727,17 +741,57 @@ class Expeditions implements ExpeditionsGame {
 		}
 
 		const chooseActionArgs = this.gamedatas.gamestate.args as EnteringChooseActionArgs;
+
+		this.addArrowsColoredButtons(chooseActionArgs.remainingArrows);
+
+		this.addImageActionButton(
+			"useTicket_button",
+			this.createDiv("expTicket", "expTicket"),
+			"blue",
+			_("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"),
+			() => {
+				this.useTicket();
+			}
+		);
+		$("expTicket").parentElement.style.padding = "0";
+
+		dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
+		if (chooseActionArgs.canPass) {
+			(this as any).addActionButton("pass_button", _("End my turn"), () => this.pass());
+		}
+	}
+
+	/**
+	 * Sets the action bar (title and buttons) for Use ticket action.
+	 */
+	private setActionBarUseTicket(fromCancel: boolean) {
+		document.getElementById(`generalactions`).innerHTML = "";
+		if (fromCancel) {
+			this.setChooseActionGamestateDescription();
+		}
+		if (this.actionTimerId) {
+			window.clearInterval(this.actionTimerId);
+		}
+
+		const stateArgs = this.gamedatas.gamestate.args as EnteringUseTicketArgs;
+		this.addArrowsColoredButtons(stateArgs.remainingArrows);
+
 		(this as any).addActionButton(
 			"drawDestinations_button",
-			dojo.string.substitute(_("Draw ${number} destination tickets"), {
-				number: chooseActionArgs.maxDestinationsPick,
-			}),
+			_("Trade one destination"),
 			() => this.drawDestinations(),
 			null,
 			null,
-			"red"
+			"blue"
 		);
+	}
 
+	private selectArrowColor(color: number) {
+		this.selectedArrowColor = color;
+		this.selectedColorChanged(color);
+	}
+
+	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }) {
 		COLORS.forEach((color) => {
 			let colorName = getColor(color);
 			let label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
@@ -753,36 +807,8 @@ class Expeditions implements ExpeditionsGame {
 					this.selectArrowColor(color);
 				}
 			);
-			dojo.toggleClass(
-				"placeArrow_button_" + colorName,
-				"disabled",
-				chooseActionArgs.remainingArrows[color] == 0
-			);
+			dojo.toggleClass("placeArrow_button_" + colorName, "disabled", remainingArrows[color] == 0);
 		});
-
-		this.addImageActionButton(
-			"useTicket_button",
-			this.createDiv("expTicket", "expTicket"),
-			//chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-			"blue",
-			_("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"),
-			() => {
-				this.useTicket();
-			}
-		);
-		$("expTicket").parentElement.style.padding = "0";
-
-		//dojo.toggleClass("placeRedArrow_button", "disabled", chooseActionArgs.remainingArrows[RED] > 0);
-		dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
-		dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
-		if (chooseActionArgs.canPass) {
-			(this as any).addActionButton("pass_button", _("End my turn"), () => this.pass());
-		}
-	}
-
-	private selectArrowColor(color: number) {
-		this.selectedArrowColor = color;
-		this.selectedColorChanged(color);
 	}
 	/**
 	 * Check if player should be asked for the color he wants when he clicks on a double route.
@@ -835,7 +861,7 @@ class Expeditions implements ExpeditionsGame {
 
 		const confirmation = (this as any).prefs[206]?.value !== 2;
 
-		if (confirmation && this.gamedatas.gamestate.args.maxDestinationsPick) {
+		if (confirmation) {
 			(this as any).confirmationDialog(_("Are you sure you want to take new destinations?"), () => {
 				this.takeAction("drawDestinations");
 			});

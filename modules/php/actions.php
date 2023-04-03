@@ -20,7 +20,6 @@ trait ActionTrait {
 
         $this->keepInitialDestinationCards($playerId, $ids);
 
-        self::incStat(count($ids), 'keptInitialDestinationCards', $playerId);
 
         $this->gamestate->setPlayerNonMultiactive($playerId, 'start');
         self::giveExtraTime($playerId);
@@ -43,7 +42,7 @@ trait ActionTrait {
 
         $this->keepAdditionalDestinationCards($playerId, $ids);
 
-        self::incStat(count($ids), 'keptAdditionalDestinationCards', $playerId);
+        self::incStat(count($ids), STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, $playerId);
 
         $this->gamestate->nextState('nextPlayer');
     }
@@ -55,10 +54,6 @@ trait ActionTrait {
 
         $drawNumber = $this->drawTrainCarCardsFromDeck($playerId, $number);
 
-        self::incStat($drawNumber, 'collectedTrainCarCards');
-        self::incStat($drawNumber, 'collectedTrainCarCards', $playerId);
-        self::incStat($drawNumber, 'collectedHiddenTrainCarCards');
-        self::incStat($drawNumber, 'collectedHiddenTrainCarCards', $playerId);
 
         $this->gamestate->nextState($number == 1 && $this->canTakeASecondCard(null) ? 'drawSecondCard' : 'nextPlayer');
     }
@@ -69,15 +64,7 @@ trait ActionTrait {
         $playerId = intval(self::getActivePlayerId());
 
         $card = $this->drawTrainCarCardsFromTable($playerId, $id);
-
-        self::incStat(1, 'collectedTrainCarCards');
-        self::incStat(1, 'collectedTrainCarCards', $playerId);
-        self::incStat(1, 'collectedVisibleTrainCarCards');
-        self::incStat(1, 'collectedVisibleTrainCarCards', $playerId);
-        if ($card->type == 0) {
-            self::incStat(1, 'collectedVisibleLocomotives');
-            self::incStat(1, 'collectedVisibleLocomotives', $playerId);
-        }
+       
 
         $this->gamestate->nextState($this->canTakeASecondCard($card->type) ? 'drawSecondCard' : 'nextPlayer');
     }
@@ -89,11 +76,6 @@ trait ActionTrait {
 
         $this->drawTrainCarCardsFromDeck($playerId, 1, true);
 
-        self::incStat(1, 'collectedTrainCarCards');
-        self::incStat(1, 'collectedTrainCarCards', $playerId);
-        self::incStat(1, 'collectedHiddenTrainCarCards');
-        self::incStat(1, 'collectedHiddenTrainCarCards', $playerId);
-
         $this->gamestate->nextState('nextPlayer');
     }
 
@@ -104,14 +86,6 @@ trait ActionTrait {
 
         $card = $this->drawTrainCarCardsFromTable($playerId, $id, true);
 
-        self::incStat(1, 'collectedTrainCarCards');
-        self::incStat(1, 'collectedTrainCarCards', $playerId);
-        self::incStat(1, 'collectedVisibleTrainCarCards');
-        self::incStat(1, 'collectedVisibleTrainCarCards', $playerId);
-        if ($card->type == 0) {
-            self::incStat(1, 'collectedVisibleLocomotives');
-            self::incStat(1, 'collectedVisibleLocomotives', $playerId);
-        }
 
         $this->gamestate->nextState('nextPlayer');
     }
@@ -127,9 +101,6 @@ trait ActionTrait {
         }
 
         $this->pickAdditionalDestinationCards($playerId);
-
-        self::incStat(1, 'drawDestinationsAction');
-        self::incStat(1, 'drawDestinationsAction', $playerId);
 
         $this->gamestate->nextState('drawDestinations');
     }
@@ -153,7 +124,7 @@ trait ActionTrait {
         ]);
         $this->incGameStateValue(TICKETS_USED, 1);
 
-        self::incStat(1, 'drawDestinationsAction', $playerId);
+        self::incStat(1, STAT_TICKETS_USED, $playerId);
 
         $this->gamestate->nextState('useTicket');
     }
@@ -204,11 +175,6 @@ trait ActionTrait {
             'reverse_direction' => $reverseDirection,
         ]), $color);
 
-        self::incStat(1, 'claimedRoutes');
-        self::incStat(1, 'claimedRoutes', $playerId);
-        self::incStat($route->number, 'playedTrainCars');
-        self::incStat($route->number, 'playedTrainCars', $playerId);
-
         self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
@@ -226,10 +192,12 @@ trait ActionTrait {
                 $this->checkCompletedDestinations($playerId, $route, $reverseDirection);
                 break;
             case RED_CITY:
+                self::incStat(1, STAT_RED_LOCATIONS_REACHED, $playerId);
                 $this->earnTicket($playerId);
                 $continuesPlaying = true;
                 break;
             case BLUE_CITY:
+                self::incStat(1, STAT_BLUE_LOCATIONS_REACHED, $playerId);
                 if ($this->getRemainingArrows($color) == 0) {
                     self::notifyAllPlayers('msg', clienttranslate('There are no more {$color} arrows, so ${player_name} can not use the benefit of the blue location.'), [
                         'playerId' => $playerId,
@@ -240,6 +208,9 @@ trait ActionTrait {
                     $continuesPlaying = true;
                 }
                 break;
+        }
+        if($loop){
+            self::incStat(1, STAT_LOOPS, $playerId);
         }
 
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
@@ -252,6 +223,7 @@ trait ActionTrait {
 
     private function earnTicket(int $playerId) {
         $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
+        self::incStat(1, STAT_TICKETS_EARNED, $playerId);
         self::notifyAllPlayers('msg', clienttranslate('${player_name} gains 1 ticket'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),

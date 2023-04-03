@@ -833,9 +833,9 @@ var ROUTES = [
     new Route(283, 179, 180, [new RouteSpace(1543, 1270, 93, 2)], BLUE),
     new Route(284, 179, 180, [new RouteSpace(1543, 1270, 93, 2)], YELLOW),
     new Route(285, 179, 180, [new RouteSpace(1543, 1270, 93, 2)], RED),
-    new Route(286, 100, 181, [new RouteSpace(14, 135, 93, -25)], BLUE),
-    new Route(287, 100, 181, [new RouteSpace(14, 135, 93, -25)], YELLOW),
-    new Route(288, 100, 181, [new RouteSpace(14, 135, 93, -25)], RED),
+    new Route(286, 101, 181, [new RouteSpace(14, 135, 93, -25)], BLUE),
+    new Route(287, 101, 181, [new RouteSpace(14, 135, 93, -25)], YELLOW),
+    new Route(288, 101, 181, [new RouteSpace(14, 135, 93, -25)], RED),
     new Route(289, 105, 181, [new RouteSpace(13, 139, 114, 35)], BLUE),
     new Route(290, 105, 181, [new RouteSpace(13, 139, 114, 35)], YELLOW),
     new Route(291, 105, 181, [new RouteSpace(13, 139, 114, 35)], RED),
@@ -1392,6 +1392,24 @@ var TtrMap = /** @class */ (function () {
         }
     };
     /**
+     * Highlight removable route wagons.
+     */
+    TtrMap.prototype.setRemovableRoutes = function (removable, routes) {
+        var _this = this;
+        dojo.query(".wagon").removeClass("removable");
+        if (removable) {
+            routes.forEach(function (route) {
+                _this.getAllRoutes()
+                    .find(function (r) { return r.id == route.id; })
+                    .spaces.forEach(function (_, index) {
+                    var _a;
+                    return (_a = document
+                        .getElementById("wagon-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable");
+                });
+            });
+        }
+    };
+    /**
      * Place train cars on claimed routes.
      * fromPlayerId is for animation (null for no animation)
      */
@@ -1505,6 +1523,7 @@ var TtrMap = /** @class */ (function () {
                 return _this.setWagon(route, space, spaceIndex, player, fromPlayerId, phantom, isLowestFromDoubleHorizontalRoute);
             });
         }
+        console.log("after", this.getAllRoutes());
     };
     /**
      * Check if the route is mostly horizontal, and the lowest from a double route
@@ -2567,6 +2586,9 @@ var Expeditions = /** @class */ (function () {
             case "chooseAction":
                 this.onEnteringChooseAction(args.args);
                 break;
+            case "useTicket":
+                this.onEnteringUseTicket(args.args);
+                break;
             case "drawSecondCard":
                 this.onEnteringDrawSecondCard(args.args);
                 break;
@@ -2577,6 +2599,15 @@ var Expeditions = /** @class */ (function () {
                 this.onEnteringEndScore();
                 break;
         }
+    };
+    /**
+     * Show selectable routes, and unclaimable routes.
+     */
+    Expeditions.prototype.onEnteringUseTicket = function (args) {
+        var currentPlayerActive = this.isCurrentPlayerActive();
+        //this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
+        this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+        this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
     };
     /**
      * Show selectable routes, and make train car draggable.
@@ -2669,10 +2700,11 @@ var Expeditions = /** @class */ (function () {
                     break;
                 case "chooseAction":
                     var chooseActionArgs = args;
-                    if (chooseActionArgs.maxDestinationsPick) {
-                        document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
-                    }
+                    document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
                     this.setActionBarChooseAction(false);
+                    break;
+                case "useTicket":
+                    this.setActionBarUseTicket(false);
                     break;
                 case "chooseAdditionalDestinations":
                     this.addActionButton("chooseAdditionalDestinations_button", _("Keep selected destinations"), function () { return _this.chooseAdditionalDestinations(); });
@@ -3064,9 +3096,38 @@ var Expeditions = /** @class */ (function () {
             window.clearInterval(this.actionTimerId);
         }
         var chooseActionArgs = this.gamedatas.gamestate.args;
-        this.addActionButton("drawDestinations_button", dojo.string.substitute(_("Draw ${number} destination tickets"), {
-            number: chooseActionArgs.maxDestinationsPick,
-        }), function () { return _this.drawDestinations(); }, null, null, "red");
+        this.addArrowsColoredButtons(chooseActionArgs.remainingArrows);
+        this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
+            _this.useTicket();
+        });
+        $("expTicket").parentElement.style.padding = "0";
+        dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
+        if (chooseActionArgs.canPass) {
+            this.addActionButton("pass_button", _("End my turn"), function () { return _this.pass(); });
+        }
+    };
+    /**
+     * Sets the action bar (title and buttons) for Use ticket action.
+     */
+    Expeditions.prototype.setActionBarUseTicket = function (fromCancel) {
+        var _this = this;
+        document.getElementById("generalactions").innerHTML = "";
+        if (fromCancel) {
+            this.setChooseActionGamestateDescription();
+        }
+        if (this.actionTimerId) {
+            window.clearInterval(this.actionTimerId);
+        }
+        var stateArgs = this.gamedatas.gamestate.args;
+        this.addArrowsColoredButtons(stateArgs.remainingArrows);
+        this.addActionButton("drawDestinations_button", _("Trade one destination"), function () { return _this.drawDestinations(); }, null, null, "blue");
+    };
+    Expeditions.prototype.selectArrowColor = function (color) {
+        this.selectedArrowColor = color;
+        this.selectedColorChanged(color);
+    };
+    Expeditions.prototype.addArrowsColoredButtons = function (remainingArrows) {
+        var _this = this;
         COLORS.forEach(function (color) {
             var colorName = getColor(color);
             var label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
@@ -3075,24 +3136,8 @@ var Expeditions = /** @class */ (function () {
             _this.addImageActionButton("placeArrow_button_" + colorName, _this.createDiv("arrow " + colorName.toLowerCase()), colorName, label, function () {
                 _this.selectArrowColor(color);
             });
-            dojo.toggleClass("placeArrow_button_" + colorName, "disabled", chooseActionArgs.remainingArrows[color] == 0);
+            dojo.toggleClass("placeArrow_button_" + colorName, "disabled", remainingArrows[color] == 0);
         });
-        this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), 
-        //chooseActionArgs.remainingArrows[RED] > 0 ? "blue" : "red",
-        "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
-            _this.useTicket();
-        });
-        $("expTicket").parentElement.style.padding = "0";
-        //dojo.toggleClass("placeRedArrow_button", "disabled", chooseActionArgs.remainingArrows[RED] > 0);
-        dojo.toggleClass("drawDestinations_button", "disabled", !chooseActionArgs.maxDestinationsPick);
-        dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
-        if (chooseActionArgs.canPass) {
-            this.addActionButton("pass_button", _("End my turn"), function () { return _this.pass(); });
-        }
-    };
-    Expeditions.prototype.selectArrowColor = function (color) {
-        this.selectedArrowColor = color;
-        this.selectedColorChanged(color);
     };
     /**
      * Check if player should be asked for the color he wants when he clicks on a double route.
@@ -3140,7 +3185,7 @@ var Expeditions = /** @class */ (function () {
             return;
         }
         var confirmation = ((_a = this.prefs[206]) === null || _a === void 0 ? void 0 : _a.value) !== 2;
-        if (confirmation && this.gamedatas.gamestate.args.maxDestinationsPick) {
+        if (confirmation) {
             this.confirmationDialog(_("Are you sure you want to take new destinations?"), function () {
                 _this.takeAction("drawDestinations");
             });
