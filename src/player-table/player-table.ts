@@ -16,7 +16,7 @@ class PlayerTable {
             </div>
         `;
 
-		dojo.place(html, "resized");
+		dojo.place(html, "destination-deck", "before");
 
 		this.playerDestinations = new PlayerDestinations(game, player, destinations, completedDestinations);
 	}

@@ -87,7 +87,8 @@ interface ExpeditionsGamedatas {
 
 interface ExpeditionsGame extends Game {
 	map: TtrMap;
-
+	animationManager: AnimationManager;
+	destinationCardsManager: CardsManager;
 	clickedRoute(route: Route): void;
 	setPlayerTablePosition(left: boolean): void;
 	getZoom(): number;
@@ -95,13 +96,9 @@ interface ExpeditionsGame extends Game {
 	setDestinationsToConnect(destinations: Destination[]): void;
 	getPlayerId(): number;
 	getPlayerScore(playerId: number): number;
-	drawDestinations(): void;
 	onVisibleTrainCarCardClick(itemId: number): void;
 	onHiddenTrainCarDeckClick(number: number): void;
-	setActiveDestination(
-		destination: Destination,
-		previousDestination?: Destination
-	): void;
+	setActiveDestination(destination: Destination, previousDestination?: Destination): void;
 	canClaimRoute(route: Route, cardsColor: number): boolean;
 	setHighligthedDestination(destination: Destination | null): void;
 	revealDestination(destination: Destination): void;

@@ -30,7 +30,6 @@ class Gauge {
 class TrainCarSelection {
 	public visibleCards: Destination[] = [];
 	private sharedDestinationDeck: SharedDestinationDeck;
-	private destinationGauge: Gauge;
 	private dblClickTimeout = null;
 
 	/**
@@ -44,11 +43,6 @@ class TrainCarSelection {
 		destinationDeckMaxCount: number
 	) {
 		this.sharedDestinationDeck = sharedDestinationDeck;
-		console.log("const", this.sharedDestinationDeck);
-
-		document
-			.getElementById("destination-deck-hidden-pile")
-			.addEventListener("click", () => this.game.drawDestinations());
 
 		/*for (let i = 1; i <= SPOTS_COUNT; i++) {
 			this.visibleCardsSpots[i] = new VisibleCardSpot(game, i);
@@ -58,8 +52,6 @@ class TrainCarSelection {
 		this.visibleCards = Object.values(visibleCards);
 		//	this.setNewCardsOnTable(visibleCards, false);
 		this.setNewSharedCardsOnTable(visibleCards, false);
-		this.destinationGauge = new Gauge("destination-deck-hidden-pile", "destination", destinationDeckMaxCount);
-		this.setDestinationCount(destinationDeckCount);
 	}
 
 	/**
@@ -111,14 +103,6 @@ class TrainCarSelection {
 	}
 
 	/**
-	 * Update destination gauge.
-	 */
-	public setDestinationCount(count: number) {
-		this.destinationGauge.setCount(count);
-		document.getElementById(`destination-deck-level`).dataset.level = `${Math.min(10, Math.ceil(count / 10))}`;
-	}
-
-	/**
 	 * Get HTML Element represented by "origin" (0 means invisible, 1 to 5 are visible cards).
 	 */
 	public getStockElement(origin: number): HTMLElement {
@@ -165,7 +149,7 @@ class TrainCarSelection {
 					`
                 <div id="animated-destination-card-${i}" class="animated-destination-card"></div>
                 `,
-					"destination-deck-hidden-pile"
+					"overall_player_board_" + playerId
 				);
 
 				animateCardToCounterAndDestroy(

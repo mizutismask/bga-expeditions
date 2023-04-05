@@ -20,6 +20,7 @@ $wagon-colors: (
 @import "destination-deck/destination-deck";
 @import "player-table/player-table";
 @import "end-score/end-score";
+@import '../node_modules/bga-cards/bga-cards';
 
 /* make space between buttons on touch devices */
 @media (hover: none) {

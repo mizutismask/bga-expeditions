@@ -197,12 +197,6 @@ class TtrMap {
 		this.mapDiv = document.getElementById("map") as HTMLDivElement;
 
 		this.inMapZoomManager = new InMapZoomManager();
-
-		this.game.setTooltip(
-			`destination-deck-hidden-pile`,
-			`<strong>${_("Destinations deck")}</strong><br><br>
-        ${_("Click here to take three new destination cards (keep at least one)")}`
-		);
 	}
 
 	public getAllRoutes(): Route[] {

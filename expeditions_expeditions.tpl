@@ -23,15 +23,12 @@
             <div id="train-car-deck">
                 <div id="shared-destination-deck">
                     <div id="shared-destination-stock"></div>
-                </div>
-
-                <div id="destination-deck-hidden-pile" class="hidden-pile stock destination-deck-hidden-pile-tooltip">
-                    <div id="destination-deck-level" class="deck-level"></div>
-                </div>
-                <div id="destination-deck" class="hidden">
-                    <div id="destination-stock"></div>
-                </div>                
+                </div>       
             </div>
+
+        </div>
+         <div id="destination-deck" class="hidden">
+            <div id="destination-stock"></div>
         </div>
     </div>
 </div>
