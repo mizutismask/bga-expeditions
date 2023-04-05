@@ -12,6 +12,11 @@ class PlayerDestinations {
 	/** Destinations in "done" column */
 	private destinationsDone: Destination[] = [];
 
+	/** Stock for destinations in "to do" column */
+	private destinationsToDoStock: LineStockWithEvents<Destination>;
+	/** Stock for destinations in "done" column */
+	private destinationsDoneStock: LineStockWithEvents<Destination>;
+
 	constructor(
 		private game: ExpeditionsGame,
 		player: ExpeditionsPlayer,
@@ -27,6 +32,13 @@ class PlayerDestinations {
 
 		dojo.place(html, `player-table-${player.id}-destinations`);
 
+		this.initDestinationStocks([
+			document.getElementById(`player-table-${this.playerId}-destinations-todo`),
+			document.getElementById(`player-table-${this.playerId}-destinations-done`),
+		]);
+		this.destinationsDoneStock.onSelectionChange = (selection: Destination[], lastChange: Destination) =>
+			this.game.revealDestination(lastChange);
+
 		this.addDestinations(destinations);
 		destinations
 			.filter((destination) => completedDestinations.some((d) => d.id == destination.id))
@@ -40,8 +52,10 @@ class PlayerDestinations {
 	 * Add destinations to player's hand.
 	 */
 	public addDestinations(destinations: Destination[], originStock?: Stock) {
+		this.destinationsDoneStock.addCards(destinations);
 		destinations.forEach((destination) => {
-			let html = `
+			const card = document.getElementById(`destination-card-${destination.id}`) as HTMLDivElement;
+			/*	let html = `
             <div id="destination-card-${
 				destination.id
 			}" class="destination-card" style="${getBackgroundInlineStyleForDestination(destination)}"></div>
@@ -49,7 +63,6 @@ class PlayerDestinations {
 
 			dojo.place(html, `player-table-${this.playerId}-destinations-todo`);
 
-			const card = document.getElementById(`destination-card-${destination.id}`) as HTMLDivElement;
 			setupDestinationCardDiv(card, destination.type * 100 + destination.type_arg);
 
 			card.addEventListener("click", () => this.game.revealDestination(destination));
@@ -57,7 +70,7 @@ class PlayerDestinations {
 			// highlight destination's cities on the map, on mouse over
 			card.addEventListener("mouseenter", () => this.game.setHighligthedDestination(destination));
 			card.addEventListener("mouseleave", () => this.game.setHighligthedDestination(null));
-
+*/
 			if (originStock) {
 				this.addAnimationFrom(
 					card,
@@ -77,15 +90,20 @@ class PlayerDestinations {
 	 * Mark destination as complete (place it on the "complete" column).
 	 */
 	public markDestinationCompleteNoAnimation(destination: Destination) {
+		console.log("markDestinationComplete");
+
 		const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
 		if (index !== -1) {
 			this.destinationsTodo.splice(index, 1);
+			this.destinationsToDoStock.removeCard(destination);
 		}
 		this.destinationsDone.push(destination);
+		// fromStock: this.destinationsToDoStock
+		this.destinationsDoneStock.addCard(destination, {}, {});
 
-		document
-			.getElementById(`player-table-${this.playerId}-destinations-done`)
-			.appendChild(document.getElementById(`destination-card-${destination.id}`));
+		/*document
+				.getElementById(`player-table-${this.playerId}-destinations-done`)
+				.appendChild(document.getElementById(`destination-card-${destination.id}`));*/
 		this.destinationColumnsUpdated();
 	}
 
@@ -224,5 +242,28 @@ class PlayerDestinations {
 			card.style.zIndex = null;
 			card.style.transition = null;
 		}, 500);
+	}
+
+	private initDestinationStocks(divs: HTMLElement[]) {
+		var stockSettings = {
+			center: false,
+			gap: "10px",
+			direction: "row" as "row",
+			wrap: "nowrap" as "nowrap",
+		};
+		divs.forEach((stockToCreate, index) => {
+			let stock = new LineStockWithEvents<Destination>(
+				this.game.destinationCardsManager,
+				stockToCreate,
+				stockSettings
+			);
+			index == 0 ? (this.destinationsDoneStock = stock) : (this.destinationsToDoStock = stock);
+
+			stock.setSelectionMode("single");
+
+			// highlight destination's cities on the map, on mouse over
+			stock.onCardMouseOver = (dest: Destination) => this.game.setHighligthedDestination(dest);
+			stock.onCardMouseOut = (dest: Destination) => this.game.setHighligthedDestination(null);
+		});
 	}
 }

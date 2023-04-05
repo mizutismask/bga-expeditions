@@ -13,6 +13,7 @@ class Expeditions implements ExpeditionsGame {
 	private trainCarSelection: TrainCarSelection;
 	private destinationSelection: DestinationSelection;
 	private sharedDestinations: SharedDestinationDeck;
+	public destinationCardsManager: CardsManager;
 	private playerTable: PlayerTable = null;
 	private destinationToReveal: Destination;
 	private endScore: EndScore;
@@ -24,6 +25,7 @@ class Expeditions implements ExpeditionsGame {
 	private completedDestinationsCounter: Counter;
 
 	private animations: WagonsAnimation[] = [];
+	public animationManager: AnimationManager;
 
 	private isTouch = window.matchMedia("(hover: none)").matches;
 	private routeToConfirm: { route: Route; color: number } | null = null;
@@ -62,6 +64,8 @@ class Expeditions implements ExpeditionsGame {
 
 		this.destinationSelection = new DestinationSelection(this);
 		this.sharedDestinations = new SharedDestinationDeck(this);
+		this.animationManager = new AnimationManager(this);
+		this.destinationCardsManager = new CardsManager(this);
 
 		this.trainCarSelection = new TrainCarSelection(
 			this,
@@ -330,8 +334,6 @@ class Expeditions implements ExpeditionsGame {
 		if (typeof value == "undefined") value = "";
 		var node: HTMLElement = dojo.create("div", { class: classes, innerHTML: value });
 		if (id) node.id = id;
-		console.log("node", node.outerHTML);
-
 		return node.outerHTML;
 	}
 	public getDestinationsByPlayer(destinations: Destination[]) {
