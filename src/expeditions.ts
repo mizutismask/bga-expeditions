@@ -62,10 +62,9 @@ class Expeditions implements ExpeditionsGame {
 			this.getDestinationsByPlayer(this.gamedatas.revealedDestinations)
 		);
 
-		this.destinationSelection = new DestinationSelection(this);
+		this.destinationCardsManager = new CardsManager(this);
 		this.sharedDestinations = new SharedDestinationDeck(this);
 		this.animationManager = new AnimationManager(this);
-		this.destinationCardsManager = new CardsManager(this);
 
 		this.trainCarSelection = new TrainCarSelection(
 			this,
@@ -84,6 +83,7 @@ class Expeditions implements ExpeditionsGame {
 				gamedatas.completedDestinations
 			);
 		}
+		this.destinationSelection = new DestinationSelection(this);
 
 		this.createPlayerPanels(gamedatas);
 
@@ -238,10 +238,6 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
-				document.getElementById("destination-deck-hidden-pile").classList.remove("selectable");
-				(Array.from(document.getElementsByClassName("train-car-group hide")) as HTMLDivElement[]).forEach(
-					(group) => group.classList.remove("hide")
-				);
 				break;
 			case "drawSecondCard":
 				this.trainCarSelection.removeSelectableVisibleCards();
@@ -274,7 +270,6 @@ class Expeditions implements ExpeditionsGame {
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
-					document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
 					this.setActionBarChooseAction(false);
 					break;
 				case "useTicket":
@@ -1060,7 +1055,7 @@ class Expeditions implements ExpeditionsGame {
 		} else {
 			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
-		this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
+		//this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
 	}
 
 	/**

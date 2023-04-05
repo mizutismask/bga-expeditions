@@ -1314,7 +1314,6 @@ var TtrMap = /** @class */ (function () {
         this.resizedDiv = document.getElementById("resized");
         this.mapDiv = document.getElementById("map");
         this.inMapZoomManager = new InMapZoomManager();
-        this.game.setTooltip("destination-deck-hidden-pile", "<strong>".concat(_("Destinations deck"), "</strong><br><br>\n        ").concat(_("Click here to take three new destination cards (keep at least one)")));
     }
     TtrMap.prototype.getAllRoutes = function () {
         return ROUTES;
@@ -1861,56 +1860,81 @@ var SharedDestinationDeck = /** @class */ (function () {
      * Init stock.
      */
     function SharedDestinationDeck(game) {
-        this.game = game;
-        this.sharedDestinations = new ebg.stock();
+        /*	this.sharedDestinations = new ebg.stock() as Stock;
         this.sharedDestinations.setSelectionAppearance("class");
         this.sharedDestinations.selectionClass = "selected";
         this.sharedDestinations.setSelectionMode(0);
-        this.sharedDestinations.create(game, $("shared-destination-stock"), CARD_WIDTH, CARD_HEIGHT);
-        this.sharedDestinations.onItemCreate = function (cardDiv, cardUniqueId) { return setupDestinationCardDiv(cardDiv, Number(cardUniqueId)); };
+        this.sharedDestinations.create(
+            game,
+            $(`shared-destination-stock`),
+            CARD_WIDTH,
+            CARD_HEIGHT
+        );
+        this.sharedDestinations.onItemCreate = (
+            cardDiv: HTMLDivElement,
+            cardUniqueId
+        ) => setupDestinationCardDiv(cardDiv, Number(cardUniqueId));
         this.sharedDestinations.image_items_per_row = 10;
         this.sharedDestinations.centerItems = true;
         this.sharedDestinations.item_margin = 20;
+
         //this.sharedDestinations.setOverlap(-1, 20);// = 20; // overlap
         //this.sharedDestinations.horizontal_overlap = -1; // current bug in stock - this is needed to enable z-index on overlapping items
         //this.sharedDestinations.item_margin = 0; // has to be 0 if using overlap
         //this.sharedDestinations.set
-        setupDestinationCards(this.sharedDestinations);
+
+        setupDestinationCards(this.sharedDestinations);*/
+        var _this = this;
+        this.game = game;
+        var stock = new LineStockWithEvents(this.game.destinationCardsManager, $("shared-destination-stock"), {
+            center: false,
+            gap: "10px",
+            direction: "column",
+            wrap: "nowrap",
+        });
+        stock.setSelectionMode("none");
+        // highlight destination's cities on the map, on mouse over
+        stock.onCardMouseOver = function (dest) { return _this.game.setHighligthedDestination(dest); };
+        stock.onCardMouseOut = function (dest) { return _this.game.setHighligthedDestination(null); };
+        /*stock.onCardClick = (dest: Destination) =>
+            this.game.setSelectedDestination(
+                dest,
+                stock.getSelection().some((item) => Number(item.id) == dest.id)
+            );*/
+        this.sharedDestinationsStock = stock;
     }
     /**
      * Set visible destination cards.
      */
     SharedDestinationDeck.prototype.setCards = function (destinations) {
-        var _this = this;
-        dojo.removeClass("destination-deck", "hidden");
-        destinations.forEach(function (destination) {
-            /*console.log(
-                "add shared",
-                destination.type * 100 + destination.type_arg
-            );*/
-            _this.sharedDestinations.addToStockWithId(destination.type * 100 + destination.type_arg, "" + destination.id);
-            var cardDiv = document.getElementById("shared-destination-stock_item_".concat(destination.id));
+        //dojo.removeClass("destination-deck", "hidden");
+        this.sharedDestinationsStock.addCards(destinations);
+        /*	destinations.forEach((destination) => {
+
+            this.sharedDestinations.addToStockWithId(
+                destination.type * 100 + destination.type_arg,
+                "" + destination.id
+            );
+
+            const cardDiv = document.getElementById(`shared-destination-stock_item_${destination.id}`);
             // when mouse hover destination, highlight it on the map
-            cardDiv.addEventListener("mouseenter", function () {
-                return _this.game.setHighligthedDestination(destination);
-            });
-            cardDiv.addEventListener("mouseleave", function () {
-                return _this.game.setHighligthedDestination(null);
-            });
+            cardDiv.addEventListener("mouseenter", () => this.game.setHighligthedDestination(destination));
+            cardDiv.addEventListener("mouseleave", () => this.game.setHighligthedDestination(null));
             // when destinatin is selected, another highlight on the map
-            cardDiv.addEventListener("click", function () {
-                return _this.game.setSelectedDestination(destination, _this.sharedDestinations
-                    .getSelectedItems()
-                    .some(function (item) { return Number(item.id) == destination.id; }));
-            });
-        });
+            cardDiv.addEventListener("click", () =>
+                this.game.setSelectedDestination(
+                    destination,
+                    this.sharedDestinations.getSelectedItems().some((item) => Number(item.id) == destination.id)
+                )
+            );
+        });*/
     };
     /**
      * Hide destination selector.
      */
     SharedDestinationDeck.prototype.hide = function () {
         this.sharedDestinations.removeAll();
-        dojo.addClass("shared-destination-deck", "hidden");
+        //dojo.addClass("shared-destination-deck", "hidden");
     };
     return SharedDestinationDeck;
 }());
@@ -1938,15 +1962,10 @@ var TrainCarSelection = /** @class */ (function () {
      * Init stocks and gauges.
      */
     function TrainCarSelection(game, visibleCards, sharedDestinationDeck, destinationDeckCount, destinationDeckMaxCount) {
-        var _this = this;
         this.game = game;
         this.visibleCards = [];
         this.dblClickTimeout = null;
         this.sharedDestinationDeck = sharedDestinationDeck;
-        console.log("const", this.sharedDestinationDeck);
-        document
-            .getElementById("destination-deck-hidden-pile")
-            .addEventListener("click", function () { return _this.game.drawDestinations(); });
         /*for (let i = 1; i <= SPOTS_COUNT; i++) {
             this.visibleCardsSpots[i] = new VisibleCardSpot(game, i);
         }*/
@@ -1954,8 +1973,6 @@ var TrainCarSelection = /** @class */ (function () {
         this.visibleCards = Object.values(visibleCards);
         //	this.setNewCardsOnTable(visibleCards, false);
         this.setNewSharedCardsOnTable(visibleCards, false);
-        this.destinationGauge = new Gauge("destination-deck-hidden-pile", "destination", destinationDeckMaxCount);
-        this.setDestinationCount(destinationDeckCount);
     }
     /**
      * Set selection of hidden cards deck.
@@ -2003,13 +2020,6 @@ var TrainCarSelection = /** @class */ (function () {
         this.game.showSharedDestinations(spotsCards);
     };
     /**
-     * Update destination gauge.
-     */
-    TrainCarSelection.prototype.setDestinationCount = function (count) {
-        this.destinationGauge.setCount(count);
-        document.getElementById("destination-deck-level").dataset.level = "".concat(Math.min(10, Math.ceil(count / 10)));
-    };
-    /**
      * Get HTML Element represented by "origin" (0 means invisible, 1 to 5 are visible cards).
      */
     TrainCarSelection.prototype.getStockElement = function (origin) {
@@ -2047,7 +2057,7 @@ var TrainCarSelection = /** @class */ (function () {
         var _this = this;
         var _loop_2 = function (i) {
             setTimeout(function () {
-                dojo.place("\n                <div id=\"animated-destination-card-".concat(i, "\" class=\"animated-destination-card\"></div>\n                "), "destination-deck-hidden-pile");
+                dojo.place("\n                <div id=\"animated-destination-card-".concat(i, "\" class=\"animated-destination-card\"></div>\n                "), "overall_player_board_" + playerId);
                 animateCardToCounterAndDestroy(_this.game, "animated-destination-card-".concat(i), "destinations-counter-".concat(playerId, "-wrapper"));
             }, 200 * i);
         };
@@ -2101,7 +2111,7 @@ var TrainCarSelection = /** @class */ (function () {
 var PlayerTable = /** @class */ (function () {
     function PlayerTable(game, player, destinations, completedDestinations) {
         var html = "\n            <div id=\"player-table\" class=\"player-table\">\n                <div id=\"player-table-".concat(player.id, "-destinations\" class=\"player-table-destinations\"></div>\n            </div>\n        ");
-        dojo.place(html, "resized");
+        dojo.place(html, "destination-deck", "before");
         this.playerDestinations = new PlayerDestinations(game, player, destinations, completedDestinations);
     }
     /**
@@ -2564,15 +2574,15 @@ var Expeditions = /** @class */ (function () {
         this.gamedatas = gamedatas;
         log("gamedatas", gamedatas);
         this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinations));
-        this.destinationSelection = new DestinationSelection(this);
+        this.destinationCardsManager = new CardsManager(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
-        this.destinationCardsManager = new CardsManager(this);
         this.trainCarSelection = new TrainCarSelection(this, gamedatas.visibleTrainCards, this.sharedDestinations, gamedatas.destinationDeckCount, gamedatas.destinationDeckMaxCount);
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
             this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
         }
+        this.destinationSelection = new DestinationSelection(this);
         this.createPlayerPanels(gamedatas);
         if (gamedatas.lastTurn) {
             this.notif_lastTurn(false);
@@ -2710,8 +2720,6 @@ var Expeditions = /** @class */ (function () {
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
-                document.getElementById("destination-deck-hidden-pile").classList.remove("selectable");
-                Array.from(document.getElementsByClassName("train-car-group hide")).forEach(function (group) { return group.classList.remove("hide"); });
                 break;
             case "drawSecondCard":
                 this.trainCarSelection.removeSelectableVisibleCards();
@@ -2740,7 +2748,6 @@ var Expeditions = /** @class */ (function () {
                     break;
                 case "chooseAction":
                     var chooseActionArgs = args;
-                    document.getElementById("destination-deck-hidden-pile").classList.add("selectable");
                     this.setActionBarChooseAction(false);
                     break;
                 case "useTicket":
@@ -3397,7 +3404,7 @@ var Expeditions = /** @class */ (function () {
         else {
             this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
         }
-        this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
+        //this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
     };
     /**
      * Update visible cards.

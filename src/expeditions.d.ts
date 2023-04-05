@@ -96,7 +96,6 @@ interface ExpeditionsGame extends Game {
 	setDestinationsToConnect(destinations: Destination[]): void;
 	getPlayerId(): number;
 	getPlayerScore(playerId: number): number;
-	drawDestinations(): void;
 	onVisibleTrainCarCardClick(itemId: number): void;
 	onHiddenTrainCarDeckClick(number: number): void;
 	setActiveDestination(destination: Destination, previousDestination?: Destination): void;
