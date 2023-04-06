@@ -67,14 +67,6 @@ trait DestinationDeckTrait {
     }
 
     /**
-     * Select kept destination cards for beginning choice. 
-     * Unused destination cards are set back on the deck or discarded.
-     */
-    public function keepInitialDestinationCards(int $playerId, array $ids) {
-        $this->keepDestinationCards($playerId, $ids, $this->getInitialDestinationCardNumber());
-    }
-
-    /**
      * Pick destination cards for pick destination action.
      */
     public function pickAdditionalDestinationCards(int $playerId) {
@@ -82,11 +74,11 @@ trait DestinationDeckTrait {
     }
 
     /**
-     * Select kept destination cards for pick destination action. 
-     * Unused destination cards are set back on the deck or discarded.
+     * Select kept destination card for pick destination action. 
+     * Unused destination cards are discarded.
      */
-    public function keepAdditionalDestinationCards(int $playerId, array $ids) {
-        $this->keepDestinationCards($playerId, $ids, ADDITIONAL_DESTINATION_MINIMUM_KEPT);
+    public function keepAdditionalDestinationCards(int $playerId,int $keptDestinationsId, int $discardedDestinationId) {
+        $this->keepDestinationCards($playerId, $keptDestinationsId, $discardedDestinationId);
     }
 
     /**
@@ -153,41 +145,51 @@ trait DestinationDeckTrait {
     }
 
     /**
-     * move selected cards to player hand, and empty pick$playerId.
+     * move selected card to player hand, discard other selected card from the hand and empty pick$playerId.
      */
-    private function keepDestinationCards(int $playerId, array $ids, int $minimum) {
-        if (count($ids) < $minimum) {
-            throw new BgaUserException("You must keep at least $minimum cards.");
+    private function keepDestinationCards(int $playerId, int $keptDestinationsId, int $discardedDestinationId) {
+        if ($keptDestinationsId xor $discardedDestinationId) {
+            throw new BgaUserException("You must discard a destination to take another one.");
         }
+        $traded = $keptDestinationsId && $discardedDestinationId;
+        if ($traded) {
+            if (
+                $this->getUniqueIntValueFromDB("SELECT count(*) FROM destination WHERE `card_location` = 'pick$playerId' AND `card_id` = $keptDestinationsId") == 0
+                || $this->getUniqueIntValueFromDB("SELECT count(*) FROM destination WHERE `card_location` = 'hand' AND `card_location_arg` = '$playerId' AND `card_id` = $discardedDestinationId") == 0
+            ) {
+                throw new BgaUserException("Selected cards are not available.");
+            }
 
-        if (count($ids) > 0 && $this->getUniqueIntValueFromDB("SELECT count(*) FROM destination WHERE `card_location` != 'pick$playerId' AND `card_id` in (" . implode(', ', $ids) . ")") > 0) {
-            throw new BgaUserException("Selected cards are not available.");
-        }
+            if($this->isDestinationRevealed($discardedDestinationId)){
+                $discardedCard = $this->getDestinationFromDb($this->destinations->getCard($discardedDestinationId));
+                $message = clienttranslate('${player_name} ${gainsloses} ${absdelta} point discarding a revealed destination : ${to}');
+                $this->incScore($playerId, -1, $message, [
+                    'delta' => 1,
+                    'absdelta' => 1,
+                    'to' => $this->CITIES[$discardedCard->to],
+                    'i18n' => ['gainsloses'],
+                    'gainsloses' => clienttranslate('loses'),
+                ]);
+            }
+            $this->destinations->moveCard($keptDestinationsId, 'hand', $playerId);
+            $this->destinations->moveCard($discardedDestinationId, 'discard');
 
-        $this->destinations->moveCards($ids, 'hand', $playerId);
-
-        $remainingCardsInPick = intval($this->destinations->countCardInLocation("pick$playerId"));
-        if ($remainingCardsInPick > 0) {
-            if (UNUSED_DESTINATIONS_GO_TO_DECK_BOTTOM) {
-                $this->destinations->shuffle("pick$playerId");
-                // we put remaining cards in pick at the bottom of the deck
-                $this->DbQuery("UPDATE destination SET `card_location_arg` = card_location_arg + $remainingCardsInPick WHERE `card_location` = 'deck'");
-                $this->destinations->moveAllCardsInLocationKeepOrder("pick$playerId", 'deck');
-            } else {
-                // we discard remaining cards in pick
-                $this->destinations->moveAllCardsInLocationKeepOrder("pick$playerId", 'discard');
+            $remainingCardsInPick = intval($this->destinations->countCardInLocation("pick$playerId"));
+            if ($remainingCardsInPick > 0) {
+                    // we discard remaining cards in pick
+                    $this->destinations->moveAllCardsInLocationKeepOrder("pick$playerId", 'discard');
             }
         }
-
-        $this->notifyAllPlayers('destinationsPicked', clienttranslate('${player_name} keeps ${count} destinations'), [
+        $this->notifyAllPlayers('destinationsPicked', clienttranslate('${player_name} trades ${count} destination'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
-            'count' => count($ids),
-            'number' => count($ids),
+            'count' => intval($traded),
+            'number' => intval($traded),
             'remainingDestinationsInDeck' => $this->getRemainingDestinationCardsInDeck(),
             '_private' => [
                 $playerId => [
-                    'destinations' => $this->getDestinationsFromDb($this->destinations->getCards($ids)),
+                    'destinations' => $this->getDestinationsFromDb([$this->destinations->getCard($keptDestinationsId)]),
+                    'discardedDestination' => $this->getDestinationFromDb($this->destinations->getCard($discardedDestinationId)),
                 ],
             ],
         ]);

@@ -35,14 +35,15 @@ trait ActionTrait {
         $this->gamestate->nextState('nextReveal');
     }
 
-    public function chooseAdditionalDestinations(array $ids) {
+    public function chooseAdditionalDestinations(int $keptDestinationsId, int $discardedDestinationId) {
         self::checkAction('chooseAdditionalDestinations');
 
         $playerId = intval(self::getActivePlayerId());
 
-        $this->keepAdditionalDestinationCards($playerId, $ids);
+        $this->keepAdditionalDestinationCards($playerId, $keptDestinationsId, $discardedDestinationId);
 
-        self::incStat(count($ids), STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, $playerId);
+        if ($keptDestinationsId)
+            self::incStat(1, STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, $playerId);
 
         $this->gamestate->nextState('nextPlayer');
     }
@@ -64,7 +65,7 @@ trait ActionTrait {
         $playerId = intval(self::getActivePlayerId());
 
         $card = $this->drawTrainCarCardsFromTable($playerId, $id);
-       
+
 
         $this->gamestate->nextState($this->canTakeASecondCard($card->type) ? 'drawSecondCard' : 'nextPlayer');
     }
@@ -209,7 +210,7 @@ trait ActionTrait {
                 }
                 break;
         }
-        if($loop){
+        if ($loop) {
             self::incStat(1, STAT_LOOPS, $playerId);
         }
 

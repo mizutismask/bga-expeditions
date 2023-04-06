@@ -63,7 +63,7 @@ trait ExpansionTrait {
     function getAdditionalDestinationCardNumber() {
         switch (EXPANSION) {
             default:
-                return 3;
+                return 2;
         }
     }
 }

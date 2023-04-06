@@ -2123,6 +2123,9 @@ var PlayerTable = /** @class */ (function () {
     PlayerTable.prototype.getSelectedToDoDestinations = function () {
         return this.playerDestinations.getSelectedToDoDestinations();
     };
+    PlayerTable.prototype.removeDestination = function (destination) {
+        this.playerDestinations.removeCard(destination);
+    };
     return PlayerTable;
 }());
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
@@ -2266,8 +2269,14 @@ var PlayerDestinations = /** @class */ (function () {
         this.destinationsToDoStock.setSelectionMode(selectionMode);
     };
     PlayerDestinations.prototype.getSelectedToDoDestinations = function () {
-        console.log("getSelectedToDoDestinations", this.destinationsToDoStock.getSelection());
         return this.destinationsToDoStock.getSelection();
+    };
+    PlayerDestinations.prototype.removeCard = function (destination) {
+        this.destinationsToDoStock.removeCard(destination);
+        var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
+        if (index !== -1) {
+            this.destinationsTodo.splice(index, 1);
+        }
     };
     /**
      * Update destination cards placement when there is a change.
@@ -3264,7 +3273,8 @@ var Expeditions = /** @class */ (function () {
         }
         var destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
         this.takeAction("chooseAdditionalDestinations", {
-            destinationsIds: destinationsIds.join(","),
+            keptDestinationId: destinationsIds.pop(),
+            discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
         });
     };
     /**
@@ -3410,11 +3420,13 @@ var Expeditions = /** @class */ (function () {
      * Update player destinations.
      */
     Expeditions.prototype.notif_destinationsPicked = function (notif) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         var destinations = (_b = (_a = notif.args._private) === null || _a === void 0 ? void 0 : _a[this.getPlayerId()]) === null || _b === void 0 ? void 0 : _b.destinations;
+        var discarded = (_d = (_c = notif.args._private) === null || _c === void 0 ? void 0 : _c[this.getPlayerId()]) === null || _d === void 0 ? void 0 : _d.discardedDestination;
         if (destinations) {
             this.playerTable.addDestinations(destinations, this.destinationSelection.destinations);
+            this.playerTable.removeDestination(discarded);
         }
         else {
             this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);

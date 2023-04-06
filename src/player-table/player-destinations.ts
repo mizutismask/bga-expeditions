@@ -170,8 +170,15 @@ class PlayerDestinations {
 	}
 
 	public getSelectedToDoDestinations() {
-		console.log("getSelectedToDoDestinations", this.destinationsToDoStock.getSelection());
 		return this.destinationsToDoStock.getSelection();
+	}
+
+	public removeCard(destination: Destination) {
+		this.destinationsToDoStock.removeCard(destination);
+		const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
+		if (index !== -1) {
+			this.destinationsTodo.splice(index, 1);
+		}
 	}
 
 	/**

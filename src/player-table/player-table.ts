@@ -49,4 +49,8 @@ class PlayerTable {
 	public getSelectedToDoDestinations() {
 		return this.playerDestinations.getSelectedToDoDestinations();
 	}
+
+	public removeDestination(destination: Destination){
+		this.playerDestinations.removeCard(destination);
+	}
 }

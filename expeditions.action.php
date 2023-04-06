@@ -60,11 +60,10 @@ class action_expeditions extends APP_GameAction {
     public function chooseAdditionalDestinations() {
         self::setAjaxMode();
 
-        $destinationsIds = self::getArg("destinationsIds", AT_numberlist, true);
+        $keptDestinationId = self::getArg("keptDestinationId", AT_posint, true);
+        $discardedDestinationId = self::getArg("discardedDestinationId", AT_posint, true);
 
-        $this->game->chooseAdditionalDestinations(array_map(function ($idStr) {
-            return intval($idStr);
-        }, explode(',', $destinationsIds)));
+        $this->game->chooseAdditionalDestinations($keptDestinationId, $discardedDestinationId);
 
         self::ajaxResponse();
     }

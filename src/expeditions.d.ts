@@ -183,6 +183,7 @@ interface NotifDestinationsPickedArgs {
 	_private: {
 		[playerId: number]: {
 			destinations: Destination[];
+			discardedDestination: Destination;
 		};
 	};
 }

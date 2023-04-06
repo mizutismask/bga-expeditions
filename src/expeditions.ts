@@ -899,7 +899,8 @@ class Expeditions implements ExpeditionsGame {
 		const destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
 
 		this.takeAction("chooseAdditionalDestinations", {
-			destinationsIds: destinationsIds.join(","),
+			keptDestinationId: destinationsIds.pop(),
+			discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
 		});
 	}
 
@@ -1071,8 +1072,10 @@ class Expeditions implements ExpeditionsGame {
 	notif_destinationsPicked(notif: Notif<NotifDestinationsPickedArgs>) {
 		this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
 		const destinations = notif.args._private?.[this.getPlayerId()]?.destinations;
+		const discarded = notif.args._private?.[this.getPlayerId()]?.discardedDestination;
 		if (destinations) {
 			this.playerTable.addDestinations(destinations, this.destinationSelection.destinations);
+			this.playerTable.removeDestination(discarded);
 		} else {
 			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
