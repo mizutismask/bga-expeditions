@@ -36,8 +36,8 @@ class PlayerDestinations {
 			document.getElementById(`player-table-${this.playerId}-destinations-todo`),
 			document.getElementById(`player-table-${this.playerId}-destinations-done`),
 		]);
-		this.destinationsDoneStock.onSelectionChange = (selection: Destination[], lastChange: Destination) =>
-			this.game.revealDestination(lastChange);
+		this.destinationsToDoStock.onSelectionChange = (selection: Destination[], lastChange: Destination) =>
+			this.game.toDoDestinationSelectionChanged(selection, lastChange);
 
 		this.addDestinations(destinations);
 		destinations
@@ -52,7 +52,7 @@ class PlayerDestinations {
 	 * Add destinations to player's hand.
 	 */
 	public addDestinations(destinations: Destination[], originStock?: Stock) {
-		this.destinationsDoneStock.addCards(destinations);
+		this.destinationsToDoStock.addCards(destinations);
 		destinations.forEach((destination) => {
 			const card = document.getElementById(`destination-card-${destination.id}`) as HTMLDivElement;
 			/*	let html = `
@@ -165,6 +165,15 @@ class PlayerDestinations {
 		this.destinationColumnsUpdated();
 	}
 
+	public setToDoSelectionMode(selectionMode: CardSelectionMode) {
+		this.destinationsToDoStock.setSelectionMode(selectionMode);
+	}
+
+	public getSelectedToDoDestinations() {
+		console.log("getSelectedToDoDestinations", this.destinationsToDoStock.getSelection());
+		return this.destinationsToDoStock.getSelection();
+	}
+
 	/**
 	 * Update destination cards placement when there is a change.
 	 */
@@ -257,7 +266,8 @@ class PlayerDestinations {
 				stockToCreate,
 				stockSettings
 			);
-			index == 0 ? (this.destinationsDoneStock = stock) : (this.destinationsToDoStock = stock);
+
+			index == 0 ? (this.destinationsToDoStock = stock) : (this.destinationsDoneStock = stock);
 
 			stock.setSelectionMode("single");
 

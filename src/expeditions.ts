@@ -125,6 +125,8 @@ class Expeditions implements ExpeditionsGame {
 						this.destinationSelection.setCards(destinations);
 						this.destinationSelection.selectionChange();
 					}
+					this.playerTable.setToDoSelectionMode("single");
+					this.toggleDisableButtonTrade(false);//no selection is valid to say no trade
 				}
 				break;
 			case "revealDestination":
@@ -230,6 +232,7 @@ class Expeditions implements ExpeditionsGame {
 				mapDiv
 					.querySelectorAll(`.city[data-selected]`)
 					.forEach((city: HTMLElement) => (city.dataset.selected = "false"));
+				this.playerTable.setToDoSelectionMode("none");
 				break;
 			case "multiChooseInitialDestinations":
 				(Array.from(document.getElementsByClassName("player-turn-order")) as HTMLDivElement[]).forEach((elem) =>
@@ -278,7 +281,7 @@ class Expeditions implements ExpeditionsGame {
 				case "chooseAdditionalDestinations":
 					(this as any).addActionButton(
 						"chooseAdditionalDestinations_button",
-						_("Keep selected destinations"),
+						_("Trade selected destinations"),
 						() => this.chooseAdditionalDestinations()
 					);
 					dojo.addClass("chooseAdditionalDestinations_button", "disabled");
@@ -684,6 +687,24 @@ class Expeditions implements ExpeditionsGame {
 				);
 			}
 		}*/
+	}
+
+	public toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination) {		
+		if (this.gamedatas.gamestate.name == "revealDestination") {
+			this.revealDestination(lastChange);
+		} else if (this.gamedatas.gamestate.name == "chooseAdditionalDestinations") {
+			this.toggleDisableButtonTrade(
+				this.destinationSelection.getSelectedDestinationsIds().length != selection.length
+			);
+		}
+	}
+
+	private toggleDisableButtonTrade(disable: boolean) {
+		document.getElementById("chooseAdditionalDestinations_button")?.classList.toggle("disabled", disable);
+	}
+
+	public destinationSelectionChanged(selectedIds:number[]) {
+		this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
 	}
 
 	/**

@@ -102,7 +102,7 @@ trait ActionTrait {
 
         $this->pickAdditionalDestinationCards($playerId);
 
-        $this->gamestate->nextState('drawDestinations');
+        $this->gamestate->nextState('tradeDestination');
     }
 
     public function useTicket() {

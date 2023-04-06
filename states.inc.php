@@ -128,9 +128,6 @@ $playerActionsGameStates = [
             "pass",
         ],
         "transitions" => [
-            "drawSecondCard" => ST_PLAYER_DRAW_SECOND_CARD,
-            "drawDestinations" => ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS,
-            "tunnel" => ST_PLAYER_CONFIRM_TUNNEL,
             "useTicket" => ST_PLAYER_USE_TICKET,
             "nextPlayer" => ST_NEXT_PLAYER,
         ]
@@ -167,8 +164,8 @@ $playerActionsGameStates = [
 
     ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS => [
         "name" => "chooseAdditionalDestinations",
-        "description" => clienttranslate('${actplayer} must choose destination tickets'),
-        "descriptionmyturn" => clienttranslate('${you} must choose destination tickets (minimum ${minimum})'),
+        "description" => clienttranslate('${actplayer} can trade 1 destination for another'),
+        "descriptionmyturn" => clienttranslate('${you} can trade 1 destination from your hand for another one among the three from the pile'),
         "type" => "activeplayer",
         "args" => "argChooseAdditionalDestinations",
         "possibleactions" => ["chooseAdditionalDestinations"],
@@ -196,11 +193,12 @@ $playerActionsGameStates = [
         "args" => "argUseTicket",
         "possibleactions" => [
             "unclaimRoute",
-            "exchangeCard",
+            "drawDestinations",
             "claimRoute"
         ],
         "transitions" => [
             "continue" => ST_PLAYER_CHOOSE_ACTION,
+            "tradeDestination" => ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS,
             "nextPlayer" => ST_NEXT_PLAYER,
         ]
     ],

@@ -41,4 +41,12 @@ class PlayerTable {
 	public markDestinationComplete(destination: Destination, destinationRoutes?: Route[]) {
 		this.playerDestinations.markDestinationComplete(destination, destinationRoutes);
 	}
+
+	public setToDoSelectionMode(selectionMode: CardSelectionMode) {
+		this.playerDestinations.setToDoSelectionMode(selectionMode);
+	}
+
+	public getSelectedToDoDestinations() {
+		return this.playerDestinations.getSelectedToDoDestinations();
+	}
 }

@@ -1783,20 +1783,18 @@ var DestinationSelection = /** @class */ (function () {
     function DestinationSelection(game) {
         var _this = this;
         this.game = game;
-        /** Minimum number of selected destinations to enable the confirm selection button */
-        this.minimumDestinations = 1;
         this.destinations = new ebg.stock();
         this.destinations.setSelectionAppearance("class");
         this.destinations.selectionClass = "selected";
         this.destinations.setSelectionMode(1);
         this.destinations.create(game, $("destination-stock"), CARD_WIDTH, CARD_HEIGHT);
-        this.destinations.onItemCreate = function (cardDiv, cardUniqueId) { return setupDestinationCardDiv(cardDiv, Number(cardUniqueId)); };
+        this.destinations.onItemCreate = function (cardDiv, cardUniqueId) {
+            return setupDestinationCardDiv(cardDiv, Number(cardUniqueId));
+        };
         this.destinations.image_items_per_row = 10;
         this.destinations.centerItems = true;
         this.destinations.item_margin = 20;
-        dojo.connect(this.destinations, "onChangeSelection", this, function () {
-            return _this.selectionChange();
-        });
+        dojo.connect(this.destinations, "onChangeSelection", this, function () { return _this.selectionChange(); });
         setupDestinationCards(this.destinations);
     }
     /**
@@ -1809,17 +1807,11 @@ var DestinationSelection = /** @class */ (function () {
             _this.destinations.addToStockWithId(destination.type * 100 + destination.type_arg, "" + destination.id);
             var cardDiv = document.getElementById("destination-stock_item_".concat(destination.id));
             // when mouse hover destination, highlight it on the map
-            cardDiv.addEventListener("mouseenter", function () {
-                return _this.game.setHighligthedDestination(destination);
-            });
-            cardDiv.addEventListener("mouseleave", function () {
-                return _this.game.setHighligthedDestination(null);
-            });
+            cardDiv.addEventListener("mouseenter", function () { return _this.game.setHighligthedDestination(destination); });
+            cardDiv.addEventListener("mouseleave", function () { return _this.game.setHighligthedDestination(null); });
             // when destinatin is selected, another highlight on the map
             cardDiv.addEventListener("click", function () {
-                return _this.game.setSelectedDestination(destination, _this.destinations
-                    .getSelectedItems()
-                    .some(function (item) { return Number(item.id) == destination.id; }));
+                return _this.game.setSelectedDestination(destination, _this.destinations.getSelectedItems().some(function (item) { return Number(item.id) == destination.id; }));
             });
         });
     };
@@ -1834,21 +1826,13 @@ var DestinationSelection = /** @class */ (function () {
      * Get selected destinations ids.
      */
     DestinationSelection.prototype.getSelectedDestinationsIds = function () {
-        return this.destinations
-            .getSelectedItems()
-            .map(function (item) { return Number(item.id); });
+        return this.destinations.getSelectedItems().map(function (item) { return Number(item.id); });
     };
     /**
      * Toggle activation of confirm selection buttons, depending on minimumDestinations.
      */
     DestinationSelection.prototype.selectionChange = function () {
-        var _a, _b;
-        (_a = document
-            .getElementById("chooseInitialDestinations_button")) === null || _a === void 0 ? void 0 : _a.classList.toggle("disabled", this.destinations.getSelectedItems().length <
-            this.minimumDestinations);
-        (_b = document
-            .getElementById("chooseAdditionalDestinations_button")) === null || _b === void 0 ? void 0 : _b.classList.toggle("disabled", this.destinations.getSelectedItems().length <
-            this.minimumDestinations);
+        this.game.destinationSelectionChanged(this.getSelectedDestinationsIds());
     };
     return DestinationSelection;
 }());
@@ -2133,6 +2117,12 @@ var PlayerTable = /** @class */ (function () {
     PlayerTable.prototype.markDestinationComplete = function (destination, destinationRoutes) {
         this.playerDestinations.markDestinationComplete(destination, destinationRoutes);
     };
+    PlayerTable.prototype.setToDoSelectionMode = function (selectionMode) {
+        this.playerDestinations.setToDoSelectionMode(selectionMode);
+    };
+    PlayerTable.prototype.getSelectedToDoDestinations = function () {
+        return this.playerDestinations.getSelectedToDoDestinations();
+    };
     return PlayerTable;
 }());
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
@@ -2165,8 +2155,8 @@ var PlayerDestinations = /** @class */ (function () {
             document.getElementById("player-table-".concat(this.playerId, "-destinations-todo")),
             document.getElementById("player-table-".concat(this.playerId, "-destinations-done")),
         ]);
-        this.destinationsDoneStock.onSelectionChange = function (selection, lastChange) {
-            return _this.game.revealDestination(lastChange);
+        this.destinationsToDoStock.onSelectionChange = function (selection, lastChange) {
+            return _this.game.toDoDestinationSelectionChanged(selection, lastChange);
         };
         this.addDestinations(destinations);
         destinations
@@ -2181,7 +2171,7 @@ var PlayerDestinations = /** @class */ (function () {
     PlayerDestinations.prototype.addDestinations = function (destinations, originStock) {
         var _a;
         var _this = this;
-        this.destinationsDoneStock.addCards(destinations);
+        this.destinationsToDoStock.addCards(destinations);
         destinations.forEach(function (destination) {
             var card = document.getElementById("destination-card-".concat(destination.id));
             /*	let html = `
@@ -2272,6 +2262,13 @@ var PlayerDestinations = /** @class */ (function () {
             .classList.toggle("front", destinationList == this.destinationsDone);
         this.destinationColumnsUpdated();
     };
+    PlayerDestinations.prototype.setToDoSelectionMode = function (selectionMode) {
+        this.destinationsToDoStock.setSelectionMode(selectionMode);
+    };
+    PlayerDestinations.prototype.getSelectedToDoDestinations = function () {
+        console.log("getSelectedToDoDestinations", this.destinationsToDoStock.getSelection());
+        return this.destinationsToDoStock.getSelection();
+    };
     /**
      * Update destination cards placement when there is a change.
      */
@@ -2346,7 +2343,7 @@ var PlayerDestinations = /** @class */ (function () {
         };
         divs.forEach(function (stockToCreate, index) {
             var stock = new LineStockWithEvents(_this.game.destinationCardsManager, stockToCreate, stockSettings);
-            index == 0 ? (_this.destinationsDoneStock = stock) : (_this.destinationsToDoStock = stock);
+            index == 0 ? (_this.destinationsToDoStock = stock) : (_this.destinationsDoneStock = stock);
             stock.setSelectionMode("single");
             // highlight destination's cities on the map, on mouse over
             stock.onCardMouseOver = function (dest) { return _this.game.setHighligthedDestination(dest); };
@@ -2617,6 +2614,8 @@ var Expeditions = /** @class */ (function () {
                         this.destinationSelection.setCards(destinations);
                         this.destinationSelection.selectionChange();
                     }
+                    this.playerTable.setToDoSelectionMode("single");
+                    this.toggleDisableButtonTrade(false); //no selection is valid to say no trade
                 }
                 break;
             case "revealDestination":
@@ -2712,6 +2711,7 @@ var Expeditions = /** @class */ (function () {
                 mapDiv
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = "false"); });
+                this.playerTable.setToDoSelectionMode("none");
                 break;
             case "multiChooseInitialDestinations":
                 Array.from(document.getElementsByClassName("player-turn-order")).forEach(function (elem) {
@@ -2754,7 +2754,7 @@ var Expeditions = /** @class */ (function () {
                     this.setActionBarUseTicket(false);
                     break;
                 case "chooseAdditionalDestinations":
-                    this.addActionButton("chooseAdditionalDestinations_button", _("Keep selected destinations"), function () { return _this.chooseAdditionalDestinations(); });
+                    this.addActionButton("chooseAdditionalDestinations_button", _("Trade selected destinations"), function () { return _this.chooseAdditionalDestinations(); });
                     dojo.addClass("chooseAdditionalDestinations_button", "disabled");
                     break;
                 case "confirmTunnel":
@@ -3091,6 +3091,21 @@ var Expeditions = /** @class */ (function () {
                 );
             }
         }*/
+    };
+    Expeditions.prototype.toDoDestinationSelectionChanged = function (selection, lastChange) {
+        if (this.gamedatas.gamestate.name == "revealDestination") {
+            this.revealDestination(lastChange);
+        }
+        else if (this.gamedatas.gamestate.name == "chooseAdditionalDestinations") {
+            this.toggleDisableButtonTrade(this.destinationSelection.getSelectedDestinationsIds().length != selection.length);
+        }
+    };
+    Expeditions.prototype.toggleDisableButtonTrade = function (disable) {
+        var _a;
+        (_a = document.getElementById("chooseAdditionalDestinations_button")) === null || _a === void 0 ? void 0 : _a.classList.toggle("disabled", disable);
+    };
+    Expeditions.prototype.destinationSelectionChanged = function (selectedIds) {
+        this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
     };
     /**
      * Timer for Confirm button
