@@ -238,7 +238,7 @@ trait UtilTrait {
     }
 
     function getRevealedDestinationsIds() {
-        $sql = "SELECT `card_id` FROM `destination` WHERE `revealed` = 1";
+        $sql = "SELECT `card_id` FROM `destination` WHERE `revealed` = 1 and `card_location` = 'hand'";
         $dbResults = self::getCollectionFromDB($sql);
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
