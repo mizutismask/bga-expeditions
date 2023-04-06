@@ -170,6 +170,7 @@ $playerActionsGameStates = [
         "args" => "argChooseAdditionalDestinations",
         "possibleactions" => ["chooseAdditionalDestinations"],
         "transitions" => [
+            "continue" => ST_PLAYER_CHOOSE_ACTION,
             "nextPlayer" => ST_NEXT_PLAYER,
         ],
     ],

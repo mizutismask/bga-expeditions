@@ -45,7 +45,7 @@ trait ActionTrait {
         if ($keptDestinationsId)
             self::incStat(1, STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, $playerId);
 
-        $this->gamestate->nextState('nextPlayer');
+        $this->gamestate->nextState('continue');
     }
 
     public function drawDeckCards(int $number) {
