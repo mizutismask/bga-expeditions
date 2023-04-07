@@ -34,7 +34,7 @@ trait DestinationDeckTrait {
             $cards[] = $replacement;
             $notFarEnough = array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) !== false);
         }
-        $this->keepDestinationCards($playerId, $this->getDestinationIds($cards), $this->getInitialDestinationCardNumber());
+        $this->keepInitialDestinationCards($playerId, $this->getDestinationIds($cards), $this->getInitialDestinationCardNumber());
 
         return $cards;
     }
@@ -190,6 +190,25 @@ trait DestinationDeckTrait {
                 $playerId => [
                     'destinations' => $this->getDestinationsFromDb([$this->destinations->getCard($keptDestinationsId)]),
                     'discardedDestination' => $this->getDestinationFromDb($this->destinations->getCard($discardedDestinationId)),
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Move selected cards to player hand.
+     */
+    private function keepInitialDestinationCards(int $playerId, array $ids) {
+        $this->destinations->moveCards($ids, 'hand', $playerId);
+        $this->notifyAllPlayers('destinationsPicked', clienttranslate('${player_name} keeps ${count} destinations'), [
+            'playerId' => $playerId,
+            'player_name' => $this->getPlayerName($playerId),
+            'count' => count($ids),
+            'number' => count($ids),
+            'remainingDestinationsInDeck' => $this->getRemainingDestinationCardsInDeck(),
+            '_private' => [
+                $playerId => [
+                    'destinations' => $this->getDestinationsFromDb($this->destinations->getCards($ids)),
                 ],
             ],
         ]);
