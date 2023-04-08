@@ -58,80 +58,6 @@
 #map-and-borders {
   position: relative;  
 
-  .side {
-    position: absolute;
-    pointer-events: none;
-    z-index: 6;
-    background-size: 100% 100%;
-
-    &.left {
-      background-image: url('img/border-map-left.png');
-      width: 9px;
-      //height: 876px;
-      left: 0;
-      top: 180px;
-      bottom: 180px;
-    }
-
-    &.right {
-      background-image: url('img/border-map-right.png');
-      width: 8px;
-      //height: 876px;
-      right: 0;
-      top: 180px;
-      bottom: 180px;
-    }
-
-    &.top {
-      background-image: url('img/border-map-top.png');
-      //width: 1541px;
-      height: 8px;
-      left: 180px;
-      right: 180px;
-      top: 0;
-    }
-
-    &.bottom {
-      background-image: url('img/border-map-bottom.png');
-      //width: 1541px;
-      height: 9px;
-      left: 180px;
-      right: 180px;
-      bottom: 0;
-    }
-  }
-
-  .corner {
-    position: absolute;
-    pointer-events: none;
-    width: 180px;
-    height: 180px;
-    z-index: 6;
-
-    &.top-left {
-      background: url('img/border-map-corner-top-left.png');
-      left: 0;
-      top: 0;
-    }
-
-    &.top-right {
-      background: url('img/border-map-corner-top-right.png');
-      right: 0;
-      top: 0;
-    }
-
-    &.bottom-left {
-      background: url('img/border-map-corner-bottom-left.png');
-      left: 0;
-      bottom: 0;
-    }
-
-    &.bottom-right {
-      background: url('img/border-map-corner-bottom-right.png');
-      right: 0;
-      bottom: 0;
-    }
-  }
 }
 
 #map-destination-highlight-shadow {
@@ -161,6 +87,7 @@
     height: 1321px;
     background: url('img/map.jpg');
     transform-origin: top left;
+    box-shadow: 1px 1px 20px 3px black;
 }
 
 /*.point-marker {

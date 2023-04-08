@@ -40,7 +40,7 @@ class SharedDestinationDeck {
 			this.game.destinationCardsManager,
 			$(`shared-destination-stock`),
 			{
-				center: false,
+				center: true,
 				gap: "10px",
 				direction: "column",
 				wrap: "nowrap",

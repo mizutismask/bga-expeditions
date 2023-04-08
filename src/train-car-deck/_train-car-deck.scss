@@ -1,10 +1,11 @@
 
 #train-car-deck {
     position: relative;
-    width: 200px;
+    width: 160px;
     display: flex;
     flex-direction: column;
     z-index: 7;
+    align-items: center;
 
     .stock {
         position: relative;
