@@ -15,7 +15,7 @@
   background: url("img/playerboard-background.png"), #df3e33;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board[data-player-color="30b0e1"]::before {
@@ -28,7 +28,7 @@
   background: url("img/playerboard-background.png"), #30b0e1;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board[data-player-color="77bd25"]::before {
@@ -41,7 +41,7 @@
   background: url("img/playerboard-background.png"), #77bd25;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board[data-player-color=eca51c]::before {
@@ -54,7 +54,7 @@
   background: url("img/playerboard-background.png"), #eca51c;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board[data-player-color=df74b2]::before {
@@ -67,7 +67,7 @@
   background: url("img/playerboard-background.png"), #df74b2;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board[data-player-color=d8d7d7]::before {
@@ -80,7 +80,7 @@
   background: url("img/playerboard-background.png"), #d8d7d7;
   background-size: cover;
   background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px black;
+  box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
 .player-board .player-name, .player-board .player-name a {
@@ -1009,6 +1009,7 @@
   right: 0;
   bottom: 0;
   background: url("img/destination-done.png");
+  box-shadow: 0 0 3px 3px #3c6c6c;
 }
 .destination-card:not(.icon).selected::after {
   content: "";
@@ -1018,14 +1019,10 @@
   right: 0;
   bottom: 0;
   background: url("img/destination-selected.png");
-  box-shadow: 0 0 3px 3px #d9ffff;
+  box-shadow: 0 0 3px 3px #4d78a3;
   border-radius: 6px;
 }
 
-.done .destination-card:not(.icon) {
-  mask: url("img/destination-done-mask.png") no-repeat center/contain;
-  -webkit-mask: url("img/destination-done-mask.png") no-repeat center/contain;
-}
 .done .destination-card:not(.icon)::after {
   content: "";
   position: absolute;
@@ -1605,6 +1602,32 @@ html,
   height: 29px;
   background: url("img/ticket.png") no-repeat;
   background-size: cover;
+}
+
+.xpd-help-icon {
+  width: 25px;
+  height: 25px;
+  color: rgb(21, 104, 134);
+  background-color: white;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.help-card {
+  width: 355px;
+  height: 480px;
+}
+.help-card.recto {
+  background: url("img/help1.jpg") no-repeat;
+}
+.help-card.verso {
+  background: url("img/help2.jpg") no-repeat;
 }
 
 .dijitTooltipContents .destinations-flex {

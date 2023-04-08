@@ -85,27 +85,25 @@
 			right: 0;
 			bottom: 0;
 			background: url("img/destination-done.png");
+			box-shadow: 0 0 3px 3px #3c6c6c;
 		}
 	}
 
 	&.selected::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('img/destination-selected.png');
-      box-shadow: 0 0 3px 3px #d9ffff;
-      border-radius: 6px;
-    }
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: url("img/destination-selected.png");
+		box-shadow: 0 0 3px 3px #4d78a3;
+		border-radius: 6px;
+	}
 }
 
 .done {
 	.destination-card:not(.icon) {
-		mask: url("img/destination-done-mask.png") no-repeat center / contain;
-		-webkit-mask: url("img/destination-done-mask.png") no-repeat center / contain;
-
 		&::after {
 			content: "";
 			position: absolute;

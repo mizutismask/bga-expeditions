@@ -2158,6 +2158,7 @@ var PlayerDestinations = /** @class */ (function () {
             document.getElementById("player-table-".concat(this.playerId, "-destinations-todo")),
             document.getElementById("player-table-".concat(this.playerId, "-destinations-done")),
         ]);
+        this.destinationsDoneStock.setSelectionMode("none");
         this.destinationsToDoStock.onSelectionChange = function (selection, lastChange) {
             return _this.game.toDoDestinationSelectionChanged(selection, lastChange);
         };
@@ -2926,10 +2927,15 @@ var Expeditions = /** @class */ (function () {
                 // don't show turn order if game is already started (refresh or TB game)
                 dojo.place("<div class=\"player-turn-order\">".concat(_("Player ${number}").replace("${number}", "<strong>".concat(player.playerNo, "</strong>")), "</div>"), "player_board_".concat(player.id));
             }
+            if (_this.getPlayerId() === playerId) {
+                dojo.place("<div class=\"xpd-help-icon\">?</div>", "player_board_".concat(player.id));
+            }
         });
         this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
         this.setTooltipToClass("train-car-card-counter", _("Train cars cards"));
         this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
+        this.setTooltipToClass("xpd-help-icon", "<div class=\"help-card recto\"></div>");
+        this.setTooltipToClass("fa-star", "<div class=\"help-card verso\"></div>");
     };
     /**
      * Update player score.
@@ -4744,7 +4750,7 @@ var CardsManager = /** @class */ (function (_super) {
                 _this.game.addTooltipHtml(div.id, _this.getTooltip(card.type * 100 + card.type_arg));
             },
             setupBackDiv: function (card, div) {
-                //div.style.backgroundImage = `url('${g_gamethemeurl}img/card-back-costume.jpg')`;//todo update if used
+                div.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destination-card-backgroundP.jpg')");
             },
         }) || this;
         _this.game = game;

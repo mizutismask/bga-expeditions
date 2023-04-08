@@ -20,7 +20,7 @@ $wagon-colors: (
 @import "destination-deck/destination-deck";
 @import "player-table/player-table";
 @import "end-score/end-score";
-@import '../node_modules/bga-cards/bga-cards';
+@import "../node_modules/bga-cards/bga-cards";
 
 /* make space between buttons on touch devices */
 @media (hover: none) {
@@ -172,7 +172,35 @@ html,
 	width: 50px;
 	height: 29px;
 	background: url("img/ticket.png") no-repeat;
-    background-size: cover;
+	background-size: cover;
+}
+
+.xpd-help-icon {
+	width: 25px;
+	height: 25px;
+	color: rgb(21, 104, 134);
+	background-color: white;
+	border-radius: 15px;
+	text-align: center;
+	font-weight: bolder;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.help-card {
+	width: 355px;
+	height: 480px;
+
+	&.recto {
+		background: url("img/help1.jpg") no-repeat;
+	}
+
+	&.verso {
+		background: url("img/help2.jpg") no-repeat;
+	}
 }
 
 .dijitTooltipContents {

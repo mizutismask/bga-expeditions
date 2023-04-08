@@ -36,6 +36,7 @@ class PlayerDestinations {
 			document.getElementById(`player-table-${this.playerId}-destinations-todo`),
 			document.getElementById(`player-table-${this.playerId}-destinations-done`),
 		]);
+		this.destinationsDoneStock.setSelectionMode("none");
 		this.destinationsToDoStock.onSelectionChange = (selection: Destination[], lastChange: Destination) =>
 			this.game.toDoDestinationSelectionChanged(selection, lastChange);
 

@@ -489,11 +489,20 @@ class Expeditions implements ExpeditionsGame {
 					`player_board_${player.id}`
 				);
 			}
+
+			if (this.getPlayerId() === playerId) {
+				dojo.place(
+					`<div class="xpd-help-icon">?</div>`,
+					`player_board_${player.id}`
+				);
+			}
 		});
 
 		this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
 		this.setTooltipToClass("train-car-card-counter", _("Train cars cards"));
 		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
+		this.setTooltipToClass("xpd-help-icon", `<div class="help-card recto"></div>`);
+		this.setTooltipToClass("fa-star", `<div class="help-card verso"></div>`);
 	}
 
 	/**
