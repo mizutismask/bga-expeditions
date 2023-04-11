@@ -217,7 +217,10 @@
 }
 
 .route-space {
-	background: #ff000026;
+	//background: #ff000026;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
 
 	display: inline-block;
 	//margin: 10px;
@@ -228,13 +231,13 @@
 	width: 54px;
 	height: 16px;
 	&.arrowS {
-		background: url("img/arrowS.svg");
+		background-image: url("img/arrowS.svg");
 	}
-  &.arrowM {
-		background: url("img/arrowM.svg");
+	&.arrowM {
+		background-image: url("img/arrowM.svg");
 	}
-  &.arrowL {
-		background: url("img/arrowL.svg");
+	&.arrowL {
+		background-image: url("img/arrowL.svg");
 	}
 
 	&.selectable {

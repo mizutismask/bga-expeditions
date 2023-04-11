@@ -443,7 +443,9 @@
 }
 
 .route-space {
-  background: rgba(255, 0, 0, 0.1490196078);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   display: inline-block;
   position: absolute;
   top: 0;
@@ -452,13 +454,13 @@
   height: 16px;
 }
 .route-space.arrowS {
-  background: url("img/arrowS.svg");
+  background-image: url("img/arrowS.svg");
 }
 .route-space.arrowM {
-  background: url("img/arrowM.svg");
+  background-image: url("img/arrowM.svg");
 }
 .route-space.arrowL {
-  background: url("img/arrowL.svg");
+  background-image: url("img/arrowL.svg");
 }
 .route-space.selectable {
   cursor: pointer;

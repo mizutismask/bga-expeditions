@@ -1515,10 +1515,10 @@ var TtrMap = /** @class */ (function () {
     };
     TtrMap.prototype.getArrowSize = function (route) {
         var length = route.spaces.pop().length;
-        if (length <= 100) {
+        if (length <= 60) {
             return "arrowS";
         }
-        if (length <= 130) {
+        if (length <= 95) {
             return "arrowM";
         }
         return "arrowL";
