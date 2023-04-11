@@ -60,15 +60,18 @@ class CardsManager extends CardManager<Destination> {
 		return getCityName(cardTypeId);
 	}
 
-	private getCardDescription(cardTypeId: number) {
-		return "desc";
-	}
-
 	public getTooltip(cardUniqueId: number) {
 		const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
-		let tooltip = `${dojo.string.substitute(_("${to}"), {
+		let tooltip = `<div class="xpd-city">${dojo.string.substitute(_("${to}"), {
 			to: getCityName(destination.to),
-		})}`;
+		})}</div>
+		<div class="xpd-location">${dojo.string.substitute(_("${location}"), {
+			location: getCityLocation(destination.to),
+		})}</div>
+		<div class="xpd-city-desc">${dojo.string.substitute(_("${description}"), {
+			description: getCityDescription(destination.to),
+		})}</div>
+		`;
 		return tooltip;
 	}
 
