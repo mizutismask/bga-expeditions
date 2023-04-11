@@ -453,23 +453,59 @@
   width: 54px;
   height: 16px;
 }
-.route-space.arrowSR {
-  background-image: url("img/arrowSR.svg");
+.route-space.arrowSRB {
+  background-image: url("img/arrowSRB.svg");
 }
-.route-space.arrowSN {
-  background-image: url("img/arrowSN.svg");
+.route-space.arrowSRY {
+  background-image: url("img/arrowSRY.svg");
 }
-.route-space.arrowMR {
-  background-image: url("img/arrowMR.svg");
+.route-space.arrowSRR {
+  background-image: url("img/arrowSRR.svg");
 }
-.route-space.arrowMN {
-  background-image: url("img/arrowMN.svg");
+.route-space.arrowSNB {
+  background-image: url("img/arrowSNB.svg");
 }
-.route-space.arrowLR {
-  background-image: url("img/arrowLR.svg");
+.route-space.arrowSNY {
+  background-image: url("img/arrowSNY.svg");
 }
-.route-space.arrowLN {
-  background-image: url("img/arrowLN.svg");
+.route-space.arrowSNR {
+  background-image: url("img/arrowSNR.svg");
+}
+.route-space.arrowMRB {
+  background-image: url("img/arrowMRB.svg");
+}
+.route-space.arrowMRY {
+  background-image: url("img/arrowMRY.svg");
+}
+.route-space.arrowMRR {
+  background-image: url("img/arrowMRR.svg");
+}
+.route-space.arrowMNB {
+  background-image: url("img/arrowMNB.svg");
+}
+.route-space.arrowMNY {
+  background-image: url("img/arrowMNY.svg");
+}
+.route-space.arrowMNR {
+  background-image: url("img/arrowMNR.svg");
+}
+.route-space.arrowLRB {
+  background-image: url("img/arrowLRB.svg");
+}
+.route-space.arrowLRY {
+  background-image: url("img/arrowLRY.svg");
+}
+.route-space.arrowLRR {
+  background-image: url("img/arrowLRR.svg");
+}
+.route-space.arrowLNB {
+  background-image: url("img/arrowLNB.svg");
+}
+.route-space.arrowLNY {
+  background-image: url("img/arrowLNY.svg");
+}
+.route-space.arrowLNR {
+  background-image: url("img/arrowLNR.svg");
 }
 .route-space.selectable {
   cursor: pointer;

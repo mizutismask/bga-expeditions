@@ -233,8 +233,10 @@
 
 	@each $size in "S", "M", "L" {
 		@each $reverse in "R", "N" {
-			&.arrow#{$size}#{$reverse} {
-				background-image: url("img/arrow#{$size}#{$reverse}.svg");
+			@each $color in "B", "Y", "R" {
+				&.arrow#{$size}#{$reverse}#{$color} {
+					background-image: url("img/arrow#{$size}#{$reverse}#{$color}.svg");
+				}
 			}
 		}
 	}

@@ -1507,7 +1507,9 @@ var TtrMap = /** @class */ (function () {
         return ROUTES[routeId];
     };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
-        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N");
+        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N").concat(getColor(route.color, false)
+            .charAt(0)
+            .toUpperCase());
     };
     TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
         var _this = this;

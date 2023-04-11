@@ -208,7 +208,9 @@ class TtrMap {
 	}
 
 	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
-		return `arrow${this.getArrowSize(route)}${claimed.reverseDirection ? "R" : "N"}`;
+		return `arrow${this.getArrowSize(route)}${claimed.reverseDirection ? "R" : "N"}${getColor(route.color, false)
+			.charAt(0)
+			.toUpperCase()}`;
 	}
 
 	private createRouteSpaces(
