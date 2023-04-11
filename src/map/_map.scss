@@ -230,14 +230,13 @@
 	left: 0;
 	width: 54px;
 	height: 16px;
-	&.arrowS {
-		background-image: url("img/arrowS.svg");
-	}
-	&.arrowM {
-		background-image: url("img/arrowM.svg");
-	}
-	&.arrowL {
-		background-image: url("img/arrowL.svg");
+
+	@each $size in "S", "M", "L" {
+		@each $reverse in "R", "N" {
+			&.arrow#{$size}#{$reverse} {
+				background-image: url("img/arrow#{$size}#{$reverse}.svg");
+			}
+		}
 	}
 
 	&.selectable {

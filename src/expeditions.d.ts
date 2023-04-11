@@ -32,6 +32,7 @@ interface Route {
 interface ClaimedRoute {
 	routeId: number;
 	playerId: number;
+	reverseDirection: boolean;
 }
 
 interface ExpeditionsPlayer extends Player {

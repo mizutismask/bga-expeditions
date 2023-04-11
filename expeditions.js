@@ -1493,13 +1493,16 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getRoute = function (routeId) {
         return ROUTES[routeId];
     };
+    TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
+        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N");
+    };
     TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
         var _this = this;
         if (shiftX === void 0) { shiftX = 0; }
         if (shiftY === void 0) { shiftY = 0; }
         this.getAllRoutes().forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
-                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space ").concat(_this.getArrowSize(route), "\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
+                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
                     to: _this.getCityName(route.to),
                 }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
@@ -1514,14 +1517,18 @@ var TtrMap = /** @class */ (function () {
         });
     };
     TtrMap.prototype.getArrowSize = function (route) {
-        var length = route.spaces.pop().length;
-        if (length <= 60) {
-            return "arrowS";
-        }
-        if (length <= 95) {
-            return "arrowM";
-        }
-        return "arrowL";
+        var size = "U";
+        route.spaces.forEach(function (space) {
+            var length = space.length;
+            if (length <= 60) {
+                size = "S";
+            }
+            if (length <= 95) {
+                size = "M";
+            }
+            size = "L";
+        });
+        return size;
     };
     /**
      * Handle dragging train car cards over a route.
@@ -1582,11 +1589,7 @@ var TtrMap = /** @class */ (function () {
             routes.forEach(function (route) {
                 _this.getAllRoutes()
                     .find(function (r) { return r.id == route.id; })
-                    .spaces.forEach(function (_, index) {
-                    var _a;
-                    return (_a = document
-                        .getElementById("wagon-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable");
-                });
+                    .spaces.forEach(function (_, index) { var _a; return (_a = document.getElementById("wagon-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable"); });
             });
         }
     };
@@ -1596,6 +1599,11 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setClaimedRoutes = function (claimedRoutes, fromPlayerId) {
         var _this = this;
+        claimedRoutes.forEach(function (claimedRoute) {
+            var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
+            var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
+            routeDiv.classList.add(_this.getClaimedArrowBackgroundClass(route, claimedRoute));
+        });
         claimedRoutes.forEach(function (claimedRoute) {
             var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
             var player = _this.players.find(function (player) { return Number(player.id) == claimedRoute.playerId; });
@@ -1686,7 +1694,7 @@ var TtrMap = /** @class */ (function () {
         if (!phantom) {
             route.spaces.forEach(function (space, spaceIndex) {
                 var spaceDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(spaceIndex));
-                spaceDiv === null || spaceDiv === void 0 ? void 0 : spaceDiv.parentElement.removeChild(spaceDiv);
+                //spaceDiv?.parentElement.removeChild(spaceDiv);
             });
         }
         var isLowestFromDoubleHorizontalRoute = this.isLowestFromDoubleHorizontalRoute(route);

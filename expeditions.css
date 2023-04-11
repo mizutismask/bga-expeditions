@@ -453,14 +453,23 @@
   width: 54px;
   height: 16px;
 }
-.route-space.arrowS {
-  background-image: url("img/arrowS.svg");
+.route-space.arrowSR {
+  background-image: url("img/arrowSR.svg");
 }
-.route-space.arrowM {
-  background-image: url("img/arrowM.svg");
+.route-space.arrowSN {
+  background-image: url("img/arrowSN.svg");
 }
-.route-space.arrowL {
-  background-image: url("img/arrowL.svg");
+.route-space.arrowMR {
+  background-image: url("img/arrowMR.svg");
+}
+.route-space.arrowMN {
+  background-image: url("img/arrowMN.svg");
+}
+.route-space.arrowLR {
+  background-image: url("img/arrowLR.svg");
+}
+.route-space.arrowLN {
+  background-image: url("img/arrowLN.svg");
 }
 .route-space.selectable {
   cursor: pointer;

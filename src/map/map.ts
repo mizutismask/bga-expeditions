@@ -207,6 +207,10 @@ class TtrMap {
 		return ROUTES[routeId];
 	}
 
+	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
+		return `arrow${this.getArrowSize(route)}${claimed.reverseDirection ? "R" : "N"}`;
+	}
+
 	private createRouteSpaces(
 		destination: "route-spaces" | "map-drag-overlay",
 		shiftX: number = 0,
@@ -215,7 +219,9 @@ class TtrMap {
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
 				dojo.place(
-					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space ${this.getArrowSize(route)}" 
+					`<div id="${destination}-route${
+						route.id
+					}-space${spaceIndex}" class="route-space" 
                     style="transform-origin:left center; transform: translate(${space.x + shiftX}px, ${
 						space.y + shiftY
 					}px) rotate(${space.angle}deg); width:${space.length}px"
@@ -237,15 +243,19 @@ class TtrMap {
 		);
 	}
 
-	private getArrowSize(route: Route): String{
-		let length = route.spaces.pop().length;
-		if(length<=60){
-			return "arrowS";
-		}
-		if (length <= 95) {
-			return "arrowM";
-		}
-		return "arrowL";
+	private getArrowSize(route: Route): String {
+		let size = "U";
+		route.spaces.forEach((space) => {
+			let length = space.length;
+			if (length <= 60) {
+				size = "S";
+			}
+			if (length <= 95) {
+				size = "M";
+			}
+			size = "L";
+		});
+		return size;
 	}
 
 	/**
@@ -310,9 +320,7 @@ class TtrMap {
 				this.getAllRoutes()
 					.find((r) => r.id == route.id)
 					.spaces.forEach((_, index) =>
-						document
-							.getElementById(`wagon-route${route.id}-space${index}`)
-							?.classList.add("removable")
+						document.getElementById(`wagon-route${route.id}-space${index}`)?.classList.add("removable")
 					);
 			});
 		}
@@ -323,6 +331,12 @@ class TtrMap {
 	 * fromPlayerId is for animation (null for no animation)
 	 */
 	public setClaimedRoutes(claimedRoutes: ClaimedRoute[], fromPlayerId: number) {
+		claimedRoutes.forEach((claimedRoute) => {
+			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
+			const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
+			routeDiv.classList.add(this.getClaimedArrowBackgroundClass(route, claimedRoute));
+		});
+
 		claimedRoutes.forEach((claimedRoute) => {
 			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
 			const player = this.players.find((player) => Number(player.id) == claimedRoute.playerId);
@@ -440,7 +454,7 @@ class TtrMap {
 		if (!phantom) {
 			route.spaces.forEach((space, spaceIndex) => {
 				const spaceDiv = document.getElementById(`route-spaces-route${route.id}-space${spaceIndex}`);
-				spaceDiv?.parentElement.removeChild(spaceDiv);
+				//spaceDiv?.parentElement.removeChild(spaceDiv);
 			});
 		}
 
