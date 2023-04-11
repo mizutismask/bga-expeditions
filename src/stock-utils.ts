@@ -22,14 +22,25 @@ const RED = 3;
 
 const COLORS = [BLUE, YELLOW, RED];
 
-function getColor(color: number) {
-	switch (color) {
-		case 1:
-			return _("Blue");
-		case 2:
-			return _("Yellow");
-		case 3:
-			return _("Red");
+function getColor(color: number, translatable: boolean = true) {
+	if (translatable) {
+		switch (color) {
+			case 1:
+				return _("Blue");
+			case 2:
+				return _("Yellow");
+			case 3:
+				return _("Red");
+		}
+	} else {
+		switch (color) {
+			case 1:
+				return "blue";
+			case 2:
+				return "yellow";
+			case 3:
+				return "red";
+		}
 	}
 }
 

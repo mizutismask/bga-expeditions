@@ -31,14 +31,27 @@ var BLUE = 1;
 var YELLOW = 2;
 var RED = 3;
 var COLORS = [BLUE, YELLOW, RED];
-function getColor(color) {
-    switch (color) {
-        case 1:
-            return _("Blue");
-        case 2:
-            return _("Yellow");
-        case 3:
-            return _("Red");
+function getColor(color, translatable) {
+    if (translatable === void 0) { translatable = true; }
+    if (translatable) {
+        switch (color) {
+            case 1:
+                return _("Blue");
+            case 2:
+                return _("Yellow");
+            case 3:
+                return _("Red");
+        }
+    }
+    else {
+        switch (color) {
+            case 1:
+                return "blue";
+            case 2:
+                return "yellow";
+            case 3:
+                return "red";
+        }
     }
 }
 function setupTrainCarCardDiv(cardDiv, cardTypeId) {
@@ -3396,13 +3409,14 @@ var Expeditions = /** @class */ (function () {
         var _this = this;
         COLORS.forEach(function (color) {
             var colorName = getColor(color);
+            var rawColorName = getColor(color, false);
             var label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
                 colorName: "".concat(colorName),
             });
-            _this.addImageActionButton("placeArrow_button_" + colorName, _this.createDiv("arrow " + colorName.toLowerCase()), colorName, label, function () {
+            _this.addImageActionButton("placeArrow_button_" + rawColorName, _this.createDiv("arrow " + rawColorName), colorName, label, function () {
                 _this.selectArrowColor(color);
             });
-            dojo.toggleClass("placeArrow_button_" + colorName, "disabled", remainingArrows[color] == 0);
+            dojo.toggleClass("placeArrow_button_" + rawColorName, "disabled", remainingArrows[color] == 0);
         });
     };
     /**

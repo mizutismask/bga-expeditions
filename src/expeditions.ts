@@ -821,20 +821,21 @@ class Expeditions implements ExpeditionsGame {
 	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }) {
 		COLORS.forEach((color) => {
 			let colorName = getColor(color);
+			let rawColorName = getColor(color,false);
 			let label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
 				colorName: `${colorName}`,
 			});
 
 			(this as any).addImageActionButton(
-				"placeArrow_button_" + colorName,
-				this.createDiv("arrow " + colorName.toLowerCase()),
+				"placeArrow_button_" + rawColorName,
+				this.createDiv("arrow " + rawColorName),
 				colorName,
 				label,
 				() => {
 					this.selectArrowColor(color);
 				}
 			);
-			dojo.toggleClass("placeArrow_button_" + colorName, "disabled", remainingArrows[color] == 0);
+			dojo.toggleClass("placeArrow_button_" + rawColorName, "disabled", remainingArrows[color] == 0);
 		});
 	}
 	/**
