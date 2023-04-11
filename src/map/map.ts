@@ -215,7 +215,7 @@ class TtrMap {
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
 				dojo.place(
-					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
+					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space ${this.getArrowSize(route)}" 
                     style="transform-origin:left center; transform: translate(${space.x + shiftX}px, ${
 						space.y + shiftY
 					}px) rotate(${space.angle}deg); width:${space.length}px"
@@ -235,6 +235,17 @@ class TtrMap {
 				}
 			})
 		);
+	}
+
+	private getArrowSize(route: Route): String{
+		let length = route.spaces.pop().length;
+		if(length<=100){
+			return "arrowS";
+		}
+		if (length <= 130) {
+			return "arrowM";
+		}
+		return "arrowL";
 	}
 
 	/**

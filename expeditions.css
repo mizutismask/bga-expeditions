@@ -451,6 +451,15 @@
   width: 54px;
   height: 16px;
 }
+.route-space.arrowS {
+  background: url("img/arrowS.svg");
+}
+.route-space.arrowM {
+  background: url("img/arrowM.svg");
+}
+.route-space.arrowL {
+  background: url("img/arrowL.svg");
+}
 .route-space.selectable {
   cursor: pointer;
 }
@@ -688,8 +697,8 @@
   bottom: -100px;
   z-index: 20;
   /*.route-space {
-    background: #FF000088;
-  }*/
+     background: #FF000088;
+   }*/
 }
 #map-drag-overlay #map-drag-target {
   position: absolute;
