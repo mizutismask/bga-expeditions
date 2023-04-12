@@ -3411,7 +3411,7 @@ var Expeditions = /** @class */ (function () {
             window.clearInterval(this.actionTimerId);
         }
         var chooseActionArgs = this.gamedatas.gamestate.args;
-        this.addArrowsColoredButtons(chooseActionArgs.remainingArrows);
+        this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
         this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
             _this.useTicket();
         });
@@ -3434,14 +3434,14 @@ var Expeditions = /** @class */ (function () {
             window.clearInterval(this.actionTimerId);
         }
         var stateArgs = this.gamedatas.gamestate.args;
-        this.addArrowsColoredButtons(stateArgs.remainingArrows);
+        this.addArrowsColoredButtons(stateArgs.remainingArrows, stateArgs.possibleRoutes);
         this.addActionButton("drawDestinations_button", _("Trade one destination"), function () { return _this.drawDestinations(); }, null, null, "blue");
     };
     Expeditions.prototype.selectArrowColor = function (color) {
         this.selectedArrowColor = color;
         this.selectedColorChanged(color);
     };
-    Expeditions.prototype.addArrowsColoredButtons = function (remainingArrows) {
+    Expeditions.prototype.addArrowsColoredButtons = function (remainingArrows, possibleRoutes) {
         var _this = this;
         COLORS.forEach(function (color) {
             var colorName = getColor(color);
@@ -3452,7 +3452,11 @@ var Expeditions = /** @class */ (function () {
             _this.addImageActionButton("placeArrow_button_" + rawColorName, _this.createDiv("arrow " + rawColorName), colorName, label, function () {
                 _this.selectArrowColor(color);
             });
-            dojo.toggleClass("placeArrow_button_" + rawColorName, "disabled", remainingArrows[color] == 0);
+        });
+        //disable buttons if no more arrows or not possible to use a certain color
+        var colors = possibleRoutes.map(function (r) { return r.color; });
+        COLORS.forEach(function (c) {
+            return dojo.toggleClass("placeArrow_button_" + getColor(c, false), "disabled", !colors.find(function (pc) { return pc == c; }) || remainingArrows[c] == 0);
         });
     };
     /**

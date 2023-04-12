@@ -126,7 +126,7 @@ class Expeditions implements ExpeditionsGame {
 						this.destinationSelection.selectionChange();
 					}
 					this.playerTable.setToDoSelectionMode("single");
-					this.toggleDisableButtonTrade(false);//no selection is valid to say no trade
+					this.toggleDisableButtonTrade(false); //no selection is valid to say no trade
 				}
 				break;
 			case "revealDestination":
@@ -491,10 +491,7 @@ class Expeditions implements ExpeditionsGame {
 			}
 
 			if (this.getPlayerId() === playerId) {
-				dojo.place(
-					`<div id="player-help" class="xpd-help-icon">?</div>`,
-					`player_board_${player.id}`
-				);
+				dojo.place(`<div id="player-help" class="xpd-help-icon">?</div>`, `player_board_${player.id}`);
 			}
 		});
 
@@ -698,7 +695,7 @@ class Expeditions implements ExpeditionsGame {
 		}*/
 	}
 
-	public toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination) {		
+	public toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination) {
 		if (this.gamedatas.gamestate.name == "revealDestination") {
 			this.revealDestination(lastChange);
 		} else if (this.gamedatas.gamestate.name == "chooseAdditionalDestinations") {
@@ -712,7 +709,7 @@ class Expeditions implements ExpeditionsGame {
 		document.getElementById("chooseAdditionalDestinations_button")?.classList.toggle("disabled", disable);
 	}
 
-	public destinationSelectionChanged(selectedIds:number[]) {
+	public destinationSelectionChanged(selectedIds: number[]) {
 		this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
 	}
 
@@ -769,7 +766,7 @@ class Expeditions implements ExpeditionsGame {
 
 		const chooseActionArgs = this.gamedatas.gamestate.args as EnteringChooseActionArgs;
 
-		this.addArrowsColoredButtons(chooseActionArgs.remainingArrows);
+		this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
 
 		this.addImageActionButton(
 			"useTicket_button",
@@ -801,7 +798,7 @@ class Expeditions implements ExpeditionsGame {
 		}
 
 		const stateArgs = this.gamedatas.gamestate.args as EnteringUseTicketArgs;
-		this.addArrowsColoredButtons(stateArgs.remainingArrows);
+		this.addArrowsColoredButtons(stateArgs.remainingArrows, stateArgs.possibleRoutes);
 
 		(this as any).addActionButton(
 			"drawDestinations_button",
@@ -818,10 +815,10 @@ class Expeditions implements ExpeditionsGame {
 		this.selectedColorChanged(color);
 	}
 
-	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }) {
+	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }, possibleRoutes: Route[]) {
 		COLORS.forEach((color) => {
 			let colorName = getColor(color);
-			let rawColorName = getColor(color,false);
+			let rawColorName = getColor(color, false);
 			let label = dojo.string.substitute(_("Continue the ${colorName} expedition"), {
 				colorName: `${colorName}`,
 			});
@@ -835,8 +832,17 @@ class Expeditions implements ExpeditionsGame {
 					this.selectArrowColor(color);
 				}
 			);
-			dojo.toggleClass("placeArrow_button_" + rawColorName, "disabled", remainingArrows[color] == 0);
 		});
+
+		//disable buttons if no more arrows or not possible to use a certain color
+		const colors = possibleRoutes.map((r) => r.color);
+		COLORS.forEach((c) =>
+			dojo.toggleClass(
+				"placeArrow_button_" + getColor(c, false),
+				"disabled",
+				!colors.find((pc) => pc == c) || remainingArrows[c] == 0
+			)
+		);
 	}
 	/**
 	 * Check if player should be asked for the color he wants when he clicks on a double route.
@@ -1125,7 +1131,7 @@ class Expeditions implements ExpeditionsGame {
 				{
 					playerId,
 					routeId: route.id,
-					reverseDirection:notif.args.reverseDirection,
+					reverseDirection: notif.args.reverseDirection,
 				},
 			],
 			playerId
