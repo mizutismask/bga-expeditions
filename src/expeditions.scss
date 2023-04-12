@@ -168,6 +168,12 @@ html,
 	}
 }
 
+.disabled{
+	.expTicket {
+		filter: grayscale(1);
+	}
+}
+
 .expTicket {
 	width: 50px;
 	height: 29px;
