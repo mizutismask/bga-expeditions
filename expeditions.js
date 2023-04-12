@@ -3311,9 +3311,11 @@ var Expeditions = /** @class */ (function () {
         document
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
-        this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
-            return _this.claimRoute(route.id, _this.selectedArrowColor);
-        });
+        if (!$("claimRouteConfirm_button")) {
+            this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
+                return _this.claimRoute(route.id, _this.selectedArrowColor);
+            });
+        }
         /*
         const selectedColor = this.playerTable.getSelectedColor();
 
