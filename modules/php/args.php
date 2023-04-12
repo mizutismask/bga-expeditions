@@ -62,13 +62,13 @@ trait ArgsTrait {
 
         $possibleRoutes = $this->claimableRoutes($playerId);
         $maxHiddenCardsPick = min(2, $this->getRemainingTrainCarCardsInDeck(true));
-       
+
         $canClaimARoute = false;
         $costForRoute = [];
 
         $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
-        $canPass = true; //todo check if arrow placed
+        $canPass = boolval(self::getGameStateValue(MAIN_ACTION_DONE));
         $canUseTicket = self::getGameStateValue(TICKETS_USED) < 2 && $this->getRemainingTicketsCount($playerId) > 0;
         return [
             'possibleRoutes' => $possibleRoutes,
@@ -96,10 +96,12 @@ trait ArgsTrait {
         return [
             'possibleRoutes' => $this->claimableRoutes($playerId),
             'unclaimableRoutes' => array_map(
-                fn ($claimedRoute) => $this->getRoute($claimedRoute->routeId),array_values(
-                array_filter(
-                    [$this->getLastClaimedRoute(BLUE), $this->getLastClaimedRoute(YELLOW), $this->getLastClaimedRoute(RED)],
-                    fn ($route) => $route != null)
+                fn ($claimedRoute) => $this->getRoute($claimedRoute->routeId),
+                array_values(
+                    array_filter(
+                        [$this->getLastClaimedRoute(BLUE), $this->getLastClaimedRoute(YELLOW), $this->getLastClaimedRoute(RED)],
+                        fn ($route) => $route != null
+                    )
                 )
             ),
             'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]

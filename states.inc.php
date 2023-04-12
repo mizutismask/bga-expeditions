@@ -130,6 +130,7 @@ $playerActionsGameStates = [
         "transitions" => [
             "useTicket" => ST_PLAYER_USE_TICKET,
             "nextPlayer" => ST_NEXT_PLAYER,
+            "continue" => ST_PLAYER_CHOOSE_ACTION,
         ]
     ],
 

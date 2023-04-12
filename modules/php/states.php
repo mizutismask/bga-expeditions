@@ -39,6 +39,7 @@ trait StateTrait {
 
         $this->setGameStateValue(TICKETS_USED, 0);
         $this->setGameStateValue(NEW_LOOP_COLOR, 0);
+        $this->setGameStateValue(MAIN_ACTION_DONE, 0);
 
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 

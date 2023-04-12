@@ -157,6 +157,8 @@ trait ActionTrait {
     function applyClaimRoute(int $playerId, int $routeId, int $color, int $extraCardCost = 0) {
         if ($this->getGameStateValue(NEW_LOOP_COLOR)) {
             $this->setGameStateValue(NEW_LOOP_COLOR, 0);
+        }else{
+            $this->setGameStateValue(MAIN_ACTION_DONE, 1);
         }
         $route = $this->getRoute($routeId);
         //self::dump('*******************applyClaimRoute', $routeId);
@@ -196,7 +198,6 @@ trait ActionTrait {
             case RED_CITY:
                 self::incStat(1, STAT_RED_LOCATIONS_REACHED, $playerId);
                 $this->earnTicket($playerId);
-                $continuesPlaying = true;
                 break;
             case BLUE_CITY:
                 self::incStat(1, STAT_BLUE_LOCATIONS_REACHED, $playerId);
@@ -218,8 +219,10 @@ trait ActionTrait {
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
         //$this->checkVisibleTrainCarCards();
         self::dump('**************continuesPlaying****', $continuesPlaying);
-        if (!$loop && !$continuesPlaying) {
+        if (!$loop && !$continuesPlaying && $this->getRemainingTicketsCount($playerId) == 0) {
             $this->gamestate->nextState('nextPlayer');
+        }else{
+            $this->gamestate->nextState('continue');
         }
     }
 
