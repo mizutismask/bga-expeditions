@@ -3028,14 +3028,15 @@ var Expeditions = /** @class */ (function () {
      * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
      * need to make a choice of resources or tokens.
      */
-    Expeditions.prototype.addImageActionButton = function (id, div, color, tooltip, handler) {
+    Expeditions.prototype.addImageActionButton = function (id, div, color, tooltip, handler, parentClass) {
         if (color === void 0) { color = "gray"; }
+        if (parentClass === void 0) { parentClass = ""; }
         // this will actually make a transparent button
         this.addActionButton(id, div, handler, "", false, color);
         // remove boarder, for images it better without
         dojo.style(id, "border", "none");
         // but add shadow style (box-shadow, see css)
-        dojo.addClass(id, "shadow bgaimagebutton");
+        dojo.addClass(id, "shadow bgaimagebutton " + parentClass);
         // you can also add addition styles, such as background
         if (tooltip)
             dojo.attr(id, "title", tooltip);
@@ -3451,13 +3452,18 @@ var Expeditions = /** @class */ (function () {
             });
             _this.addImageActionButton("placeArrow_button_" + rawColorName, _this.createDiv("arrow " + rawColorName), colorName, label, function () {
                 _this.selectArrowColor(color);
-            });
+            }, "place-arrow-button");
         });
         //disable buttons if no more arrows or not possible to use a certain color
         var colors = possibleRoutes.map(function (r) { return r.color; });
         COLORS.forEach(function (c) {
             return dojo.toggleClass("placeArrow_button_" + getColor(c, false), "disabled", !colors.find(function (pc) { return pc == c; }) || remainingArrows[c] == 0);
         });
+        //auto select color if there is only one possible
+        var enabledButtons = dojo.query(".place-arrow-button:not(.disabled)");
+        if (enabledButtons.length == 1) {
+            enabledButtons[0].click();
+        }
     };
     /**
      * Check if player should be asked for the color he wants when he clicks on a double route.

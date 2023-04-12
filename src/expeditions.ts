@@ -316,13 +316,20 @@ class Expeditions implements ExpeditionsGame {
 	 * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
 	 * need to make a choice of resources or tokens.
 	 */
-	public addImageActionButton(id: string, div: string, color: string = "gray", tooltip: string, handler) {
+	public addImageActionButton(
+		id: string,
+		div: string,
+		color: string = "gray",
+		tooltip: string,
+		handler,
+		parentClass: string = ""
+	) {
 		// this will actually make a transparent button
 		(this as any).addActionButton(id, div, handler, "", false, color);
 		// remove boarder, for images it better without
 		dojo.style(id, "border", "none");
 		// but add shadow style (box-shadow, see css)
-		dojo.addClass(id, "shadow bgaimagebutton");
+		dojo.addClass(id, "shadow bgaimagebutton " + parentClass);
 		// you can also add addition styles, such as background
 		if (tooltip) dojo.attr(id, "title", tooltip);
 		return $(id);
@@ -830,7 +837,8 @@ class Expeditions implements ExpeditionsGame {
 				label,
 				() => {
 					this.selectArrowColor(color);
-				}
+				},
+				"place-arrow-button"
 			);
 		});
 
@@ -843,6 +851,12 @@ class Expeditions implements ExpeditionsGame {
 				!colors.find((pc) => pc == c) || remainingArrows[c] == 0
 			)
 		);
+
+		//auto select color if there is only one possible
+		const enabledButtons = dojo.query(".place-arrow-button:not(.disabled)");
+		if (enabledButtons.length == 1) {
+			enabledButtons[0].click();
+		}
 	}
 	/**
 	 * Check if player should be asked for the color he wants when he clicks on a double route.
