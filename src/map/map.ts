@@ -221,9 +221,7 @@ class TtrMap {
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
 				dojo.place(
-					`<div id="${destination}-route${
-						route.id
-					}-space${spaceIndex}" class="route-space" 
+					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
                     style="transform-origin:left center; transform: translate(${space.x + shiftX}px, ${
 						space.y + shiftY
 					}px) rotate(${space.angle}deg); width:${space.length}px"
@@ -337,27 +335,7 @@ class TtrMap {
 			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
 			const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
 			routeDiv.classList.add(this.getClaimedArrowBackgroundClass(route, claimedRoute));
-		});
-
-		claimedRoutes.forEach((claimedRoute) => {
-			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
-			const player = this.players.find((player) => Number(player.id) == claimedRoute.playerId);
-			this.setWagons(route, player, fromPlayerId, false);
-
-			if (this.game.isDoubleRouteForbidden()) {
-				const otherRoute = ROUTES.find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
-				otherRoute?.spaces.forEach((space, spaceIndex) => {
-					const spaceDiv = document.getElementById(`route-spaces-route${otherRoute.id}-space${spaceIndex}`);
-					if (spaceDiv) {
-						spaceDiv.classList.add("forbidden");
-						this.game.setTooltip(
-							spaceDiv.id,
-							`<strong><span style="color: darkred">${_("Important Note:")}</span> 
-                        ${_("In 2 or 3 player games, only one of the Double-Routes can be used.")}</strong>`
-						);
-					}
-				});
-			}
+			this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
 		});
 	}
 
@@ -378,6 +356,55 @@ class TtrMap {
 		}, 0);
 	}
 
+	private shiftArrowIfNeeded(route: Route, claimedRoute: ClaimedRoute, allClaimedRoutes: ClaimedRoute[]): void {
+		const shift:number = 25;
+		const sameRoutes = this.getAllRoutes().filter(
+			(r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((r) => r.routeId === route.id)
+		);
+		let blueRoute = sameRoutes.find((r) => r.color === BLUE);
+		const yellowRoute = sameRoutes.find((r) => r.color === YELLOW);
+		const redRoute = sameRoutes.find((r) => r.color === RED);
+		console.log("sameRoutes ", sameRoutes);
+		if (sameRoutes.length === 3) {
+			//shift needed, yellow is never moved
+			if (route.color == BLUE) this.shiftArrow(blueRoute, -shift);
+			if (route.color == RED) this.shiftArrow(redRoute, shift);
+		} else if (sameRoutes.length == 2) {
+			if (yellowRoute) {
+				//const otherColor = sameRoutes.find((r) => r.color !== YELLOW);
+				if (route.color != YELLOW) this.shiftArrow(route, -shift);
+			} else {
+				if (route.color == BLUE) this.shiftArrow(route, -shift);
+			}
+		}
+	}
+
+	private shiftArrow(route: Route, shift: number) {
+		console.log("shift arrow", route, shift);
+
+		const space = route.spaces.pop();
+		let angle = -space.angle;
+		while (angle < 0) {
+			angle += 180;
+		}
+		while (angle >= 180) {
+			angle -= 180;
+		}
+		let x = space.x;
+		let y = space.y;
+
+		// we shift a little the train car to let the other route visible
+		//x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
+		y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
+
+		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
+		let oldTransform = routeDiv.style.transform;
+		console.log("oldTransform", oldTransform);
+		let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
+		console.log("newTransform", newTransform);
+		
+		routeDiv.style.transform = newTransform;
+	}
 	/**
 	 * Place train car on a route space.
 	 * fromPlayerId is for animation (null for no animation)
@@ -491,7 +518,6 @@ class TtrMap {
 				)
 			);
 		}
-		console.log("after", this.getAllRoutes());
 	}
 
 	/**

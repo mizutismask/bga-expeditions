@@ -180,6 +180,7 @@ trait ActionTrait {
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'route' => $route,
+            'reverseDirection' => $reverseDirection,
             'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($color),

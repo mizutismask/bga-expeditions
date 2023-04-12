@@ -1618,21 +1618,7 @@ var TtrMap = /** @class */ (function () {
             var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
             var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
             routeDiv.classList.add(_this.getClaimedArrowBackgroundClass(route, claimedRoute));
-        });
-        claimedRoutes.forEach(function (claimedRoute) {
-            var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
-            var player = _this.players.find(function (player) { return Number(player.id) == claimedRoute.playerId; });
-            _this.setWagons(route, player, fromPlayerId, false);
-            if (_this.game.isDoubleRouteForbidden()) {
-                var otherRoute_1 = ROUTES.find(function (r) { return route.from == r.from && route.to == r.to && route.id != r.id; });
-                otherRoute_1 === null || otherRoute_1 === void 0 ? void 0 : otherRoute_1.spaces.forEach(function (space, spaceIndex) {
-                    var spaceDiv = document.getElementById("route-spaces-route".concat(otherRoute_1.id, "-space").concat(spaceIndex));
-                    if (spaceDiv) {
-                        spaceDiv.classList.add("forbidden");
-                        _this.game.setTooltip(spaceDiv.id, "<strong><span style=\"color: darkred\">".concat(_("Important Note:"), "</span> \n                        ").concat(_("In 2 or 3 player games, only one of the Double-Routes can be used."), "</strong>"));
-                    }
-                });
-            }
+            _this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
         });
     };
     TtrMap.prototype.animateWagonFromCounter = function (playerId, wagonId, toX, toY) {
@@ -1647,6 +1633,54 @@ var TtrMap = /** @class */ (function () {
             wagon.style.transition = "transform 0.5s";
             wagon.style.transform = "translate(".concat(toX, "px, ").concat(toY, "px");
         }, 0);
+    };
+    TtrMap.prototype.shiftArrowIfNeeded = function (route, claimedRoute, allClaimedRoutes) {
+        var shift = 25;
+        var sameRoutes = this.getAllRoutes().filter(function (r) { return route.from == r.from && route.to == r.to && allClaimedRoutes.find(function (r) { return r.routeId === route.id; }); });
+        var blueRoute = sameRoutes.find(function (r) { return r.color === BLUE; });
+        var yellowRoute = sameRoutes.find(function (r) { return r.color === YELLOW; });
+        var redRoute = sameRoutes.find(function (r) { return r.color === RED; });
+        console.log("sameRoutes ", sameRoutes);
+        if (sameRoutes.length === 3) {
+            //shift needed, yellow is never moved
+            if (route.color == BLUE)
+                this.shiftArrow(blueRoute, -shift);
+            if (route.color == RED)
+                this.shiftArrow(redRoute, shift);
+        }
+        else if (sameRoutes.length == 2) {
+            if (yellowRoute) {
+                //const otherColor = sameRoutes.find((r) => r.color !== YELLOW);
+                if (route.color != YELLOW)
+                    this.shiftArrow(route, -shift);
+            }
+            else {
+                if (route.color == BLUE)
+                    this.shiftArrow(route, -shift);
+            }
+        }
+    };
+    TtrMap.prototype.shiftArrow = function (route, shift) {
+        console.log("shift arrow", route, shift);
+        var space = route.spaces.pop();
+        var angle = -space.angle;
+        while (angle < 0) {
+            angle += 180;
+        }
+        while (angle >= 180) {
+            angle -= 180;
+        }
+        var x = space.x;
+        var y = space.y;
+        // we shift a little the train car to let the other route visible
+        //x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
+        y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
+        var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
+        var oldTransform = routeDiv.style.transform;
+        console.log("oldTransform", oldTransform);
+        var newTransform = oldTransform.replace(new RegExp("translate(.*px, .*px)"), "translate(".concat(x, "px, ").concat(y, "px"));
+        console.log("newTransform", newTransform);
+        routeDiv.style.transform = newTransform;
     };
     /**
      * Place train car on a route space.
@@ -1727,7 +1761,6 @@ var TtrMap = /** @class */ (function () {
                 return _this.setWagon(route, space, spaceIndex, player, fromPlayerId, phantom, isLowestFromDoubleHorizontalRoute);
             });
         }
-        console.log("after", this.getAllRoutes());
     };
     /**
      * Check if the route is mostly horizontal, and the lowest from a double route
@@ -3133,7 +3166,7 @@ var Expeditions = /** @class */ (function () {
                 dojo.place("<div class=\"player-turn-order\">".concat(_("Player ${number}").replace("${number}", "<strong>".concat(player.playerNo, "</strong>")), "</div>"), "player_board_".concat(player.id));
             }
             if (_this.getPlayerId() === playerId) {
-                dojo.place("<div class=\"xpd-help-icon\">?</div>", "player_board_".concat(player.id));
+                dojo.place("<div id=\"player-help\" class=\"xpd-help-icon\">?</div>", "player_board_".concat(player.id));
             }
         });
         this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
@@ -3673,6 +3706,7 @@ var Expeditions = /** @class */ (function () {
             {
                 playerId: playerId,
                 routeId: route.id,
+                reverseDirection: notif.args.reverseDirection,
             },
         ], playerId);
     };

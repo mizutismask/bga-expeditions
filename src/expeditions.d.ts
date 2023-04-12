@@ -208,6 +208,7 @@ interface NotifClaimedRouteArgs {
 	playerId: number;
 	route: Route;
 	removeCards: TrainCar[];
+	reverseDirection: boolean;
 }
 
 interface NotifDestinationCompletedArgs {

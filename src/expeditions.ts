@@ -492,7 +492,7 @@ class Expeditions implements ExpeditionsGame {
 
 			if (this.getPlayerId() === playerId) {
 				dojo.place(
-					`<div class="xpd-help-icon">?</div>`,
+					`<div id="player-help" class="xpd-help-icon">?</div>`,
 					`player_board_${player.id}`
 				);
 			}
@@ -1125,6 +1125,7 @@ class Expeditions implements ExpeditionsGame {
 				{
 					playerId,
 					routeId: route.id,
+					reverseDirection:notif.args.reverseDirection,
 				},
 			],
 			playerId
