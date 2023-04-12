@@ -1507,7 +1507,7 @@ var TtrMap = /** @class */ (function () {
         return ROUTES[routeId];
     };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
-        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N").concat(getColor(route.color, false)
+        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "N" : "R").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
     };
@@ -1618,6 +1618,7 @@ var TtrMap = /** @class */ (function () {
             var route = _this.getAllRoutes().find(function (r) { return r.id == claimedRoute.routeId; });
             var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
             routeDiv.classList.add(_this.getClaimedArrowBackgroundClass(route, claimedRoute));
+            routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
             _this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
         });
     };
@@ -5037,9 +5038,9 @@ var CardsManager = /** @class */ (function (_super) {
             to: getCityName(destination.to),
         }), "</div>\n\t\t<div class=\"xpd-location\">").concat(dojo.string.substitute(_("${location}"), {
             location: getCityLocation(destination.to),
-        }), "</div>\n\t\t<div class=\"xpd-city-desc\">").concat(dojo.string.substitute(_("${description}"), {
+        }), "</div>\n\t\t<div class=\"xpd-city-desc\"><p>").concat(dojo.string.substitute(_("${description}"), {
             description: getCityDescription(destination.to),
-        }), "</div>\n\t\t");
+        }), "</p></div>\n\t\t");
         return tooltip;
     };
     CardsManager.prototype.setupNewCard = function (cardDiv, cardType) {

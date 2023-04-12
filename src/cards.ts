@@ -68,9 +68,9 @@ class CardsManager extends CardManager<Destination> {
 		<div class="xpd-location">${dojo.string.substitute(_("${location}"), {
 			location: getCityLocation(destination.to),
 		})}</div>
-		<div class="xpd-city-desc">${dojo.string.substitute(_("${description}"), {
+		<div class="xpd-city-desc"><p>${dojo.string.substitute(_("${description}"), {
 			description: getCityDescription(destination.to),
-		})}</div>
+		})}</p></div>
 		`;
 		return tooltip;
 	}
