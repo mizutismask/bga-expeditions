@@ -3313,9 +3313,11 @@ var Expeditions = /** @class */ (function () {
             .forEach(function (button) { return button.parentElement.removeChild(button); });
         if (!$("claimRouteConfirm_button")) {
             this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
-                return _this.claimRoute(route.id, _this.selectedArrowColor);
+                dojo.destroy("claimRouteConfirm_button");
+                _this.claimRoute(route.id, _this.selectedArrowColor);
             });
         }
+        this.startActionTimer("claimRouteConfirm_button", 5);
         /*
         const selectedColor = this.playerTable.getSelectedColor();
 

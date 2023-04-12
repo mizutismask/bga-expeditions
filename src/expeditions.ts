@@ -665,11 +665,14 @@ class Expeditions implements ExpeditionsGame {
 			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
 			.forEach((button) => button.parentElement.removeChild(button));
 
-			if(!$(`claimRouteConfirm_button`)){
-				(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () =>
-					this.claimRoute(route.id, this.selectedArrowColor)
-				);
-			}
+		if (!$(`claimRouteConfirm_button`)) {
+			(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
+				dojo.destroy(`claimRouteConfirm_button`);
+				this.claimRoute(route.id, this.selectedArrowColor);
+			});
+		}
+
+		this.startActionTimer(`claimRouteConfirm_button`, 5);
 		/*
 		const selectedColor = this.playerTable.getSelectedColor();
 
