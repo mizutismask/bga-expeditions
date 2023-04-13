@@ -2911,7 +2911,7 @@ var Expeditions = /** @class */ (function () {
      * Show selectable routes, and make train car draggable.
      */
     Expeditions.prototype.onEnteringChooseAction = function (args) {
-        this.setGamestateDescription(args.canTakeTrainCarCards ? "" : "NoTrainCarsCards");
+        this.setGamestateDescription(args.canPass ? "MainActionDone" : "");
         var currentPlayerActive = this.isCurrentPlayerActive();
         this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
@@ -3416,7 +3416,9 @@ var Expeditions = /** @class */ (function () {
             window.clearInterval(this.actionTimerId);
         }
         var chooseActionArgs = this.gamedatas.gamestate.args;
-        this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
+        if (!chooseActionArgs.canPass) {
+            this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
+        }
         this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
             _this.useTicket();
         });

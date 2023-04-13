@@ -175,7 +175,7 @@ class Expeditions implements ExpeditionsGame {
 	 * Show selectable routes, and make train car draggable.
 	 */
 	private onEnteringChooseAction(args: EnteringChooseActionArgs) {
-		this.setGamestateDescription(args.canTakeTrainCarCards ? "" : "NoTrainCarsCards");
+		this.setGamestateDescription(args.canPass ? "MainActionDone" : "");
 
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 		this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
@@ -778,8 +778,9 @@ class Expeditions implements ExpeditionsGame {
 
 		const chooseActionArgs = this.gamedatas.gamestate.args as EnteringChooseActionArgs;
 
-		this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
-
+		if (!chooseActionArgs.canPass) {
+			this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
+		}
 		this.addImageActionButton(
 			"useTicket_button",
 			this.createDiv("expTicket", "expTicket"),
@@ -826,11 +827,7 @@ class Expeditions implements ExpeditionsGame {
 		this.selectedArrowColor = color;
 		this.selectedColorChanged(color);
 		dojo.query(".place-arrow-button.selected").removeClass("selected");
-		dojo.toggleClass(
-			"placeArrow_button_" + getColor(color, false),
-			"selected",
-			this.selectedArrowColor!=null
-		);
+		dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != null);
 	}
 
 	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }, possibleRoutes: Route[]) {
