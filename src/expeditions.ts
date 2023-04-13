@@ -825,6 +825,12 @@ class Expeditions implements ExpeditionsGame {
 	private selectArrowColor(color: number) {
 		this.selectedArrowColor = color;
 		this.selectedColorChanged(color);
+		dojo.query(".place-arrow-button.selected").removeClass("selected");
+		dojo.toggleClass(
+			"placeArrow_button_" + getColor(color, false),
+			"selected",
+			this.selectedArrowColor!=null
+		);
 	}
 
 	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }, possibleRoutes: Route[]) {

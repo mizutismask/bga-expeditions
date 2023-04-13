@@ -1582,6 +1582,13 @@ html,
   margin: -5px 0px;
 }
 
+.place-arrow-button.selected {
+  background-color: #56a8d1;
+}
+.place-arrow-button.selected:hover {
+  background-color: #4b94b9;
+}
+
 /* Makes the svg arrow to change color */
 .arrow {
   width: 36px;

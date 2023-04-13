@@ -3445,6 +3445,8 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.selectArrowColor = function (color) {
         this.selectedArrowColor = color;
         this.selectedColorChanged(color);
+        dojo.query(".place-arrow-button.selected").removeClass("selected");
+        dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != null);
     };
     Expeditions.prototype.addArrowsColoredButtons = function (remainingArrows, possibleRoutes) {
         var _this = this;
