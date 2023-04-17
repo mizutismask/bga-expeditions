@@ -56,7 +56,7 @@ class Expeditions extends Table {
             REMAINING_BLUE_ARROWS => 13,
             REMAINING_RED_ARROWS => 14,
             NEW_LOOP_COLOR => 15,
-            MAIN_ACTION_DONE=>16,
+            MAIN_ACTION_DONE => 16,
             // options
             SHOW_TURN_ORDER => 110, // last turn is the id of the player starting last turn, 0 if it's not last turn
         ]);
@@ -177,9 +177,9 @@ class Expeditions extends Table {
         // share informations (for player panels)
         foreach ($result['players'] as $playerId => &$player) {
             $player['playerNo'] = intval($player['playerNo']);
-            //$player['trainCarsCount'] = intval($this->trainCars->countCardInLocation('hand', $playerId));
+            $player['ticketsCount'] = $this->getRemainingTicketsCount($playerId);
             $player['destinationsCount'] = intval($this->destinations->countCardInLocation('hand', $playerId));
-            $player['remainingTrainCarsCount'] = $this->getRemainingTrainCarsCount($playerId);
+            $player['revealedTokensBackCount'] = $this->getRevealedTokensBackCount($playerId);
 
             if ($isEnd) {
                 $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));

@@ -37,9 +37,9 @@ interface ClaimedRoute {
 
 interface ExpeditionsPlayer extends Player {
 	playerNo: number;
-	trainCarsCount: number;
+	ticketsCount: number;
 	destinationsCount: number;
-	remainingTrainCarsCount: number;
+	revealedTokensBackCount: number;
 
 	// for end score
 	completedDestinations?: Destination[];
@@ -92,7 +92,7 @@ interface ExpeditionsGame extends Game {
 	destinationCardsManager: CardsManager;
 	clickedRoute(route: Route): void;
 	toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination): void;
-	destinationSelectionChanged(selectedIds:number[]):void;
+	destinationSelectionChanged(selectedIds: number[]): void;
 	setPlayerTablePosition(left: boolean): void;
 	getZoom(): number;
 	getCurrentPlayer(): ExpeditionsPlayer;

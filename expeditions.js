@@ -1507,7 +1507,7 @@ var TtrMap = /** @class */ (function () {
         return ROUTES[routeId];
     };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
-        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "N" : "R").concat(getColor(route.color, false)
+        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
     };
@@ -1625,7 +1625,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.animateWagonFromCounter = function (playerId, wagonId, toX, toY) {
         var wagon = document.getElementById(wagonId);
         var wagonBR = wagon.getBoundingClientRect();
-        var fromBR = document.getElementById("train-car-counter-".concat(playerId, "-wrapper")).getBoundingClientRect();
+        var fromBR = document.getElementById("revealed-tokens-back-counter-".concat(playerId, "-wrapper")).getBoundingClientRect();
         var zoom = this.game.getZoom();
         var fromX = (fromBR.x - wagonBR.x) / zoom;
         var fromY = (fromBR.y - wagonBR.y) / zoom;
@@ -2265,7 +2265,7 @@ var TrainCarSelection = /** @class */ (function () {
             var _loop_1 = function (i) {
                 setTimeout(function () {
                     dojo.place("\n                    <div id=\"animated-train-car-card-0-".concat(i, "\" class=\"animated train-car-card from-hidden-pile\"></div>\n                    "), document.getElementById("train-car-deck-hidden-pile"));
-                    animateCardToCounterAndDestroy(_this.game, "animated-train-car-card-0-".concat(i), "train-car-card-counter-".concat(playerId, "-wrapper"));
+                    animateCardToCounterAndDestroy(_this.game, "animated-train-car-card-0-".concat(i), "tickets-counter-".concat(playerId, "-wrapper"));
                 }, 200 * i);
             };
             for (var i = 0; i < number; i++) {
@@ -2793,8 +2793,8 @@ var ACTION_TIMER_DURATION = 8;
 var Expeditions = /** @class */ (function () {
     function Expeditions() {
         this.playerTable = null;
-        this.trainCarCounters = [];
-        this.trainCarCardCounters = [];
+        this.revealedTokensBackCounters = [];
+        this.ticketsCounters = [];
         this.destinationCardCounters = [];
         this.animations = [];
         this.isTouch = window.matchMedia("(hover: none)").matches;
@@ -3144,25 +3144,22 @@ var Expeditions = /** @class */ (function () {
             var playerId = Number(player.id);
             document.getElementById("overall_player_board_".concat(player.id)).dataset.playerColor = player.color;
             // public counters
-            dojo.place("<div class=\"counters\">\n                <div id=\"train-car-counter-".concat(player.id, "-wrapper\" class=\"counter train-car-counter\">\n                    <div class=\"icon train\" data-player-color=\"").concat(player.color, "\" data-color-blind-player-no=\"").concat(player.playerNo, "\"></div> \n                    <span id=\"train-car-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"train-car-card-counter-").concat(player.id, "-wrapper\" class=\"counter train-car-card-counter\">\n                    <div class=\"icon train-car-card-icon\"></div> \n                    <span id=\"train-car-card-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"destinations-counter-").concat(player.id, "-wrapper\" class=\"counter destinations-counter\">\n                    <div class=\"icon destination-card\"></div> \n                    <span id=\"completed-destinations-counter-").concat(player.id, "\">").concat(_this.getPlayerId() !== playerId ? "?" : "", "</span>/<span id=\"destination-card-counter-").concat(player.id, "\"></span>\n                </div>\n            </div>"), "player_board_".concat(player.id));
-            var trainCarCounter = new ebg.counter();
-            trainCarCounter.create("train-car-counter-".concat(player.id));
-            trainCarCounter.setValue(player.remainingTrainCarsCount);
-            _this.trainCarCounters[playerId] = trainCarCounter;
-            var trainCarCardCounter = new ebg.counter();
-            trainCarCardCounter.create("train-car-card-counter-".concat(player.id));
-            trainCarCardCounter.setValue(player.trainCarsCount);
-            _this.trainCarCardCounters[playerId] = trainCarCardCounter;
+            dojo.place("<div class=\"counters\">\n\t\t\t\t<div id=\"tickets-counter-".concat(player.id, "-wrapper\" class=\"counter tickets-counter\">\n                    <div class=\"icon train-car-card-icon\"></div> \n                    <span id=\"tickets-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"destinations-counter-").concat(player.id, "-wrapper\" class=\"counter destinations-counter\">\n                    <div class=\"icon destination-card\"></div> \n                    <span id=\"completed-destinations-counter-").concat(player.id, "\">").concat(_this.getPlayerId() !== playerId ? "?" : "", "</span>/<span id=\"destination-card-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"revealed-tokens-back-counter-").concat(player.id, "-wrapper\" class=\"counter revealed-tokens-back-counter\">\n                    <div class=\"icon train\" data-player-color=\"").concat(player.color, "\" data-color-blind-player-no=\"").concat(player.playerNo, "\"></div> \n                    <span id=\"revealed-tokens-back-counter-").concat(player.id, "\"></span> / 4\n                </div>\n                \n            </div>"), "player_board_".concat(player.id));
+            var revealedTokensBackCounter = new ebg.counter();
+            revealedTokensBackCounter.create("revealed-tokens-back-counter-".concat(player.id));
+            revealedTokensBackCounter.setValue(player.revealedTokensBackCount);
+            _this.revealedTokensBackCounters[playerId] = revealedTokensBackCounter;
+            var ticketsCounter = new ebg.counter();
+            ticketsCounter.create("tickets-counter-".concat(player.id));
+            ticketsCounter.setValue(player.ticketsCount);
+            _this.ticketsCounters[playerId] = ticketsCounter;
             var destinationCardCounter = new ebg.counter();
             destinationCardCounter.create("destination-card-counter-".concat(player.id));
             destinationCardCounter.setValue(player.destinationsCount);
             _this.destinationCardCounters[playerId] = destinationCardCounter;
-            // private counters
-            if (_this.getPlayerId() === playerId) {
-                _this.completedDestinationsCounter = new ebg.counter();
-                _this.completedDestinationsCounter.create("completed-destinations-counter-".concat(player.id));
-                _this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
-            }
+            _this.completedDestinationsCounter = new ebg.counter();
+            _this.completedDestinationsCounter.create("completed-destinations-counter-".concat(player.id));
+            _this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
             if (gamedatas.showTurnOrder && gamedatas.gamestate.id < 30) {
                 // don't show turn order if game is already started (refresh or TB game)
                 dojo.place("<div class=\"player-turn-order\">".concat(_("Player ${number}").replace("${number}", "<strong>".concat(player.playerNo, "</strong>")), "</div>"), "player_board_".concat(player.id));
@@ -3171,8 +3168,8 @@ var Expeditions = /** @class */ (function () {
                 dojo.place("<div id=\"player-help\" class=\"xpd-help-icon\">?</div>", "player_board_".concat(player.id));
             }
         });
-        this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
-        this.setTooltipToClass("train-car-card-counter", _("Train cars cards"));
+        this.setTooltipToClass("revealed-tokens-back-counter", _("Revealed destinations reached"));
+        this.setTooltipToClass("tickets-counter", _("Remaining tickets"));
         this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
         this.setTooltipToClass("xpd-help-icon", "<div class=\"help-card recto\"></div>");
         this.setTooltipToClass("fa-star", "<div class=\"help-card verso\"></div>");
@@ -3719,8 +3716,8 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.notif_claimedRoute = function (notif) {
         var playerId = notif.args.playerId;
         var route = notif.args.route;
-        this.trainCarCardCounters[playerId].incValue(-route.number);
-        this.trainCarCounters[playerId].incValue(-route.number);
+        this.ticketsCounters[playerId].incValue(-route.number);
+        this.revealedTokensBackCounters[playerId].incValue(-route.number);
         this.map.setClaimedRoutes([
             {
                 playerId: playerId,

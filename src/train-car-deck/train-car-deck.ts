@@ -132,7 +132,7 @@ class TrainCarSelection {
 					animateCardToCounterAndDestroy(
 						this.game,
 						`animated-train-car-card-0-${i}`,
-						`train-car-card-counter-${playerId}-wrapper`
+						`tickets-counter-${playerId}-wrapper`
 					);
 				}, 200 * i);
 			}

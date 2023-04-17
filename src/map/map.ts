@@ -335,6 +335,7 @@ class TtrMap {
 			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
 			const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
 			routeDiv.classList.add(this.getClaimedArrowBackgroundClass(route, claimedRoute));
+			routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
 			this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
 		});
 	}
@@ -343,7 +344,7 @@ class TtrMap {
 		const wagon = document.getElementById(wagonId);
 		const wagonBR = wagon.getBoundingClientRect();
 
-		const fromBR = document.getElementById(`train-car-counter-${playerId}-wrapper`).getBoundingClientRect();
+		const fromBR = document.getElementById(`revealed-tokens-back-counter-${playerId}-wrapper`).getBoundingClientRect();
 
 		const zoom = this.game.getZoom();
 		const fromX = (fromBR.x - wagonBR.x) / zoom;
@@ -357,7 +358,7 @@ class TtrMap {
 	}
 
 	private shiftArrowIfNeeded(route: Route, claimedRoute: ClaimedRoute, allClaimedRoutes: ClaimedRoute[]): void {
-		const shift:number = 25;
+		const shift: number = 25;
 		const sameRoutes = this.getAllRoutes().filter(
 			(r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((r) => r.routeId === route.id)
 		);
@@ -402,7 +403,7 @@ class TtrMap {
 		console.log("oldTransform", oldTransform);
 		let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
 		console.log("newTransform", newTransform);
-		
+
 		routeDiv.style.transform = newTransform;
 	}
 	/**

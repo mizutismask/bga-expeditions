@@ -77,7 +77,7 @@ trait DestinationDeckTrait {
      * Select kept destination card for pick destination action. 
      * Unused destination cards are discarded.
      */
-    public function keepAdditionalDestinationCards(int $playerId,int $keptDestinationsId, int $discardedDestinationId) {
+    public function keepAdditionalDestinationCards(int $playerId, int $keptDestinationsId, int $discardedDestinationId) {
         $this->keepDestinationCards($playerId, $keptDestinationsId, $discardedDestinationId);
     }
 
@@ -121,6 +121,10 @@ trait DestinationDeckTrait {
         return $this->getUniqueBoolValueFromDB("SELECT `revealed` FROM destination WHERE `card_id` = $destinationId");
     }
 
+    public function getRevealedTokensBackCount($playerId) {
+        return $this->getUniqueIntValueFromDB("SELECT count(`card_id`) FROM destination WHERE `card_location_arg` = $playerId AND `revealed` = 1 and `completed` = 1");
+    }
+
     /**
      * place a number of destinations cards to pick$playerId.
      */
@@ -160,7 +164,7 @@ trait DestinationDeckTrait {
                 throw new BgaUserException("Selected cards are not available.");
             }
 
-            if($this->isDestinationRevealed($discardedDestinationId)){
+            if ($this->isDestinationRevealed($discardedDestinationId)) {
                 $discardedCard = $this->getDestinationFromDb($this->destinations->getCard($discardedDestinationId));
                 $message = clienttranslate('${player_name} ${gainsloses} ${absdelta} point discarding a revealed destination : ${to}');
                 $this->incScore($playerId, -1, $message, [
@@ -176,8 +180,8 @@ trait DestinationDeckTrait {
 
             $remainingCardsInPick = intval($this->destinations->countCardInLocation("pick$playerId"));
             if ($remainingCardsInPick > 0) {
-                    // we discard remaining cards in pick
-                    $this->destinations->moveAllCardsInLocationKeepOrder("pick$playerId", 'discard');
+                // we discard remaining cards in pick
+                $this->destinations->moveAllCardsInLocationKeepOrder("pick$playerId", 'discard');
             }
         }
         $this->notifyAllPlayers('destinationsPicked', clienttranslate('${player_name} trades ${count} destination'), [

@@ -19,8 +19,8 @@ class Expeditions implements ExpeditionsGame {
 	private endScore: EndScore;
 	private selectedArrowColor: number;
 
-	private trainCarCounters: Counter[] = [];
-	private trainCarCardCounters: Counter[] = [];
+	private revealedTokensBackCounters: Counter[] = [];
+	private ticketsCounters: Counter[] = [];
 	private destinationCardCounters: Counter[] = [];
 	private completedDestinationsCounter: Counter;
 
@@ -444,15 +444,9 @@ class Expeditions implements ExpeditionsGame {
 			// public counters
 			dojo.place(
 				`<div class="counters">
-                <div id="train-car-counter-${player.id}-wrapper" class="counter train-car-counter">
-                    <div class="icon train" data-player-color="${player.color}" data-color-blind-player-no="${
-					player.playerNo
-				}"></div> 
-                    <span id="train-car-counter-${player.id}"></span>
-                </div>
-                <div id="train-car-card-counter-${player.id}-wrapper" class="counter train-car-card-counter">
+				<div id="tickets-counter-${player.id}-wrapper" class="counter tickets-counter">
                     <div class="icon train-car-card-icon"></div> 
-                    <span id="train-car-card-counter-${player.id}"></span>
+                    <span id="tickets-counter-${player.id}"></span>
                 </div>
                 <div id="destinations-counter-${player.id}-wrapper" class="counter destinations-counter">
                     <div class="icon destination-card"></div> 
@@ -460,31 +454,37 @@ class Expeditions implements ExpeditionsGame {
 					this.getPlayerId() !== playerId ? "?" : ""
 				}</span>/<span id="destination-card-counter-${player.id}"></span>
                 </div>
+                <div id="revealed-tokens-back-counter-${
+					player.id
+				}-wrapper" class="counter revealed-tokens-back-counter">
+                    <div class="icon train" data-player-color="${player.color}" data-color-blind-player-no="${
+					player.playerNo
+				}"></div> 
+                    <span id="revealed-tokens-back-counter-${player.id}"></span> / 4
+                </div>
+                
             </div>`,
 				`player_board_${player.id}`
 			);
 
-			const trainCarCounter = new ebg.counter();
-			trainCarCounter.create(`train-car-counter-${player.id}`);
-			trainCarCounter.setValue(player.remainingTrainCarsCount);
-			this.trainCarCounters[playerId] = trainCarCounter;
+			const revealedTokensBackCounter = new ebg.counter();
+			revealedTokensBackCounter.create(`revealed-tokens-back-counter-${player.id}`);
+			revealedTokensBackCounter.setValue(player.revealedTokensBackCount);
+			this.revealedTokensBackCounters[playerId] = revealedTokensBackCounter;
 
-			const trainCarCardCounter = new ebg.counter();
-			trainCarCardCounter.create(`train-car-card-counter-${player.id}`);
-			trainCarCardCounter.setValue(player.trainCarsCount);
-			this.trainCarCardCounters[playerId] = trainCarCardCounter;
+			const ticketsCounter = new ebg.counter();
+			ticketsCounter.create(`tickets-counter-${player.id}`);
+			ticketsCounter.setValue(player.ticketsCount);
+			this.ticketsCounters[playerId] = ticketsCounter;
 
 			const destinationCardCounter = new ebg.counter();
 			destinationCardCounter.create(`destination-card-counter-${player.id}`);
 			destinationCardCounter.setValue(player.destinationsCount);
 			this.destinationCardCounters[playerId] = destinationCardCounter;
 
-			// private counters
-			if (this.getPlayerId() === playerId) {
-				this.completedDestinationsCounter = new ebg.counter();
-				this.completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
-				this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
-			}
+			this.completedDestinationsCounter = new ebg.counter();
+			this.completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
+			this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
 
 			if (gamedatas.showTurnOrder && gamedatas.gamestate.id < 30) {
 				// don't show turn order if game is already started (refresh or TB game)
@@ -502,8 +502,8 @@ class Expeditions implements ExpeditionsGame {
 			}
 		});
 
-		this.setTooltipToClass("train-car-counter", _("Remaining train cars"));
-		this.setTooltipToClass("train-car-card-counter", _("Train cars cards"));
+		this.setTooltipToClass("revealed-tokens-back-counter", _("Revealed destinations reached"));
+		this.setTooltipToClass("tickets-counter", _("Remaining tickets"));
 		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
 		this.setTooltipToClass("xpd-help-icon", `<div class="help-card recto"></div>`);
 		this.setTooltipToClass("fa-star", `<div class="help-card verso"></div>`);
@@ -1146,8 +1146,8 @@ class Expeditions implements ExpeditionsGame {
 		const playerId = notif.args.playerId;
 		const route: Route = notif.args.route;
 
-		this.trainCarCardCounters[playerId].incValue(-route.number);
-		this.trainCarCounters[playerId].incValue(-route.number);
+		this.ticketsCounters[playerId].incValue(-route.number);
+		this.revealedTokensBackCounters[playerId].incValue(-route.number);
 		this.map.setClaimedRoutes(
 			[
 				{

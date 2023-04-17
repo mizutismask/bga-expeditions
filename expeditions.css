@@ -83,7 +83,8 @@
   box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
-.player-board .player-name, .player-board .player-name a {
+.player-board .player-name,
+.player-board .player-name a {
   color: white !important;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
@@ -91,7 +92,7 @@
   font-weight: bold;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
-.player-board .train-car-counter {
+.player-board .revealed-tokens-back-counter {
   flex-direction: column;
   width: 64px;
   height: 64px;
@@ -100,17 +101,17 @@
   position: relative;
   color: black;
 }
-.player-board .train-car-counter span {
+.player-board .revealed-tokens-back-counter span {
   margin-top: -5px;
 }
-.player-board .train-car-counter.animate-low-count {
+.player-board .revealed-tokens-back-counter.animate-low-count {
   z-index: 1;
   animation: train-car-low-count-animation 1.5s 1 forwards ease-in-out;
 }
-.player-board .train-car-counter.animate-low-count:after {
+.player-board .revealed-tokens-back-counter.animate-low-count:after {
   animation: train-car-low-count-after-animation 1.5s 1 forwards ease-in-out;
 }
-.player-board .train-car-counter:after {
+.player-board .revealed-tokens-back-counter:after {
   content: "";
   position: absolute;
   width: 48px;
