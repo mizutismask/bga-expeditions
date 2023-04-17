@@ -109,59 +109,10 @@
 	background-size: auto 100%;
 	background-repeat: no-repeat;
 
-	&.train-car-card-icon {
-		background-position: #{0 * 100% / 3} 50%;
-	}
-
 	&.destination-card {
-		background-position: #{1 * 100% / 3} 50%;
-	}
-
-	&.completed-destination {
-		background-position: #{2 * 100% / 3} 50%;
-	}
-
-	&.uncompleted-destination {
-		background-position: #{3 * 100% / 3} 50%;
-	}
-
-	&.train {
-		background-image: url("img/train-icons.png");
-
-		&[data-player-color="df3e33"] {
-			background-position: #{3 * 100% / 4} 0%;
-		}
-
-		&[data-player-color="30b0e1"] {
-			background-position: #{1 * 100% / 4} 0%;
-		}
-
-		&[data-player-color="77bd25"] {
-			background-position: #{0 * 100% / 4} 0%;
-		}
-
-		&[data-player-color="df74b2"] {
-			background-position: #{4 * 100% / 4} 0%;
-		}
-
-		&[data-player-color="d8d7d7"] {
-			background-position: #{2 * 100% / 4} 0%;
-		}
-	}
-
-	&.train-car-color {
-		background-image: url("img/train-cards.jpg");
-		background-repeat: no-repeat;
-		background-size: 900%;
-		height: 21px;
-		border-radius: 2px;
-		vertical-align: middle;
-
-		@for $i from 0 through 8 {
-			&[data-color="#{$i}"] {
-				background-position: #{$i * 100% / 8} 50%;
-			}
-		}
+		background-image: url("img/destination-card-backgroundP.jpg");
+		height: 24px;
+		width: 18px;
 	}
 
 	&.expTicket {
