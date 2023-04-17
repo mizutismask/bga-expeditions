@@ -445,7 +445,7 @@ class Expeditions implements ExpeditionsGame {
 			dojo.place(
 				`<div class="counters">
 				<div id="tickets-counter-${player.id}-wrapper" class="counter tickets-counter">
-                    <div class="icon train-car-card-icon"></div> 
+                    <div class="icon expTicket"></div> 
                     <span id="tickets-counter-${player.id}"></span>
                 </div>
                 <div id="destinations-counter-${player.id}-wrapper" class="counter destinations-counter">
@@ -457,9 +457,7 @@ class Expeditions implements ExpeditionsGame {
                 <div id="revealed-tokens-back-counter-${
 					player.id
 				}-wrapper" class="counter revealed-tokens-back-counter">
-                    <div class="icon train" data-player-color="${player.color}" data-color-blind-player-no="${
-					player.playerNo
-				}"></div> 
+                    <div class="icon token" data-player-color="${player.color}"></div> 
                     <span id="revealed-tokens-back-counter-${player.id}"></span> / 4
                 </div>
                 
@@ -498,7 +496,12 @@ class Expeditions implements ExpeditionsGame {
 			}
 
 			if (this.getPlayerId() === playerId) {
-				dojo.place(`<div id="player-help" class="xpd-help-icon">?</div>`, `player_board_${player.id}`);
+				dojo.place(
+					`<div class="counters">
+						<div id="player-help" class="xpd-help-icon">?</div>
+					</div>`,
+					`player_board_${player.id}`
+				);
 			}
 		});
 

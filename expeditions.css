@@ -5,53 +5,14 @@
   background-position: bottom;
   background-size: cover;
 }
-.player-board[data-player-color=df3e33]::before {
+.player-board[data-player-color=d8d7d7]::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 52px;
-  background: url("img/playerboard-background.png"), #df3e33;
-  background-size: cover;
-  background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px #8181c7;
-  border-radius: 8px;
-}
-.player-board[data-player-color="30b0e1"]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 52px;
-  background: url("img/playerboard-background.png"), #30b0e1;
-  background-size: cover;
-  background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px #8181c7;
-  border-radius: 8px;
-}
-.player-board[data-player-color="77bd25"]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 52px;
-  background: url("img/playerboard-background.png"), #77bd25;
-  background-size: cover;
-  background-repeat: no-repeat;
-  box-shadow: 0 0 3px 2px #8181c7;
-  border-radius: 8px;
-}
-.player-board[data-player-color=eca51c]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 52px;
-  background: url("img/playerboard-background.png"), #eca51c;
+  background: url("img/playerboard-background.png"), #d8d7d7;
   background-size: cover;
   background-repeat: no-repeat;
   box-shadow: 0 0 3px 2px #8181c7;
@@ -70,14 +31,53 @@
   box-shadow: 0 0 3px 2px #8181c7;
   border-radius: 8px;
 }
-.player-board[data-player-color=d8d7d7]::before {
+.player-board[data-player-color=eca51c]::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 52px;
-  background: url("img/playerboard-background.png"), #d8d7d7;
+  background: url("img/playerboard-background.png"), #eca51c;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px #8181c7;
+  border-radius: 8px;
+}
+.player-board[data-player-color="77bd25"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #77bd25;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px #8181c7;
+  border-radius: 8px;
+}
+.player-board[data-player-color="30b0e1"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #30b0e1;
+  background-size: cover;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 3px 2px #8181c7;
+  border-radius: 8px;
+}
+.player-board[data-player-color=df3e33]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: url("img/playerboard-background.png"), #df3e33;
   background-size: cover;
   background-repeat: no-repeat;
   box-shadow: 0 0 3px 2px #8181c7;
@@ -92,36 +92,6 @@
   font-weight: bold;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
-.player-board .revealed-tokens-back-counter {
-  flex-direction: column;
-  width: 64px;
-  height: 64px;
-  background: url("img/playerboard-train-background.png") no-repeat center;
-  margin: -5px -10px -10px -10px;
-  position: relative;
-  color: black;
-}
-.player-board .revealed-tokens-back-counter span {
-  margin-top: -5px;
-}
-.player-board .revealed-tokens-back-counter.animate-low-count {
-  z-index: 1;
-  animation: train-car-low-count-animation 1.5s 1 forwards ease-in-out;
-}
-.player-board .revealed-tokens-back-counter.animate-low-count:after {
-  animation: train-car-low-count-after-animation 1.5s 1 forwards ease-in-out;
-}
-.player-board .revealed-tokens-back-counter:after {
-  content: "";
-  position: absolute;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  left: 50%;
-  top: 50%;
-  margin-left: -24px;
-  margin-top: -24px;
-}
 .player-board .player-turn-order {
   background: rgba(255, 255, 255, 0.6666666667);
   color: black;
@@ -130,6 +100,27 @@
   padding: 2px;
   text-align: center;
   border-radius: 8px;
+}
+.player-board .token {
+  background-image: url("img/tokens.png");
+}
+.player-board .token[data-player-color=d8d7d7] {
+  background-position: 0% 50%;
+}
+.player-board .token[data-player-color=df74b2] {
+  background-position: 20% 50%;
+}
+.player-board .token[data-player-color=eca51c] {
+  background-position: 40% 50%;
+}
+.player-board .token[data-player-color="77bd25"] {
+  background-position: 60% 50%;
+}
+.player-board .token[data-player-color="30b0e1"] {
+  background-position: 80% 50%;
+}
+.player-board .token[data-player-color=df3e33] {
+  background-position: 100% 50%;
 }
 
 @keyframes train-car-low-count-animation {
@@ -238,6 +229,12 @@
 }
 .icon.train-car-color[data-color="8"] {
   background-position: 100% 50%;
+}
+.icon.expTicket {
+  height: 23px;
+  width: 36px;
+  background-size: contain;
+  border-radius: 2px;
 }
 
 #map-zoom-wrapper {
