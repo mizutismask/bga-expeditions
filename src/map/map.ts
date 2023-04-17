@@ -208,9 +208,20 @@ class TtrMap {
 	}
 
 	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
-		return `arrow${this.getArrowSize(route)}${claimed.reverseDirection ? "R" : "N"}${getColor(route.color, false)
+		const origin = CITIES.find((city) => city.id == this.getRouteOrigin(route, claimed));
+		const destination = CITIES.find((city) => city.id == this.getRouteDestination(route, claimed));
+		let reverse = destination.x < origin.x;
+		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
 			.toUpperCase()}`;
+	}
+
+	private getRouteOrigin(route: Route, claimed: ClaimedRoute) {
+		return claimed.reverseDirection ? route.to : route.from;
+	}
+
+	private getRouteDestination(route: Route, claimed: ClaimedRoute) {
+		return claimed.reverseDirection ? route.from : route.to;
 	}
 
 	private createRouteSpaces(
@@ -344,7 +355,9 @@ class TtrMap {
 		const wagon = document.getElementById(wagonId);
 		const wagonBR = wagon.getBoundingClientRect();
 
-		const fromBR = document.getElementById(`revealed-tokens-back-counter-${playerId}-wrapper`).getBoundingClientRect();
+		const fromBR = document
+			.getElementById(`revealed-tokens-back-counter-${playerId}-wrapper`)
+			.getBoundingClientRect();
 
 		const zoom = this.game.getZoom();
 		const fromX = (fromBR.x - wagonBR.x) / zoom;

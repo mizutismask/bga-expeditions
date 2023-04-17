@@ -1507,9 +1507,19 @@ var TtrMap = /** @class */ (function () {
         return ROUTES[routeId];
     };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
-        return "arrow".concat(this.getArrowSize(route)).concat(claimed.reverseDirection ? "R" : "N").concat(getColor(route.color, false)
+        var _this = this;
+        var origin = CITIES.find(function (city) { return city.id == _this.getRouteOrigin(route, claimed); });
+        var destination = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimed); });
+        var reverse = destination.x < origin.x;
+        return "arrow".concat(this.getArrowSize(route)).concat(reverse ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
+    };
+    TtrMap.prototype.getRouteOrigin = function (route, claimed) {
+        return claimed.reverseDirection ? route.to : route.from;
+    };
+    TtrMap.prototype.getRouteDestination = function (route, claimed) {
+        return claimed.reverseDirection ? route.from : route.to;
     };
     TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
         var _this = this;
@@ -1625,7 +1635,9 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.animateWagonFromCounter = function (playerId, wagonId, toX, toY) {
         var wagon = document.getElementById(wagonId);
         var wagonBR = wagon.getBoundingClientRect();
-        var fromBR = document.getElementById("revealed-tokens-back-counter-".concat(playerId, "-wrapper")).getBoundingClientRect();
+        var fromBR = document
+            .getElementById("revealed-tokens-back-counter-".concat(playerId, "-wrapper"))
+            .getBoundingClientRect();
         var zoom = this.game.getZoom();
         var fromX = (fromBR.x - wagonBR.x) / zoom;
         var fromY = (fromBR.y - wagonBR.y) / zoom;
