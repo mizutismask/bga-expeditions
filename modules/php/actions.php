@@ -214,6 +214,7 @@ trait ActionTrait {
         }
         if ($loop) {
             self::incStat(1, STAT_LOOPS, $playerId);
+            $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         }
 
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
