@@ -24,16 +24,17 @@ trait DebugUtilTrait {
         //$this->gamestate->changeActivePlayer(2343492);
     }
 
-    function debugRevealCards() {
+    function debugRevealCards(bool $all = false) {
         $players = $this->getPlayersIds();
+        $restriction = $all ? "" : " limit 4";
         foreach ($players as $playerId) {
-            self::DbQuery("UPDATE `destination` set `revealed` = true WHERE `card_location_arg`= $playerId limit 4");
+            self::DbQuery("UPDATE `destination` set `revealed` = true WHERE `card_location_arg`= $playerId" . $restriction);
         }
         $this->gamestate->jumpToState(ST_PLAYER_CHOOSE_ACTION);
     }
 
-    function rc() {
-        $this->debugRevealCards();
+    function rc(bool $all = false) {
+        $this->debugRevealCards($all);
     }
 
     function debugSetDestinationInHand($cardType, $playerId) {
@@ -73,22 +74,55 @@ trait DebugUtilTrait {
         $this->destinations->pickCardsForLocation($moveNumber, 'deck', 'discard');
     }
 
-    function debugClaimRoute($playerId, $routeId) {
-        self::DbQuery("INSERT INTO `claimed_routes` (`route_id`, `player_id`) VALUES ($routeId, $playerId)");
+    function exps() {
+        $this->debugClaimExpeditionRoutes();
+    }
 
-        $route = $this->ROUTES[$routeId];
-        $points = $this->ROUTE_POINTS[$route->number];
+    function clear() {
+        self::DbQuery("DELETE FROM `claimed_routes`");
+        $this->deleteGlobalVariable(LAST_BLUE_ROUTE);
+        $this->deleteGlobalVariable(LAST_YELLOW_ROUTE);
+        $this->deleteGlobalVariable(LAST_RED_ROUTE);
+    }
 
-        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} gains ${points} point(s) by claiming route from ${from} to ${to} with ${number} train car(s) : ${colors}'), [
+    function debugClaimExpeditionRoutes(int $arrowsNb = 15) {
+        foreach (COLORS as $color) {
+            for ($i = 0; $i < $arrowsNb; $i++) {
+                $claimableRoutes = $this->claimableRoutes($this->getActivePlayerId());
+                $claimableRoutes = array_filter($claimableRoutes,fn ($r)=>$r->color==$color);
+                if ($claimableRoutes) {
+                    $claimableIds = array_values(array_map(fn ($r) => $r->id, $claimableRoutes));
+                    $claimedId = $claimableIds[bga_rand(0, count($claimableIds) - 1)];
+                    $route = $this->array_find($this->ROUTES, fn ($r) => $r->id == $claimedId);
+                    $this->debugClaimRoute($this->getActivePlayerId(), $route);
+                }else{
+                    break;
+                }
+            }
+        }
+    }
+
+    function debugClaimRoute($playerId, $route) {
+        $reverseDirection =  intval($this->guessDirection($route));
+        self::DbQuery("INSERT INTO `claimed_routes` (`route_id`, `player_id`,`reverse_direction`) VALUES ($route->id, $playerId, $reverseDirection)");
+
+        $remainingArrows = $this->getRemainingArrows($route->color);
+        $this->setRemainingArrows($route->color, $remainingArrows - 1);
+
+        $this->setLastClaimedRoute(new ClaimedRoute([
+            'route_id' => $route->id,
+            'player_id' => $playerId,
+            'reverse_direction' => $reverseDirection,
+        ]), $route->color);
+
+        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
-            'points' => $points,
             'route' => $route,
-            'from' => $this->CITIES[$route->from],
-            'to' => $this->CITIES[$route->to],
-            'number' => $route->number,
-            'removeCards' => [],
-            'colors' => [],
+            'reverseDirection' => $reverseDirection,
+            'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
+            'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
+            'color' => $this->getColorName($route->color),
         ]);
     }
 
