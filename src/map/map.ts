@@ -210,7 +210,7 @@ class TtrMap {
 	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
 		const origin = CITIES.find((city) => city.id == this.getRouteOrigin(route, claimed));
 		const destination = CITIES.find((city) => city.id == this.getRouteDestination(route, claimed));
-		let reverse = destination.x < origin.x;
+		let reverse = Math.abs(destination.x - origin.x) > 5 ? destination.x < origin.x : destination.y < origin.y;
 		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
 			.toUpperCase()}`;
@@ -325,13 +325,15 @@ class TtrMap {
 	 * Highlight removable route wagons.
 	 */
 	public setRemovableRoutes(removable: boolean, routes: Route[]) {
-		dojo.query(".wagon").removeClass("removable");
+		dojo.query(".route-space").removeClass("removable");
 		if (removable) {
 			routes.forEach((route) => {
 				this.getAllRoutes()
 					.find((r) => r.id == route.id)
 					.spaces.forEach((_, index) =>
-						document.getElementById(`wagon-route${route.id}-space${index}`)?.classList.add("removable")
+						document
+							.getElementById(`route-spaces-route${route.id}-space${index}`)
+							?.classList.add("removable")
 					);
 			});
 		}
@@ -349,6 +351,15 @@ class TtrMap {
 			routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
 			this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
 		});
+	}
+
+	/**
+	 * Removes the arrow from a route.
+	 * @param route
+	 */
+	public unclaimRoute(route: Route) {
+		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);		
+		dojo.removeClass(`route-spaces-route${route.id}-space${0}`, ARROW_CLASSES_PERMUTATIONS.join(" "));
 	}
 
 	private animateWagonFromCounter(playerId: number, wagonId: string, toX: number, toY: number) {
@@ -396,7 +407,7 @@ class TtrMap {
 	private shiftArrow(route: Route, shift: number) {
 		console.log("shift arrow", route, shift);
 
-		const space = route.spaces.pop();
+		const space = route.spaces[0];
 		let angle = -space.angle;
 		while (angle < 0) {
 			angle += 180;

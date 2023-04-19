@@ -95,17 +95,21 @@ trait ArgsTrait {
         $playerId = intval(self::getActivePlayerId());
         return [
             'possibleRoutes' => $this->claimableRoutes($playerId),
-            'unclaimableRoutes' => array_map(
-                fn ($claimedRoute) => $this->getRoute($claimedRoute->routeId),
-                array_values(
-                    array_filter(
-                        [$this->getLastClaimedRoute(BLUE), $this->getLastClaimedRoute(YELLOW), $this->getLastClaimedRoute(RED)],
-                        fn ($route) => $route != null
-                    )
-                )
-            ),
+            'unclaimableRoutes' => $this->unclaimableRoutes(),
             'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)]
         ];
+    }
+
+    function unclaimableRoutes() {
+        return array_map(
+            fn ($claimedRoute) => $this->getRoute($claimedRoute->routeId),
+            array_values(
+                array_filter(
+                    [$this->getLastClaimedRoute(BLUE), $this->getLastClaimedRoute(YELLOW), $this->getLastClaimedRoute(RED)],
+                    fn ($route) => $route != null
+                )
+            ),
+        );
     }
 
     function argConfirmTunnel() {

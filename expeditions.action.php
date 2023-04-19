@@ -125,6 +125,16 @@ class action_expeditions extends APP_GameAction {
         self::ajaxResponse();
     }
 
+    public function unclaimRoute() {
+        self::setAjaxMode();
+
+        $routeId = self::getArg("routeId", AT_posint, true);
+
+        $this->game->unclaimRoute($routeId);
+
+        self::ajaxResponse();
+    }
+
     public function pass() {
         self::setAjaxMode();
 

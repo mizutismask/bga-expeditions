@@ -1510,7 +1510,7 @@ var TtrMap = /** @class */ (function () {
         var _this = this;
         var origin = CITIES.find(function (city) { return city.id == _this.getRouteOrigin(route, claimed); });
         var destination = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimed); });
-        var reverse = destination.x < origin.x;
+        var reverse = Math.abs(destination.x - origin.x) > 5 ? destination.x < origin.x : destination.y < origin.y;
         return "arrow".concat(this.getArrowSize(route)).concat(reverse ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
@@ -1609,12 +1609,16 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setRemovableRoutes = function (removable, routes) {
         var _this = this;
-        dojo.query(".wagon").removeClass("removable");
+        dojo.query(".route-space").removeClass("removable");
         if (removable) {
             routes.forEach(function (route) {
                 _this.getAllRoutes()
                     .find(function (r) { return r.id == route.id; })
-                    .spaces.forEach(function (_, index) { var _a; return (_a = document.getElementById("wagon-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable"); });
+                    .spaces.forEach(function (_, index) {
+                    var _a;
+                    return (_a = document
+                        .getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable");
+                });
             });
         }
     };
@@ -1631,6 +1635,14 @@ var TtrMap = /** @class */ (function () {
             routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
             _this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
         });
+    };
+    /**
+     * Removes the arrow from a route.
+     * @param route
+     */
+    TtrMap.prototype.unclaimRoute = function (route) {
+        var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
+        dojo.removeClass("route-spaces-route".concat(route.id, "-space").concat(0), ARROW_CLASSES_PERMUTATIONS.join(" "));
     };
     TtrMap.prototype.animateWagonFromCounter = function (playerId, wagonId, toX, toY) {
         var wagon = document.getElementById(wagonId);
@@ -1675,7 +1687,7 @@ var TtrMap = /** @class */ (function () {
     };
     TtrMap.prototype.shiftArrow = function (route, shift) {
         console.log("shift arrow", route, shift);
-        var space = route.spaces.pop();
+        var space = route.spaces[0];
         var angle = -space.angle;
         while (angle < 0) {
             angle += 180;
@@ -2802,6 +2814,14 @@ var SCORE_MS = 1500;
 var isDebug = window.location.host == "studio.boardgamearena.com";
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var ACTION_TIMER_DURATION = 8;
+var ARROW_CLASSES_PERMUTATIONS = [
+    "arrowLRB", "arrowLRY", "arrowLRR",
+    "arrowLNB", "arrowLNY", "arrowLNR",
+    "arrowMRB", "arrowMRY", "arrowMRR",
+    "arrowMNB", "arrowMNY", "arrowMNR",
+    "arrowSRB", "arrowSRY", "arrowSRR",
+    "arrowSNB", "arrowSNY", "arrowSNR",
+];
 var Expeditions = /** @class */ (function () {
     function Expeditions() {
         this.playerTable = null;
@@ -3314,19 +3334,30 @@ var Expeditions = /** @class */ (function () {
             needToCheckDoubleRoute = this.askDoubleRouteActive();
         }
         //const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
-        if (!this.canClaimRoute(route, 0)) {
+        if (!this.canClaimRoute(route, 0) && !dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), "removable")) {
             return;
         }
         document
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
-        if (!$("claimRouteConfirm_button")) {
-            this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
-                dojo.destroy("claimRouteConfirm_button");
-                _this.claimRoute(route.id, _this.selectedArrowColor);
-            });
+        if (dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), "removable")) {
+            if (!$("unclaimRouteConfirm_button")) {
+                this.addActionButton("unclaimRouteConfirm_button", _("Confirm"), function () {
+                    dojo.destroy("unclaimRouteConfirm_button");
+                    _this.unclaimRoute(route.id);
+                });
+            }
+            this.startActionTimer("unclaimRouteConfirm_button", 1);
         }
-        this.startActionTimer("claimRouteConfirm_button", 5);
+        else {
+            if (!$("claimRouteConfirm_button")) {
+                this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
+                    dojo.destroy("claimRouteConfirm_button");
+                    _this.claimRoute(route.id, _this.selectedArrowColor);
+                });
+            }
+            this.startActionTimer("claimRouteConfirm_button", 1);
+        }
         /*
         const selectedColor = this.playerTable.getSelectedColor();
 
@@ -3587,6 +3618,17 @@ var Expeditions = /** @class */ (function () {
         });
     };
     /**
+     * Unclaim a route (with a ticket).
+     */
+    Expeditions.prototype.unclaimRoute = function (routeId) {
+        if (!this.checkAction("unclaimRoute")) {
+            return;
+        }
+        this.takeAction("unclaimRoute", {
+            routeId: routeId,
+        });
+    };
+    /**
      * Use ticket.
      */
     Expeditions.prototype.useTicket = function () {
@@ -3649,6 +3691,7 @@ var Expeditions = /** @class */ (function () {
         var notifs = [
             ["newCardsOnTable", ANIMATION_MS],
             ["claimedRoute", ANIMATION_MS],
+            ["unclaimedRoute", ANIMATION_MS],
             ["destinationCompleted", ANIMATION_MS],
             ["points", 1],
             ["destinationsPicked", 1],
@@ -3737,6 +3780,13 @@ var Expeditions = /** @class */ (function () {
                 reverseDirection: notif.args.reverseDirection,
             },
         ], playerId);
+    };
+    /**
+     * Update unclaimed routes.
+     */
+    Expeditions.prototype.notif_unclaimedRoute = function (notif) {
+        var route = notif.args.route;
+        this.map.unclaimRoute(route);
     };
     /**
      * Mark a destination as complete.

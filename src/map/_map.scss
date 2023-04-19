@@ -278,6 +278,11 @@
 			background-position: center center;
 		}
 	}
+
+	&.removable {
+		pointer-events: auto;
+		cursor: crosshair;
+	}
 }
 
 @keyframes selectable-road-animation {
@@ -326,11 +331,6 @@
 
 	&.highlight {
 		z-index: 11;
-	}
-
-	&.removable {
-		pointer-events: auto;
-		cursor: crosshair;
 	}
 }
 

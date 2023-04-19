@@ -211,6 +211,10 @@ interface NotifClaimedRouteArgs {
 	reverseDirection: boolean;
 }
 
+interface NotifUnclaimedRouteArgs {
+	route: Route;
+}
+
 interface NotifDestinationCompletedArgs {
 	playerId: number;
 	destination: Destination;

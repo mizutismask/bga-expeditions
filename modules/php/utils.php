@@ -179,6 +179,32 @@ trait UtilTrait {
         return array_map(fn ($dbResult) => new ClaimedRoute($dbResult), array_values($dbResults));
     }
 
+    function getClaimedRoute($routeId) {
+        $sql = "SELECT route_id, player_id, reverse_direction FROM claimed_routes WHERE route_id = $routeId ";
+        $dbResult = self::getObjectFromDB($sql, true);
+        return new ClaimedRoute($dbResult);
+    }
+
+    function getRouteOrigin(Route $route, ClaimedRoute $claimed) {
+        return $claimed->reverseDirection ? $route->to : $route->from;
+    }
+
+    function getRouteDestination(Route $route, ClaimedRoute $claimed) {
+        return $claimed->reverseDirection ? $route->from : $route->to;
+    }
+
+    function getRouteOriginFromRouteId(int $routeId) {
+        $claimedRoute = $this->getClaimedRoute($routeId);
+        $route = $this->getRoute($routeId);
+        return $this->getRouteOrigin($route, $claimedRoute);
+    }
+
+    function getRouteDestinationFromRouteId(int $routeId) {
+        $claimedRoute = $this->getClaimedRoute($routeId);
+        $route = $this->getRoute($routeId);
+        return $this->getRouteDestination($route, $claimedRoute);
+    }
+
     function getPlayersIds() {
         return array_keys($this->loadPlayersBasicInfos());
     }
@@ -249,20 +275,18 @@ trait UtilTrait {
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
-    function checkCompletedDestinations(int $playerId, Route $claimedRoute, bool $reverseDirection) {
-
-        $target = $reverseDirection ? $claimedRoute->from : $claimedRoute->to;
+    function checkCompletedDestinations(int $playerId, int $reachedTarget) {
 
         $handDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand'));
         $sharedDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('shared'));
 
         foreach ($handDestinations as $destination) {
-            if ($destination->to == $target) {
+            if ($destination->to == $reachedTarget) {
                 $this->completeDestination($destination->location_arg, $destination, false);
             }
         }
         foreach ($sharedDestinations as $destination) {
-            if ($destination->to == $target) {
+            if ($destination->to == $reachedTarget) {
                 $this->completeDestination($playerId, $destination, true);
             }
         }

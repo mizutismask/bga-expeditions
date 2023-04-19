@@ -496,6 +496,10 @@
   background: url("img/forbidden.png") no-repeat;
   background-position: center center;
 }
+.route-space.removable {
+  pointer-events: auto;
+  cursor: crosshair;
+}
 
 @keyframes selectable-road-animation {
   from {
@@ -644,10 +648,6 @@
 }
 .wagon.highlight {
   z-index: 11;
-}
-.wagon.removable {
-  pointer-events: auto;
-  cursor: crosshair;
 }
 
 #map[data-big-shadows=true] .wagon[data-player-color="3"] {

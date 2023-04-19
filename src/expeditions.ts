@@ -5,6 +5,14 @@ const isDebug = window.location.host == "studio.boardgamearena.com";
 const log = isDebug ? console.log.bind(window.console) : function () {};
 
 const ACTION_TIMER_DURATION = 8;
+const ARROW_CLASSES_PERMUTATIONS : string[] = [
+	"arrowLRB", "arrowLRY", "arrowLRR",
+	"arrowLNB","arrowLNY","arrowLNR",
+	"arrowMRB", "arrowMRY", "arrowMRR",
+	"arrowMNB","arrowMNY","arrowMNR",
+	"arrowSRB", "arrowSRY", "arrowSRR",
+	"arrowSNB","arrowSNY","arrowSNR",
+];
 
 class Expeditions implements ExpeditionsGame {
 	private gamedatas: ExpeditionsGamedatas;
@@ -660,7 +668,7 @@ class Expeditions implements ExpeditionsGame {
 
 		//const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
 
-		if (!this.canClaimRoute(route, 0)) {
+		if (!this.canClaimRoute(route, 0) && !dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
 			return;
 		}
 
@@ -668,14 +676,24 @@ class Expeditions implements ExpeditionsGame {
 			.querySelectorAll(`[id^="claimRouteWithColor_button"]`)
 			.forEach((button) => button.parentElement.removeChild(button));
 
-		if (!$(`claimRouteConfirm_button`)) {
-			(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
-				dojo.destroy(`claimRouteConfirm_button`);
-				this.claimRoute(route.id, this.selectedArrowColor);
-			});
-		}
+		if (dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
+			if (!$(`unclaimRouteConfirm_button`)) {
+				(this as any).addActionButton(`unclaimRouteConfirm_button`, _("Confirm"), () => {
+					dojo.destroy(`unclaimRouteConfirm_button`);
+					this.unclaimRoute(route.id);
+				});
+			}
+			this.startActionTimer(`unclaimRouteConfirm_button`, 1);
+		} else {
+			if (!$(`claimRouteConfirm_button`)) {
+				(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
+					dojo.destroy(`claimRouteConfirm_button`);
+					this.claimRoute(route.id, this.selectedArrowColor);
+				});
+			}
 
-		this.startActionTimer(`claimRouteConfirm_button`, 5);
+			this.startActionTimer(`claimRouteConfirm_button`, 1);
+		}
 		/*
 		const selectedColor = this.playerTable.getSelectedColor();
 
@@ -990,6 +1008,19 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
+	 * Unclaim a route (with a ticket).
+	 */
+	public unclaimRoute(routeId: number) {
+		if (!(this as any).checkAction("unclaimRoute")) {
+			return;
+		}
+
+		this.takeAction("unclaimRoute", {
+			routeId,
+		});
+	}
+
+	/**
 	 * Use ticket.
 	 */
 	public useTicket() {
@@ -1063,6 +1094,7 @@ class Expeditions implements ExpeditionsGame {
 		const notifs = [
 			["newCardsOnTable", ANIMATION_MS],
 			["claimedRoute", ANIMATION_MS],
+			["unclaimedRoute", ANIMATION_MS],
 			["destinationCompleted", ANIMATION_MS],
 			["points", 1],
 			["destinationsPicked", 1],
@@ -1161,6 +1193,14 @@ class Expeditions implements ExpeditionsGame {
 			],
 			playerId
 		);
+	}
+
+	/**
+	 * Update unclaimed routes.
+	 */
+	notif_unclaimedRoute(notif: Notif<NotifUnclaimedRouteArgs>) {		
+		const route: Route = notif.args.route;
+		this.map.unclaimRoute(route);
 	}
 
 	/**
