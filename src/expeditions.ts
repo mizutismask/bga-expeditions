@@ -5,13 +5,25 @@ const isDebug = window.location.host == "studio.boardgamearena.com";
 const log = isDebug ? console.log.bind(window.console) : function () {};
 
 const ACTION_TIMER_DURATION = 8;
-const ARROW_CLASSES_PERMUTATIONS : string[] = [
-	"arrowLRB", "arrowLRY", "arrowLRR",
-	"arrowLNB","arrowLNY","arrowLNR",
-	"arrowMRB", "arrowMRY", "arrowMRR",
-	"arrowMNB","arrowMNY","arrowMNR",
-	"arrowSRB", "arrowSRY", "arrowSRR",
-	"arrowSNB","arrowSNY","arrowSNR",
+const ARROW_CLASSES_PERMUTATIONS: string[] = [
+	"arrowLRB",
+	"arrowLRY",
+	"arrowLRR",
+	"arrowLNB",
+	"arrowLNY",
+	"arrowLNR",
+	"arrowMRB",
+	"arrowMRY",
+	"arrowMRR",
+	"arrowMNB",
+	"arrowMNY",
+	"arrowMNR",
+	"arrowSRB",
+	"arrowSRY",
+	"arrowSRR",
+	"arrowSNB",
+	"arrowSNY",
+	"arrowSNR",
 ];
 
 class Expeditions implements ExpeditionsGame {
@@ -1097,6 +1109,7 @@ class Expeditions implements ExpeditionsGame {
 			["unclaimedRoute", ANIMATION_MS],
 			["destinationCompleted", ANIMATION_MS],
 			["points", 1],
+			["ticketUsed", 1],
 			["destinationsPicked", 1],
 			//["trainCarPicked", ANIMATION_MS],
 			["freeTunnel", 2000],
@@ -1181,7 +1194,7 @@ class Expeditions implements ExpeditionsGame {
 		const playerId = notif.args.playerId;
 		const route: Route = notif.args.route;
 
-		this.ticketsCounters[playerId].incValue(-route.number);
+		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
 		this.revealedTokensBackCounters[playerId].incValue(-route.number);
 		this.map.setClaimedRoutes(
 			[
@@ -1196,11 +1209,21 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
-	 * Update unclaimed routes.
+	 * Update unclaimed route.
 	 */
-	notif_unclaimedRoute(notif: Notif<NotifUnclaimedRouteArgs>) {		
+	notif_unclaimedRoute(notif: Notif<NotifUnclaimedRouteArgs>) {
+		const playerId = notif.args.playerId;
 		const route: Route = notif.args.route;
 		this.map.unclaimRoute(route);
+		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+	}
+
+	/**
+	 * Update unclaimed routes.
+	 */
+	notif_ticketUsed(notif: Notif<NotifTicketUsedArgs>) {
+		const playerId = notif.args.playerId;
+		this.ticketsCounters[playerId].incValue(-1);
 	}
 
 	/**

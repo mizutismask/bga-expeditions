@@ -209,10 +209,17 @@ interface NotifClaimedRouteArgs {
 	route: Route;
 	removeCards: TrainCar[];
 	reverseDirection: boolean;
+	ticketsGained: number;
 }
 
 interface NotifUnclaimedRouteArgs {
+	playerId: number;
 	route: Route;
+	ticketsGained: number;
+}
+
+interface NotifTicketUsedArgs {
+	playerId: number;
 }
 
 interface NotifDestinationCompletedArgs {

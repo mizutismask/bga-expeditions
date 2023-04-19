@@ -2815,12 +2815,24 @@ var isDebug = window.location.host == "studio.boardgamearena.com";
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var ACTION_TIMER_DURATION = 8;
 var ARROW_CLASSES_PERMUTATIONS = [
-    "arrowLRB", "arrowLRY", "arrowLRR",
-    "arrowLNB", "arrowLNY", "arrowLNR",
-    "arrowMRB", "arrowMRY", "arrowMRR",
-    "arrowMNB", "arrowMNY", "arrowMNR",
-    "arrowSRB", "arrowSRY", "arrowSRR",
-    "arrowSNB", "arrowSNY", "arrowSNR",
+    "arrowLRB",
+    "arrowLRY",
+    "arrowLRR",
+    "arrowLNB",
+    "arrowLNY",
+    "arrowLNR",
+    "arrowMRB",
+    "arrowMRY",
+    "arrowMRR",
+    "arrowMNB",
+    "arrowMNY",
+    "arrowMNR",
+    "arrowSRB",
+    "arrowSRY",
+    "arrowSRR",
+    "arrowSNB",
+    "arrowSNY",
+    "arrowSNR",
 ];
 var Expeditions = /** @class */ (function () {
     function Expeditions() {
@@ -3694,6 +3706,7 @@ var Expeditions = /** @class */ (function () {
             ["unclaimedRoute", ANIMATION_MS],
             ["destinationCompleted", ANIMATION_MS],
             ["points", 1],
+            ["ticketUsed", 1],
             ["destinationsPicked", 1],
             //["trainCarPicked", ANIMATION_MS],
             ["freeTunnel", 2000],
@@ -3771,7 +3784,7 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.notif_claimedRoute = function (notif) {
         var playerId = notif.args.playerId;
         var route = notif.args.route;
-        this.ticketsCounters[playerId].incValue(-route.number);
+        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         this.revealedTokensBackCounters[playerId].incValue(-route.number);
         this.map.setClaimedRoutes([
             {
@@ -3782,11 +3795,20 @@ var Expeditions = /** @class */ (function () {
         ], playerId);
     };
     /**
-     * Update unclaimed routes.
+     * Update unclaimed route.
      */
     Expeditions.prototype.notif_unclaimedRoute = function (notif) {
+        var playerId = notif.args.playerId;
         var route = notif.args.route;
         this.map.unclaimRoute(route);
+        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+    };
+    /**
+     * Update unclaimed routes.
+     */
+    Expeditions.prototype.notif_ticketUsed = function (notif) {
+        var playerId = notif.args.playerId;
+        this.ticketsCounters[playerId].incValue(-1);
     };
     /**
      * Mark a destination as complete.

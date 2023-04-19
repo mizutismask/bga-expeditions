@@ -119,7 +119,7 @@ trait ActionTrait {
         }
 
         $this->dbIncField("player", "player_remaining_tickets", -1, "player_id", $playerId);
-        self::notifyAllPlayers('msg', clienttranslate('${player_name} uses 1 ticket'), [
+        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} uses 1 ticket'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
         ]);
@@ -174,6 +174,10 @@ trait ActionTrait {
             'reverse_direction' => $reverseDirection,
         ]), $color);
 
+        $target = $reverseDirection ? $route->from : $route->to;
+        $destinationColor = $this->getLocationColor($target);
+        $this->applyDestinationColorEffect($playerId, $target, $color);
+
         self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
@@ -182,6 +186,7 @@ trait ActionTrait {
             'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($color),
+            'ticketsGained' => $destinationColor == RED ? 1 : 0,
         ]);
 
         if ($this->getGameStateValue(NEW_LOOP_COLOR)) {
@@ -198,8 +203,6 @@ trait ActionTrait {
             $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         }
 
-        $target = $reverseDirection ? $route->from : $route->to;
-        $this->applyDestinationColorEffect($playerId, $target, $color);
 
         // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
         //$this->checkVisibleTrainCarCards();
@@ -257,6 +260,10 @@ trait ActionTrait {
         $remainingArrows = $this->getRemainingArrows($route->color);
         $this->setRemainingArrows($route->color, $remainingArrows + 1);
 
+        $target = $claimedRoute->reverseDirection ? $route->from : $route->to;
+        $destinationColor = $this->getLocationColor($target);
+        $this->applyDestinationColorEffect($playerId, $target, $route->color);
+
         self::notifyAllPlayers('unclaimedRoute', clienttranslate('${player_name} removes a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
@@ -265,6 +272,7 @@ trait ActionTrait {
             'from' => $this->getLocationName($claimedRoute->reverseDirection ? $route->to : $route->from),
             'to' => $this->getLocationName($claimedRoute->reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($route->color),
+            'ticketsGained' => $destinationColor == RED ? 1 : 0,
         ]);
 
         $loop = $this->checkLoopAfterUnclaim($playerId, $route, $claimedRoute->reverseDirection);
@@ -272,11 +280,6 @@ trait ActionTrait {
             self::incStat(1, STAT_LOOPS, $playerId);
             $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         }
-
-        
-        $target = $claimedRoute->reverseDirection ? $route->from : $route->to;
-        $this->applyDestinationColorEffect($playerId, $target, $route->color);
-        
         self::DbQuery("DELETE FROM `claimed_routes` where `route_id` = $routeId");
     }
 
@@ -323,7 +326,7 @@ trait ActionTrait {
         $claimedRoute = $this->getClaimedRoute($unclaimedRoute->id);
 
         $origin = $this->getRouteOrigin($route, $claimedRoute);
-      
+
         $claimedRoutes = $this->getClaimedRoutes();
         $comingOut = array_filter($claimedRoutes, fn ($route) => $this->getRouteOriginFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
         $comingIn = array_filter($claimedRoutes, fn ($route) => $this->getRouteDestinationFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
