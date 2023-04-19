@@ -315,8 +315,8 @@ trait UtilTrait {
             'player_name' => $this->getPlayerName($ownerId),
             'destination' => $destination,
             'to' => $this->CITIES[$destination->to],
-            'revealed' => $revealed,
             'destinationRoutes' => [],
+            'revealedTokenBack' => $revealed?1:0,
         ]);
     }
 

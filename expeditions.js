@@ -3785,7 +3785,6 @@ var Expeditions = /** @class */ (function () {
         var playerId = notif.args.playerId;
         var route = notif.args.route;
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
-        this.revealedTokensBackCounters[playerId].incValue(-route.number);
         this.map.setClaimedRoutes([
             {
                 playerId: playerId,
@@ -3814,10 +3813,12 @@ var Expeditions = /** @class */ (function () {
      * Mark a destination as complete.
      */
     Expeditions.prototype.notif_destinationCompleted = function (notif) {
+        var playerId = notif.args.playerId;
         var destination = notif.args.destination;
         this.completedDestinationsCounter.incValue(1);
         this.gamedatas.completedDestinations.push(destination);
         this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
+        this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         playSound("ttr-completed-in-game");
         this.disableNextMoveSound();
     };

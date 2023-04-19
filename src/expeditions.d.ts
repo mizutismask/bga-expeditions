@@ -226,6 +226,7 @@ interface NotifDestinationCompletedArgs {
 	playerId: number;
 	destination: Destination;
 	destinationRoutes: Route[];
+	revealedTokenBack: number;
 }
 
 interface NotifFreeTunnelArgs {

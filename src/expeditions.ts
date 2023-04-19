@@ -1195,7 +1195,6 @@ class Expeditions implements ExpeditionsGame {
 		const route: Route = notif.args.route;
 
 		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
-		this.revealedTokensBackCounters[playerId].incValue(-route.number);
 		this.map.setClaimedRoutes(
 			[
 				{
@@ -1230,10 +1229,12 @@ class Expeditions implements ExpeditionsGame {
 	 * Mark a destination as complete.
 	 */
 	notif_destinationCompleted(notif: Notif<NotifDestinationCompletedArgs>) {
+		const playerId = notif.args.playerId;
 		const destination: Destination = notif.args.destination;
 		this.completedDestinationsCounter.incValue(1);
 		this.gamedatas.completedDestinations.push(destination);
-		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
+		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);		
+		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
 		playSound(`ttr-completed-in-game`);
 		(this as any).disableNextMoveSound();
