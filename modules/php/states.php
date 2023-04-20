@@ -43,19 +43,19 @@ trait StateTrait {
 
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 
-        // check if it was last action from player who started last turn
-        if ($lastTurn == $playerId) {
+        // check if it was last action from player who started last turn or if there is no arrow left
+        if ($lastTurn == $playerId || $this->noArrowLeft()) {
             $this->gamestate->nextState('endScore');
         } else {
             if ($lastTurn == 0) {
                 // check if last turn is started    
-                if ($this->getLowestTrainCarsCount() <= TRAIN_CARS_NUMBER_TO_START_LAST_TURN) {
+                $todoDests = $this->getUncompletedDestinationsIds($playerId);
+                if (count($todoDests) == 0) {
                     self::setGameStateValue(LAST_TURN, $playerId);
 
-                    self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has ${number} train cars or less, starting final turn !'), [
+                    self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has no more destination cards, starting final turn !'), [
                         'playerId' => $playerId,
                         'player_name' => $this->getPlayerName($playerId),
-                        'number' => TRAIN_CARS_NUMBER_TO_START_LAST_TURN,
                     ]);
                 }
             }

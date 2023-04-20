@@ -185,7 +185,7 @@ class Expeditions extends Table {
 
             if ($isEnd) {
                 $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));
-                $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUnompletedDestinationsIds($playerId)));
+                $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
                 $player['longestPathLength'] = $this->getLongestPath($playerId)->length;
             } else {
                 $player['completedDestinations'] = [];
@@ -231,9 +231,7 @@ class Expeditions extends Table {
             // game is over
             return 100;
         }
-
-        // ratio of remaining train cars (based on player with lowest count)
-        return 100 * (TRAIN_CARS_PER_PLAYER - $this->getLowestTrainCarsCount()) / TRAIN_CARS_PER_PLAYER;
+        return 100 * $this->getHighestCompletedDestinationsCount() / $this->getInitialDestinationCardNumber();
     }
 
     //////////////////////////////////////////////////////////////////////////////

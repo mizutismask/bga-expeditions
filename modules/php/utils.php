@@ -152,8 +152,8 @@ trait UtilTrait {
         return TICKETS_PER_PLAYER;
     }
 
-    function getLowestTrainCarsCount() {
-        return $this->getUniqueIntValueFromDB("SELECT min(`player_remaining_train_cars`) FROM player");
+    function getHighestCompletedDestinationsCount() {
+        return $this->getUniqueIntValueFromDB("SELECT max(complete) FROM (select count(`card_location_arg`) as complete FROM destination WHERE `completed` = 1 GROUP BY `card_location_arg`) as unusedMandatoryAlias");
     }
 
     function getRemainingTrainCarsCount(int $playerId) {
@@ -269,7 +269,7 @@ trait UtilTrait {
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
-    function getUnompletedDestinationsIds(int $playerId) {
+    function getUncompletedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 0";
         $dbResults = self::getCollectionFromDB($sql);
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
@@ -316,7 +316,7 @@ trait UtilTrait {
             'destination' => $destination,
             'to' => $this->CITIES[$destination->to],
             'destinationRoutes' => [],
-            'revealedTokenBack' => $revealed?1:0,
+            'revealedTokenBack' => $revealed ? 1 : 0,
         ]);
     }
 
@@ -359,5 +359,11 @@ trait UtilTrait {
 
     function dbIncField(String $table, String $field, int $value, String $pkfield, String $key) {
         $this->DbQuery("UPDATE $table SET $field = $field+$value WHERE $pkfield = '$key'");
+    }
+
+    function noArrowLeft(): bool {
+        return intval($this->getGameStateValue(REMAINING_BLUE_ARROWS)) == 0
+            && intval($this->getGameStateValue(REMAINING_YELLOW_ARROWS)) == 0
+            && intval($this->getGameStateValue(REMAINING_RED_ARROWS)) == 0;
     }
 }
