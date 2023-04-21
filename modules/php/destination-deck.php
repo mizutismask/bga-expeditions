@@ -188,7 +188,7 @@ trait DestinationDeckTrait {
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'count' => intval($traded),
-            'number' => intval($traded),
+            'number' => 0, //1-1 or 0-0
             'remainingDestinationsInDeck' => $this->getRemainingDestinationCardsInDeck(),
             '_private' => [
                 $playerId => [
