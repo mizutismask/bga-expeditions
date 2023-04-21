@@ -92,15 +92,6 @@
   font-weight: bold;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
-.player-board .player-turn-order {
-  background: rgba(255, 255, 255, 0.6666666667);
-  color: black;
-  margin: 2px;
-  margin-top: 10px;
-  padding: 2px;
-  text-align: center;
-  border-radius: 8px;
-}
 .player-board .token {
   background-image: url("img/tokens.png");
 }
@@ -154,6 +145,14 @@
 }
 .counters .counter span {
   padding: 0 5px 0 5px;
+}
+.counters.additional-info {
+  column-gap: 5px;
+  justify-content: end;
+}
+
+.player-turn-order {
+  user-select: none;
 }
 
 .icon {
@@ -1562,10 +1561,9 @@ html,
   background-size: cover;
 }
 
-.xpd-help-icon {
+.css-icon {
   width: 25px;
   height: 25px;
-  color: rgb(21, 104, 134);
   background-color: white;
   border-radius: 15px;
   text-align: center;
@@ -1573,6 +1571,9 @@ html,
   display: flex;
   justify-content: center;
   align-items: center;
+  color: rgb(21, 104, 134);
+}
+.css-icon.xpd-help-icon {
   cursor: pointer;
   pointer-events: auto;
 }

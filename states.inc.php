@@ -209,7 +209,7 @@ $playerActionsGameStates = [
 $gameGameStates = [
 
     ST_DEAL_INITIAL_DESTINATIONS => [
-        "name" => "endScore",
+        "name" => "dealInitialDestinations",
         "description" => "",
         "type" => "game",
         "action" => "stDealInitialDestinations",

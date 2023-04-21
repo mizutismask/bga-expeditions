@@ -481,7 +481,8 @@ class Expeditions implements ExpeditionsGame {
                     <span id="revealed-tokens-back-counter-${player.id}"></span> / 4
                 </div>
                 
-            </div>`,
+				</div>
+				<div id="additional-info-${player.id}" class="counters additional-info"></div>`,
 				`player_board_${player.id}`
 			);
 
@@ -504,24 +505,11 @@ class Expeditions implements ExpeditionsGame {
 			this.completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
 			this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
 
-			if (gamedatas.showTurnOrder && gamedatas.gamestate.id < 30) {
-				// don't show turn order if game is already started (refresh or TB game)
-				dojo.place(
-					`<div class="player-turn-order">${_("Player ${number}").replace(
-						"${number}",
-						`<strong>${player.playerNo}</strong>`
-					)}</div>`,
-					`player_board_${player.id}`
-				);
-			}
-
 			if (this.getPlayerId() === playerId) {
-				dojo.place(
-					`<div class="counters">
-						<div id="player-help" class="xpd-help-icon">?</div>
-					</div>`,
-					`player_board_${player.id}`
-				);
+				dojo.place(`<div id="player-help" class="css-icon xpd-help-icon">?</div>`, `additional-info-${player.id}`);	
+			}
+			if (player.playerNo === 1) {
+				dojo.place(`<div id="firstPlayerIcon" class="css-icon player-turn-order">1</div>`, `additional-info-${player.id}`, `last`);
 			}
 		});
 
@@ -530,6 +518,7 @@ class Expeditions implements ExpeditionsGame {
 		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
 		this.setTooltipToClass("xpd-help-icon", `<div class="help-card recto"></div>`);
 		this.setTooltipToClass("fa-star", `<div class="help-card verso"></div>`);
+		this.setTooltipToClass("player-turn-order", _("First player"));
 	}
 
 	/**
@@ -1233,7 +1222,7 @@ class Expeditions implements ExpeditionsGame {
 		const destination: Destination = notif.args.destination;
 		this.completedDestinationsCounter.incValue(1);
 		this.gamedatas.completedDestinations.push(destination);
-		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);		
+		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
 		playSound(`ttr-completed-in-game`);

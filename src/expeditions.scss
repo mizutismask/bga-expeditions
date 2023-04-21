@@ -1,7 +1,7 @@
 // old colors (classic BGA colors) : $player-colors: ("red": "ff0000", "green": "008000", "blue": "0000ff", "yellow": "ffa500", "purple": "982fff");
 // new colors (from end score train image)
 $player-colors: (
-	"grey": "d8d7d7",	
+	"grey": "d8d7d7",
 	"pink": "df74b2",
 	"orange": "eca51c",
 	"green": "77bd25",
@@ -138,7 +138,7 @@ html,
 .place-arrow-button {
 	&.selected {
 		background-color: #56a8d1;
-		&:hover{
+		&:hover {
 			background-color: #4b94b9;
 		}
 	}
@@ -190,10 +190,9 @@ html,
 	background-size: cover;
 }
 
-.xpd-help-icon {
+.css-icon {
 	width: 25px;
 	height: 25px;
-	color: rgb(21, 104, 134);
 	background-color: white;
 	border-radius: 15px;
 	text-align: center;
@@ -201,8 +200,12 @@ html,
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	cursor: pointer;
-	pointer-events: auto;
+	color: rgb(21, 104, 134);
+
+	&.xpd-help-icon {
+		cursor: pointer;
+		pointer-events: auto;
+	}
 }
 
 .help-card {

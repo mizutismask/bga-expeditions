@@ -3188,7 +3188,7 @@ var Expeditions = /** @class */ (function () {
             var playerId = Number(player.id);
             document.getElementById("overall_player_board_".concat(player.id)).dataset.playerColor = player.color;
             // public counters
-            dojo.place("<div class=\"counters\">\n\t\t\t\t<div id=\"tickets-counter-".concat(player.id, "-wrapper\" class=\"counter tickets-counter\">\n                    <div class=\"icon expTicket\"></div> \n                    <span id=\"tickets-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"destinations-counter-").concat(player.id, "-wrapper\" class=\"counter destinations-counter\">\n                    <div class=\"icon destination-card\"></div> \n                    <span id=\"completed-destinations-counter-").concat(player.id, "\">").concat(_this.getPlayerId() !== playerId ? "?" : "", "</span>/<span id=\"destination-card-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"revealed-tokens-back-counter-").concat(player.id, "-wrapper\" class=\"counter revealed-tokens-back-counter\">\n                    <div class=\"icon token\" data-player-color=\"").concat(player.color, "\"></div> \n                    <span id=\"revealed-tokens-back-counter-").concat(player.id, "\"></span> / 4\n                </div>\n                \n            </div>"), "player_board_".concat(player.id));
+            dojo.place("<div class=\"counters\">\n\t\t\t\t<div id=\"tickets-counter-".concat(player.id, "-wrapper\" class=\"counter tickets-counter\">\n                    <div class=\"icon expTicket\"></div> \n                    <span id=\"tickets-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"destinations-counter-").concat(player.id, "-wrapper\" class=\"counter destinations-counter\">\n                    <div class=\"icon destination-card\"></div> \n                    <span id=\"completed-destinations-counter-").concat(player.id, "\">").concat(_this.getPlayerId() !== playerId ? "?" : "", "</span>/<span id=\"destination-card-counter-").concat(player.id, "\"></span>\n                </div>\n                <div id=\"revealed-tokens-back-counter-").concat(player.id, "-wrapper\" class=\"counter revealed-tokens-back-counter\">\n                    <div class=\"icon token\" data-player-color=\"").concat(player.color, "\"></div> \n                    <span id=\"revealed-tokens-back-counter-").concat(player.id, "\"></span> / 4\n                </div>\n                \n\t\t\t\t</div>\n\t\t\t\t<div id=\"additional-info-").concat(player.id, "\" class=\"counters additional-info\"></div>"), "player_board_".concat(player.id));
             var revealedTokensBackCounter = new ebg.counter();
             revealedTokensBackCounter.create("revealed-tokens-back-counter-".concat(player.id));
             revealedTokensBackCounter.setValue(player.revealedTokensBackCount);
@@ -3204,12 +3204,11 @@ var Expeditions = /** @class */ (function () {
             _this.completedDestinationsCounter = new ebg.counter();
             _this.completedDestinationsCounter.create("completed-destinations-counter-".concat(player.id));
             _this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
-            if (gamedatas.showTurnOrder && gamedatas.gamestate.id < 30) {
-                // don't show turn order if game is already started (refresh or TB game)
-                dojo.place("<div class=\"player-turn-order\">".concat(_("Player ${number}").replace("${number}", "<strong>".concat(player.playerNo, "</strong>")), "</div>"), "player_board_".concat(player.id));
-            }
             if (_this.getPlayerId() === playerId) {
-                dojo.place("<div class=\"counters\">\n\t\t\t\t\t\t<div id=\"player-help\" class=\"xpd-help-icon\">?</div>\n\t\t\t\t\t</div>", "player_board_".concat(player.id));
+                dojo.place("<div id=\"player-help\" class=\"css-icon xpd-help-icon\">?</div>", "additional-info-".concat(player.id));
+            }
+            if (player.playerNo === 1) {
+                dojo.place("<div id=\"firstPlayerIcon\" class=\"css-icon player-turn-order\">1</div>", "additional-info-".concat(player.id), "last");
             }
         });
         this.setTooltipToClass("revealed-tokens-back-counter", _("Revealed destinations reached"));
@@ -3217,6 +3216,7 @@ var Expeditions = /** @class */ (function () {
         this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
         this.setTooltipToClass("xpd-help-icon", "<div class=\"help-card recto\"></div>");
         this.setTooltipToClass("fa-star", "<div class=\"help-card verso\"></div>");
+        this.setTooltipToClass("player-turn-order", _("First player"));
     };
     /**
      * Update player score.
