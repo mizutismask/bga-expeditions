@@ -870,6 +870,9 @@ class Expeditions implements ExpeditionsGame {
 				},
 				"place-arrow-button"
 			);
+			dojo.place(dojo.create("span", {
+				class: "remaining-arrows-count", innerHTML: "x" + remainingArrows[color],
+			}).outerHTML, "placeArrow_button_"+rawColorName, "after");
 		});
 
 		//disable buttons if no more arrows or not possible to use a certain color

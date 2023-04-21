@@ -3513,6 +3513,9 @@ var Expeditions = /** @class */ (function () {
             _this.addImageActionButton("placeArrow_button_" + rawColorName, _this.createDiv("arrow " + rawColorName), colorName, label, function () {
                 _this.selectArrowColor(color);
             }, "place-arrow-button");
+            dojo.place(dojo.create("span", {
+                class: "remaining-arrows-count", innerHTML: "x" + remainingArrows[color],
+            }).outerHTML, "placeArrow_button_" + rawColorName, "after");
         });
         //disable buttons if no more arrows or not possible to use a certain color
         var colors = possibleRoutes.map(function (r) { return r.color; });
