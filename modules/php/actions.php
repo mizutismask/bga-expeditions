@@ -226,7 +226,7 @@ trait ActionTrait {
             case BLUE_CITY:
                 self::incStat(1, STAT_BLUE_LOCATIONS_REACHED, $playerId);
                 if ($this->getRemainingArrows($routeColor) == 0) {
-                    self::notifyAllPlayers('msg', clienttranslate('There are no more {$color} arrows, so ${player_name} can not use the benefit of the blue location.'), [
+                    self::notifyAllPlayers('msg', clienttranslate('There are no more ${color} arrows, so ${player_name} can not use the benefit of the blue location.'), [
                         'playerId' => $playerId,
                         'player_name' => $this->getPlayerName($playerId),
                         'color' => $this->getColorName($routeColor),
