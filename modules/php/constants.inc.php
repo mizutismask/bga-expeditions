@@ -57,6 +57,7 @@ define('ST_PLAYER_USE_TICKET', 34);
 define('ST_NEXT_PLAYER', 80);
 define('ST_NEXT_REVEAL', 81);
 
+define('ST_DEBUG_END_GAME', 97);
 define('ST_END_SCORE', 98);
 
 define('ST_END_GAME', 99);

@@ -1079,121 +1079,47 @@
 #score {
   display: none;
   justify-content: center;
-  margin: 10px;
 }
 #score #table-wrapper {
-  background: url("img/score-background.jpg");
+  padding: 40px;
   background-size: 100% 100%;
-  padding: 5px;
 }
-#score #table-wrapper table {
-  border: 2px solid rgba(255, 255, 255, 0.5019607843);
+#score #table-wrapper table tbody tr {
+  border-top: 1px solid #459dbe;
+}
+#score #table-wrapper table td:not(:first-child), #score #table-wrapper table th:not(:first-child) {
+  border-left: 1px solid #459dbe;
 }
 #score #table-wrapper table tr {
-  height: 27px;
+  height: 40px;
+}
+#score #table-wrapper table tr th {
+  text-align: center;
+  color: white;
+  text-shadow: 0px 0px 1px #054259, 0px 0px 2px #054259, 0px 0px 3px #054259;
+  padding: 8px;
 }
 #score #table-wrapper table tr td {
-  position: relative;
-  border: 2px solid rgba(255, 255, 255, 0.5019607843);
+  width: 100px;
   text-align: center;
 }
+#score #table-wrapper table tr td:not(:first-child) {
+  font-size: 150%;
+  color: white;
+  text-shadow: 0px 0px 1px #054259, 0px 0px 2px #054259, 0px 0px 3px #054259;
+}
 #score #table-wrapper table tr td.player-name {
-  width: 170px;
+  color: #054259;
+  width: 181px;
   font-weight: bold;
+  text-shadow: 0px 0px 1px white, 0px 0px 2px white, 0px 0px 3px white;
+  word-break: break-all;
   text-overflow: ellipsis;
-  position: relative;
-}
-#score #table-wrapper table tr td.player-name .bonus-card-icons {
-  position: absolute;
-  right: 0;
-  z-index: 25;
-  display: flex;
-}
-#score #table-wrapper table tr td.destinations {
-  width: 100px;
-}
-#score #table-wrapper table tr td.destinations .icons-grid {
-  pointer-events: none;
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  grid-template-rows: 25px;
-}
-#score #table-wrapper table tr td.destinations .icons-grid .icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  text-shadow: 0 0 1px white, 0 0 2px white, 0 0 3px white, 0 0 4px white;
-}
-#score #table-wrapper table tr td.destinations .icons-grid .icon.destination-card:not(.icon) {
-  background-size: auto 90%;
-  width: 30px;
-}
-#score #table-wrapper table tr td.destinations .icons-grid .hidden {
-  visibility: hidden;
-}
-#score #table-wrapper table tr td.train {
-  position: relative;
-  overflow: hidden;
-  width: 300px;
-}
-#score #table-wrapper table tr td.train .train-image {
-  position: absolute;
-  top: 0;
-  right: 100%;
-  background: url("img/score-trains.png");
-  width: 556px;
-  height: 20px;
-  transition: right 0.5s;
-}
-#score #table-wrapper table tr td.train .train-image[data-player-color=df3e33] {
-  background-position: 0% 100%;
-}
-#score #table-wrapper table tr td.train .train-image[data-player-color="30b0e1"] {
-  background-position: 0% 50%;
-}
-#score #table-wrapper table tr td.train .train-image[data-player-color="77bd25"] {
-  background-position: 0% 25%;
-}
-#score #table-wrapper table tr td.train .train-image[data-player-color=df74b2] {
-  background-position: 0% 0%;
-}
-#score #table-wrapper table tr td.train .train-image[data-player-color=d8d7d7] {
-  background-position: 0% 75%;
+  font-size: 120%;
 }
 #score #table-wrapper table tr td.total {
   font-weight: bold;
-  color: white;
-  width: 60px;
 }
-#score #table-wrapper table tr.highlight td {
-  color: black;
-  position: relative;
-  z-index: 2;
-}
-#score #table-wrapper table tr.highlight td.player-name {
-  z-index: 3;
-}
-#score #table-wrapper table tr.highlight td::before {
-  position: absolute;
-  content: "";
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  background: url("img/score-highlight.png");
-  background-size: auto 100%;
-}
-#score #table-wrapper table tr.highlight td.player-name::before {
-  left: -28px;
-  right: -8px;
-  background-position: 0% 50%;
-}
-#score #table-wrapper table tr.highlight td.total::before {
-  left: -8px;
-  right: -28px;
-  background-position: 100% 50%;
-}
-
 .bonus-card {
   width: 250px;
   height: 209px;

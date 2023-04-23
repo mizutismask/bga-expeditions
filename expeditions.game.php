@@ -155,7 +155,7 @@ class Expeditions extends Table {
     */
     protected function getAllDatas() {
         $stateName = $this->gamestate->state()['name'];
-        $isEnd = $stateName === 'endScore' || $stateName === 'gameEnd';
+        $isEnd = $stateName === 'endScore' || $stateName === 'gameEnd' || $stateName === 'debugGameEnd';
 
         $result = [];
 
@@ -181,12 +181,13 @@ class Expeditions extends Table {
             $player['playerNo'] = intval($player['playerNo']);
             $player['ticketsCount'] = $this->getRemainingTicketsCount($playerId);
             $player['destinationsCount'] = intval($this->destinations->countCardInLocation('hand', $playerId));
-            $player['revealedTokensBackCount'] = $this->getRevealedTokensBackCount($playerId);
+            $tokensBackCount = $this->getRevealedTokensBackCount($playerId);
+            $player['revealedTokensBackCount'] = $tokensBackCount;
+            $player['revealedTokensLeftCount'] = DESTINATIONS_TO_REVEAL_COUNT - $tokensBackCount;
 
             if ($isEnd) {
                 $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));
                 $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
-                $player['longestPathLength'] = $this->getLongestPath($playerId)->length;
             } else {
                 $player['completedDestinations'] = [];
                 $player['uncompletedDestinations'] = [];

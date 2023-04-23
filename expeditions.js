@@ -2652,107 +2652,41 @@ var EndScore = /** @class */ (function () {
         this.bestScore = bestScore;
         /** Player scores (key is player id) */
         this.scoreCounters = [];
-        /** Unrevealed destinations counters (key is player id) */
-        this.destinationCounters = [];
-        /** Complete destinations counters (key is player id) */
-        this.completedDestinationCounters = [];
-        /** Uncomplete destinations counters (key is player id) */
-        this.uncompletedDestinationCounters = [];
-        players.forEach(function (player) {
-            var playerId = Number(player.id);
-            dojo.place("<tr id=\"score".concat(player.id, "\">\n                <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\">").concat(player.name, "<div id=\"bonus-card-icons-").concat(player.id, "\" class=\"bonus-card-icons\"></div></td>\n                <td id=\"destinations-score-").concat(player.id, "\" class=\"destinations\">\n                    <div class=\"icons-grid\">\n                        <div id=\"destination-counter-").concat(player.id, "\" class=\"icon destination-card\"></div>\n                        <div id=\"completed-destination-counter-").concat(player.id, "\" class=\"icon completed-destination\"></div>\n                        <div id=\"uncompleted-destination-counter-").concat(player.id, "\" class=\"icon uncompleted-destination\"></div>\n                    </div>\n                </td>\n                <td id=\"train-score-").concat(player.id, "\" class=\"train\">\n                    <div id=\"train-image-").concat(player.id, "\" class=\"train-image\" data-player-color=\"").concat(player.color, "\"></div>\n                </td>\n                <td id=\"end-score-").concat(player.id, "\" class=\"total\"></td>\n            </tr>"), 'score-table-body');
-            var destinationCounter = new ebg.counter();
-            destinationCounter.create("destination-counter-".concat(player.id));
-            destinationCounter.setValue(fromReload ? 0 : _this.game.destinationCardCounters[player.id].getValue());
-            _this.destinationCounters[playerId] = destinationCounter;
-            var completedDestinationCounter = new ebg.counter();
-            completedDestinationCounter.create("completed-destination-counter-".concat(player.id));
-            completedDestinationCounter.setValue(fromReload ? player.completedDestinations.length : 0);
-            _this.completedDestinationCounters[playerId] = completedDestinationCounter;
-            var uncompletedDestinationCounter = new ebg.counter();
-            uncompletedDestinationCounter.create("uncompleted-destination-counter-".concat(player.id));
-            uncompletedDestinationCounter.setValue(fromReload ? player.uncompletedDestinations.length : 0);
-            _this.uncompletedDestinationCounters[playerId] = uncompletedDestinationCounter;
-            var scoreCounter = new ebg.counter();
-            scoreCounter.create("end-score-".concat(player.id));
-            scoreCounter.setValue(_this.game.getPlayerScore(playerId));
-            _this.scoreCounters[playerId] = scoreCounter;
-            _this.moveTrain(playerId);
-        });
-        // if we are at reload of end state, we display values, else we wait for notifications
-        if (fromReload) {
-            var longestPath_1 = Math.max.apply(Math, players.map(function (player) { return player.longestPathLength; }));
-            this.setBestScore(bestScore);
-            var maxCompletedDestinations_1 = players.map(function (player) { return player.completedDestinations.length; }).reduce(function (a, b) { return (a > b) ? a : b; }, 0);
-            players.forEach(function (player) {
-                if (Number(player.score) == bestScore) {
-                    _this.highlightWinnerScore(player.id);
-                }
-                if (_this.game.isLongestPathBonusActive() && player.longestPathLength == longestPath_1) {
-                    _this.setLongestPathWinner(player.id, longestPath_1);
-                }
-                if (_this.game.isGlobetrotterBonusActive() && player.completedDestinations.length == maxCompletedDestinations_1) {
-                    _this.setGlobetrotterWinner(player.id, maxCompletedDestinations_1);
-                }
-                _this.updateDestinationsTooltip(player);
-            });
+        var headers = document.getElementById("scoretr");
+        if (!headers.childElementCount) {
+            dojo.place("\n                <th></th>\n                <th id=\"th-destination-reached-score\" class=\"\">".concat(_("Destinations reached"), "</th>\n                <th id=\"th-revealed-tokens-back-score\" class=\"\">").concat(_("Revealed destinations reached"), "</th>\n                <th id=\"th-destination-unreached-score\" class=\"\">").concat(_("Destinations not reached"), "</th>\n                <th id=\"th-revelead-tokens-left-score\" class=\"\">").concat(_("Reveled destinations not reached"), "</th>\n                <th id=\"th-total-score\" class=\"\">").concat(_("Total"), "</th>\n            "), headers);
         }
+        players.forEach(function (player) {
+            var _a, _b;
+            var playerId = Number(player.id);
+            dojo.place("<tr id=\"score".concat(player.id, "\">\n                    <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\">").concat(player.name, "</td>\n                    <td id=\"destination-reached").concat(player.id, "\" class=\"score-number\">").concat((_a = player.completedDestinations) === null || _a === void 0 ? void 0 : _a.length, "</td>\n                    <td id=\"revealed-tokens-back").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensBackCount, "</td>\n                    <td id=\"destination-unreached").concat(player.id, "\" class=\"score-number\">").concat((_b = player.uncompletedDestinations) === null || _b === void 0 ? void 0 : _b.length, "</td>\n                    <td id=\"revealed-tokens-left").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensLeftCount, "</td>\n                    <td id=\"total").concat(player.id, "\" class=\"score-number total\">").concat(player.score, "</td>\n                </tr>"), "score-table-body");
+        });
+        this.setBestScore(bestScore);
+        players.forEach(function (player) {
+            if (Number(player.score) == bestScore) {
+                _this.highlightWinnerScore(player.id);
+            }
+            _this.updateDestinationsTooltip(player);
+        });
     }
     /**
      * Add golden highlight to top score player(s)
      */
     EndScore.prototype.highlightWinnerScore = function (playerId) {
-        document.getElementById("score".concat(playerId)).classList.add('highlight');
-        document.getElementById("score-name-".concat(playerId)).style.color = '';
+        document.getElementById("score".concat(playerId)).classList.add("highlight");
+        document.getElementById("score-name-".concat(playerId)).style.color = "";
     };
     /**
      * Save best score so we can move trains.
      */
     EndScore.prototype.setBestScore = function (bestScore) {
-        var _this = this;
         this.bestScore = bestScore;
-        this.players.forEach(function (player) { return _this.moveTrain(Number(player.id)); });
     };
     /**
      * Set score, and animate train to new score.
      */
     EndScore.prototype.setPoints = function (playerId, points) {
         this.scoreCounters[playerId].toValue(points);
-        this.moveTrain(playerId);
-    };
-    /**
-     * Move train to represent score progression.
-     */
-    EndScore.prototype.moveTrain = function (playerId) {
-        var scorePercent = 100 * this.scoreCounters[playerId].getValue() / Math.max(50, this.bestScore);
-        document.getElementById("train-image-".concat(playerId)).style.right = "".concat(100 - scorePercent, "%");
-    };
-    /**
-     * Show score animation for a revealed destination.
-     */
-    EndScore.prototype.scoreDestination = function (playerId, destination, destinationRoutes, isFastEndScoring) {
-        var _this = this;
-        if (isFastEndScoring === void 0) { isFastEndScoring = false; }
-        var state = destinationRoutes ? 'completed' : 'uncompleted';
-        var endFunction = function () {
-            (destinationRoutes ? _this.completedDestinationCounters : _this.uncompletedDestinationCounters)[playerId].incValue(1);
-            _this.destinationCounters[playerId].incValue(-1);
-            if (_this.destinationCounters[playerId].getValue() == 0) {
-                document.getElementById("destination-counter-".concat(playerId)).classList.add('hidden');
-            }
-        };
-        if (isFastEndScoring) {
-            endFunction();
-            return;
-        }
-        var newDac = new DestinationCompleteAnimation(this.game, destination, destinationRoutes, "destination-counter-".concat(playerId), "".concat(destinationRoutes ? 'completed' : 'uncompleted', "-destination-counter-").concat(playerId), {
-            change: function () {
-                playSound("ttr-".concat(destinationRoutes ? 'completed' : 'uncompleted', "-end"));
-                _this.game.disableNextMoveSound();
-            },
-            end: endFunction,
-        }, state, 0.15 / this.game.getZoom());
-        this.game.addAnimation(newDac);
     };
     EndScore.prototype.updateDestinationsTooltip = function (player) {
         var _a, _b;
@@ -2764,37 +2698,6 @@ var EndScore = /** @class */ (function () {
         if (document.getElementById("destinations-score-".concat(player.id))) {
             this.game.setTooltip("destinations-score-".concat(player.id), html);
         }
-    };
-    /**
-     * Show longest path animation for a player.
-     */
-    EndScore.prototype.showLongestPath = function (playerColor, routes, length, isFastEndScoring) {
-        var _this = this;
-        if (isFastEndScoring === void 0) { isFastEndScoring = false; }
-        if (isFastEndScoring) {
-            return;
-        }
-        var newDac = new LongestPathAnimation(this.game, routes, length, playerColor, {
-            end: function () {
-                playSound("ttr-longest-line-scoring");
-                _this.game.disableNextMoveSound();
-            }
-        });
-        this.game.addAnimation(newDac);
-    };
-    /**
-     * Add Globetrotter badge to the Globetrotter winner(s).
-     */
-    EndScore.prototype.setGlobetrotterWinner = function (playerId, length) {
-        dojo.place("<div id=\"globetrotter-bonus-card-".concat(playerId, "\" class=\"globetrotter bonus-card bonus-card-icon\"></div>"), "bonus-card-icons-".concat(playerId));
-        this.game.setTooltip("globetrotter-bonus-card-".concat(playerId), "\n        <div><strong>".concat(/* TODO1910_*/ ('Most Completed Tickets'), " : ").concat(length, "</strong></div>\n        <div>").concat(/* TODO1910_*/ ('The player who completed the most Destination tickets receives this special bonus card and adds 15 points to his score.'), "</div>\n        <div class=\"globetrotter bonus-card\"></div>\n        "));
-    };
-    /**
-     * Add longest path badge to the longest path winner(s).
-     */
-    EndScore.prototype.setLongestPathWinner = function (playerId, length) {
-        dojo.place("<div id=\"longest-path-bonus-card-".concat(playerId, "\" class=\"longest-path bonus-card bonus-card-icon\"></div>"), "bonus-card-icons-".concat(playerId));
-        this.game.setTooltip("longest-path-bonus-card-".concat(playerId), "\n        <div><strong>".concat(_('Longest path'), " : ").concat(length, "</strong></div>\n        <div>").concat(_('The player who has the Longest Continuous Path of routes receives this special bonus card and adds 10 points to his score.'), "</div>\n        <div class=\"longest-path bonus-card\"></div>\n        "));
     };
     return EndScore;
 }());
@@ -3718,10 +3621,6 @@ var Expeditions = /** @class */ (function () {
             ["lastTurn", 1],
             ["bestScore", 1],
             ["destinationRevealed", 1],
-            ["scoreDestination", skipEndOfGameAnimations ? 1 : 2000],
-            ["longestPath", skipEndOfGameAnimations ? 1 : 2000],
-            ["longestPathWinner", skipEndOfGameAnimations ? 1 : 1500],
-            ["globetrotterWinner", skipEndOfGameAnimations ? 1 : 1500],
             ["highlightWinnerScore", 1],
         ];
         notifs.forEach(function (notif) {
@@ -3852,45 +3751,8 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.notif_bestScore = function (notif) {
         var _a;
         this.gamedatas.bestScore = notif.args.bestScore;
+        this.gamedatas.players = notif.args.players;
         (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setBestScore(notif.args.bestScore);
-    };
-    /**
-     * Animate a destination for end score.
-     */
-    Expeditions.prototype.notif_scoreDestination = function (notif) {
-        var _a, _b, _c;
-        var playerId = notif.args.playerId;
-        var player = this.gamedatas.players[playerId];
-        (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.scoreDestination(playerId, notif.args.destination, notif.args.destinationRoutes, this.isFastEndScoring());
-        if (notif.args.destinationRoutes) {
-            player.completedDestinations.push(notif.args.destination);
-        }
-        else {
-            player.uncompletedDestinations.push(notif.args.destination);
-            (_b = document.getElementById("destination-card-".concat(notif.args.destination.id))) === null || _b === void 0 ? void 0 : _b.classList.add("uncompleted");
-        }
-        (_c = this.endScore) === null || _c === void 0 ? void 0 : _c.updateDestinationsTooltip(player);
-    };
-    /**
-     * Add Globetrotter badge for end score.
-     */
-    Expeditions.prototype.notif_globetrotterWinner = function (notif) {
-        var _a;
-        (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setGlobetrotterWinner(notif.args.playerId, notif.args.length);
-    };
-    /**
-     * Animate longest path for end score.
-     */
-    Expeditions.prototype.notif_longestPath = function (notif) {
-        var _a;
-        (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.showLongestPath(this.gamedatas.players[notif.args.playerId].color, notif.args.routes, notif.args.length, this.isFastEndScoring());
-    };
-    /**
-     * Add longest path badge for end score.
-     */
-    Expeditions.prototype.notif_longestPathWinner = function (notif) {
-        var _a;
-        (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setLongestPathWinner(notif.args.playerId, notif.args.length);
     };
     /**
      * Highlight winner for end score.
@@ -3898,8 +3760,6 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.notif_highlightWinnerScore = function (notif) {
         var _a;
         (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.highlightWinnerScore(notif.args.playerId);
-        playSound("ttr-scoring-end");
-        this.disableNextMoveSound();
     };
     /* This enable to inject translatable styled things to logs or action bar */
     /* @Override */

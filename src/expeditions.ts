@@ -1110,10 +1110,6 @@ class Expeditions implements ExpeditionsGame {
 			["lastTurn", 1],
 			["bestScore", 1],
 			["destinationRevealed", 1],
-			["scoreDestination", skipEndOfGameAnimations ? 1 : 2000],
-			["longestPath", skipEndOfGameAnimations ? 1 : 2000],
-			["longestPathWinner", skipEndOfGameAnimations ? 1 : 1500],
-			["globetrotterWinner", skipEndOfGameAnimations ? 1 : 1500],
 			["highlightWinnerScore", 1],
 		];
 
@@ -1264,54 +1260,8 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	notif_bestScore(notif: Notif<NotifBestScoreArgs>) {
 		this.gamedatas.bestScore = notif.args.bestScore;
+		this.gamedatas.players=notif.args.players;
 		this.endScore?.setBestScore(notif.args.bestScore);
-	}
-
-	/**
-	 * Animate a destination for end score.
-	 */
-	notif_scoreDestination(notif: Notif<NotifDestinationCompletedArgs>) {
-		const playerId = notif.args.playerId;
-		const player = this.gamedatas.players[playerId];
-		this.endScore?.scoreDestination(
-			playerId,
-			notif.args.destination,
-			notif.args.destinationRoutes,
-			this.isFastEndScoring()
-		);
-		if (notif.args.destinationRoutes) {
-			player.completedDestinations.push(notif.args.destination);
-		} else {
-			player.uncompletedDestinations.push(notif.args.destination);
-			document.getElementById(`destination-card-${notif.args.destination.id}`)?.classList.add("uncompleted");
-		}
-		this.endScore?.updateDestinationsTooltip(player);
-	}
-
-	/**
-	 * Add Globetrotter badge for end score.
-	 */
-	notif_globetrotterWinner(notif: Notif<NotifBadgeArgs>) {
-		this.endScore?.setGlobetrotterWinner(notif.args.playerId, notif.args.length);
-	}
-
-	/**
-	 * Animate longest path for end score.
-	 */
-	notif_longestPath(notif: Notif<NotifLongestPathArgs>) {
-		this.endScore?.showLongestPath(
-			this.gamedatas.players[notif.args.playerId].color,
-			notif.args.routes,
-			notif.args.length,
-			this.isFastEndScoring()
-		);
-	}
-
-	/**
-	 * Add longest path badge for end score.
-	 */
-	notif_longestPathWinner(notif: Notif<NotifBadgeArgs>) {
-		this.endScore?.setLongestPathWinner(notif.args.playerId, notif.args.length);
 	}
 
 	/**
@@ -1319,9 +1269,6 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	notif_highlightWinnerScore(notif: Notif<NotifLongestPathArgs>) {
 		this.endScore?.highlightWinnerScore(notif.args.playerId);
-
-		playSound(`ttr-scoring-end`);
-		(this as any).disableNextMoveSound();
 	}
 
 	/* This enable to inject translatable styled things to logs or action bar */

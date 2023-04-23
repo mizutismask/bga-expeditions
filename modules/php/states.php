@@ -77,7 +77,7 @@ trait StateTrait {
     }
 
     function stEndScore() {
-        $sql = "SELECT player_id id, player_score score FROM player ORDER BY player_no ASC";
+        $sql = "SELECT player_id id, player_score score, player_no playerNo FROM player ORDER BY player_no ASC";
         $players = self::getCollectionFromDb($sql);
 
         // points gained during the game : reached destinations
@@ -101,11 +101,13 @@ trait StateTrait {
                 if ($completed) {
                     $completedDestinationsCount[$playerId]++;
                     $completedDestinations[] = $destination;
+                    self::incStat(1, STAT_POINTS_WITH_COMPLETED_DESTINATIONS, $playerId);
                 } else {
                     $totalScore[$playerId] += -1;
                     if ($this->isDestinationRevealed($destination->id)) {
                         $totalScore[$playerId] += -1;
                     }
+                    self::incStat(1, STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS, $playerId);
                     $uncompletedDestinations[] = $destination;
                 }
             }
@@ -113,51 +115,29 @@ trait StateTrait {
             $destinationsResults[$playerId] = $uncompletedDestinations;
         }
 
-        // we need to send bestScore before all score notifs, because train animations will show score ratio over best score
-        $bestScore = max($totalScore);
-        self::notifyAllPlayers('bestScore', '', [
-            'bestScore' => $bestScore,
-        ]);
-
-        // now we can send score notifications
-
-        // completed/failed destinations 
-        foreach ($destinationsResults as $playerId => $destinations) {
-
-            foreach ($destinations as $destination) {
-                $destinationRoutes = $this->getDestinationRoutes($playerId, $destination);
-                $completed = $destinationRoutes != null;
-                $points = $completed ? 0 : -1; //positive points are count along the game
-
-
-                self::notifyAllPlayers('scoreDestination', "", [
-                    'playerId' => $playerId,
-                    'player_name' => $this->getPlayerName($playerId),
-                    'destination' => $destination,
-                    'to' => $this->CITIES[$destination->to],
-                    'destinationRoutes' => $destinationRoutes,
-                ]);
-
-                $message = clienttranslate('${player_name} ${gainsloses} ${absdelta} point with ${to}');
-                $this->incScore($playerId, $points, $message, [
-                    'delta' => $destination->points,
-                    'absdelta' => 1,
-                    'to' => $this->CITIES[$destination->to],
-                    'i18n' => ['gainsloses'],
-                    'gainsloses' => $completed ? clienttranslate('gains') : clienttranslate('loses'),
-                ]);
-
-                if ($completed) {
-                    self::incStat(1, STAT_POINTS_WITH_COMPLETED_DESTINATIONS, $playerId);
-                } else {
-                    self::incStat(1, STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS, $playerId);
-                }
-            }
-        }
-
         foreach ($players as $playerId => $playerDb) {
             self::DbQuery("UPDATE player SET `player_score_aux` = `player_remaining_tickets` where `player_id` = $playerId");
         }
+
+        $bestScore = max($totalScore);
+        $playersWithScore = [];
+        foreach ($players as $playerId => &$player) {
+            $playersWithScore[$playerId] = $player;
+            $player['playerNo'] = intval($player['playerNo']);
+            $player['ticketsCount'] = $this->getRemainingTicketsCount($playerId);
+            $player['destinationsCount'] = intval($this->destinations->countCardInLocation('hand', $playerId));
+            $tokensBackCount = $this->getRevealedTokensBackCount($playerId);
+            $player['revealedTokensBackCount'] = $tokensBackCount;
+            $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));
+            $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
+            $player['revealedTokensLeftCount'] = DESTINATIONS_TO_REVEAL_COUNT - $tokensBackCount;
+            $player['completedDestinations'] = [];
+            $player['uncompletedDestinations'] = [];
+        }
+        self::notifyAllPlayers('bestScore', '', [
+            'bestScore' => $bestScore,
+            'players' => $playersWithScore,
+        ]);
 
         // highlight winner(s)
         foreach ($totalScore as $playerId => $playerScore) {

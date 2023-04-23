@@ -42,9 +42,9 @@ interface ExpeditionsPlayer extends Player {
 	revealedTokensBackCount: number;
 
 	// for end score
+	revealedTokensLeftCount: number;
 	completedDestinations?: Destination[];
 	uncompletedDestinations?: Destination[];
-	longestPathLength: number;
 }
 
 /**
@@ -235,14 +235,10 @@ interface NotifFreeTunnelArgs {
 
 interface NotifBestScoreArgs {
 	bestScore: number;
+	players: ExpeditionsPlayer[];
 }
 
 interface NotifScorePointArgs {
-	playerId: number;
-	points: number;
-}
-
-interface NotifScoreDestinationArgs {
 	playerId: number;
 	points: number;
 }

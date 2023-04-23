@@ -63,6 +63,13 @@ $basicGameStates = [
         "transitions" => ["" => ST_DEAL_INITIAL_DESTINATIONS]
     ],
 
+    ST_DEBUG_END_GAME => [
+        "name" => "debugGameEnd",
+        "description" => clienttranslate("Debug end of game"),
+        "type" => "manager",
+        "args" => "argGameEnd",
+    ],
+
     // Final state.
     // Please do not modify.
     ST_END_GAME => [
@@ -248,7 +255,7 @@ $gameGameStates = [
         "type" => "game",
         "action" => "stEndScore",
         "transitions" => [
-            "endGame" => ST_END_GAME,
+            "endGame" => ST_DEBUG_END_GAME,//ST_END_GAME or ST_DEBUG_END_GAME
         ],
     ],
 ];
