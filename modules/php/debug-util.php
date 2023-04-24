@@ -83,19 +83,23 @@ trait DebugUtilTrait {
         $this->deleteGlobalVariable(LAST_BLUE_ROUTE);
         $this->deleteGlobalVariable(LAST_YELLOW_ROUTE);
         $this->deleteGlobalVariable(LAST_RED_ROUTE);
+        $this->setGameStateValue(NEW_LOOP_COLOR, 0);
+        $this->setGameStateValue(MAIN_ACTION_DONE, 0);
+        $this->setGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 0);
+        $this->debugResetArrowsLeft();
     }
 
     function debugClaimExpeditionRoutes(int $arrowsNb = 15) {
         foreach (COLORS as $color) {
             for ($i = 0; $i < $arrowsNb; $i++) {
                 $claimableRoutes = $this->claimableRoutes($this->getActivePlayerId());
-                $claimableRoutes = array_filter($claimableRoutes,fn ($r)=>$r->color==$color);
+                $claimableRoutes = array_filter($claimableRoutes, fn ($r) => $r->color == $color);
                 if ($claimableRoutes) {
                     $claimableIds = array_values(array_map(fn ($r) => $r->id, $claimableRoutes));
                     $claimedId = $claimableIds[bga_rand(0, count($claimableIds) - 1)];
                     $route = $this->array_find($this->ROUTES, fn ($r) => $r->id == $claimedId);
                     $this->debugClaimRoute($this->getActivePlayerId(), $route);
-                }else{
+                } else {
                     break;
                 }
             }
@@ -124,6 +128,31 @@ trait DebugUtilTrait {
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($route->color),
         ]);
+    }
+
+    function debugArrowLeft() {
+        $this->setRemainingArrows(BLUE, 0);
+        $this->setRemainingArrows(YELLOW, 0);
+        $this->setRemainingArrows(RED, 1);
+    }
+
+    function al() {
+        $this->debugArrowLeft();
+    }
+
+    function debugResetArrowsLeft() {
+        $this->setRemainingArrows(BLUE, 45);
+        $this->setRemainingArrows(YELLOW, 45);
+        $this->setRemainingArrows(RED, 45);
+    }
+
+    function loop() {
+        $playerId = $this->getActivePlayerId();
+        $this->clear();
+        $routesInLoop = [9, 66, 471, 474];
+        foreach ($routesInLoop as $routeId) {
+            $this->debugClaimRoute($playerId, $this->ROUTES[$routeId]);
+        }
     }
 
     function debugClaimAllRoutes($playerId, $ratio = 0.1) {

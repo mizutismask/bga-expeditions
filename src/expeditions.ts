@@ -195,8 +195,12 @@ class Expeditions implements ExpeditionsGame {
 	 * Show selectable routes, and make train car draggable.
 	 */
 	private onEnteringChooseAction(args: EnteringChooseActionArgs) {
-		this.setGamestateDescription(args.canPass ? "MainActionDone" : "");
-
+		if(args.loopToResolve){
+			this.setGamestateDescription("Loop");
+		}
+		else{
+			this.setGamestateDescription(args.mainActionDone && args.canPass? "MainActionDone" : "");
+		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 		this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
 

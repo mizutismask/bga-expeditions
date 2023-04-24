@@ -2858,7 +2858,12 @@ var Expeditions = /** @class */ (function () {
      * Show selectable routes, and make train car draggable.
      */
     Expeditions.prototype.onEnteringChooseAction = function (args) {
-        this.setGamestateDescription(args.canPass ? "MainActionDone" : "");
+        if (args.loopToResolve) {
+            this.setGamestateDescription("Loop");
+        }
+        else {
+            this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
+        }
         var currentPlayerActive = this.isCurrentPlayerActive();
         this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);

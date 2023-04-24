@@ -140,7 +140,10 @@ interface EnteringChooseActionArgs {
 	canTakeTrainCarCards: boolean;
 	canPass: boolean;
 	canUseTicket: boolean;
+	canPlaceArrow: boolean;
 	remainingArrows: { [color: number]: number };
+	loopToResolve: boolean;
+	mainActionDone: boolean;
 }
 
 interface EnteringUseTicketArgs {

@@ -189,7 +189,7 @@ trait UtilTrait {
         return $claimed->reverseDirection ? $route->to : $route->from;
     }
 
-    function getRouteDestination(Route $route, ClaimedRoute $claimed) {
+    function getRouteDestination(Route $route, ClaimedRoute $claimed):int {
         return $claimed->reverseDirection ? $route->from : $route->to;
     }
 
