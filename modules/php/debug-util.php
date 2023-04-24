@@ -80,9 +80,9 @@ trait DebugUtilTrait {
 
     function clear() {
         self::DbQuery("DELETE FROM `claimed_routes`");
-        $this->deleteGlobalVariable(LAST_BLUE_ROUTE);
-        $this->deleteGlobalVariable(LAST_YELLOW_ROUTE);
-        $this->deleteGlobalVariable(LAST_RED_ROUTE);
+        $this->setGlobalVariable(LAST_BLUE_ROUTES, [null, null, null]);
+        $this->setGlobalVariable(LAST_YELLOW_ROUTES, [null, null, null]);
+        $this->setGlobalVariable(LAST_RED_ROUTES, [null, null, null]);
         $this->setGameStateValue(NEW_LOOP_COLOR, 0);
         $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 0);

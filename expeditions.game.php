@@ -117,6 +117,10 @@ class Expeditions extends Table {
         $this->setGameStateInitialValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateInitialValue(BLUEPOINT_ACTIONS_REMAINING, 0);
 
+        $this->setGlobalVariable(LAST_BLUE_ROUTES, [null, null, null]);
+        $this->setGlobalVariable(LAST_YELLOW_ROUTES, [null, null, null]);
+        $this->setGlobalVariable(LAST_RED_ROUTES, [null, null, null]);
+
         // Init game statistics
         $this->initStat('table', 'turnsNumber', 0);
         $this->initStat('player', 'turnsNumber', 0);

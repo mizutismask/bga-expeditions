@@ -86,12 +86,9 @@ define('BLUEPOINT_ACTIONS_REMAINING', 'BLUEPOINT_ACTIONS_REMAINING');
  * Global variables (objects)
  */
 define('TUNNEL_ATTEMPT', 'TUNNEL_ATTEMPT');
-define('LAST_BLUE_ROUTE', 'LAST_BLUE_ROUTE');
-define('LAST_YELLOW_ROUTE', 'LAST_YELLOW_ROUTE');
-define('LAST_RED_ROUTE', 'LAST_RED_ROUTE');
-define('BEFORE_LAST_BLUE_ROUTE', 'BEFORE_LAST_BLUE_ROUTE');
-define('BEFORE_LAST_YELLOW_ROUTE', 'BEFORE_LAST_YELLOW_ROUTE');
-define('BEFORE_LAST_RED_ROUTE', 'BEFORE_LAST_RED_ROUTE');
+define('LAST_BLUE_ROUTES', 'LAST_BLUE_ROUTES');//array of the 3 last arrows
+define('LAST_YELLOW_ROUTES', 'LAST_YELLOW_ROUTES');//array of the 3 last arrows
+define('LAST_RED_ROUTES', 'LAST_RED_ROUTES');//array of the 3 last arrows
 
 /*
     Stats

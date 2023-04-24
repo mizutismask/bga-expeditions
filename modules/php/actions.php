@@ -176,7 +176,7 @@ trait ActionTrait {
 
         $target = $reverseDirection ? $route->from : $route->to;
         $destinationColor = $this->getLocationColor($target);
-        
+
         self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
@@ -268,9 +268,9 @@ trait ActionTrait {
         $this->setRemainingArrows($route->color, $remainingArrows + 1);
 
         $target = $this->getRouteDestination($route, $claimedRoute);
-        $origin=$this->getRouteOrigin($route, $claimedRoute);
+        $origin = $this->getRouteOrigin($route, $claimedRoute);
         $destinationColor = $this->getLocationColor($origin);
-        
+
         self::notifyAllPlayers('unclaimedRoute', clienttranslate('${player_name} removes a ${color} arrow on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
@@ -469,48 +469,44 @@ trait ActionTrait {
     }
 
     public function setLastClaimedRoute(ClaimedRoute $value, int $color) {
-        $this->shiftLastClaimedRoute($color);
+        $max = 3;
         switch ($color) {
             case BLUE:
-                return $this->setGlobalVariable(LAST_BLUE_ROUTE, $value);
+                $oldValue = $this->getGlobalVariable(LAST_BLUE_ROUTES);
+                array_unshift($oldValue, $value);
+                $shiftedArray = array_slice($oldValue, 0, $max);
+                return $this->setGlobalVariable(LAST_BLUE_ROUTES, $shiftedArray);
             case YELLOW:
-                return $this->setGlobalVariable(LAST_YELLOW_ROUTE, $value);
+                $oldValue = $this->getGlobalVariable(LAST_YELLOW_ROUTES);
+                array_unshift($oldValue, $value);
+                $shiftedArray = array_slice($oldValue, 0, $max);
+                return $this->setGlobalVariable(LAST_YELLOW_ROUTES, $shiftedArray);
             case RED:
-                return $this->setGlobalVariable(LAST_RED_ROUTE, $value);
-        }
-    }
-
-    public function shiftLastClaimedRoute(int $color) {
-        switch ($color) {
-            case BLUE:
-                $oldLast = $this->getGlobalVariable(LAST_BLUE_ROUTE);
-                if ($oldLast) {
-                    $this->setGlobalVariable(BEFORE_LAST_BLUE_ROUTE, $oldLast);
-                }
-            case YELLOW:
-                $oldLast = $this->getGlobalVariable(LAST_YELLOW_ROUTE);
-                if ($oldLast) {
-                    $this->setGlobalVariable(BEFORE_LAST_YELLOW_ROUTE, $oldLast);
-                }
-            case RED:
-                $oldLast = $this->getGlobalVariable(LAST_RED_ROUTE);
-                if ($oldLast) {
-                    $this->setGlobalVariable(BEFORE_LAST_RED_ROUTE, $oldLast);
-                }
+                $oldValue = $this->getGlobalVariable(LAST_RED_ROUTES);
+                array_unshift($oldValue, $value);
+                $shiftedArray = array_slice($oldValue, 0, $max);
+                return $this->setGlobalVariable(LAST_RED_ROUTES, $shiftedArray);
         }
     }
 
     public function unshiftLastClaimedRoute(int $color) {
+        $max = 3;
         switch ($color) {
             case BLUE:
-                $beforeLast = $this->getGlobalVariable(BEFORE_LAST_BLUE_ROUTE);
-                $this->setGlobalVariable(LAST_BLUE_ROUTE, $beforeLast);
+                $oldValue = $this->getGlobalVariable(LAST_BLUE_ROUTES);
+                array_shift($oldValue);
+                $shiftedArray = array_pad($oldValue, $max, null);
+                return $this->setGlobalVariable(LAST_BLUE_ROUTES, $shiftedArray);
             case YELLOW:
-                $beforeLast = $this->getGlobalVariable(BEFORE_LAST_YELLOW_ROUTE);
-                $this->setGlobalVariable(LAST_YELLOW_ROUTE, $beforeLast);
+                $oldValue = $this->getGlobalVariable(LAST_YELLOW_ROUTES);
+                array_shift($oldValue);
+                $shiftedArray = array_pad($oldValue, $max, null);
+                return $this->setGlobalVariable(LAST_YELLOW_ROUTES, $shiftedArray);
             case RED:
-                $beforeLast = $this->getGlobalVariable(BEFORE_LAST_RED_ROUTE);
-                $this->setGlobalVariable(LAST_RED_ROUTE, $beforeLast);
+                $oldValue = $this->getGlobalVariable(LAST_RED_ROUTES);
+                array_shift($oldValue);
+                $shiftedArray = array_pad($oldValue, $max, null);
+                return $this->setGlobalVariable(LAST_RED_ROUTES, $shiftedArray);
         }
     }
 
@@ -521,13 +517,13 @@ trait ActionTrait {
         $arrayData = null;
         switch ($color) {
             case BLUE:
-                $arrayData = $this->getGlobalVariable(LAST_BLUE_ROUTE, false);
+                $arrayData = $this->getGlobalVariable(LAST_BLUE_ROUTES, false)[0];
                 break;
             case YELLOW:
-                $arrayData = $this->getGlobalVariable(LAST_YELLOW_ROUTE, false);
+                $arrayData = $this->getGlobalVariable(LAST_YELLOW_ROUTES, false)[0];
                 break;
             case RED:
-                $arrayData = $this->getGlobalVariable(LAST_RED_ROUTE, false);
+                $arrayData = $this->getGlobalVariable(LAST_RED_ROUTES, false)[0];
                 break;
         }
         $casted = $this->getClaimedRouteFromGlobal($arrayData);
