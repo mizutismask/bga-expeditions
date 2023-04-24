@@ -40,10 +40,11 @@ interface ExpeditionsPlayer extends Player {
 	ticketsCount: number;
 	destinationsCount: number;
 	revealedTokensBackCount: number;
+	completedDestinations: Destination[];
+	sharedCompletedDestinationsCount: number;
 
 	// for end score
 	revealedTokensLeftCount: number;
-	completedDestinations?: Destination[];
 	uncompletedDestinations?: Destination[];
 }
 

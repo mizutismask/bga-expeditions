@@ -213,6 +213,14 @@ trait UtilTrait {
         return count($this->getPlayersIds());
     }
 
+    function getPlayerIdByOrder($playerOrder=1){
+        return $this->getUniqueIntValueFromDB("SELECT player_id FROM player where `player_no` = $playerOrder");
+    }
+
+    function getLastPlayer() {
+        return $this->getPlayerIdByOrder($this->getPlayerCount());
+    }
+
     function getPlayerName(int $playerId) {
         return self::getUniqueValueFromDb("SELECT player_name FROM player WHERE player_id = $playerId");
     }
@@ -303,7 +311,7 @@ trait UtilTrait {
         }
 
         if ($shared) {
-            //move the card to the hand ?
+            $this->destinations->moveCard($destination->id, 'shared', $ownerId);
         }
 
         $msg = $shared ?

@@ -43,7 +43,7 @@ trait StateTrait {
 
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 
-        // check if it was last action from player who started last turn or if there is no arrow left
+        // check if it was last action from the last player or if there is no arrow left
         if ($lastTurn == $playerId || $this->noArrowLeft()) {
             $this->gamestate->nextState('endScore');
         } else {
@@ -51,12 +51,18 @@ trait StateTrait {
                 // check if last turn is started    
                 $todoDests = $this->getUncompletedDestinationsIds($playerId);
                 if (count($todoDests) == 0) {
-                    self::setGameStateValue(LAST_TURN, $playerId);
+                    $lastPlayer = $this->getLastPlayer();
+                    self::setGameStateValue(LAST_TURN, $lastPlayer);
 
-                    self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has no more destination cards, starting final turn !'), [
-                        'playerId' => $playerId,
-                        'player_name' => $this->getPlayerName($playerId),
-                    ]);
+                    if ($playerId == $lastPlayer) {
+                        $this->gamestate->nextState('endScore');
+                    }
+                    else{
+                        self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has no more destination cards, finishing turn !'), [
+                            'playerId' => $playerId,
+                            'player_name' => $this->getPlayerName($playerId),
+                        ]);
+                    }
                 }
             }
 

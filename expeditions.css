@@ -169,6 +169,11 @@
   height: 24px;
   width: 18px;
 }
+.icon.destination-card.shared-destination {
+  -webkit-box-shadow: inset 0px 0px 0px 2px black;
+  -moz-box-shadow: inset 0px 0px 0px 2px black;
+  box-shadow: inset 0px 0px 0px 2px black;
+}
 .icon.expTicket {
   height: 23px;
   width: 36px;

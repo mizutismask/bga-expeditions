@@ -42,7 +42,8 @@ class Expeditions implements ExpeditionsGame {
 	private revealedTokensBackCounters: Counter[] = [];
 	private ticketsCounters: Counter[] = [];
 	private destinationCardCounters: Counter[] = [];
-	private completedDestinationsCounter: Counter;
+	private completedDestinationsCounters: Counter[] = [];
+	private commonCompletedDestinationsCounters: Counter[] = [];
 
 	private animations: WagonsAnimation[] = [];
 	public animationManager: AnimationManager;
@@ -195,11 +196,10 @@ class Expeditions implements ExpeditionsGame {
 	 * Show selectable routes, and make train car draggable.
 	 */
 	private onEnteringChooseAction(args: EnteringChooseActionArgs) {
-		if(args.loopToResolve){
+		if (args.loopToResolve) {
 			this.setGamestateDescription("Loop");
-		}
-		else{
-			this.setGamestateDescription(args.mainActionDone && args.canPass? "MainActionDone" : "");
+		} else {
+			this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
 		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 		this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
@@ -486,7 +486,12 @@ class Expeditions implements ExpeditionsGame {
                 </div>
                 
 				</div>
-				<div id="additional-info-${player.id}" class="counters additional-info"></div>`,
+				<div id="additional-info-${player.id}" class="counters additional-info">
+					<div id="common-destinations-counter-${player.id}-wrapper" class="counter common-destinations-counter">
+						<div class="icon destination-card shared-destination"></div> 
+						<span id="common-completed-destinations-counter-${player.id}">${this.getPlayerId() !== playerId ? "?" : ""}</span>
+					</div>
+				</div>`,
 				`player_board_${player.id}`
 			);
 
@@ -505,21 +510,35 @@ class Expeditions implements ExpeditionsGame {
 			destinationCardCounter.setValue(player.destinationsCount);
 			this.destinationCardCounters[playerId] = destinationCardCounter;
 
-			this.completedDestinationsCounter = new ebg.counter();
-			this.completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
-			this.completedDestinationsCounter.setValue(gamedatas.completedDestinations.length);
+			const completedDestinationsCounter = new ebg.counter();
+			completedDestinationsCounter.create(`completed-destinations-counter-${player.id}`);
+			completedDestinationsCounter.setValue(gamedatas.players[player.id].completedDestinations.length);
+			this.completedDestinationsCounters[playerId] = completedDestinationsCounter;
+
+			const commonCompletedDestinationsCounter = new ebg.counter();
+			commonCompletedDestinationsCounter.create(`common-completed-destinations-counter-${player.id}`);
+			commonCompletedDestinationsCounter.setValue(gamedatas.players[player.id].sharedCompletedDestinationsCount);
+			this.commonCompletedDestinationsCounters[playerId] = commonCompletedDestinationsCounter;
 
 			if (this.getPlayerId() === playerId) {
-				dojo.place(`<div id="player-help" class="css-icon xpd-help-icon">?</div>`, `additional-info-${player.id}`);	
+				dojo.place(
+					`<div id="player-help" class="css-icon xpd-help-icon">?</div>`,
+					`additional-info-${player.id}`
+				);
 			}
 			if (player.playerNo === 1) {
-				dojo.place(`<div id="firstPlayerIcon" class="css-icon player-turn-order">1</div>`, `additional-info-${player.id}`, `last`);
+				dojo.place(
+					`<div id="firstPlayerIcon" class="css-icon player-turn-order">1</div>`,
+					`additional-info-${player.id}`,
+					`last`
+				);
 			}
 		});
 
 		this.setTooltipToClass("revealed-tokens-back-counter", _("Revealed destinations reached"));
 		this.setTooltipToClass("tickets-counter", _("Remaining tickets"));
 		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
+		this.setTooltipToClass("common-destinations-counter", _("Shared destinations reached"));
 		this.setTooltipToClass("xpd-help-icon", `<div class="help-card recto"></div>`);
 		this.setTooltipToClass("fa-star", `<div class="help-card verso"></div>`);
 		this.setTooltipToClass("player-turn-order", _("First player"));
@@ -874,9 +893,14 @@ class Expeditions implements ExpeditionsGame {
 				},
 				"place-arrow-button"
 			);
-			dojo.place(dojo.create("span", {
-				class: "remaining-arrows-count", innerHTML: "x" + remainingArrows[color],
-			}).outerHTML, "placeArrow_button_"+rawColorName, "after");
+			dojo.place(
+				dojo.create("span", {
+					class: "remaining-arrows-count",
+					innerHTML: "x" + remainingArrows[color],
+				}).outerHTML,
+				"placeArrow_button_" + rawColorName,
+				"after"
+			);
 		});
 
 		//disable buttons if no more arrows or not possible to use a certain color
@@ -1223,7 +1247,11 @@ class Expeditions implements ExpeditionsGame {
 	notif_destinationCompleted(notif: Notif<NotifDestinationCompletedArgs>) {
 		const playerId = notif.args.playerId;
 		const destination: Destination = notif.args.destination;
-		this.completedDestinationsCounter.incValue(1);
+		if (destination.location == "shared") {
+			this.commonCompletedDestinationsCounters[playerId].incValue(1);
+		}else{
+			this.completedDestinationsCounters[playerId].incValue(1);
+		}
 		this.gamedatas.completedDestinations.push(destination);
 		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
@@ -1264,7 +1292,7 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	notif_bestScore(notif: Notif<NotifBestScoreArgs>) {
 		this.gamedatas.bestScore = notif.args.bestScore;
-		this.gamedatas.players=notif.args.players;
+		this.gamedatas.players = notif.args.players;
 		this.endScore?.setBestScore(notif.args.bestScore);
 	}
 

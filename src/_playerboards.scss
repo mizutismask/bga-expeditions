@@ -90,13 +90,13 @@
 		}
 	}
 
-	&.additional-info{
+	&.additional-info {
 		column-gap: 5px;
 		justify-content: end;
 	}
 }
 
-.player-turn-order{
+.player-turn-order {
 	user-select: none;
 }
 
@@ -113,6 +113,12 @@
 		background-image: url("img/destination-card-backgroundP.jpg");
 		height: 24px;
 		width: 18px;
+
+		&.shared-destination {
+			-webkit-box-shadow: inset 0px 0px 0px 2px black;
+			-moz-box-shadow: inset 0px 0px 0px 2px black;
+			box-shadow: inset 0px 0px 0px 2px black;
+		}
 	}
 
 	&.expTicket {

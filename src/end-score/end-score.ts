@@ -37,7 +37,7 @@ class EndScore {
 			dojo.place(
 				`<tr id="score${player.id}">
                     <td id="score-name-${player.id}" class="player-name" style="color: #${player.color}">${player.name}</td>
-                    <td id="destination-reached${player.id}" class="score-number">${player.completedDestinations?.length}</td>
+                    <td id="destination-reached${player.id}" class="score-number">${player.completedDestinations.length}</td>
                     <td id="revealed-tokens-back${player.id}" class="score-number">${player.revealedTokensBackCount}</td>
                     <td id="destination-unreached${player.id}" class="score-number">${player.uncompletedDestinations?.length}</td>
                     <td id="revealed-tokens-left${player.id}" class="score-number">${player.revealedTokensLeftCount}</td>
@@ -81,7 +81,7 @@ class EndScore {
 	public updateDestinationsTooltip(player: ExpeditionsPlayer) {
 		let html = `<div class="destinations-flex">
             <div>
-                ${player.completedDestinations?.map(
+                ${player.completedDestinations.map(
 					(destination) =>
 						`<div class="destination-card completed" style="${getBackgroundInlineStyleForDestination(
 							destination
