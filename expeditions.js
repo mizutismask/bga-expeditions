@@ -2975,12 +2975,6 @@ var Expeditions = /** @class */ (function () {
             return __assign(__assign({}, prev), (_a = {}, _a[groupKey] = group, _a));
         }, {});
     };
-    Expeditions.prototype.isGlobetrotterBonusActive = function () {
-        return this.gamedatas.isGlobetrotterBonusActive;
-    };
-    Expeditions.prototype.isLongestPathBonusActive = function () {
-        return this.gamedatas.isLongestPathBonusActive;
-    };
     Expeditions.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
     };
@@ -3606,8 +3600,6 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.notif_newCardsOnTable = function (notif) {
         if (notif.args.locomotiveRefill) {
-            playSound("ttr-clear-train-car-cards");
-            this.disableNextMoveSound();
         }
         this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);
     };

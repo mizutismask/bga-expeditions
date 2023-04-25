@@ -26,7 +26,6 @@ require_once('modules/php/states.php');
 require_once('modules/php/args.php');
 require_once('modules/php/actions.php');
 require_once('modules/php/map.php');
-require_once('modules/php/train-car-deck.php');
 require_once('modules/php/destination-deck.php');
 require_once('modules/php/debug-util.php');
 require_once('modules/php/expansion.php');
@@ -194,8 +193,6 @@ class Expeditions extends Table {
         $result['destinationDeckMaxCount'] = 30;
 
         $result['expansion'] = EXPANSION;
-        $result['isGlobetrotterBonusActive'] = $this->isGlobetrotterBonusActive();
-        $result['isLongestPathBonusActive'] = $this->isLongestPathBonusActive();
 
         $result['showTurnOrder'] = intval($this->getGameStateValue(SHOW_TURN_ORDER)) == 2;
 

@@ -21,20 +21,6 @@ trait ExpansionTrait {
     }
 
     /**
-     * Return if Globetrotter bonus card is used for the game.
-     */
-    function isGlobetrotterBonusActive() {
-        return in_array(EXPANSION, [1, 2]);
-    }
-
-    /**
-     * Return if Longest Path bonus card is used for the game.
-     */
-    function isLongestPathBonusActive() {
-        return in_array(EXPANSION, [0, 2, 3]);
-    }
-
-    /**
      * Return the number of destinations cards shown at the beginning.
      */
     function getInitialDestinationCardNumber():int {

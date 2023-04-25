@@ -351,14 +351,6 @@ class Expeditions implements ExpeditionsGame {
 		}, {});
 	}
 
-	public isGlobetrotterBonusActive(): boolean {
-		return this.gamedatas.isGlobetrotterBonusActive;
-	}
-
-	public isLongestPathBonusActive(): boolean {
-		return this.gamedatas.isLongestPathBonusActive;
-	}
-
 	public setTooltip(id: string, html: string) {
 		(this as any).addTooltipHtml(id, html, this.TOOLTIP_DELAY);
 	}
@@ -1125,8 +1117,7 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	notif_newCardsOnTable(notif: Notif<NotifNewCardsOnTableArgs>) {
 		if (notif.args.locomotiveRefill) {
-			playSound(`ttr-clear-train-car-cards`);
-			(this as any).disableNextMoveSound();
+			
 		}
 
 		this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);

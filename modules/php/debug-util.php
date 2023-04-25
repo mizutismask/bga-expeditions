@@ -55,23 +55,6 @@ trait DebugUtilTrait {
         return $card;
     }
 
-    // SELECT card_location, count(*)  FROM `traincar` GROUP BY card_location
-    function debugEmptyHand() {
-        $this->trainCars->moveAllCardsInLocation('hand', 'void');
-    }
-    function debugEmptyDeck() {
-        $this->trainCars->moveAllCardsInLocation('deck', 'void');
-    }
-    function debugEmptyDiscard() {
-        $this->trainCars->moveAllCardsInLocation('discard', 'void');
-    }
-
-    function debugNoAvailableTrainCardCards() {
-        $this->trainCars->moveAllCardsInLocation('table', 'void');
-        $this->trainCars->moveAllCardsInLocation('deck', 'void');
-        $this->trainCars->moveAllCardsInLocation('discard', 'void');
-    }
-
     function debugEmptyDestinationDeck() {
         $this->destinations->moveAllCardsInLocation('deck', 'void');
     }

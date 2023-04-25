@@ -1,6 +1,4 @@
 <?php
-
-require_once(__DIR__ . '/objects/train-car.php');
 require_once(__DIR__ . '/objects/destination.php');
 require_once(__DIR__ . '/objects/route.php');
 
