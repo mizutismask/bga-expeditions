@@ -362,10 +362,7 @@ class TtrMap {
 	public addClaimedRoute(claimedRoute: ClaimedRoute, claimedRoutes: ClaimedRoute[]) {
 		const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
 		this.claimRoute(claimedRoute, route);
-		const routeOnSamePath = this.getAllRoutes().filter((r) => route.from == r.from && route.to == r.to);
-		routeOnSamePath.forEach((r) => {
-			this.shiftArrowIfNeeded(r, claimedRoutes);
-		});
+		this.shiftArrowIfNeeded(route, claimedRoutes);
 	}
 
 	/**
@@ -397,26 +394,11 @@ class TtrMap {
 	}
 
 	private shiftArrowIfNeeded(route: Route, allClaimedRoutes: ClaimedRoute[]): void {
-		const shift: number = 15;
-		let sameRoutes = this.getAllRoutes().filter(
-			(r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((cr) => cr.routeId === r.id)
-		);
-		let blueRoute = sameRoutes.find((r) => r.color === BLUE);
-		const yellowRoute = sameRoutes.find((r) => r.color === YELLOW);
-		const redRoute = sameRoutes.find((r) => r.color === RED);
-		console.log("sameRoutes ", sameRoutes);
-		if (sameRoutes.length === 3) {
-			//shift needed, yellow is never moved
-			if (route.color == BLUE) this.shiftArrow(route, -shift);
-			if (route.color == RED) this.shiftArrow(route, shift);
-		} else if (sameRoutes.length == 2) {
-			if (yellowRoute) {
-				//const otherColor = sameRoutes.find((r) => r.color !== YELLOW);
-				if (route.color != YELLOW) this.shiftArrow(route, -shift);
-			} else {
-				if (route.color == BLUE) this.shiftArrow(route, -shift);
-			}
+		if (route.color === YELLOW) {
+			return;
 		}
+		const shift: number = route.color === BLUE ? -15 : 15;
+		this.shiftArrow(route, -shift);
 	}
 
 	/**
@@ -424,7 +406,6 @@ class TtrMap {
 	 */
 	private shiftArrow(route: Route, shift: number) {
 		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-		if (routeDiv.dataset.shifted == "false"){
 			console.log("shift arrow", route, shift);
 
 			const space = route.spaces[0];
@@ -446,11 +427,7 @@ class TtrMap {
 			console.log("oldTransform", oldTransform);
 			let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
 			console.log("newTransform", newTransform);
-			routeDiv.dataset.shifted = "true";
 			routeDiv.style.transform = newTransform;
-		}else{
-			console.log("shift aborted", route, shift);
-		}
 	}
 	/**
 	 * Place train car on a route space.
