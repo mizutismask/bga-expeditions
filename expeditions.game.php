@@ -103,9 +103,9 @@ class Expeditions extends Table {
         // Init global values with their initial values
         $this->setGameStateInitialValue(LAST_TURN, 0);
         $this->setGameStateInitialValue(TICKETS_USED, 0);
-        $this->setGameStateInitialValue(REMAINING_BLUE_ARROWS, $this->getInitialTrainCarsNumber());
-        $this->setGameStateInitialValue(REMAINING_YELLOW_ARROWS, $this->getInitialTrainCarsNumber());
-        $this->setGameStateInitialValue(REMAINING_RED_ARROWS, $this->getInitialTrainCarsNumber());
+        $this->setGameStateInitialValue(REMAINING_BLUE_ARROWS, $this->getInitialArrowsNumber());
+        $this->setGameStateInitialValue(REMAINING_YELLOW_ARROWS, $this->getInitialArrowsNumber());
+        $this->setGameStateInitialValue(REMAINING_RED_ARROWS, $this->getInitialArrowsNumber());
         $this->setGameStateInitialValue(NEW_LOOP_COLOR, 0);
         $this->setGameStateInitialValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateInitialValue(BLUEPOINT_ACTIONS_REMAINING, 0);

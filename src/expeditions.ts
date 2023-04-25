@@ -1007,8 +1007,6 @@ class Expeditions implements ExpeditionsGame {
 			["points", 1],
 			["ticketUsed", 1],
 			["destinationsPicked", 1],
-			["highlightVisibleLocomotives", 1000],
-			["notEnoughTrainCars", 1],
 			["lastTurn", 1],
 			["bestScore", 1],
 			["destinationRevealed", 1],
@@ -1050,13 +1048,6 @@ class Expeditions implements ExpeditionsGame {
 			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
 		//this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
-	}
-
-	/**
-	 * Animate the 3 visible locomotives (bump) before they are replaced.
-	 */
-	notif_highlightVisibleLocomotives() {
-		this.trainCarSelection.highlightVisibleLocomotives();
 	}
 
 	/**
@@ -1114,11 +1105,6 @@ class Expeditions implements ExpeditionsGame {
 		playSound(`ttr-completed-in-game`);
 		(this as any).disableNextMoveSound();
 	}
-
-	/**
-	 * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
-	 */
-	notif_notEnoughTrainCars() {}
 
 	/**
 	 * Show last turn banner.

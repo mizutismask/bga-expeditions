@@ -2259,20 +2259,6 @@ var TrainCarSelection = /** @class */ (function () {
         /*return this.visibleCardsSpots.map((stock) => stock.getVisibleColor());//*/
         return [2];
     };
-    /**
-     * Animate the 3 visible locomotives (bump) before they are replaced.
-     */
-    TrainCarSelection.prototype.highlightVisibleLocomotives = function () {
-        /*	this.visibleCardsSpots
-            .filter((stock) => stock.getVisibleColor() === 0)
-            .forEach((stock) => {
-                const cardDiv = stock.getCardDiv();
-                if (cardDiv) {
-                    cardDiv.classList.remove("highlight-locomotive");
-                    cardDiv.classList.add("highlight-locomotive");
-                }
-            });*/
-    };
     return TrainCarSelection;
 }());
 /**
@@ -3449,8 +3435,6 @@ var Expeditions = /** @class */ (function () {
             ["points", 1],
             ["ticketUsed", 1],
             ["destinationsPicked", 1],
-            ["highlightVisibleLocomotives", 1000],
-            ["notEnoughTrainCars", 1],
             ["lastTurn", 1],
             ["bestScore", 1],
             ["destinationRevealed", 1],
@@ -3491,12 +3475,6 @@ var Expeditions = /** @class */ (function () {
             this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
         }
         //this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
-    };
-    /**
-     * Animate the 3 visible locomotives (bump) before they are replaced.
-     */
-    Expeditions.prototype.notif_highlightVisibleLocomotives = function () {
-        this.trainCarSelection.highlightVisibleLocomotives();
     };
     /**
      * Update claimed routes.
@@ -3547,10 +3525,6 @@ var Expeditions = /** @class */ (function () {
         playSound("ttr-completed-in-game");
         this.disableNextMoveSound();
     };
-    /**
-     * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.
-     */
-    Expeditions.prototype.notif_notEnoughTrainCars = function () { };
     /**
      * Show last turn banner.
      */

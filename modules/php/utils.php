@@ -122,8 +122,8 @@ trait UtilTrait {
         return $class;
     }
 
-    function getInitialTrainCarsNumber() {
-        return TRAIN_CARS_PER_PLAYER;
+    function getInitialArrowsNumber() {
+        return INITIAL_ARROW_COUNT;
     }
 
     function getInitialTicketsNumber() {
@@ -163,7 +163,7 @@ trait UtilTrait {
         return $claimed->reverseDirection ? $route->to : $route->from;
     }
 
-    function getRouteDestination(Route $route, ClaimedRoute $claimed):int {
+    function getRouteDestination(Route $route, ClaimedRoute $claimed): int {
         return $claimed->reverseDirection ? $route->from : $route->to;
     }
 
@@ -187,7 +187,7 @@ trait UtilTrait {
         return count($this->getPlayersIds());
     }
 
-    function getPlayerIdByOrder($playerOrder=1){
+    function getPlayerIdByOrder($playerOrder = 1) {
         return $this->getUniqueIntValueFromDB("SELECT player_id FROM player where `player_no` = $playerOrder");
     }
 
@@ -200,7 +200,7 @@ trait UtilTrait {
     }
 
     function isLastPlayer(int $playerId) {
-        return $this->getLastPlayer()==$playerId;
+        return $this->getLastPlayer() == $playerId;
     }
 
     function getPlayerScore(int $playerId) {
