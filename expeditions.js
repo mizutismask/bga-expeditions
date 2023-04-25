@@ -2138,25 +2138,11 @@ var SharedDestinationDeck = /** @class */ (function () {
 var DBL_CLICK_TIMEOUT = 300;
 var SPOTS_COUNT = 6;
 /**
- * Level of cards in deck indicator.
- */
-var Gauge = /** @class */ (function () {
-    function Gauge(containerId, className, max) {
-        this.max = max;
-        dojo.place("\n        <div id=\"gauge-".concat(className, "\" class=\"gauge ").concat(className, "\">\n            <div class=\"inner\" id=\"gauge-").concat(className, "-level\"></div>\n        </div>"), containerId);
-        this.levelDiv = document.getElementById("gauge-".concat(className, "-level"));
-    }
-    Gauge.prototype.setCount = function (count) {
-        this.levelDiv.style.height = "".concat((100 * count) / this.max, "%");
-    };
-    return Gauge;
-}());
-/**
  * Selection of new train cars and destination cards.
  */
 var TrainCarSelection = /** @class */ (function () {
     /**
-     * Init stocks and gauges.
+     * Init stocks.
      */
     function TrainCarSelection(game, visibleCards, sharedDestinationDeck, destinationDeckCount, destinationDeckMaxCount) {
         this.game = game;
@@ -2251,13 +2237,6 @@ var TrainCarSelection = /** @class */ (function () {
         for (var i = 0; i < number; i++) {
             _loop_2(i);
         }
-    };
-    /**
-     * List visible cards colors.
-     */
-    TrainCarSelection.prototype.getVisibleColors = function () {
-        /*return this.visibleCardsSpots.map((stock) => stock.getVisibleColor());//*/
-        return [2];
     };
     return TrainCarSelection;
 }());
