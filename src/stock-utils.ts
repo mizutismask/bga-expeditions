@@ -2,13 +2,6 @@ const CARD_WIDTH = 150;
 const CARD_HEIGHT = 209;
 const DESTINATION_CARD_SHIFT = 32;
 
-function setupTrainCarCards(stock: Stock) {
-	const trainCarsUrl = `${g_gamethemeurl}img/train-cards.jpg`;
-	for (let type = 0; type <= 8; type++) {
-		stock.addItemType(type, type, trainCarsUrl, type);
-	}
-}
-
 function setupDestinationCards(stock: Stock) {
 	const destinationsUrl = `${g_gamethemeurl}img/destinations.jpg`;
 	for (let id = 1; id <= 80; id++) {

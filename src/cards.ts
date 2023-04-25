@@ -15,7 +15,7 @@ class CardsManager extends CardManager<Destination> {
 				(this.game as any).addTooltipHtml(div.id, this.getTooltip(card.type * 100 + card.type_arg));
 			},
 			setupBackDiv: (card: Destination, div: HTMLElement) => {
-				div.style.backgroundImage = `url('${g_gamethemeurl}img/destination-card-backgroundP.jpg')`;
+				div.style.backgroundImage = `url('${g_gamethemeurl}img/destination-card-background.jpg')`;
 			},
 		});
 	}

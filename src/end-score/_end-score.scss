@@ -65,25 +65,6 @@
     }
 }
 
-.bonus-card {
-	width: 250px;
-	height: 209px;
-
-	&.globetrotter {
-		background: url("img/bonus-card-globetrotter.png");
-	}
-
-	&.longest-path {
-		background: url("img/bonus-card-longest-path.png");
-	}
-
-	&.bonus-card-icon {
-		transform-origin: center center;
-		margin: -90px -106px;
-		animation: bonus-card-animation 1.5s 1 forwards ease-in-out;
-	}
-}
-
 @keyframes bonus-card-animation {
 	0% {
 		transform: scale(0.15);

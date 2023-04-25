@@ -36,12 +36,6 @@
     </div>
 </div>
 
-<audio id="audiosrc_ttr-placed-train-car" src="{GAMETHEMEURL}img/placed-train-car.mp3" preload="none" autobuffer></audio>
-<audio id="audiosrc_o_ttr-placed-train-car" src="{GAMETHEMEURL}img/placed-train-car.ogg" preload="none" autobuffer></audio>
-
-<audio id="audiosrc_ttr-clear-train-car-cards" src="{GAMETHEMEURL}img/clear-train-car-cards.mp3" preload="none" autobuffer></audio>
-<audio id="audiosrc_o_ttr-clear-train-car-cards" src="{GAMETHEMEURL}img/clear-train-car-cards.ogg" preload="none" autobuffer></audio>
-
 <audio id="audiosrc_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.mp3" preload="none" autobuffer></audio>
 <audio id="audiosrc_o_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.ogg" preload="none" autobuffer></audio>
 

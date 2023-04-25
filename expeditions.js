@@ -15,12 +15,6 @@ function animateCardToCounterAndDestroy(game, cardOrCardId, destinationId) {
 var CARD_WIDTH = 150;
 var CARD_HEIGHT = 209;
 var DESTINATION_CARD_SHIFT = 32;
-function setupTrainCarCards(stock) {
-    var trainCarsUrl = "".concat(g_gamethemeurl, "img/train-cards.jpg");
-    for (var type = 0; type <= 8; type++) {
-        stock.addItemType(type, type, trainCarsUrl, type);
-    }
-}
 function setupDestinationCards(stock) {
     var destinationsUrl = "".concat(g_gamethemeurl, "img/destinations.jpg");
     for (var id = 1; id <= 80; id++) {
@@ -1758,30 +1752,46 @@ var TtrMap = /** @class */ (function () {
      * fromPlayerId is for animation (null for no animation)
      * Phantom is for dragging over a route : wagons are showns translucent.
      */
-    TtrMap.prototype.setWagons = function (route, player, fromPlayerId, phantom) {
-        var _this = this;
+    /*private setWagons(route: Route, player: ExpeditionsPlayer, fromPlayerId: number, phantom: boolean) {
         if (!phantom) {
-            route.spaces.forEach(function (space, spaceIndex) {
-                var spaceDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(spaceIndex));
+            route.spaces.forEach((space, spaceIndex) => {
+                const spaceDiv = document.getElementById(`route-spaces-route${route.id}-space${spaceIndex}`);
                 //spaceDiv?.parentElement.removeChild(spaceDiv);
             });
         }
-        var isLowestFromDoubleHorizontalRoute = this.isLowestFromDoubleHorizontalRoute(route);
+
+        const isLowestFromDoubleHorizontalRoute = this.isLowestFromDoubleHorizontalRoute(route);
+
         if (fromPlayerId) {
-            route.spaces.forEach(function (space, spaceIndex) {
-                setTimeout(function () {
-                    _this.setWagon(route, space, spaceIndex, player, fromPlayerId, phantom, isLowestFromDoubleHorizontalRoute);
-                    playSound("ttr-placed-train-car");
+            route.spaces.forEach((space, spaceIndex) => {
+                setTimeout(() => {
+                    this.setWagon(
+                        route,
+                        space,
+                        spaceIndex,
+                        player,
+                        fromPlayerId,
+                        phantom,
+                        isLowestFromDoubleHorizontalRoute
+                    );
+                    playSound(`ttr-placed-train-car`);
                 }, 200 * spaceIndex);
             });
-            this.game.disableNextMoveSound();
+            (this.game as any).disableNextMoveSound();
+        } else {
+            route.spaces.forEach((space, spaceIndex) =>
+                this.setWagon(
+                    route,
+                    space,
+                    spaceIndex,
+                    player,
+                    fromPlayerId,
+                    phantom,
+                    isLowestFromDoubleHorizontalRoute
+                )
+            );
         }
-        else {
-            route.spaces.forEach(function (space, spaceIndex) {
-                return _this.setWagon(route, space, spaceIndex, player, fromPlayerId, phantom, isLowestFromDoubleHorizontalRoute);
-            });
-        }
-    };
+    }*/
     /**
      * Check if the route is mostly horizontal, and the lowest from a double route
      */
@@ -1853,29 +1863,30 @@ var TtrMap = /** @class */ (function () {
     /**
      * Highlight hovered route (when dragging train cars).
      */
-    TtrMap.prototype.setHoveredRoute = function (route, valid) {
-        if (valid === void 0) { valid = null; }
+    /*public setHoveredRoute(route: Route | null, valid: boolean | null = null) {
         this.inMapZoomManager.setHoveredRoute(route);
+
         if (route) {
-            [route.from, route.to].forEach(function (city) {
-                var cityDiv = document.getElementById("city".concat(city));
+            [route.from, route.to].forEach((city) => {
+                const cityDiv = document.getElementById(`city${city}`);
                 cityDiv.dataset.hovered = "true";
                 cityDiv.dataset.valid = valid.toString();
             });
+
             if (valid) {
                 this.setWagons(route, this.game.getCurrentPlayer(), null, true);
             }
-        }
-        else {
-            this.getAllRoutes().forEach(function (r) {
-                return [r.from, r.to].forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.hovered = "false"); });
-            });
+        } else {
+            this.getAllRoutes().forEach((r) =>
+                [r.from, r.to].forEach((city) => (document.getElementById(`city${city}`).dataset.hovered = "false"))
+            );
+
             // remove phantom wagons
             this.mapDiv
                 .querySelectorAll(".wagon.phantom")
-                .forEach(function (spaceDiv) { return spaceDiv.parentElement.removeChild(spaceDiv); });
+                .forEach((spaceDiv) => spaceDiv.parentElement.removeChild(spaceDiv));
         }
-    };
+    }*/
     /**
      * Highlight cities of selectable destination.
      */
@@ -4967,7 +4978,7 @@ var CardsManager = /** @class */ (function (_super) {
                 _this.game.addTooltipHtml(div.id, _this.getTooltip(card.type * 100 + card.type_arg));
             },
             setupBackDiv: function (card, div) {
-                div.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destination-card-backgroundP.jpg')");
+                div.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destination-card-background.jpg')");
             },
         }) || this;
         _this.game = game;

@@ -503,7 +503,7 @@ class TtrMap {
 	 * fromPlayerId is for animation (null for no animation)
 	 * Phantom is for dragging over a route : wagons are showns translucent.
 	 */
-	private setWagons(route: Route, player: ExpeditionsPlayer, fromPlayerId: number, phantom: boolean) {
+	/*private setWagons(route: Route, player: ExpeditionsPlayer, fromPlayerId: number, phantom: boolean) {
 		if (!phantom) {
 			route.spaces.forEach((space, spaceIndex) => {
 				const spaceDiv = document.getElementById(`route-spaces-route${route.id}-space${spaceIndex}`);
@@ -542,7 +542,7 @@ class TtrMap {
 				)
 			);
 		}
-	}
+	}*/
 
 	/**
 	 * Check if the route is mostly horizontal, and the lowest from a double route
@@ -634,7 +634,7 @@ class TtrMap {
 	/**
 	 * Highlight hovered route (when dragging train cars).
 	 */
-	public setHoveredRoute(route: Route | null, valid: boolean | null = null) {
+	/*public setHoveredRoute(route: Route | null, valid: boolean | null = null) {
 		this.inMapZoomManager.setHoveredRoute(route);
 
 		if (route) {
@@ -657,7 +657,7 @@ class TtrMap {
 				.querySelectorAll(".wagon.phantom")
 				.forEach((spaceDiv) => spaceDiv.parentElement.removeChild(spaceDiv));
 		}
-	}
+	}*/
 
 	/**
 	 * Highlight cities of selectable destination.

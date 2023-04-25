@@ -160,12 +160,11 @@
   position: relative;
   width: 32px;
   height: 32px;
-  background-image: url("img/icons.png");
   background-size: auto 100%;
   background-repeat: no-repeat;
 }
 .icon.destination-card {
-  background-image: url("img/destination-card-backgroundP.jpg");
+  background-image: url("img/destination-card-background.jpg");
   height: 24px;
   width: 18px;
 }
@@ -709,116 +708,6 @@
   width: 272px;
   height: 166px;
 }
-#train-car-deck .hidden-pile {
-  position: relative;
-  display: flex;
-  height: 192px;
-  margin-bottom: -20px;
-}
-#train-car-deck .hidden-pile .deck-level {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="1"] {
-  background-image: url("img/deck-destiLevel-10.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="2"] {
-  background-image: url("img/deck-destiLevel-20.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="3"] {
-  background-image: url("img/deck-destiLevel-30.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="4"] {
-  background-image: url("img/deck-destiLevel-40.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="5"] {
-  background-image: url("img/deck-destiLevel-50.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="6"] {
-  background-image: url("img/deck-destiLevel-60.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="7"] {
-  background-image: url("img/deck-destiLevel-70.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="8"] {
-  background-image: url("img/deck-destiLevel-80.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="9"] {
-  background-image: url("img/deck-destiLevel-90.png");
-}
-#train-car-deck .hidden-pile #destination-deck-level[data-level="10"] {
-  background-image: url("img/deck-destiLevel-100.png");
-}
-#train-car-deck .hidden-pile .button {
-  display: none;
-  flex: 1;
-  border: 3px dashed white;
-  color: white;
-  font-size: 400%;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 2px 2px 2px black;
-  z-index: 1;
-}
-#train-car-deck .hidden-pile .button.left-radius {
-  border-radius: 10px 0 0 10px;
-}
-#train-car-deck .hidden-pile .button.right-radius {
-  border-radius: 0 10px 10px 0;
-}
-#train-car-deck .hidden-pile.buttonselection.selectable .button {
-  display: flex;
-  cursor: pointer;
-}
-#train-car-deck .hidden-pile.buttonselection.selectable .button.hidden {
-  visibility: hidden;
-  pointer-events: none;
-  cursor: default;
-}
-#train-car-deck .hidden-pile:not(.buttonselection).selectable {
-  cursor: pointer;
-}
-#train-car-deck #visible-train-cards {
-  transform-origin: 0 0;
-  transform: scale(0.9);
-  margin-bottom: -90px;
-  margin-left: 10px;
-  z-index: 1;
-}
-
-.gauge {
-  width: 50px;
-  height: 158px;
-  position: absolute;
-  left: 0;
-  top: 10px;
-}
-.gauge .inner {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 100%;
-  width: 100%;
-  background-position: bottom;
-}
-.gauge.train-car {
-  background-image: url("img/gauge-train-car-empty.png");
-}
-.gauge.train-car .inner {
-  background-image: url("img/gauge-train-car-full.png");
-}
-.gauge.destination {
-  background-image: url("img/gauge-destination-empty.png");
-}
-.gauge.destination .inner {
-  background-image: url("img/gauge-destination-full.png");
-}
 
 .animated-destination-card {
   position: absolute;
@@ -853,7 +742,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: url("img/destination-choice-background.jpg");
   background-size: 100% 100%;
   z-index: 1;
 }
@@ -935,10 +823,6 @@
   right: 0;
   bottom: 0;
   background: url("img/destination-todo.png");
-}
-.destination-card:not(.icon).completed {
-  mask: url("img/destination-done-mask.png") no-repeat center/contain;
-  -webkit-mask: url("img/destination-done-mask.png") no-repeat center/contain;
 }
 .destination-card:not(.icon).completed::after {
   content: "";
@@ -1125,22 +1009,6 @@
 #score #table-wrapper table tr td.total {
   font-weight: bold;
 }
-.bonus-card {
-  width: 250px;
-  height: 209px;
-}
-.bonus-card.globetrotter {
-  background: url("img/bonus-card-globetrotter.png");
-}
-.bonus-card.longest-path {
-  background: url("img/bonus-card-longest-path.png");
-}
-.bonus-card.bonus-card-icon {
-  transform-origin: center center;
-  margin: -90px -106px;
-  animation: bonus-card-animation 1.5s 1 forwards ease-in-out;
-}
-
 @keyframes bonus-card-animation {
   0% {
     transform: scale(0.15);
@@ -1373,65 +1241,6 @@ html,
     transform: scale(1);
   }
 }
-.train-car-card {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px;
-  height: 209px;
-  background-image: url("img/train-cards.jpg");
-  border-radius: 6px;
-  box-shadow: 0 0 8px 1px black;
-  transform-origin: center center;
-}
-.train-car-card.selectable {
-  cursor: pointer;
-}
-.train-car-card.disabled {
-  filter: contrast(0.6);
-  cursor: not-allowed;
-}
-.train-car-card[data-color="0"] {
-  background-position: 0% 50%;
-}
-.train-car-card[data-color="1"] {
-  background-position: 12.5% 50%;
-}
-.train-car-card[data-color="2"] {
-  background-position: 25% 50%;
-}
-.train-car-card[data-color="3"] {
-  background-position: 37.5% 50%;
-}
-.train-car-card[data-color="4"] {
-  background-position: 50% 50%;
-}
-.train-car-card[data-color="5"] {
-  background-position: 62.5% 50%;
-}
-.train-car-card[data-color="6"] {
-  background-position: 75% 50%;
-}
-.train-car-card[data-color="7"] {
-  background-position: 87.5% 50%;
-}
-.train-car-card[data-color="8"] {
-  background-position: 100% 50%;
-}
-.train-car-card.animated {
-  pointer-events: none;
-  transition: transform 0.5s;
-}
-.train-car-card.animated.transform-origin-top-left {
-  transform-origin: top left;
-}
-.train-car-card.animated.from-hidden-pile {
-  background-image: url("img/deck-cardLevel-10.png");
-}
-.train-car-card.tunnel-card {
-  transform: scale(0.1);
-}
-
 .stockitem {
   border-radius: 6px;
 }
