@@ -2804,7 +2804,7 @@ var Expeditions = /** @class */ (function () {
     //
     Expeditions.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         log("Entering state: " + stateName, args.args);
         switch (stateName) {
             case "privateChooseInitialDestinations":
@@ -2818,15 +2818,15 @@ var Expeditions = /** @class */ (function () {
                         this.destinationSelection.setCards(destinations);
                         this.destinationSelection.selectionChange();
                     }
-                    this.playerTable.setToDoSelectionMode("single");
+                    (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setToDoSelectionMode("single");
                     this.toggleDisableButtonTrade(false); //no selection is valid to say no trade
                 }
                 break;
             case "revealDestination":
                 if (args === null || args === void 0 ? void 0 : args.args) {
                     var revealDestinationArgs = args.args;
-                    var possibleDestinations = (_b = revealDestinationArgs._private) === null || _b === void 0 ? void 0 : _b.possibleDestinations;
-                    var allDestinations = (_c = revealDestinationArgs._private) === null || _c === void 0 ? void 0 : _c.allDestinations;
+                    var possibleDestinations = (_c = revealDestinationArgs._private) === null || _c === void 0 ? void 0 : _c.possibleDestinations;
+                    var allDestinations = (_d = revealDestinationArgs._private) === null || _d === void 0 ? void 0 : _d.allDestinations;
                     if (allDestinations && this.isCurrentPlayerActive()) {
                         possibleDestinations.forEach(function (destination) {
                             return _this.map.setSelectableDestination(destination, true);
@@ -2904,6 +2904,7 @@ var Expeditions = /** @class */ (function () {
     //                 You can use this method to perform some user interface changes at this moment.
     //
     Expeditions.prototype.onLeavingState = function (stateName) {
+        var _a;
         log("Leaving state: " + stateName);
         switch (stateName) {
             case "revealDestination":
@@ -2920,7 +2921,7 @@ var Expeditions = /** @class */ (function () {
                 mapDiv
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = "false"); });
-                this.playerTable.setToDoSelectionMode("none");
+                (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setToDoSelectionMode("none");
                 break;
             case "multiChooseInitialDestinations":
                 Array.from(document.getElementsByClassName("player-turn-order")).forEach(function (elem) {
@@ -3671,13 +3672,13 @@ var Expeditions = /** @class */ (function () {
      * Update player destinations.
      */
     Expeditions.prototype.notif_destinationsPicked = function (notif) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f;
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         var destinations = (_b = (_a = notif.args._private) === null || _a === void 0 ? void 0 : _a[this.getPlayerId()]) === null || _b === void 0 ? void 0 : _b.destinations;
         var discarded = (_d = (_c = notif.args._private) === null || _c === void 0 ? void 0 : _c[this.getPlayerId()]) === null || _d === void 0 ? void 0 : _d.discardedDestination;
         if (destinations) {
-            this.playerTable.addDestinations(destinations, this.destinationSelection.destinations);
-            this.playerTable.removeDestination(discarded);
+            (_e = this.playerTable) === null || _e === void 0 ? void 0 : _e.addDestinations(destinations, this.destinationSelection.destinations);
+            (_f = this.playerTable) === null || _f === void 0 ? void 0 : _f.removeDestination(discarded);
         }
         else {
             this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
@@ -3734,6 +3735,7 @@ var Expeditions = /** @class */ (function () {
      * Mark a destination as complete.
      */
     Expeditions.prototype.notif_destinationCompleted = function (notif) {
+        var _a;
         var playerId = notif.args.playerId;
         var destination = notif.args.destination;
         if (destination.location == "shared") {
@@ -3743,7 +3745,7 @@ var Expeditions = /** @class */ (function () {
             this.completedDestinationsCounters[playerId].incValue(1);
         }
         this.gamedatas.completedDestinations.push(destination);
-        this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
+        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination, notif.args.destinationRoutes);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         playSound("ttr-completed-in-game");
         this.disableNextMoveSound();

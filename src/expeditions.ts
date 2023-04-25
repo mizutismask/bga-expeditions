@@ -146,7 +146,7 @@ class Expeditions implements ExpeditionsGame {
 						this.destinationSelection.setCards(destinations);
 						this.destinationSelection.selectionChange();
 					}
-					this.playerTable.setToDoSelectionMode("single");
+					this.playerTable?.setToDoSelectionMode("single");
 					this.toggleDisableButtonTrade(false); //no selection is valid to say no trade
 				}
 				break;
@@ -256,7 +256,7 @@ class Expeditions implements ExpeditionsGame {
 				mapDiv
 					.querySelectorAll(`.city[data-selected]`)
 					.forEach((city: HTMLElement) => (city.dataset.selected = "false"));
-				this.playerTable.setToDoSelectionMode("none");
+				this.playerTable?.setToDoSelectionMode("none");
 				break;
 			case "multiChooseInitialDestinations":
 				(Array.from(document.getElementsByClassName("player-turn-order")) as HTMLDivElement[]).forEach((elem) =>
@@ -1176,8 +1176,8 @@ class Expeditions implements ExpeditionsGame {
 		const destinations = notif.args._private?.[this.getPlayerId()]?.destinations;
 		const discarded = notif.args._private?.[this.getPlayerId()]?.discardedDestination;
 		if (destinations) {
-			this.playerTable.addDestinations(destinations, this.destinationSelection.destinations);
-			this.playerTable.removeDestination(discarded);
+			this.playerTable?.addDestinations(destinations, this.destinationSelection.destinations);
+			this.playerTable?.removeDestination(discarded);
 		} else {
 			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
@@ -1252,7 +1252,7 @@ class Expeditions implements ExpeditionsGame {
 			this.completedDestinationsCounters[playerId].incValue(1);
 		}
 		this.gamedatas.completedDestinations.push(destination);
-		this.playerTable.markDestinationComplete(destination, notif.args.destinationRoutes);
+		this.playerTable?.markDestinationComplete(destination, notif.args.destinationRoutes);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
 		playSound(`ttr-completed-in-game`);
