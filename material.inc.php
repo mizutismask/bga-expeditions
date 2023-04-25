@@ -413,14 +413,3 @@ $this->DESTINATIONS = [
     ]
 ];
 
-/**
- * Points scored for claimed routes.
- */
-$this->ROUTE_POINTS = [
-  1 => 1,
-  2 => 2,
-  3 => 4,
-  4 => 7,
-  5 => 10,
-  6 => 15,
-];
