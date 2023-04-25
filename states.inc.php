@@ -3,7 +3,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * Expeditions implementation : © <Your name here> <Your email address here>
+ * Expeditions implementation : © <Séverine Kamycki> <mizutismask@gmail.com>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -246,7 +246,7 @@ $gameGameStates = [
         "type" => "game",
         "action" => "stEndScore",
         "transitions" => [
-            "endGame" => ST_DEBUG_END_GAME,//ST_END_GAME or ST_DEBUG_END_GAME
+            "endGame" => ST_DEBUG_END_GAME, //ST_END_GAME or ST_DEBUG_END_GAME
         ],
     ],
 ];

@@ -3,7 +3,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * Expeditions implementation : © <Your name here> <Your email address here>
+ * Expeditions implementation : © <Séverine Kamycki> <mizutismask@gmail.com>
  * 
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -58,7 +58,7 @@ class Expeditions extends Table {
             MAIN_ACTION_DONE => 16,
             BLUEPOINT_ACTIONS_REMAINING => 17,
             // options
-            SHOW_TURN_ORDER => 110, 
+            SHOW_TURN_ORDER => 110,
         ]);
 
         $this->destinations = $this->getNew("module.common.deck");

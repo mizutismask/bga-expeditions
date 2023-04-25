@@ -3,7 +3,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * Expeditions implementation : © <Your name here> <Your email address here>
+ * Expeditions implementation : © <Séverine Kamycki> <mizutismask@gmail.com>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -52,17 +52,17 @@ $commonStats = [
         "id" => 10,
         "name" => totranslate("Number of turns"),
         "type" => "int"
-    ], 
+    ],
 ];
 
 $stats_type = [
 
     // Statistics global to table
-    "table" => $commonStats + [ ],
+    "table" => $commonStats + [],
 
     // Statistics existing for each player
     "player" => $commonStats + [
-        
+
         "keptAdditionalDestinationCards" => [
             "id" => 20,
             "name" => totranslate("Kept additional destination cards"),
