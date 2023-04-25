@@ -51,7 +51,6 @@ define('ST_PLAYER_REVEAL_DESTINATION', 23);
 define('ST_PLAYER_CHOOSE_ACTION', 30);
 define('ST_PLAYER_DRAW_SECOND_CARD', 31);
 define('ST_PLAYER_CHOOSE_ADDITIONAL_DESTINATIONS', 32);
-define('ST_PLAYER_CONFIRM_TUNNEL', 33);
 define('ST_PLAYER_USE_TICKET', 34);
 
 define('ST_NEXT_PLAYER', 80);
@@ -85,7 +84,6 @@ define('BLUEPOINT_ACTIONS_REMAINING', 'BLUEPOINT_ACTIONS_REMAINING');
 /*
  * Global variables (objects)
  */
-define('TUNNEL_ATTEMPT', 'TUNNEL_ATTEMPT');
 define('LAST_BLUE_ROUTES', 'LAST_BLUE_ROUTES');//array of the 3 last arrows
 define('LAST_YELLOW_ROUTES', 'LAST_YELLOW_ROUTES');//array of the 3 last arrows
 define('LAST_RED_ROUTES', 'LAST_RED_ROUTES');//array of the 3 last arrows

@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__ . '/objects/tunnel-attempt.php');
-
 trait ActionTrait {
 
     //////////////////////////////////////////////////////////////////////////////
@@ -408,44 +406,6 @@ trait ActionTrait {
 
         $this->gamestate->nextState('nextPlayer');
     }
-
-    public function claimTunnel() {
-        self::checkAction('claimTunnel');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $tunnelAttempt = $this->getGlobalVariable(TUNNEL_ATTEMPT);
-
-        $this->endTunnelAttempt(true);
-
-        $this->applyClaimRoute($playerId, $tunnelAttempt->routeId, $tunnelAttempt->color, $tunnelAttempt->extraCards);
-        // applyClaimRoute handles the call to nextState
-    }
-
-    public function skipTunnel() {
-        self::checkAction('skipTunnel');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $this->endTunnelAttempt(true);
-
-        self::notifyAllPlayers('log', /* TODO MAPS clienttranslate*/ ('${player_name} skip tunnel claim'), [
-            'playerId' => $playerId,
-            'player_name' => $this->getPlayerName($playerId),
-        ]);
-
-        $this->gamestate->nextState('nextPlayer');
-    }
-
-    function endTunnelAttempt(bool $storedTunnelAttempt) {
-        // put back tunnel cards
-        $this->trainCars->moveAllCardsInLocation('tunnel', 'discard');
-
-        if ($storedTunnelAttempt) {
-            $this->deleteGlobalVariable(TUNNEL_ATTEMPT);
-        }
-    }
-
 
     public function getRemainingArrows($color) {
         switch ($color) {

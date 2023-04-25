@@ -287,7 +287,7 @@ class TtrMap {
 	private setSpaceClickEvents(spaceDiv: HTMLElement, route: Route) {
 		spaceDiv.addEventListener("dragenter", (e) => this.routeDragOver(e, route));
 		spaceDiv.addEventListener("dragover", (e) => this.routeDragOver(e, route));
-		spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
+		//spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
 		spaceDiv.addEventListener("drop", (e) => this.routeDragDrop(e, route));
 		spaceDiv.addEventListener("click", () => this.game.clickedRoute(route));
 	}
@@ -298,7 +298,7 @@ class TtrMap {
 	private setSpaceDragEvents(spaceDiv: HTMLElement, route: Route) {
 		spaceDiv.addEventListener("dragenter", (e) => this.routeDragOver(e, route));
 		spaceDiv.addEventListener("dragover", (e) => this.routeDragOver(e, route));
-		spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
+		//spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
 		spaceDiv.addEventListener("drop", (e) => this.routeDragDrop(e, route));
 	}
 
@@ -406,28 +406,28 @@ class TtrMap {
 	 */
 	private shiftArrow(route: Route, shift: number) {
 		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-			console.log("shift arrow", route, shift);
+		console.log("shift arrow", route, shift);
 
-			const space = route.spaces[0];
-			let angle = -space.angle;
-			while (angle < 0) {
-				angle += 180;
-			}
-			while (angle >= 180) {
-				angle -= 180;
-			}
-			let x = space.x;
-			let y = space.y;
+		const space = route.spaces[0];
+		let angle = -space.angle;
+		while (angle < 0) {
+			angle += 180;
+		}
+		while (angle >= 180) {
+			angle -= 180;
+		}
+		let x = space.x;
+		let y = space.y;
 
-			// we shift a little the train car to let the other route visible
-			x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
-			y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
+		// we shift a little the train car to let the other route visible
+		x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
+		y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
 
-			let oldTransform = routeDiv.style.transform;
-			console.log("oldTransform", oldTransform);
-			let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
-			console.log("newTransform", newTransform);
-			routeDiv.style.transform = newTransform;
+		let oldTransform = routeDiv.style.transform;
+		console.log("oldTransform", oldTransform);
+		let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
+		console.log("newTransform", newTransform);
+		routeDiv.style.transform = newTransform;
 	}
 	/**
 	 * Place train car on a route space.
@@ -599,8 +599,6 @@ class TtrMap {
 
 		this.resizedDiv.style.transform = this.scale === 1 ? "" : `scale(${this.scale})`;
 		this.resizedDiv.style.marginBottom = `-${(1 - this.scale) * gameHeight}px`;
-
-		this.setOutline();
 	}
 
 	/**
@@ -812,15 +810,6 @@ class TtrMap {
 		this.crosshairTarget = null;
 		document.getElementById(`map`).removeChild(this.dragOverlay);
 		this.dragOverlay = null;
-	}
-
-	/**
-	 * Set outline for train cars on the map, according to preferences.
-	 */
-	public setOutline() {
-		const preference = Number((this.game as any).prefs[203]?.value);
-		const outline = preference === 1 || (preference === 2 && this.mapDiv?.getBoundingClientRect().width < 1000);
-		this.mapDiv.dataset.bigShadows = outline.toString();
 	}
 
 	public getCityName(cityId: number) {

@@ -143,22 +143,6 @@ class action_expeditions extends APP_GameAction {
         self::ajaxResponse();
     }
 
-    public function claimTunnel() {
-        self::setAjaxMode();
-
-        $this->game->claimTunnel();
-
-        self::ajaxResponse();
-    }
-
-    public function skipTunnel() {
-        self::setAjaxMode();
-
-        $this->game->skipTunnel();
-
-        self::ajaxResponse();
-    }
-
     public function useTicket() {
         self::setAjaxMode();
 

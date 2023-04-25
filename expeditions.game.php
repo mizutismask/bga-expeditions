@@ -41,7 +41,6 @@ class Expeditions extends Table {
     use StateTrait;
     use ArgsTrait;
     use MapTrait;
-    use TrainCarDeckTrait;
     use DestinationDeckTrait;
     use DebugUtilTrait;
     use ExpansionTrait;
@@ -65,11 +64,6 @@ class Expeditions extends Table {
         $this->destinations = $this->getNew("module.common.deck");
         $this->destinations->init("destination");
         $this->destinations->autoreshuffle = true;
-
-        $this->trainCars = $this->getNew("module.common.deck");
-        $this->trainCars->init("traincar");
-        $this->trainCars->autoreshuffle = true;
-        $this->trainCars->autoreshuffle_trigger = array('obj' => $this, 'method' => 'trainCarDeckAutoReshuffle');
     }
 
     protected function getGameName() {
@@ -137,8 +131,6 @@ class Expeditions extends Table {
 
         $this->createDestinations();
 
-        $this->createTrainCars();
-
         // Activate first player (which is in general a good idea :) )
         //$this->activeNextPlayer();
 
@@ -198,9 +190,7 @@ class Expeditions extends Table {
         }
 
         // deck counters
-        $result['trainCarDeckCount'] = $this->getRemainingTrainCarCardsInDeck();
         $result['destinationDeckCount'] = $this->getRemainingDestinationCardsInDeck();
-        $result['trainCarDeckMaxCount'] = 110;
         $result['destinationDeckMaxCount'] = 30;
 
         $result['expansion'] = EXPANSION;

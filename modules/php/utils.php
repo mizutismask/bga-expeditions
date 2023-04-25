@@ -86,26 +86,6 @@ trait UtilTrait {
     }
 
     /**
-     * Transforms a TrainCar Db object to TrainCar class.
-     */
-    function getTrainCarFromDb($dbObject) {
-        if ($dbObject === null) {
-            return null;
-        }
-        if (!$dbObject || !array_key_exists('id', $dbObject)) {
-            throw new BgaSystemException("Train car doesn't exists " . json_encode($dbObject));
-        }
-        return new TrainCar($dbObject);
-    }
-
-    /**
-     * Transforms a TrainCar Db object array to TrainCar class array.
-     */
-    function getTrainCarsFromDb(array $dbObjects) {
-        return array_map(fn ($dbObject) => $this->getTrainCarFromDb($dbObject), array_values($dbObjects));
-    }
-
-    /**
      * Transforms a Destination Db object to Destination class.
      */
     function getDestinationFromDb($dbObject) {
@@ -154,10 +134,6 @@ trait UtilTrait {
 
     function getHighestCompletedDestinationsCount() {
         return $this->getUniqueIntValueFromDB("SELECT max(complete) FROM (select count(`card_location_arg`) as complete FROM destination WHERE `completed` = 1 GROUP BY `card_location_arg`) as unusedMandatoryAlias");
-    }
-
-    function getRemainingTrainCarsCount(int $playerId) {
-        return $this->getUniqueIntValueFromDB("SELECT `player_remaining_train_cars` FROM player WHERE player_id = $playerId");
     }
 
     function getRemainingTicketsCount(int $playerId) {

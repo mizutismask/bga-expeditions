@@ -75,9 +75,7 @@ interface ExpeditionsGamedatas {
 	completedDestinations: Destination[];
 
 	// counters
-	trainCarDeckCount: number;
 	destinationDeckCount: number;
-	trainCarDeckMaxCount: number;
 	destinationDeckMaxCount: number;
 	lastTurn: boolean;
 	bestScore: number;
@@ -137,7 +135,6 @@ interface EnteringRevealDestinationArgs {
 interface EnteringChooseActionArgs {
 	possibleRoutes: Route[];
 	costForRoute: { [routeId: number]: { [color: number]: number[] } };
-	maxHiddenCardsPick: number;
 	canTakeTrainCarCards: boolean;
 	canPass: boolean;
 	canUseTicket: boolean;
@@ -156,18 +153,6 @@ interface EnteringUseTicketArgs {
 interface EnteringDrawSecondCardArgs {
 	availableVisibleCards: Destination[];
 	maxHiddenCardsPick: number;
-}
-
-interface TunnelAttempt {
-	routeId: number;
-	color: number;
-	extraCards: number;
-	tunnelCards: TrainCar[];
-}
-
-interface EnteringConfirmTunnelArgs {
-	tunnelAttempt: TunnelAttempt;
-	canPay: boolean;
 }
 
 interface NotifPointsArgs {
@@ -232,10 +217,6 @@ interface NotifDestinationCompletedArgs {
 	destination: Destination;
 	destinationRoutes: Route[];
 	revealedTokenBack: number;
-}
-
-interface NotifFreeTunnelArgs {
-	tunnelCards: TrainCar[];
 }
 
 interface NotifBestScoreArgs {

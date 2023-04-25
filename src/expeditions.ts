@@ -173,9 +173,6 @@ class Expeditions implements ExpeditionsGame {
 			case "drawSecondCard":
 				this.onEnteringDrawSecondCard(args.args as EnteringDrawSecondCardArgs);
 				break;
-			case "confirmTunnel":
-				this.onEnteringConfirmTunnel(args.args as EnteringConfirmTunnelArgs);
-				break;
 			case "endScore":
 				this.onEnteringEndScore();
 				break;
@@ -186,7 +183,6 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	private onEnteringUseTicket(args: EnteringUseTicketArgs) {
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
-		//this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
 
 		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 		this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
@@ -202,7 +198,6 @@ class Expeditions implements ExpeditionsGame {
 			this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
 		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
-		this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
 
 		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 	}
@@ -211,14 +206,8 @@ class Expeditions implements ExpeditionsGame {
 	 * Allow to pick a second card (locomotives will be grayed).
 	 */
 	private onEnteringDrawSecondCard(args: EnteringDrawSecondCardArgs) {
-		this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
+		//this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
 		this.trainCarSelection.setSelectableVisibleCards(args.availableVisibleCards);
-	}
-
-	private onEnteringConfirmTunnel(args: EnteringConfirmTunnelArgs) {
-		const route = ROUTES.find((route) => route.id == args.tunnelAttempt.routeId);
-		this.map.setHoveredRoute(route, true);
-		this.trainCarSelection.showTunnelCards(args.tunnelAttempt.tunnelCards);
 	}
 
 	/**
@@ -269,10 +258,6 @@ class Expeditions implements ExpeditionsGame {
 			case "drawSecondCard":
 				this.trainCarSelection.removeSelectableVisibleCards();
 				break;
-			case "confirmTunnel":
-				this.map.setHoveredRoute(null);
-				this.trainCarSelection.showTunnelCards([]);
-				break;
 		}
 	}
 
@@ -309,24 +294,6 @@ class Expeditions implements ExpeditionsGame {
 						() => this.chooseAdditionalDestinations()
 					);
 					dojo.addClass("chooseAdditionalDestinations_button", "disabled");
-					break;
-				case "confirmTunnel":
-					const confirmTunnelArgs = args as EnteringConfirmTunnelArgs;
-					const confirmLabel =
-						/* TODO MAPS _*/ "Confirm tunnel claim" +
-						(confirmTunnelArgs.canPay ? "" : ` (${/* TODO MAPS _*/ "You don't have enough cards"})`);
-					(this as any).addActionButton("claimTunnel_button", confirmLabel, () => this.claimTunnel());
-					(this as any).addActionButton(
-						"skipTunnel_button",
-						/* TODO MAPS _*/ "Skip tunnel claim",
-						() => this.skipTunnel(),
-						null,
-						null,
-						"gray"
-					);
-					if (!confirmTunnelArgs.canPay) {
-						dojo.addClass("claimTunnel_button", "disabled");
-					}
 					break;
 			}
 		}
@@ -434,9 +401,7 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	private onPreferenceChange(prefId: number, prefValue: number) {
 		switch (prefId) {
-			case 203:
-				this.map.setOutline();
-				break;
+			
 		}
 	}
 
@@ -1074,36 +1039,10 @@ class Expeditions implements ExpeditionsGame {
 		this.takeAction("pass");
 	}
 
-	/**
-	 * Claim a tunnel (confirm paying extra cost).
-	 */
-	public claimTunnel() {
-		if (!(this as any).checkAction("claimTunnel")) {
-			return;
-		}
-
-		this.takeAction("claimTunnel");
-	}
-
-	/**
-	 * Skip a tunnel (deny paying extra cost).
-	 */
-	public skipTunnel() {
-		if (!(this as any).checkAction("skipTunnel")) {
-			return;
-		}
-
-		this.takeAction("skipTunnel");
-	}
-
 	public takeAction(action: string, data?: any) {
 		data = data || {};
 		data.lock = true;
 		(this as any).ajaxcall(`/expeditions/expeditions/${action}.html`, data, this, () => {});
-	}
-
-	private isFastEndScoring() {
-		return Number((this as any).prefs[208]?.value) == 2;
 	}
 
 	///////////////////////////////////////////////////
@@ -1121,8 +1060,6 @@ class Expeditions implements ExpeditionsGame {
 	setupNotifications() {
 		//log( 'notifications subscriptions setup' );
 
-		const skipEndOfGameAnimations = this.isFastEndScoring();
-
 		const notifs = [
 			["newCardsOnTable", ANIMATION_MS],
 			["claimedRoute", ANIMATION_MS],
@@ -1132,7 +1069,6 @@ class Expeditions implements ExpeditionsGame {
 			["ticketUsed", 1],
 			["destinationsPicked", 1],
 			//["trainCarPicked", ANIMATION_MS],
-			["freeTunnel", 2000],
 			["highlightVisibleLocomotives", 1000],
 			["notEnoughTrainCars", 1],
 			["lastTurn", 1],
@@ -1257,16 +1193,6 @@ class Expeditions implements ExpeditionsGame {
 
 		playSound(`ttr-completed-in-game`);
 		(this as any).disableNextMoveSound();
-	}
-
-	/**
-	 * Show the 3 cards when attempting a tunnel (case withno extra cards required, play automatically).
-	 */
-	notif_freeTunnel(notif: Notif<NotifFreeTunnelArgs>) {
-		if (document.visibilityState !== "hidden" && !(this as any).instantaneousMode) {
-			this.trainCarSelection.showTunnelCards(notif.args.tunnelCards);
-			setTimeout(() => this.trainCarSelection.showTunnelCards([]), 2000);
-		}
 	}
 
 	/**

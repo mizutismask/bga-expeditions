@@ -1566,7 +1566,7 @@ var TtrMap = /** @class */ (function () {
         var _this = this;
         spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
         spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
-        spaceDiv.addEventListener("dragleave", function (e) { return _this.setHoveredRoute(null); });
+        //spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
         spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
         spaceDiv.addEventListener("click", function () { return _this.game.clickedRoute(route); });
     };
@@ -1577,7 +1577,7 @@ var TtrMap = /** @class */ (function () {
         var _this = this;
         spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
         spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
-        spaceDiv.addEventListener("dragleave", function (e) { return _this.setHoveredRoute(null); });
+        //spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
         spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
     };
     /**
@@ -1837,7 +1837,6 @@ var TtrMap = /** @class */ (function () {
         this.scale = Math.min(1, horizontalScale, verticalScale);
         this.resizedDiv.style.transform = this.scale === 1 ? "" : "scale(".concat(this.scale, ")");
         this.resizedDiv.style.marginBottom = "-".concat((1 - this.scale) * gameHeight, "px");
-        this.setOutline();
     };
     /**
      * Get current zoom.
@@ -2027,15 +2026,6 @@ var TtrMap = /** @class */ (function () {
         this.crosshairTarget = null;
         document.getElementById("map").removeChild(this.dragOverlay);
         this.dragOverlay = null;
-    };
-    /**
-     * Set outline for train cars on the map, according to preferences.
-     */
-    TtrMap.prototype.setOutline = function () {
-        var _a, _b;
-        var preference = Number((_a = this.game.prefs[203]) === null || _a === void 0 ? void 0 : _a.value);
-        var outline = preference === 1 || (preference === 2 && ((_b = this.mapDiv) === null || _b === void 0 ? void 0 : _b.getBoundingClientRect().width) < 1000);
-        this.mapDiv.dataset.bigShadows = outline.toString();
     };
     TtrMap.prototype.getCityName = function (cityId) {
         return cityId - 100 < CITIES_NAMES.length ? CITIES_NAMES[cityId - 100] : "unknown";
@@ -2338,23 +2328,6 @@ var TrainCarSelection = /** @class */ (function () {
                     cardDiv.classList.add("highlight-locomotive");
                 }
             });*/
-    };
-    /**
-     * Show the 3 cards drawn for the tunnel claim. Clear them if called with empty array.
-     */
-    TrainCarSelection.prototype.showTunnelCards = function (tunnelCards) {
-        if (tunnelCards === null || tunnelCards === void 0 ? void 0 : tunnelCards.length) {
-            dojo.place("<div id=\"tunnel-cards\"></div>", "train-car-deck-hidden-pile");
-            tunnelCards.forEach(function (card, index) {
-                dojo.place("<div id=\"tunnel-card-".concat(index, "\" class=\"train-car-card tunnel-card animated\" data-color=\"").concat(card.type, "\"></div>"), "tunnel-cards");
-                var element = document.getElementById("tunnel-card-".concat(index));
-                setTimeout(function () { return (element.style.transform = "translateY(".concat(55 * (index - 1), "px) scale(0.33)")); });
-            });
-        }
-        else {
-            this.game.fadeOutAndDestroy("tunnel-cards");
-            //document.getElementById('tunnel-cards')?.remove();
-        }
     };
     return TrainCarSelection;
 }());
@@ -2845,9 +2818,6 @@ var Expeditions = /** @class */ (function () {
             case "drawSecondCard":
                 this.onEnteringDrawSecondCard(args.args);
                 break;
-            case "confirmTunnel":
-                this.onEnteringConfirmTunnel(args.args);
-                break;
             case "endScore":
                 this.onEnteringEndScore();
                 break;
@@ -2858,7 +2828,6 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.onEnteringUseTicket = function (args) {
         var currentPlayerActive = this.isCurrentPlayerActive();
-        //this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
         this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
     };
@@ -2873,20 +2842,14 @@ var Expeditions = /** @class */ (function () {
             this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
         }
         var currentPlayerActive = this.isCurrentPlayerActive();
-        this.trainCarSelection.setSelectableTopDeck(currentPlayerActive, args.maxHiddenCardsPick);
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
     };
     /**
      * Allow to pick a second card (locomotives will be grayed).
      */
     Expeditions.prototype.onEnteringDrawSecondCard = function (args) {
-        this.trainCarSelection.setSelectableTopDeck(this.isCurrentPlayerActive(), args.maxHiddenCardsPick);
+        //this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
         this.trainCarSelection.setSelectableVisibleCards(args.availableVisibleCards);
-    };
-    Expeditions.prototype.onEnteringConfirmTunnel = function (args) {
-        var route = ROUTES.find(function (route) { return route.id == args.tunnelAttempt.routeId; });
-        this.map.setHoveredRoute(route, true);
-        this.trainCarSelection.showTunnelCards(args.tunnelAttempt.tunnelCards);
     };
     /**
      * Show score board.
@@ -2934,10 +2897,6 @@ var Expeditions = /** @class */ (function () {
             case "drawSecondCard":
                 this.trainCarSelection.removeSelectableVisibleCards();
                 break;
-            case "confirmTunnel":
-                this.map.setHoveredRoute(null);
-                this.trainCarSelection.showTunnelCards([]);
-                break;
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -2966,18 +2925,6 @@ var Expeditions = /** @class */ (function () {
                 case "chooseAdditionalDestinations":
                     this.addActionButton("chooseAdditionalDestinations_button", _("Trade selected destinations"), function () { return _this.chooseAdditionalDestinations(); });
                     dojo.addClass("chooseAdditionalDestinations_button", "disabled");
-                    break;
-                case "confirmTunnel":
-                    var confirmTunnelArgs = args;
-                    var confirmLabel = 
-                    /* TODO MAPS _*/ "Confirm tunnel claim" +
-                        (confirmTunnelArgs.canPay ? "" : " (".concat(/* TODO MAPS _*/ "You don't have enough cards", ")"));
-                    this.addActionButton("claimTunnel_button", confirmLabel, function () { return _this.claimTunnel(); });
-                    this.addActionButton("skipTunnel_button", 
-                    /* TODO MAPS _*/ "Skip tunnel claim", function () { return _this.skipTunnel(); }, null, null, "gray");
-                    if (!confirmTunnelArgs.canPay) {
-                        dojo.addClass("claimTunnel_button", "disabled");
-                    }
                     break;
             }
         }
@@ -3077,9 +3024,6 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.onPreferenceChange = function (prefId, prefValue) {
         switch (prefId) {
-            case 203:
-                this.map.setOutline();
-                break;
         }
     };
     Expeditions.prototype.isColorBlindMode = function () {
@@ -3585,32 +3529,10 @@ var Expeditions = /** @class */ (function () {
         }
         this.takeAction("pass");
     };
-    /**
-     * Claim a tunnel (confirm paying extra cost).
-     */
-    Expeditions.prototype.claimTunnel = function () {
-        if (!this.checkAction("claimTunnel")) {
-            return;
-        }
-        this.takeAction("claimTunnel");
-    };
-    /**
-     * Skip a tunnel (deny paying extra cost).
-     */
-    Expeditions.prototype.skipTunnel = function () {
-        if (!this.checkAction("skipTunnel")) {
-            return;
-        }
-        this.takeAction("skipTunnel");
-    };
     Expeditions.prototype.takeAction = function (action, data) {
         data = data || {};
         data.lock = true;
         this.ajaxcall("/expeditions/expeditions/".concat(action, ".html"), data, this, function () { });
-    };
-    Expeditions.prototype.isFastEndScoring = function () {
-        var _a;
-        return Number((_a = this.prefs[208]) === null || _a === void 0 ? void 0 : _a.value) == 2;
     };
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
@@ -3626,7 +3548,6 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.setupNotifications = function () {
         //log( 'notifications subscriptions setup' );
         var _this = this;
-        var skipEndOfGameAnimations = this.isFastEndScoring();
         var notifs = [
             ["newCardsOnTable", ANIMATION_MS],
             ["claimedRoute", ANIMATION_MS],
@@ -3636,7 +3557,6 @@ var Expeditions = /** @class */ (function () {
             ["ticketUsed", 1],
             ["destinationsPicked", 1],
             //["trainCarPicked", ANIMATION_MS],
-            ["freeTunnel", 2000],
             ["highlightVisibleLocomotives", 1000],
             ["notEnoughTrainCars", 1],
             ["lastTurn", 1],
@@ -3749,16 +3669,6 @@ var Expeditions = /** @class */ (function () {
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         playSound("ttr-completed-in-game");
         this.disableNextMoveSound();
-    };
-    /**
-     * Show the 3 cards when attempting a tunnel (case withno extra cards required, play automatically).
-     */
-    Expeditions.prototype.notif_freeTunnel = function (notif) {
-        var _this = this;
-        if (document.visibilityState !== "hidden" && !this.instantaneousMode) {
-            this.trainCarSelection.showTunnelCards(notif.args.tunnelCards);
-            setTimeout(function () { return _this.trainCarSelection.showTunnelCards([]); }, 2000);
-        }
     };
     /**
      * Show an error message and animate train car counter to show the player can't take the route because he doesn't have enough train cars left.

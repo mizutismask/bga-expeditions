@@ -54,19 +54,8 @@ trait ArgsTrait {
     function argChooseAction() {
         $playerId = intval(self::getActivePlayerId());
 
-        $trainCarsHand = $this->getTrainCarsFromDb($this->trainCars->getCardsInLocation('hand', $playerId));
-        // we don't limit claimable routes to the number of remaining train cars, because the players don't understand why they can't claim the route
-        // so instead they'll get an error when they try to claim the route, saying they don't have enough train cars left
-        $remainingTrainCars = 99;
-        $realRemainingTrainCars = $this->getRemainingTrainCarsCount($playerId);
-
         $possibleRoutes = $this->claimableRoutes($playerId);
-        $maxHiddenCardsPick = min(2, $this->getRemainingTrainCarCardsInDeck(true));
-
-        $canClaimARoute = false;
         $costForRoute = [];
-
-        $canTakeTrainCarCards = $this->getRemainingTrainCarCardsInDeck(true, true);
 
         $loopToResolve =!empty($this->getGameStateValue(NEW_LOOP_COLOR));
         $mainActionDone=boolval($this->getGameStateValue(MAIN_ACTION_DONE));
@@ -76,8 +65,6 @@ trait ArgsTrait {
         return [
             'possibleRoutes' => $possibleRoutes,
             'costForRoute' => $costForRoute,
-            'maxHiddenCardsPick' => $maxHiddenCardsPick,
-            'canTakeTrainCarCards' => $canTakeTrainCarCards,
             'canUseTicket' => $canUseTicket,
             'canPass' => $canPass,
             'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)],
@@ -88,11 +75,11 @@ trait ArgsTrait {
     }
 
     function argDrawSecondCard() {
-        $maxHiddenCardsPick = min(1, $this->getRemainingTrainCarCardsInDeck(true));
+        //$maxHiddenCardsPick = min(1, $this->getRemainingTrainCarCardsInDeck(true));
         $availableVisibleCards = $this->getVisibleTrainCarCards(true);
 
         return [
-            'maxHiddenCardsPick' => $maxHiddenCardsPick,
+          //  'maxHiddenCardsPick' => $maxHiddenCardsPick,
             'availableVisibleCards' => $availableVisibleCards,
         ];
     }
@@ -116,31 +103,6 @@ trait ArgsTrait {
                 )
             ),
         );
-    }
-
-    function argConfirmTunnel() {
-        $playerId = intval(self::getActivePlayerId());
-
-        $tunnelAttempt = $this->getGlobalVariable(TUNNEL_ATTEMPT);
-
-        $route = $this->ROUTES[$tunnelAttempt->routeId];
-        $remainingTrainCars = $this->getRemainingTrainCarsCount($playerId);
-        $trainCarsHand = $this->getTrainCarsFromDb($this->trainCars->getCardsInLocation('hand', $playerId));
-        $tunnelCost = $this->canPayForRoute($route, $trainCarsHand, $remainingTrainCars, $tunnelAttempt->color, $tunnelAttempt->extraCards);
-        $canPay = $tunnelCost != null;
-
-        $extraCards = null;
-        if ($canPay) {
-            $routeCost = $this->canPayForRoute($route, $trainCarsHand, $remainingTrainCars, $tunnelAttempt->color);
-            $extraCards = array_values(array_filter($tunnelCost, fn ($tunnelCard) => !$this->array_some($routeCost, fn ($routeCard) => $routeCard->id == $tunnelCard->id)));
-        }
-
-        return [
-            'tunnelAttempt' => $tunnelAttempt,
-            'canPay' => $canPay,
-            'colors' => $extraCards == null ? '' : array_map(fn ($card) => $card->type, $extraCards), // for title bar
-            'extraCards' => $tunnelAttempt->extraCards, // for title bar
-        ];
     }
 
     function argRevealDestination() {

@@ -30,29 +30,4 @@ $game_options = [
 
 $game_preferences = [
 
-
-    203 => [
-        'name' => totranslate('Train car outline'),
-        'needReload' => false,
-        'values' => [
-            1 => ['name' => totranslate('Enabled')],
-            2 => ['name' => totranslate('Automatic')],
-            3 => ['name' => totranslate('Disabled')],
-        ],
-        'default' => 2
-    ],
-
-    // 206 and 207 already used
-
-    208 => [
-        'name' => totranslate('End of game animations'),
-        'needReload' => true,
-        'values' => [
-            1 => ['name' => totranslate('Enabled')],
-            2 => ['name' => totranslate('Disabled')],
-        ],
-        'default' => 1
-    ],
-
-    // 209 already used
 ];
