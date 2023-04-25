@@ -36,6 +36,18 @@ trait DebugUtilTrait {
     function rc(bool $all = false) {
         $this->debugRevealCards($all);
     }
+    function cd() {
+        $this->debugCompleteDestinations();
+    }
+
+    function debugCompleteDestinations() {
+        $players = $this->getPlayersIds();
+        $restriction = " limit " . ($this->getInitialDestinationCardNumber() - 1);
+        foreach ($players as $playerId) {
+            self::DbQuery("UPDATE `destination` set `completed` = true WHERE `card_location_arg`= $playerId" . $restriction);
+        }
+        $this->gamestate->jumpToState(ST_PLAYER_CHOOSE_ACTION);
+    }
 
     function debugSetDestinationInHand($cardType, $playerId) {
         $card = $this->getDestinationFromDb(array_values($this->destinations->getCardsOfType(1, $cardType))[0]);
@@ -87,6 +99,7 @@ trait DebugUtilTrait {
         $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 0);
         $this->debugResetArrowsLeft();
+        self::DbQuery("UPDATE `destination` set `completed` = false" );
     }
 
     function debugClaimExpeditionRoutes(int $arrowsNb = 15) {

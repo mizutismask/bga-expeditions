@@ -31,6 +31,20 @@ trait StateTrait {
         $this->gamestate->initializePrivateStateForAllActivePlayers();
     }
 
+    function hasReachedEndOfGameRequirements($playerId): bool {
+        $end = count($this->getUncompletedDestinationsIds($playerId)) == 0;
+        if ($end && intval(self::getGameStateValue(LAST_TURN) == 0)) {
+            self::setGameStateValue(LAST_TURN, $this->getLastPlayer()); //we play until the last player to finish the round
+            if (!$this->isLastPlayer($playerId)) {
+                self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has no more destination cards, finishing round !'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                ]);
+            }
+        }
+        return $end;
+    }
+
     function stNextPlayer() {
         $playerId = self::getActivePlayerId();
 
@@ -44,28 +58,13 @@ trait StateTrait {
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 
         // check if it was last action from the last player or if there is no arrow left
-        if ($lastTurn == $playerId || $this->noArrowLeft()) {
+        if (
+            $lastTurn == $playerId || $this->noArrowLeft() ||
+            ($this->hasReachedEndOfGameRequirements($playerId) && $this->isLastPlayer($playerId))
+        ) {
             $this->gamestate->nextState('endScore');
         } else {
-            if ($lastTurn == 0) {
-                // check if last turn is started    
-                $todoDests = $this->getUncompletedDestinationsIds($playerId);
-                if (count($todoDests) == 0) {
-                    $lastPlayer = $this->getLastPlayer();
-                    self::setGameStateValue(LAST_TURN, $lastPlayer);
-
-                    if ($playerId == $lastPlayer) {
-                        $this->gamestate->nextState('endScore');
-                    }
-                    else{
-                        self::notifyAllPlayers('lastTurn', clienttranslate('${player_name} has no more destination cards, finishing turn !'), [
-                            'playerId' => $playerId,
-                            'player_name' => $this->getPlayerName($playerId),
-                        ]);
-                    }
-                }
-            }
-
+            //finishing round or playing normally
             $playerId = self::activeNextPlayer();
             self::giveExtraTime($playerId);
             $this->gamestate->nextState('nextPlayer');

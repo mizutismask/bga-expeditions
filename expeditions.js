@@ -3762,7 +3762,7 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.notif_lastTurn = function (animate) {
         if (animate === void 0) { animate = true; }
-        dojo.place("<div id=\"last-round\">\n            <span class=\"last-round-text ".concat(animate ? "animate" : "", "\">").concat(_("This is the final round!"), "</span>\n        </div>"), "page-title");
+        dojo.place("<div id=\"last-round\">\n            <span class=\"last-round-text ".concat(animate ? "animate" : "", "\">").concat(_("Finishing round before end of game!"), "</span>\n        </div>"), "page-title");
     };
     /**
      * Save best score for end score animations.

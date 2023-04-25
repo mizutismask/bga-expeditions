@@ -1281,7 +1281,7 @@ class Expeditions implements ExpeditionsGame {
 	notif_lastTurn(animate: boolean = true) {
 		dojo.place(
 			`<div id="last-round">
-            <span class="last-round-text ${animate ? "animate" : ""}">${_("This is the final round!")}</span>
+            <span class="last-round-text ${animate ? "animate" : ""}">${_("Finishing round before end of game!")}</span>
         </div>`,
 			"page-title"
 		);

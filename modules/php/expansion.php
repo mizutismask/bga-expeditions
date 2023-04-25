@@ -37,7 +37,7 @@ trait ExpansionTrait {
     /**
      * Return the number of destinations cards shown at the beginning.
      */
-    function getInitialDestinationCardNumber() {
+    function getInitialDestinationCardNumber():int {
         $playerCount = $this->getPlayerCount();
         switch (EXPANSION) {
             default:

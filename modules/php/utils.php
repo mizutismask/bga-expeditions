@@ -225,6 +225,10 @@ trait UtilTrait {
         return self::getUniqueValueFromDb("SELECT player_name FROM player WHERE player_id = $playerId");
     }
 
+    function isLastPlayer(int $playerId) {
+        return $this->getLastPlayer()==$playerId;
+    }
+
     function getPlayerScore(int $playerId) {
         return $this->getUniqueIntValueFromDB("SELECT player_score FROM player where `player_id` = $playerId");
     }

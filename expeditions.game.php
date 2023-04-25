@@ -50,7 +50,7 @@ class Expeditions extends Table {
         parent::__construct();
 
         $this->initGameStateLabels([
-            LAST_TURN => 10, // last turn is the id of the player starting last turn, 0 if it's not last turn
+            LAST_TURN => 10, // last turn is the id of the last player, 0 if it's not last turn
             TICKETS_USED => 11, // used tickets count for active player during his turn
             REMAINING_YELLOW_ARROWS => 12,
             REMAINING_BLUE_ARROWS => 13,
@@ -59,7 +59,7 @@ class Expeditions extends Table {
             MAIN_ACTION_DONE => 16,
             BLUEPOINT_ACTIONS_REMAINING => 17,
             // options
-            SHOW_TURN_ORDER => 110, // last turn is the id of the player starting last turn, 0 if it's not last turn
+            SHOW_TURN_ORDER => 110, 
         ]);
 
         $this->destinations = $this->getNew("module.common.deck");
