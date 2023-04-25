@@ -91,7 +91,7 @@ class PlayerDestinations {
 	 * Mark destination as complete (place it on the "complete" column).
 	 */
 	public markDestinationCompleteNoAnimation(destination: Destination) {
-		console.log("markDestinationComplete");
+		//console.log("markDestinationComplete");
 
 		const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
 		if (index !== -1) {

@@ -1676,7 +1676,6 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.shiftArrow = function (route, shift) {
         var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
-        console.log("shift arrow", route, shift);
         var space = route.spaces[0];
         var angle = -space.angle;
         while (angle < 0) {
@@ -1691,9 +1690,7 @@ var TtrMap = /** @class */ (function () {
         x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
         y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
         var oldTransform = routeDiv.style.transform;
-        console.log("oldTransform", oldTransform);
         var newTransform = oldTransform.replace(new RegExp("translate(.*px, .*px)"), "translate(".concat(x, "px, ").concat(y, "px"));
-        console.log("newTransform", newTransform);
         routeDiv.style.transform = newTransform;
     };
     /**
@@ -1891,7 +1888,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSelectableDestination = function (destination, visible) {
         [destination.to].forEach(function (city) {
-            console.log("search ", "city".concat(city));
+            //console.log("search ", `city${city}`);
             document.getElementById("city".concat(city)).dataset.selectable = "" + visible;
         });
     };
@@ -1959,7 +1956,6 @@ var TtrMap = /** @class */ (function () {
      * Sets a marker to indicate that the destination is shared.
      */
     TtrMap.prototype.showSharedDestinations = function (destinations) {
-        console.log("showSharedDestinations", destinations);
         destinations.forEach(function (d) {
             document.getElementById("city".concat(d.to)).dataset.revealedBy = "shared";
             document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
@@ -2448,7 +2444,7 @@ var PlayerDestinations = /** @class */ (function () {
      * Mark destination as complete (place it on the "complete" column).
      */
     PlayerDestinations.prototype.markDestinationCompleteNoAnimation = function (destination) {
-        console.log("markDestinationComplete");
+        //console.log("markDestinationComplete");
         var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
         if (index !== -1) {
             this.destinationsTodo.splice(index, 1);

@@ -385,7 +385,7 @@ trait ActionTrait {
                 $end = $junction == $claimedRoute->from ? $claimedRoute->to : $claimedRoute->from;
                 $reversed = $junction > $end;
             } else {
-                self::dump('*******************No previous route of color', $claimedRoute->color);
+               // self::dump('*******************No previous route of color', $claimedRoute->color);
             }
         }
         return $reversed;

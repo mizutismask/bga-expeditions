@@ -406,7 +406,6 @@ class TtrMap {
 	 */
 	private shiftArrow(route: Route, shift: number) {
 		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-		console.log("shift arrow", route, shift);
 
 		const space = route.spaces[0];
 		let angle = -space.angle;
@@ -424,9 +423,7 @@ class TtrMap {
 		y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
 
 		let oldTransform = routeDiv.style.transform;
-		console.log("oldTransform", oldTransform);
 		let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
-		console.log("newTransform", newTransform);
 		routeDiv.style.transform = newTransform;
 	}
 	/**
@@ -662,7 +659,7 @@ class TtrMap {
 	 */
 	public setSelectableDestination(destination: Destination, visible: boolean): void {
 		[destination.to].forEach((city) => {
-			console.log("search ", `city${city}`);
+			//console.log("search ", `city${city}`);
 
 			document.getElementById(`city${city}`).dataset.selectable = "" + visible;
 		});
@@ -736,8 +733,6 @@ class TtrMap {
 	 * Sets a marker to indicate that the destination is shared.
 	 */
 	public showSharedDestinations(destinations: Destination[]) {
-		console.log("showSharedDestinations", destinations);
-
 		destinations.forEach((d) => {
 			document.getElementById(`city${d.to}`).dataset.revealedBy = "shared";
 			document.getElementById(`city${d.to}`).dataset.toConnect = "true";
