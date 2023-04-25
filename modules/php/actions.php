@@ -46,49 +46,6 @@ trait ActionTrait {
         $this->gamestate->nextState('continue');
     }
 
-    public function drawDeckCards(int $number) {
-        self::checkAction('drawDeckCards');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $drawNumber = $this->drawTrainCarCardsFromDeck($playerId, $number);
-
-
-        $this->gamestate->nextState($number == 1 && $this->canTakeASecondCard(null) ? 'drawSecondCard' : 'nextPlayer');
-    }
-
-    public function drawTableCard(int $id) {
-        self::checkAction('drawTableCard');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $card = $this->drawTrainCarCardsFromTable($playerId, $id);
-
-
-        $this->gamestate->nextState($this->canTakeASecondCard($card->type) ? 'drawSecondCard' : 'nextPlayer');
-    }
-
-    public function drawSecondDeckCard() {
-        self::checkAction('drawSecondDeckCard');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $this->drawTrainCarCardsFromDeck($playerId, 1, true);
-
-        $this->gamestate->nextState('nextPlayer');
-    }
-
-    public function drawSecondTableCard(int $id) {
-        self::checkAction('drawSecondTableCard');
-
-        $playerId = intval(self::getActivePlayerId());
-
-        $card = $this->drawTrainCarCardsFromTable($playerId, $id, true);
-
-
-        $this->gamestate->nextState('nextPlayer');
-    }
-
     public function drawDestinations() {
         self::checkAction('drawDestinations');
 

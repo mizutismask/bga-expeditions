@@ -129,10 +129,7 @@ $playerActionsGameStates = [
         "type" => "activeplayer",
         "args" => "argChooseAction",
         "possibleactions" => [
-            "drawDeckCards",
-            "drawTableCard",
             "claimRoute",
-            "drawDestinations",
             "useTicket",
             "pass",
         ],
@@ -140,21 +137,6 @@ $playerActionsGameStates = [
             "useTicket" => ST_PLAYER_USE_TICKET,
             "nextPlayer" => ST_NEXT_PLAYER,
             "continue" => ST_PLAYER_CHOOSE_ACTION,
-        ]
-    ],
-
-    ST_PLAYER_DRAW_SECOND_CARD => [
-        "name" => "drawSecondCard",
-        "description" => clienttranslate('${actplayer} must draw a train car card'),
-        "descriptionmyturn" => clienttranslate('${you} must draw a train car card'),
-        "type" => "activeplayer",
-        "args" => "argDrawSecondCard",
-        "possibleactions" => [
-            "drawSecondDeckCard",
-            "drawSecondTableCard",
-        ],
-        "transitions" => [
-            "nextPlayer" => ST_NEXT_PLAYER,
         ]
     ],
 

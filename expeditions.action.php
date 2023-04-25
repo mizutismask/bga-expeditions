@@ -68,44 +68,6 @@ class action_expeditions extends APP_GameAction {
         self::ajaxResponse();
     }
 
-    public function drawDeckCards() {
-        self::setAjaxMode();
-
-        $number = self::getArg("number", AT_posint, true);
-
-        $this->game->drawDeckCards($number);
-
-        self::ajaxResponse();
-    }
-
-    public function drawTableCard() {
-        self::setAjaxMode();
-
-        $id = self::getArg("id", AT_posint, true);
-
-        $this->game->drawTableCard($id);
-
-        self::ajaxResponse();
-    }
-
-    public function drawSecondDeckCard() {
-        self::setAjaxMode();
-
-        $this->game->drawSecondDeckCard();
-
-        self::ajaxResponse();
-    }
-
-    public function drawSecondTableCard() {
-        self::setAjaxMode();
-
-        $id = self::getArg("id", AT_posint, true);
-
-        $this->game->drawSecondTableCard($id);
-
-        self::ajaxResponse();
-    }
-
     public function drawDestinations() {
         self::setAjaxMode();
 

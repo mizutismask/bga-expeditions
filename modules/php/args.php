@@ -74,16 +74,6 @@ trait ArgsTrait {
         ];
     }
 
-    function argDrawSecondCard() {
-        //$maxHiddenCardsPick = min(1, $this->getRemainingTrainCarCardsInDeck(true));
-        $availableVisibleCards = $this->getVisibleTrainCarCards(true);
-
-        return [
-          //  'maxHiddenCardsPick' => $maxHiddenCardsPick,
-            'availableVisibleCards' => $availableVisibleCards,
-        ];
-    }
-
     function argUseTicket() {
         $playerId = intval(self::getActivePlayerId());
         return [

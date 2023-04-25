@@ -170,9 +170,6 @@ class Expeditions implements ExpeditionsGame {
 			case "useTicket":
 				this.onEnteringUseTicket(args.args as EnteringUseTicketArgs);
 				break;
-			case "drawSecondCard":
-				this.onEnteringDrawSecondCard(args.args as EnteringDrawSecondCardArgs);
-				break;
 			case "endScore":
 				this.onEnteringEndScore();
 				break;
@@ -200,14 +197,6 @@ class Expeditions implements ExpeditionsGame {
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 
 		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
-	}
-
-	/**
-	 * Allow to pick a second card (locomotives will be grayed).
-	 */
-	private onEnteringDrawSecondCard(args: EnteringDrawSecondCardArgs) {
-		//this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
-		this.trainCarSelection.setSelectableVisibleCards(args.availableVisibleCards);
 	}
 
 	/**
@@ -254,9 +243,6 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
-				break;
-			case "drawSecondCard":
-				this.trainCarSelection.removeSelectableVisibleCards();
 				break;
 		}
 	}
@@ -949,36 +935,6 @@ class Expeditions implements ExpeditionsGame {
 		this.takeAction("chooseAdditionalDestinations", {
 			keptDestinationId: destinationsIds.pop(),
 			discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
-		});
-	}
-
-	/**
-	 * Pick hidden train car(s).
-	 */
-	public onHiddenTrainCarDeckClick(number: number) {
-		const action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondDeckCard" : "drawDeckCards";
-
-		if (!(this as any).checkAction(action)) {
-			return;
-		}
-
-		this.takeAction(action, {
-			number,
-		});
-	}
-
-	/**
-	 * Pick visible train car.
-	 */
-	public onVisibleTrainCarCardClick(id: number) {
-		const action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondTableCard" : "drawTableCard";
-
-		if (!(this as any).checkAction(action)) {
-			return;
-		}
-
-		this.takeAction(action, {
-			id,
 		});
 	}
 

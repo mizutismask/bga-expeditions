@@ -524,48 +524,6 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
     };
     return DestinationCompleteAnimation;
 }(WagonsAnimation));
-/**
- * Longest path animation : wagons used by longest path are highlighted, and length is displayed over the map.
- */
-var LongestPathAnimation = /** @class */ (function (_super) {
-    __extends(LongestPathAnimation, _super);
-    function LongestPathAnimation(game, routes, length, playerColor, actions) {
-        var _this = _super.call(this, game, routes) || this;
-        _this.routes = routes;
-        _this.length = length;
-        _this.playerColor = playerColor;
-        _this.actions = actions;
-        return _this;
-    }
-    LongestPathAnimation.prototype.animate = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            dojo.place("\n            <div id=\"longest-path-animation\" style=\"color: #".concat(_this.playerColor, ";").concat(_this.getCardPosition(), "\">").concat(_this.length, "</div>\n            "), 'map');
-            _this.setWagonsVisibility(true);
-            setTimeout(function () { return _this.endAnimation(resolve); }, 1900);
-        });
-    };
-    LongestPathAnimation.prototype.endAnimation = function (resolve) {
-        var _a, _b;
-        this.setWagonsVisibility(false);
-        var number = document.getElementById('longest-path-animation');
-        number.parentElement.removeChild(number);
-        resolve(this);
-        this.game.endAnimation(this);
-        (_b = (_a = this.actions).end) === null || _b === void 0 ? void 0 : _b.call(_a);
-    };
-    LongestPathAnimation.prototype.getCardPosition = function () {
-        var x = 100;
-        var y = 100;
-        if (this.routes.length) {
-            var positions = [this.routes[0].from, this.routes[this.routes.length - 1].to].map(function (cityId) { return CITIES.find(function (city) { return city.id == cityId; }); });
-            x = (positions[0].x + positions[1].x) / 2;
-            y = (positions[0].y + positions[1].y) / 2;
-        }
-        return "left: ".concat(x, "px; top: ").concat(y, "px;");
-    };
-    return LongestPathAnimation;
-}(WagonsAnimation));
 var City = /** @class */ (function () {
     function City(id, x, y) {
         this.id = id;
@@ -2811,9 +2769,6 @@ var Expeditions = /** @class */ (function () {
             case "useTicket":
                 this.onEnteringUseTicket(args.args);
                 break;
-            case "drawSecondCard":
-                this.onEnteringDrawSecondCard(args.args);
-                break;
             case "endScore":
                 this.onEnteringEndScore();
                 break;
@@ -2839,13 +2794,6 @@ var Expeditions = /** @class */ (function () {
         }
         var currentPlayerActive = this.isCurrentPlayerActive();
         this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
-    };
-    /**
-     * Allow to pick a second card (locomotives will be grayed).
-     */
-    Expeditions.prototype.onEnteringDrawSecondCard = function (args) {
-        //this.trainCarSelection.setSelectableTopDeck((this as any).isCurrentPlayerActive(), args.maxHiddenCardsPick);
-        this.trainCarSelection.setSelectableVisibleCards(args.availableVisibleCards);
     };
     /**
      * Show score board.
@@ -2889,9 +2837,6 @@ var Expeditions = /** @class */ (function () {
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
-                break;
-            case "drawSecondCard":
-                this.trainCarSelection.removeSelectableVisibleCards();
                 break;
         }
     };
@@ -3452,30 +3397,6 @@ var Expeditions = /** @class */ (function () {
         this.takeAction("chooseAdditionalDestinations", {
             keptDestinationId: destinationsIds.pop(),
             discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
-        });
-    };
-    /**
-     * Pick hidden train car(s).
-     */
-    Expeditions.prototype.onHiddenTrainCarDeckClick = function (number) {
-        var action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondDeckCard" : "drawDeckCards";
-        if (!this.checkAction(action)) {
-            return;
-        }
-        this.takeAction(action, {
-            number: number,
-        });
-    };
-    /**
-     * Pick visible train car.
-     */
-    Expeditions.prototype.onVisibleTrainCarCardClick = function (id) {
-        var action = this.gamedatas.gamestate.name === "drawSecondCard" ? "drawSecondTableCard" : "drawTableCard";
-        if (!this.checkAction(action)) {
-            return;
-        }
-        this.takeAction(action, {
-            id: id,
         });
     };
     /**

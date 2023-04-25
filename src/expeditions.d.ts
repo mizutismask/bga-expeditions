@@ -96,8 +96,6 @@ interface ExpeditionsGame extends Game {
 	setDestinationsToConnect(destinations: Destination[]): void;
 	getPlayerId(): number;
 	getPlayerScore(playerId: number): number;
-	onVisibleTrainCarCardClick(itemId: number): void;
-	onHiddenTrainCarDeckClick(number: number): void;
 	setActiveDestination(destination: Destination, previousDestination?: Destination): void;
 	canClaimRoute(route: Route, cardsColor: number): boolean;
 	setHighligthedDestination(destination: Destination | null): void;
@@ -144,11 +142,6 @@ interface EnteringUseTicketArgs {
 	possibleRoutes: Route[];
 	unclaimableRoutes: Route[];
 	remainingArrows: { [color: number]: number };
-}
-
-interface EnteringDrawSecondCardArgs {
-	availableVisibleCards: Destination[];
-	maxHiddenCardsPick: number;
 }
 
 interface NotifPointsArgs {
