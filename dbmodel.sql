@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `claimed_routes` (
   PRIMARY KEY (`route_id`, `player_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `player` ADD `player_remaining_train_cars` INT UNSIGNED NOT NULL;
 ALTER TABLE `player` ADD `player_remaining_tickets` INT UNSIGNED NOT NULL;
 
 CREATE TABLE IF NOT EXISTS `global_variables` (
