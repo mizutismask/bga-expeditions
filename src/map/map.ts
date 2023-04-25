@@ -346,10 +346,25 @@ class TtrMap {
 	public setClaimedRoutes(claimedRoutes: ClaimedRoute[], fromPlayerId: number) {
 		claimedRoutes.forEach((claimedRoute) => {
 			const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
-			const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-			routeDiv.classList.add(this.getClaimedArrowBackgroundClass(route, claimedRoute));
-			routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
-			this.shiftArrowIfNeeded(route, claimedRoute, claimedRoutes);
+			this.claimRoute(claimedRoute, route);
+			this.shiftArrowIfNeeded(route, claimedRoutes);
+		});
+	}
+
+	private claimRoute(claimedRoute, route) {
+		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
+		routeDiv.classList.add(this.getClaimedArrowBackgroundClass(route, claimedRoute));
+		routeDiv.dataset.revert = claimedRoute.reverseDirection.toString();
+	}
+	/**
+	 * Add a new claimed route to the existing ones. Shift arrow if needed.
+	 */
+	public addClaimedRoute(claimedRoute: ClaimedRoute, claimedRoutes: ClaimedRoute[]) {
+		const route = this.getAllRoutes().find((r) => r.id == claimedRoute.routeId);
+		this.claimRoute(claimedRoute, route);
+		const routeOnSamePath = this.getAllRoutes().filter((r) => route.from == r.from && route.to == r.to);
+		routeOnSamePath.forEach((r) => {
+			this.shiftArrowIfNeeded(r, claimedRoutes);
 		});
 	}
 
@@ -358,7 +373,7 @@ class TtrMap {
 	 * @param route
 	 */
 	public unclaimRoute(route: Route) {
-		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);		
+		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
 		dojo.removeClass(`route-spaces-route${route.id}-space${0}`, ARROW_CLASSES_PERMUTATIONS.join(" "));
 	}
 
@@ -381,10 +396,10 @@ class TtrMap {
 		}, 0);
 	}
 
-	private shiftArrowIfNeeded(route: Route, claimedRoute: ClaimedRoute, allClaimedRoutes: ClaimedRoute[]): void {
-		const shift: number = 25;
-		const sameRoutes = this.getAllRoutes().filter(
-			(r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((r) => r.routeId === route.id)
+	private shiftArrowIfNeeded(route: Route, allClaimedRoutes: ClaimedRoute[]): void {
+		const shift: number = 15;
+		let sameRoutes = this.getAllRoutes().filter(
+			(r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((cr) => cr.routeId === r.id)
 		);
 		let blueRoute = sameRoutes.find((r) => r.color === BLUE);
 		const yellowRoute = sameRoutes.find((r) => r.color === YELLOW);
@@ -392,8 +407,8 @@ class TtrMap {
 		console.log("sameRoutes ", sameRoutes);
 		if (sameRoutes.length === 3) {
 			//shift needed, yellow is never moved
-			if (route.color == BLUE) this.shiftArrow(blueRoute, -shift);
-			if (route.color == RED) this.shiftArrow(redRoute, shift);
+			if (route.color == BLUE) this.shiftArrow(route, -shift);
+			if (route.color == RED) this.shiftArrow(route, shift);
 		} else if (sameRoutes.length == 2) {
 			if (yellowRoute) {
 				//const otherColor = sameRoutes.find((r) => r.color !== YELLOW);
@@ -404,31 +419,38 @@ class TtrMap {
 		}
 	}
 
+	/**
+	 * Shifts given arrow if it has not been shifted before.
+	 */
 	private shiftArrow(route: Route, shift: number) {
-		console.log("shift arrow", route, shift);
-
-		const space = route.spaces[0];
-		let angle = -space.angle;
-		while (angle < 0) {
-			angle += 180;
-		}
-		while (angle >= 180) {
-			angle -= 180;
-		}
-		let x = space.x;
-		let y = space.y;
-
-		// we shift a little the train car to let the other route visible
-		//x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
-		y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
-
 		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-		let oldTransform = routeDiv.style.transform;
-		console.log("oldTransform", oldTransform);
-		let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
-		console.log("newTransform", newTransform);
+		if (routeDiv.dataset.shifted == "false"){
+			console.log("shift arrow", route, shift);
 
-		routeDiv.style.transform = newTransform;
+			const space = route.spaces[0];
+			let angle = -space.angle;
+			while (angle < 0) {
+				angle += 180;
+			}
+			while (angle >= 180) {
+				angle -= 180;
+			}
+			let x = space.x;
+			let y = space.y;
+
+			// we shift a little the train car to let the other route visible
+			x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
+			y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
+
+			let oldTransform = routeDiv.style.transform;
+			console.log("oldTransform", oldTransform);
+			let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
+			console.log("newTransform", newTransform);
+			routeDiv.dataset.shifted = "true";
+			routeDiv.style.transform = newTransform;
+		}else{
+			console.log("shift aborted", route, shift);
+		}
 	}
 	/**
 	 * Place train car on a route space.

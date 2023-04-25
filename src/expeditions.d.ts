@@ -214,6 +214,7 @@ interface NotifClaimedRouteArgs {
 	removeCards: TrainCar[];
 	reverseDirection: boolean;
 	ticketsGained: number;
+	claimedRoutes: ClaimedRoute[];//to figure if the new route should be shifted or not
 }
 
 interface NotifUnclaimedRouteArgs {

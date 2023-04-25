@@ -1211,15 +1211,14 @@ class Expeditions implements ExpeditionsGame {
 		const route: Route = notif.args.route;
 
 		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
-		this.map.setClaimedRoutes(
-			[
-				{
-					playerId,
-					routeId: route.id,
-					reverseDirection: notif.args.reverseDirection,
-				},
-			],
-			playerId
+		this.gamedatas.claimedRoutes = notif.args.claimedRoutes;
+		this.map.addClaimedRoute(
+			{
+				playerId,
+				routeId: route.id,
+				reverseDirection: notif.args.reverseDirection,
+			},
+			this.gamedatas.claimedRoutes
 		);
 	}
 
@@ -1249,7 +1248,7 @@ class Expeditions implements ExpeditionsGame {
 		const destination: Destination = notif.args.destination;
 		if (destination.location == "shared") {
 			this.commonCompletedDestinationsCounters[playerId].incValue(1);
-		}else{
+		} else {
 			this.completedDestinationsCounters[playerId].incValue(1);
 		}
 		this.gamedatas.completedDestinations.push(destination);

@@ -99,7 +99,7 @@ trait DebugUtilTrait {
         $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 0);
         $this->debugResetArrowsLeft();
-        self::DbQuery("UPDATE `destination` set `completed` = false" );
+        self::DbQuery("UPDATE `destination` set `completed` = false");
     }
 
     function debugClaimExpeditionRoutes(int $arrowsNb = 15) {
@@ -140,6 +140,7 @@ trait DebugUtilTrait {
             'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($route->color),
+            'claimedRoutes' => $this->getClaimedRoutes(),
         ]);
     }
 
