@@ -19,7 +19,6 @@
     "src/stock-utils.ts",
     "src/wagons-animation.ts",
     "src/destination-animation.ts",
-    "src/longest-path-animation.ts",
     "src/map/map-material.ts",
     "src/map/map.ts",
     "src/destination-deck/destination-deck.ts",

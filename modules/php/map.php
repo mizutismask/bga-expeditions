@@ -12,16 +12,6 @@ class ConnectedCity {
     }
 }
 
-class LongestPath {
-    public int $length;
-    public array $routes;
-
-    public function __construct(int $length, array $routes) {
-        $this->length = $length;
-        $this->routes = $routes;
-    }
-}
-
 trait MapTrait {
 
     /**
@@ -51,26 +41,6 @@ trait MapTrait {
         $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
         $claimableRoutes = array_filter($connectedRoutes, fn ($route) => !in_array($route->id, $claimedRoutesIds));
         return array_values($claimableRoutes);
-    }
-
-    /**
-     * Get the longest continuous path for a player. Returns a LongestPath object.
-     */
-    public function getLongestPath(int $playerId) {
-        $claimedRoutes = $this->getClaimedRoutes($playerId);
-        $claimedRoutesIds = array_map(fn ($claimedRoute) => $claimedRoute->routeId, array_values($claimedRoutes));
-
-        $longestPath = new LongestPath(0, []);
-
-        foreach ($claimedRoutes as $claimedRoute) {
-            $longestPathFromRoute = $this->getLongestPathFromRouteId($claimedRoute->routeId, $claimedRoutesIds);
-
-            if ($longestPathFromRoute->length > $longestPath->length) {
-                $longestPath = $longestPathFromRoute;
-            }
-        }
-
-        return $longestPath;
     }
 
     /**
@@ -259,54 +229,5 @@ trait MapTrait {
         }
 
         return $recursiveConnectedCities;
-    }
-
-    //  Returns a LongestPath object.
-    private function getLongestPathFromRouteId(int $fromRouteId, array $claimedRoutesIds) {
-        $fromRoute = $this->ROUTES[$fromRouteId];
-        $fromRoute->id = $fromRouteId;
-
-        $pathFrom = $this->getLongestPathFromCity($fromRoute->from, [$fromRoute->id], $claimedRoutesIds);
-        $pathTo = $this->getLongestPathFromCity($fromRoute->to, [$fromRoute->id], $claimedRoutesIds);
-
-        $longestPath = $pathFrom->length > $pathTo->length ? $pathFrom : $pathTo;
-
-        // we add fromRoute
-        return new LongestPath($longestPath->length + $fromRoute->number, array_merge(
-            $longestPath->routes,
-            [$fromRoute]
-        ));
-    }
-
-    private function getLongestPathFromCity(int $from, array $visitedRoutesIds, array $playerClaimedRoutesIds) {
-        $connectedRoutes = $this->getRoutesConnectedToCity($from);
-
-        // we only check route we haven't checked, to avoid infinite loop
-        $claimedConnectedRoutesToExplore = array_values(array_filter(
-            $connectedRoutes,
-            fn ($route) =>
-            in_array($route->id, $playerClaimedRoutesIds) && !in_array($route->id, $visitedRoutesIds)
-        ));
-
-        $longestPath = new LongestPath(0, []);
-
-        foreach ($claimedConnectedRoutesToExplore as $route) {
-            $cityOnOtherSideOfRoute = $route->from == $from ? $route->to : $route->from;
-            $longestPathFromRouteBefore = $this->getLongestPathFromCity(
-                $cityOnOtherSideOfRoute,
-                array_merge($visitedRoutesIds, [$route->id]),
-                $playerClaimedRoutesIds
-            );
-            $longestPathFromRoute = new LongestPath(
-                $longestPathFromRouteBefore->length + $route->number,
-                array_merge($longestPathFromRouteBefore->routes, [$route])
-            );
-
-            if ($longestPathFromRoute->length > $longestPath->length) {
-                $longestPath = $longestPathFromRoute;
-            }
-        }
-
-        return $longestPath;
     }
 }

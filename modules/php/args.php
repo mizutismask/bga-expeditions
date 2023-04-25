@@ -55,8 +55,6 @@ trait ArgsTrait {
         $playerId = intval(self::getActivePlayerId());
 
         $possibleRoutes = $this->claimableRoutes($playerId);
-        $costForRoute = [];
-
         $loopToResolve =!empty($this->getGameStateValue(NEW_LOOP_COLOR));
         $mainActionDone=boolval($this->getGameStateValue(MAIN_ACTION_DONE));
         $hasBlueActions=intval($this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING))>0;
@@ -64,7 +62,6 @@ trait ArgsTrait {
         $canUseTicket = $this->canUseTicket($playerId) && !$loopToResolve && !$hasBlueActions;//no loop needing resolving nor blue point
         return [
             'possibleRoutes' => $possibleRoutes,
-            'costForRoute' => $costForRoute,
             'canUseTicket' => $canUseTicket,
             'canPass' => $canPass,
             'remainingArrows' => [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)],

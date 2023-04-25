@@ -104,8 +104,6 @@ interface ExpeditionsGame extends Game {
 	setSelectedDestination(destination: Destination, visible: boolean): void;
 	addAnimation(animation: WagonsAnimation): void;
 	endAnimation(ended: WagonsAnimation): void;
-	isColorBlindMode(): boolean;
-	isDoubleRouteForbidden(): boolean;
 	selectedColorChanged(selectedColor: number | null): void;
 	setTooltip(id: string, html: string): void;
 	setTooltipToClass(className: string, html: string): void;
@@ -128,7 +126,6 @@ interface EnteringRevealDestinationArgs {
 
 interface EnteringChooseActionArgs {
 	possibleRoutes: Route[];
-	costForRoute: { [routeId: number]: { [color: number]: number[] } };
 	canTakeTrainCarCards: boolean;
 	canPass: boolean;
 	canUseTicket: boolean;
@@ -167,28 +164,13 @@ interface NotifDestinationsPickedArgs {
 	};
 }
 
-interface NotifTrainCarsPickedArgs {
-	playerId: number;
-	count: number;
-	number: number;
-	remainingTrainCarsInDeck: number;
-	cards?: TrainCar[];
-	origin: number; // 0 for hidden, else spot number
-}
-
-interface NotifNewCardsOnTableArgs {
-	spotsCards: { [spot: number]: Destination | null };
-	remainingTrainCarsInDeck: number;
-	locomotiveRefill: boolean;
-}
-
 interface NotifClaimedRouteArgs {
 	playerId: number;
 	route: Route;
 	removeCards: TrainCar[];
 	reverseDirection: boolean;
 	ticketsGained: number;
-	claimedRoutes: ClaimedRoute[];//to figure if the new route should be shifted or not
+	claimedRoutes: ClaimedRoute[]; //to figure if the new route should be shifted or not
 }
 
 interface NotifUnclaimedRouteArgs {
@@ -220,8 +202,6 @@ interface NotifScorePointArgs {
 
 interface NotifLongestPathArgs {
 	playerId: number;
-	length: number;
-	routes: Route[];
 }
 
 interface NotifBadgeArgs {

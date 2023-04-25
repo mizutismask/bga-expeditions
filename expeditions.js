@@ -2168,7 +2168,6 @@ var TrainCarSelection = /** @class */ (function () {
         }*/
         //console.log("new TrainCarSelection", visibleCards);
         this.visibleCards = Object.values(visibleCards);
-        //	this.setNewCardsOnTable(visibleCards, false);
         this.setNewSharedCardsOnTable(visibleCards, false);
     }
     /**
@@ -2199,15 +2198,6 @@ var TrainCarSelection = /** @class */ (function () {
         for (var i = 1; i <= SPOTS_COUNT; i++) {
             /*this.visibleCardsSpots[i].removeSelectableVisibleCards();*/
         }
-    };
-    /**
-     * Set new visible cards.
-     */
-    TrainCarSelection.prototype.setNewCardsOnTable = function (spotsCards, fromDeck) {
-        Object.keys(spotsCards).forEach(function (spot) {
-            var card = spotsCards[spot];
-            /*this.visibleCardsSpots[spot].setNewCardOnTable(card, fromDeck);*/
-        });
     };
     /**
      * Set new visible cards.
@@ -2961,19 +2951,12 @@ var Expeditions = /** @class */ (function () {
         switch (prefId) {
         }
     };
-    Expeditions.prototype.isColorBlindMode = function () {
-        var _a;
-        return Number((_a = this.prefs[204]) === null || _a === void 0 ? void 0 : _a.value) === 1;
-    };
     Expeditions.prototype.getPlayerId = function () {
         return Number(this.player_id);
     };
     Expeditions.prototype.getPlayerScore = function (playerId) {
         var _a, _b;
         return (_b = (_a = this.scoreCtrl[playerId]) === null || _a === void 0 ? void 0 : _a.getValue()) !== null && _b !== void 0 ? _b : Number(this.gamedatas.players[playerId].score);
-    };
-    Expeditions.prototype.isDoubleRouteForbidden = function () {
-        return false;
     };
     /**
      * Place counters on player panels.
@@ -3460,14 +3443,12 @@ var Expeditions = /** @class */ (function () {
         //log( 'notifications subscriptions setup' );
         var _this = this;
         var notifs = [
-            ["newCardsOnTable", ANIMATION_MS],
             ["claimedRoute", ANIMATION_MS],
             ["unclaimedRoute", ANIMATION_MS],
             ["destinationCompleted", ANIMATION_MS],
             ["points", 1],
             ["ticketUsed", 1],
             ["destinationsPicked", 1],
-            //["trainCarPicked", ANIMATION_MS],
             ["highlightVisibleLocomotives", 1000],
             ["notEnoughTrainCars", 1],
             ["lastTurn", 1],
@@ -3479,11 +3460,6 @@ var Expeditions = /** @class */ (function () {
             dojo.subscribe(notif[0], _this, "notif_".concat(notif[0]));
             _this.notifqueue.setSynchronous(notif[0], notif[1]);
         });
-        /*(this as any).notifqueue.setIgnoreNotificationCheck(
-            "trainCarPicked",
-            (notif: Notif<NotifTrainCarsPickedArgs>) =>
-                notif.args.playerId == this.getPlayerId() && !notif.args.cards
-        );*/
     };
     /**
      * Update player score.
@@ -3515,14 +3491,6 @@ var Expeditions = /** @class */ (function () {
             this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
         }
         //this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
-    };
-    /**
-     * Update visible cards.
-     */
-    Expeditions.prototype.notif_newCardsOnTable = function (notif) {
-        if (notif.args.locomotiveRefill) {
-        }
-        this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);
     };
     /**
      * Animate the 3 visible locomotives (bump) before they are replaced.

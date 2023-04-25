@@ -383,20 +383,12 @@ class Expeditions implements ExpeditionsGame {
 		}
 	}
 
-	public isColorBlindMode(): boolean {
-		return Number((this as any).prefs[204]?.value) === 1;
-	}
-
 	public getPlayerId(): number {
 		return Number((this as any).player_id);
 	}
 
 	public getPlayerScore(playerId: number): number {
 		return (this as any).scoreCtrl[playerId]?.getValue() ?? Number(this.gamedatas.players[playerId].score);
-	}
-
-	public isDoubleRouteForbidden(): boolean {
-		return false;
 	}
 
 	/**
@@ -1009,14 +1001,12 @@ class Expeditions implements ExpeditionsGame {
 		//log( 'notifications subscriptions setup' );
 
 		const notifs = [
-			["newCardsOnTable", ANIMATION_MS],
 			["claimedRoute", ANIMATION_MS],
 			["unclaimedRoute", ANIMATION_MS],
 			["destinationCompleted", ANIMATION_MS],
 			["points", 1],
 			["ticketUsed", 1],
 			["destinationsPicked", 1],
-			//["trainCarPicked", ANIMATION_MS],
 			["highlightVisibleLocomotives", 1000],
 			["notEnoughTrainCars", 1],
 			["lastTurn", 1],
@@ -1029,12 +1019,6 @@ class Expeditions implements ExpeditionsGame {
 			dojo.subscribe(notif[0], this, `notif_${notif[0]}`);
 			(this as any).notifqueue.setSynchronous(notif[0], notif[1]);
 		});
-
-		/*(this as any).notifqueue.setIgnoreNotificationCheck(
-			"trainCarPicked",
-			(notif: Notif<NotifTrainCarsPickedArgs>) =>
-				notif.args.playerId == this.getPlayerId() && !notif.args.cards
-		);*/
 	}
 
 	/**
@@ -1066,17 +1050,6 @@ class Expeditions implements ExpeditionsGame {
 			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 		}
 		//this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
-	}
-
-	/**
-	 * Update visible cards.
-	 */
-	notif_newCardsOnTable(notif: Notif<NotifNewCardsOnTableArgs>) {
-		if (notif.args.locomotiveRefill) {
-			
-		}
-
-		this.trainCarSelection.setNewCardsOnTable(notif.args.spotsCards, true);
 	}
 
 	/**

@@ -50,7 +50,6 @@ class TrainCarSelection {
 
 		//console.log("new TrainCarSelection", visibleCards);
 		this.visibleCards = Object.values(visibleCards);
-		//	this.setNewCardsOnTable(visibleCards, false);
 		this.setNewSharedCardsOnTable(visibleCards, false);
 	}
 
@@ -85,15 +84,6 @@ class TrainCarSelection {
 		}
 	}
 
-	/**
-	 * Set new visible cards.
-	 */
-	public setNewCardsOnTable(spotsCards: { [spot: number]: Destination | null }, fromDeck: boolean) {
-		Object.keys(spotsCards).forEach((spot) => {
-			const card = spotsCards[spot];
-			/*this.visibleCardsSpots[spot].setNewCardOnTable(card, fromDeck);*/
-		});
-	}
 	/**
 	 * Set new visible cards.
 	 */
