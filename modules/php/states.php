@@ -121,6 +121,7 @@ trait StateTrait {
         }
 
         foreach ($players as $playerId => $playerDb) {
+            self::DbQuery("UPDATE player SET `player_score` = $totalScore[$playerId] where `player_id` = $playerId");
             self::DbQuery("UPDATE player SET `player_score_aux` = `player_remaining_tickets` where `player_id` = $playerId");
         }
 
