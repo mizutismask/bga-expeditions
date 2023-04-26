@@ -87,6 +87,9 @@ class PlayerDestinations {
 		this.destinationColumnsUpdated();
 	}
 
+	public setToDoSelectableCards(possibleDestinations: Destination[]) {
+		this.destinationsToDoStock.setSelectableCards(possibleDestinations);
+	}
 	/**
 	 * Mark destination as complete (place it on the "complete" column).
 	 */

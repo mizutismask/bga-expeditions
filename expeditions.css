@@ -1185,6 +1185,11 @@ body > .card {
   top: calc((var(--height) + var(--shift)) * var(--order));
 }
 
+.line-stock.selectable .card:not(.selectable) {
+  filter: contrast(0.6);
+  cursor: not-allowed;
+}
+
 /* make space between buttons on touch devices */
 @media (hover: none) {
   #page-title .action-button.bgabutton,

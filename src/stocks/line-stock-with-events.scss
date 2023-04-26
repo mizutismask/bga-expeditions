@@ -1,0 +1,10 @@
+.line-stock {
+	&.selectable {
+		.card {
+			&:not(.selectable) {
+				filter: contrast(0.6);
+				cursor: not-allowed;
+			}
+		}
+	}
+}

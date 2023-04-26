@@ -46,11 +46,15 @@ class PlayerTable {
 		this.playerDestinations.setToDoSelectionMode(selectionMode);
 	}
 
+	public setToDoSelectableCards(possibleDestinations: Destination[]) {
+		this.playerDestinations.setToDoSelectableCards(possibleDestinations);
+	}
+
 	public getSelectedToDoDestinations() {
 		return this.playerDestinations.getSelectedToDoDestinations();
 	}
 
-	public removeDestination(destination: Destination){
+	public removeDestination(destination: Destination) {
 		this.playerDestinations.removeCard(destination);
 	}
 }

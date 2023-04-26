@@ -1,5 +1,6 @@
 /**
  * A normal LineStock, but handling more events from the mouse.
+ * Also allows to make some cards unselectable.
  */
 class LineStockWithEvents<T> extends LineStock<T> {
 	/**
@@ -51,4 +52,25 @@ class LineStockWithEvents<T> extends LineStock<T> {
 	 * card: the previously hovered card
 	 */
 	public onCardMouseOut?: (card: T) => void;
+
+	public setSelectableCards(selectableCards: T[]) {
+		/*this.cards.forEach((card) =>
+			this.setSelectableCard(card, selectableCards.find((sc) => sc == card) != undefined)
+		);*/
+		console.log("selectableCards", selectableCards);
+
+		this.cards.forEach((card) =>
+			this.setSelectableCard(
+				card,
+				selectableCards.find((sc) => this.manager.getId(sc) == this.manager.getId(card)) != undefined
+			)
+		);
+	}
+
+	protected cardClick(card: T) {
+		const div: HTMLElement = this.getCardElement(card);
+		if (div && div.classList.contains("selectable")) {
+			super.cardClick(card);
+		}
+	}
 }

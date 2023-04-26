@@ -62,7 +62,7 @@ trait DestinationDeckTrait {
     }
 
     public function getRevealableDestinations(int $playerId) {
-        $cards = $this->getPickedDestinationCards($playerId);
+        $cards = $this->getPlayerDestinationCards($playerId);
         return array_values(array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
     }
 
@@ -86,6 +86,14 @@ trait DestinationDeckTrait {
      */
     public function getPickedDestinationCards(int $playerId) {
         $cards = $this->getDestinationsFromDb($this->destinations->getCardsInLocation("pick$playerId"));
+        return $cards;
+    }
+
+    /**
+     * Get destination cards in player hand.
+     */
+    public function getPlayerDestinationCards(int $playerId) {
+        $cards = $this->getDestinationsFromDb($this->destinations->getCardsInLocation("hand",$playerId));
         return $cards;
     }
 

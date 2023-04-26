@@ -159,8 +159,9 @@ class Expeditions implements ExpeditionsGame {
 						possibleDestinations.forEach((destination) =>
 							this.map.setSelectableDestination(destination, true)
 						);
-						this.destinationSelection.setCards(allDestinations);
-						this.destinationSelection.selectionChange();
+						//this.destinationSelection.setCards(allDestinations);
+						//this.destinationSelection.setSelectableCards(possibleDestinations);
+						this.playerTable?.setToDoSelectableCards(possibleDestinations);
 					}
 				}
 				break;
@@ -379,7 +380,6 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	private onPreferenceChange(prefId: number, prefValue: number) {
 		switch (prefId) {
-			
 		}
 	}
 

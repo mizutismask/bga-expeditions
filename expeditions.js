@@ -2271,6 +2271,9 @@ var PlayerTable = /** @class */ (function () {
     PlayerTable.prototype.setToDoSelectionMode = function (selectionMode) {
         this.playerDestinations.setToDoSelectionMode(selectionMode);
     };
+    PlayerTable.prototype.setToDoSelectableCards = function (possibleDestinations) {
+        this.playerDestinations.setToDoSelectableCards(possibleDestinations);
+    };
     PlayerTable.prototype.getSelectedToDoDestinations = function () {
         return this.playerDestinations.getSelectedToDoDestinations();
     };
@@ -2352,6 +2355,9 @@ var PlayerDestinations = /** @class */ (function () {
         originStock === null || originStock === void 0 ? void 0 : originStock.removeAll();
         (_a = this.destinationsTodo).push.apply(_a, destinations);
         this.destinationColumnsUpdated();
+    };
+    PlayerDestinations.prototype.setToDoSelectableCards = function (possibleDestinations) {
+        this.destinationsToDoStock.setSelectableCards(possibleDestinations);
     };
     /**
      * Mark destination as complete (place it on the "complete" column).
@@ -2686,7 +2692,7 @@ var Expeditions = /** @class */ (function () {
     //
     Expeditions.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         log("Entering state: " + stateName, args.args);
         switch (stateName) {
             case "privateChooseInitialDestinations":
@@ -2713,8 +2719,9 @@ var Expeditions = /** @class */ (function () {
                         possibleDestinations.forEach(function (destination) {
                             return _this.map.setSelectableDestination(destination, true);
                         });
-                        this.destinationSelection.setCards(allDestinations);
-                        this.destinationSelection.selectionChange();
+                        //this.destinationSelection.setCards(allDestinations);
+                        //this.destinationSelection.setSelectableCards(possibleDestinations);
+                        (_e = this.playerTable) === null || _e === void 0 ? void 0 : _e.setToDoSelectableCards(possibleDestinations);
                     }
                 }
                 break;
@@ -4192,6 +4199,7 @@ var CardStock = /** @class */ (function () {
         cards.forEach(function (card) { return _this.removeCard(card); });
     };
     CardStock.prototype.setSelectableCard = function (card, selectable) {
+        console.log("setSelectableCard", selectable, card);
         var element = this.getCardElement(card);
         element.classList.toggle('selectable', selectable);
     };
@@ -4809,6 +4817,7 @@ var CardsManager = /** @class */ (function (_super) {
 }(CardManager));
 /**
  * A normal LineStock, but handling more events from the mouse.
+ * Also allows to make some cards unselectable.
  */
 var LineStockWithEvents = /** @class */ (function (_super) {
     __extends(LineStockWithEvents, _super);
@@ -4849,6 +4858,22 @@ var LineStockWithEvents = /** @class */ (function (_super) {
             }
             _this.onCardMouseOut(card);
         });
+    };
+    LineStockWithEvents.prototype.setSelectableCards = function (selectableCards) {
+        var _this = this;
+        /*this.cards.forEach((card) =>
+            this.setSelectableCard(card, selectableCards.find((sc) => sc == card) != undefined)
+        );*/
+        console.log("selectableCards", selectableCards);
+        this.cards.forEach(function (card) {
+            return _this.setSelectableCard(card, selectableCards.find(function (sc) { return _this.manager.getId(sc) == _this.manager.getId(card); }) != undefined);
+        });
+    };
+    LineStockWithEvents.prototype.cardClick = function (card) {
+        var div = this.getCardElement(card);
+        if (div && div.classList.contains("selectable")) {
+            _super.prototype.cardClick.call(this, card);
+        }
     };
     return LineStockWithEvents;
 }(LineStock));
