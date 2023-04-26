@@ -2817,6 +2817,7 @@ var Expeditions = /** @class */ (function () {
                     this.addActionButton("revealDestination_button", _("Reveal this destination"), function () {
                         return _this.doRevealDestination();
                     });
+                    dojo.addClass("revealDestination_button", "disabled");
                     break;
                 case "chooseAction":
                     var chooseActionArgs = args;
@@ -3014,6 +3015,7 @@ var Expeditions = /** @class */ (function () {
             : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), destination);
+        dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
     };
     /**
      * Sets a player marker on the destination.

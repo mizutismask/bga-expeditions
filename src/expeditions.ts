@@ -266,6 +266,7 @@ class Expeditions implements ExpeditionsGame {
 					(this as any).addActionButton("revealDestination_button", _("Reveal this destination"), () =>
 						this.doRevealDestination()
 					);
+					dojo.addClass("revealDestination_button", "disabled");
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
@@ -522,6 +523,7 @@ class Expeditions implements ExpeditionsGame {
 			: (this.destinationToReveal = destination);
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), destination);
+		dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal==null);
 	}
 
 	/**
