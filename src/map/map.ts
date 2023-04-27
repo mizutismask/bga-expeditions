@@ -207,10 +207,35 @@ class TtrMap {
 		return ROUTES[routeId];
 	}
 
+	private isCityOnMapEdge(city: City): boolean {
+		return this.getCitiesOnMapEdge().indexOf(city.id) != -1;
+	}
+
+	private getCitiesOnMapEdge(): number[] {
+		return [181, 182, 183];
+	}
+
+	private getXCoord(city: City, route:Route): number {		
+		if (this.isCityOnMapEdge(city)) {
+			return this.getEdgeFromRoute(city, route) == "left" ? 0 : 1742;//right edge position
+		} else {
+			return city.x;
+		}
+	}
+
+	private getEdgeFromRoute(redEdgecity: City, route: Route): "left" | "right" {
+		let cityConnectedToRedPoint = route.from == redEdgecity.id ? route.to : route.from;
+		const citiesOnTheLeft = [101, 105, 108, 111, 124, 126, 202]; //list of cites connected to edges on the left
+		return citiesOnTheLeft.indexOf(cityConnectedToRedPoint) != -1 ? "left" : "right";
+	}
+
 	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
 		const origin = CITIES.find((city) => city.id == this.getRouteOrigin(route, claimed));
 		const destination = CITIES.find((city) => city.id == this.getRouteDestination(route, claimed));
-		let reverse = Math.abs(destination.x - origin.x) > 5 ? destination.x < origin.x : destination.y < origin.y;
+		const originX = this.getXCoord(origin, route);
+		const destinationX = this.getXCoord(destination, route);
+		let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
+		
 		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
 			.toUpperCase()}`;

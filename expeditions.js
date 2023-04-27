@@ -1458,11 +1458,32 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getRoute = function (routeId) {
         return ROUTES[routeId];
     };
+    TtrMap.prototype.isCityOnMapEdge = function (city) {
+        return this.getCitiesOnMapEdge().indexOf(city.id) != -1;
+    };
+    TtrMap.prototype.getCitiesOnMapEdge = function () {
+        return [181, 182, 183];
+    };
+    TtrMap.prototype.getXCoord = function (city, route) {
+        if (this.isCityOnMapEdge(city)) {
+            return this.getEdgeFromRoute(city, route) == "left" ? 0 : 1742; //right edge position
+        }
+        else {
+            return city.x;
+        }
+    };
+    TtrMap.prototype.getEdgeFromRoute = function (redEdgecity, route) {
+        var cityConnectedToRedPoint = route.from == redEdgecity.id ? route.to : route.from;
+        var citiesOnTheLeft = [101, 105, 108, 111, 124, 126, 202]; //list of cites connected to edges on the left
+        return citiesOnTheLeft.indexOf(cityConnectedToRedPoint) != -1 ? "left" : "right";
+    };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
         var _this = this;
         var origin = CITIES.find(function (city) { return city.id == _this.getRouteOrigin(route, claimed); });
         var destination = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimed); });
-        var reverse = Math.abs(destination.x - origin.x) > 5 ? destination.x < origin.x : destination.y < origin.y;
+        var originX = this.getXCoord(origin, route);
+        var destinationX = this.getXCoord(destination, route);
+        var reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
         return "arrow".concat(this.getArrowSize(route)).concat(reverse ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
@@ -4211,7 +4232,6 @@ var CardStock = /** @class */ (function () {
         cards.forEach(function (card) { return _this.removeCard(card); });
     };
     CardStock.prototype.setSelectableCard = function (card, selectable) {
-        console.log("setSelectableCard", selectable, card);
         var element = this.getCardElement(card);
         element.classList.toggle('selectable', selectable);
     };
