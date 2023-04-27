@@ -36,11 +36,21 @@ class EndScore {
 
 			dojo.place(
 				`<tr id="score${player.id}">
-                    <td id="score-name-${player.id}" class="player-name" style="color: #${player.color}">${player.name}</td>
-                    <td id="destination-reached${player.id}" class="score-number">${player.completedDestinations.length}</td>
-                    <td id="revealed-tokens-back${player.id}" class="score-number">${player.revealedTokensBackCount}</td>
-                    <td id="destination-unreached${player.id}" class="score-number">${player.uncompletedDestinations?.length}</td>
-                    <td id="revealed-tokens-left${player.id}" class="score-number">${player.revealedTokensLeftCount}</td>
+                    <td id="score-name-${player.id}" class="player-name" style="color: #${player.color}">${
+					player.name
+				}</td>
+                    <td id="destination-reached${player.id}" class="score-number">${
+					player.completedDestinations.length + player.sharedCompletedDestinationsCount
+				}</td>
+                    <td id="revealed-tokens-back${player.id}" class="score-number">${
+					player.revealedTokensBackCount
+				}</td>
+                    <td id="destination-unreached${player.id}" class="score-number">-${
+					player.uncompletedDestinations?.length
+				}</td>
+                    <td id="revealed-tokens-left${player.id}" class="score-number">-${
+					player.revealedTokensLeftCount
+				}</td>
                     <td id="total${player.id}" class="score-number total">${player.score}</td>
                 </tr>`,
 				"score-table-body"
@@ -53,6 +63,18 @@ class EndScore {
 				this.highlightWinnerScore(player.id);
 			}
 			this.updateDestinationsTooltip(player);
+		});
+	}
+
+	public updateScores(players: ExpeditionsPlayer[]) {
+		players.forEach((p) => {
+			document.getElementById(`destination-reached${p.id}`).innerHTML = (
+				p.completedDestinations.length + p.sharedCompletedDestinationsCount
+			).toString();
+			document.getElementById(`revealed-tokens-back${p.id}`).innerHTML = p.revealedTokensBackCount.toString();
+			document.getElementById(`destination-unreached${p.id}`).innerHTML = "-" + p.uncompletedDestinations?.length;
+			document.getElementById(`revealed-tokens-left${p.id}`).innerHTML = "-" + p.revealedTokensLeftCount;
+			document.getElementById(`total${p.id}`).innerHTML = p.score.toString();
 		});
 	}
 

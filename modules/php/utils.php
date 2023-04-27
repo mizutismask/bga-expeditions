@@ -289,7 +289,9 @@ trait UtilTrait {
         }
 
         if ($shared) {
-            $this->destinations->moveCard($destination->id, 'shared', $ownerId);
+            $this->destinations->moveCard($destination->id, 'sharedCompleted', $ownerId);
+            $destination->location= 'sharedCompleted';
+            $destination->location_arg = $ownerId;
         }
 
         $msg = $shared ?

@@ -1095,7 +1095,7 @@ class Expeditions implements ExpeditionsGame {
 	notif_destinationCompleted(notif: Notif<NotifDestinationCompletedArgs>) {
 		const playerId = notif.args.playerId;
 		const destination: Destination = notif.args.destination;
-		if (destination.location == "shared") {
+		if (destination.location == "sharedCompleted") {
 			this.commonCompletedDestinationsCounters[playerId].incValue(1);
 		} else {
 			this.completedDestinationsCounters[playerId].incValue(1);
@@ -1125,8 +1125,8 @@ class Expeditions implements ExpeditionsGame {
 	 */
 	notif_bestScore(notif: Notif<NotifBestScoreArgs>) {
 		this.gamedatas.bestScore = notif.args.bestScore;
-		this.gamedatas.players = notif.args.players;
 		this.endScore?.setBestScore(notif.args.bestScore);
+		this.endScore?.updateScores(notif.args.players);
 	}
 
 	/**

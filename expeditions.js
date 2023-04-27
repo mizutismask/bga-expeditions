@@ -2553,7 +2553,7 @@ var EndScore = /** @class */ (function () {
         players.forEach(function (player) {
             var _a;
             var playerId = Number(player.id);
-            dojo.place("<tr id=\"score".concat(player.id, "\">\n                    <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\">").concat(player.name, "</td>\n                    <td id=\"destination-reached").concat(player.id, "\" class=\"score-number\">").concat(player.completedDestinations.length, "</td>\n                    <td id=\"revealed-tokens-back").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensBackCount, "</td>\n                    <td id=\"destination-unreached").concat(player.id, "\" class=\"score-number\">").concat((_a = player.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.length, "</td>\n                    <td id=\"revealed-tokens-left").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensLeftCount, "</td>\n                    <td id=\"total").concat(player.id, "\" class=\"score-number total\">").concat(player.score, "</td>\n                </tr>"), "score-table-body");
+            dojo.place("<tr id=\"score".concat(player.id, "\">\n                    <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\">").concat(player.name, "</td>\n                    <td id=\"destination-reached").concat(player.id, "\" class=\"score-number\">").concat(player.completedDestinations.length + player.sharedCompletedDestinationsCount, "</td>\n                    <td id=\"revealed-tokens-back").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensBackCount, "</td>\n                    <td id=\"destination-unreached").concat(player.id, "\" class=\"score-number\">-").concat((_a = player.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.length, "</td>\n                    <td id=\"revealed-tokens-left").concat(player.id, "\" class=\"score-number\">-").concat(player.revealedTokensLeftCount, "</td>\n                    <td id=\"total").concat(player.id, "\" class=\"score-number total\">").concat(player.score, "</td>\n                </tr>"), "score-table-body");
         });
         this.setBestScore(bestScore);
         players.forEach(function (player) {
@@ -2563,6 +2563,16 @@ var EndScore = /** @class */ (function () {
             _this.updateDestinationsTooltip(player);
         });
     }
+    EndScore.prototype.updateScores = function (players) {
+        players.forEach(function (p) {
+            var _a;
+            document.getElementById("destination-reached".concat(p.id)).innerHTML = (p.completedDestinations.length + p.sharedCompletedDestinationsCount).toString();
+            document.getElementById("revealed-tokens-back".concat(p.id)).innerHTML = p.revealedTokensBackCount.toString();
+            document.getElementById("destination-unreached".concat(p.id)).innerHTML = "-" + ((_a = p.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.length);
+            document.getElementById("revealed-tokens-left".concat(p.id)).innerHTML = "-" + p.revealedTokensLeftCount;
+            document.getElementById("total".concat(p.id)).innerHTML = p.score.toString();
+        });
+    };
     /**
      * Add golden highlight to top score player(s)
      */
@@ -3501,7 +3511,7 @@ var Expeditions = /** @class */ (function () {
         var _a;
         var playerId = notif.args.playerId;
         var destination = notif.args.destination;
-        if (destination.location == "shared") {
+        if (destination.location == "sharedCompleted") {
             this.commonCompletedDestinationsCounters[playerId].incValue(1);
         }
         else {
@@ -3524,10 +3534,10 @@ var Expeditions = /** @class */ (function () {
      * Save best score for end score animations.
      */
     Expeditions.prototype.notif_bestScore = function (notif) {
-        var _a;
+        var _a, _b;
         this.gamedatas.bestScore = notif.args.bestScore;
-        this.gamedatas.players = notif.args.players;
         (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setBestScore(notif.args.bestScore);
+        (_b = this.endScore) === null || _b === void 0 ? void 0 : _b.updateScores(notif.args.players);
     };
     /**
      * Highlight winner for end score.
@@ -4863,10 +4873,6 @@ var LineStockWithEvents = /** @class */ (function (_super) {
     };
     LineStockWithEvents.prototype.setSelectableCards = function (selectableCards) {
         var _this = this;
-        /*this.cards.forEach((card) =>
-            this.setSelectableCard(card, selectableCards.find((sc) => sc == card) != undefined)
-        );*/
-        console.log("selectableCards", selectableCards);
         this.cards.forEach(function (card) {
             return _this.setSelectableCard(card, selectableCards.find(function (sc) { return _this.manager.getId(sc) == _this.manager.getId(card); }) != undefined);
         });

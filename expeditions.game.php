@@ -180,7 +180,7 @@ class Expeditions extends Table {
             $player['revealedTokensBackCount'] = $tokensBackCount;
             $player['revealedTokensLeftCount'] = DESTINATIONS_TO_REVEAL_COUNT - $tokensBackCount;
             $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));
-            $player['sharedCompletedDestinationsCount'] = count($this->destinations->getCardsInLocation('shared', $playerId));
+            $player['sharedCompletedDestinationsCount'] = count($this->destinations->getCardsInLocation('sharedCompleted', $playerId));
             if ($isEnd) {
                 $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
             } else {

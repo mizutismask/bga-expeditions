@@ -128,7 +128,6 @@ trait StateTrait {
         $bestScore = max($totalScore);
         $playersWithScore = [];
         foreach ($players as $playerId => &$player) {
-            $playersWithScore[$playerId] = $player;
             $player['playerNo'] = intval($player['playerNo']);
             $player['ticketsCount'] = $this->getRemainingTicketsCount($playerId);
             $player['destinationsCount'] = intval($this->destinations->countCardInLocation('hand', $playerId));
@@ -137,12 +136,13 @@ trait StateTrait {
             $player['completedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getCompletedDestinationsIds($playerId)));
             $player['uncompletedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
             $player['revealedTokensLeftCount'] = DESTINATIONS_TO_REVEAL_COUNT - $tokensBackCount;
-            $player['completedDestinations'] = [];
-            $player['uncompletedDestinations'] = [];
+            $player['sharedCompletedDestinationsCount'] = count($this->destinations->getCardsInLocation('sharedCompleted', $playerId));
+            $player['score'] = $totalScore[$playerId];
+            $playersWithScore[$playerId] = $player;
         }
         self::notifyAllPlayers('bestScore', '', [
             'bestScore' => $bestScore,
-            'players' => $playersWithScore,
+            'players' => array_values($playersWithScore),
         ]);
 
         // highlight winner(s)

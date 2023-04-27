@@ -54,11 +54,6 @@ class LineStockWithEvents<T> extends LineStock<T> {
 	public onCardMouseOut?: (card: T) => void;
 
 	public setSelectableCards(selectableCards: T[]) {
-		/*this.cards.forEach((card) =>
-			this.setSelectableCard(card, selectableCards.find((sc) => sc == card) != undefined)
-		);*/
-		console.log("selectableCards", selectableCards);
-
 		this.cards.forEach((card) =>
 			this.setSelectableCard(
 				card,
