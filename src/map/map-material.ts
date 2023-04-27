@@ -768,6 +768,9 @@ const ROUTES = [
 	new Route(610, 118, 184, [new RouteSpace(255, 705, 104, 80)], BLUE),
 	new Route(611, 118, 184, [new RouteSpace(255, 705, 104, 80)], YELLOW),
 	new Route(612, 118, 184, [new RouteSpace(255, 705, 104, 80)], RED),
+	new Route(613, 103, 187, [new RouteSpace(411, 170, 93, -45)], BLUE),
+	new Route(614, 103, 187, [new RouteSpace(411, 170, 93, -45)], YELLOW),
+	new Route(615, 103, 187, [new RouteSpace(411, 170, 93, -45)], RED),
 
 	//routes from red points
 
