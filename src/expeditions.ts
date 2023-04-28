@@ -182,7 +182,7 @@ class Expeditions implements ExpeditionsGame {
 	private onEnteringUseTicket(args: EnteringUseTicketArgs) {
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 
-		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+		//this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 		this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
 	}
 
@@ -193,11 +193,12 @@ class Expeditions implements ExpeditionsGame {
 		if (args.loopToResolve) {
 			this.setGamestateDescription("Loop");
 		} else {
+			this.selectedArrowColor = 0;
 			this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
 		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
 
-		this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+		//this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 	}
 
 	/**
@@ -600,17 +601,18 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	public selectedColorChanged(selectedColor: number | null) {
-		if (!(this as any).isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "chooseAction") {
+		if (
+			!(this as any).isCurrentPlayerActive() ||
+			(this.gamedatas.gamestate.name !== "chooseAction" && this.gamedatas.gamestate.name !== "useTicket")
+		) {
 			return;
 		}
 
 		const args = this.gamedatas.gamestate.args as EnteringChooseActionArgs;
-		if (selectedColor === null || selectedColor === 0) {
-			this.map.setSelectableRoutes(true, args.possibleRoutes);
-		} else {
+		if (selectedColor) {
 			this.map.setSelectableRoutes(
 				true,
-				args.possibleRoutes.filter((route) => route.color === selectedColor || route.color === 0)
+				args.possibleRoutes.filter((route) => route.color === selectedColor)
 			);
 		}
 	}
@@ -810,7 +812,7 @@ class Expeditions implements ExpeditionsGame {
 		this.selectedArrowColor = color;
 		this.selectedColorChanged(color);
 		dojo.query(".place-arrow-button.selected").removeClass("selected");
-		dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != null);
+		dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != 0);
 	}
 
 	private addArrowsColoredButtons(remainingArrows: { [color: number]: number }, possibleRoutes: Route[]) {

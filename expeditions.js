@@ -2743,7 +2743,7 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.onEnteringUseTicket = function (args) {
         var currentPlayerActive = this.isCurrentPlayerActive();
-        this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+        //this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
         this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
     };
     /**
@@ -2754,10 +2754,11 @@ var Expeditions = /** @class */ (function () {
             this.setGamestateDescription("Loop");
         }
         else {
+            this.selectedArrowColor = 0;
             this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
         }
         var currentPlayerActive = this.isCurrentPlayerActive();
-        this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
+        //this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
     };
     /**
      * Show score board.
@@ -3084,15 +3085,13 @@ var Expeditions = /** @class */ (function () {
         }
     };
     Expeditions.prototype.selectedColorChanged = function (selectedColor) {
-        if (!this.isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "chooseAction") {
+        if (!this.isCurrentPlayerActive() ||
+            (this.gamedatas.gamestate.name !== "chooseAction" && this.gamedatas.gamestate.name !== "useTicket")) {
             return;
         }
         var args = this.gamedatas.gamestate.args;
-        if (selectedColor === null || selectedColor === 0) {
-            this.map.setSelectableRoutes(true, args.possibleRoutes);
-        }
-        else {
-            this.map.setSelectableRoutes(true, args.possibleRoutes.filter(function (route) { return route.color === selectedColor || route.color === 0; }));
+        if (selectedColor) {
+            this.map.setSelectableRoutes(true, args.possibleRoutes.filter(function (route) { return route.color === selectedColor; }));
         }
     };
     /**
@@ -3262,7 +3261,7 @@ var Expeditions = /** @class */ (function () {
         this.selectedArrowColor = color;
         this.selectedColorChanged(color);
         dojo.query(".place-arrow-button.selected").removeClass("selected");
-        dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != null);
+        dojo.toggleClass("placeArrow_button_" + getColor(color, false), "selected", this.selectedArrowColor != 0);
     };
     Expeditions.prototype.addArrowsColoredButtons = function (remainingArrows, possibleRoutes) {
         var _this = this;
