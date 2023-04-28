@@ -1935,6 +1935,14 @@ var TtrMap = /** @class */ (function () {
         });
     };
     /**
+     * Removes player ownership marker.
+     */
+    TtrMap.prototype.removeRevealedDestination = function (dest) {
+        var dataset = document.getElementById("city".concat(dest.to)).dataset;
+        dataset.revealedBy = "";
+        dataset.toConnect = "false";
+    };
+    /**
      * Sets a marker to indicate that the destination is shared.
      */
     TtrMap.prototype.showSharedDestinations = function (destinations) {
@@ -2156,6 +2164,9 @@ var SharedDestinationDeck = /** @class */ (function () {
     SharedDestinationDeck.prototype.hide = function () {
         this.sharedDestinations.removeAll();
         //dojo.addClass("shared-destination-deck", "hidden");
+    };
+    SharedDestinationDeck.prototype.removeCard = function (destination) {
+        this.sharedDestinationsStock.removeCard(destination);
     };
     return SharedDestinationDeck;
 }());
@@ -3457,6 +3468,7 @@ var Expeditions = /** @class */ (function () {
             ["points", 1],
             ["ticketUsed", 1],
             ["destinationsPicked", 1],
+            ["newSharedDestinationsOnTable", 1],
             ["lastTurn", 1],
             ["bestScore", 1],
             ["destinationRevealed", 1],
@@ -3476,10 +3488,17 @@ var Expeditions = /** @class */ (function () {
         (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setPoints(notif.args.playerId, notif.args.points);
     };
     /**
-     * Update player score.
+     * Shows a revealed destination.
      */
     Expeditions.prototype.notif_destinationRevealed = function (notif) {
         this.showRevealedDestination(this.gamedatas.players[notif.args.playerId], notif.args.destination);
+    };
+    /**
+     * Adds shared destinations.
+     */
+    Expeditions.prototype.notif_newSharedDestinationsOnTable = function (notif) {
+        this.sharedDestinations.setCards(notif.args.sharedDestinations);
+        this.map.showSharedDestinations(notif.args.sharedDestinations);
     };
     /**
      * Update player destinations.
@@ -3537,6 +3556,8 @@ var Expeditions = /** @class */ (function () {
         var destination = notif.args.destination;
         if (destination.location == "sharedCompleted") {
             this.commonCompletedDestinationsCounters[playerId].incValue(1);
+            this.map.removeRevealedDestination(destination);
+            this.sharedDestinations.removeCard(destination);
         }
         else {
             this.completedDestinationsCounters[playerId].incValue(1);

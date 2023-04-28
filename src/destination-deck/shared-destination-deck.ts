@@ -94,4 +94,8 @@ class SharedDestinationDeck {
 
 		//dojo.addClass("shared-destination-deck", "hidden");
 	}
+
+	public removeCard(destination: Destination) {
+		this.sharedDestinationsStock.removeCard(destination);
+	}
 }

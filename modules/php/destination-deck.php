@@ -61,6 +61,23 @@ trait DestinationDeckTrait {
         return $cards;
     }
 
+    public function checkVisibleSharedCardsAreEnough() {
+        $visibleCardsCount = intval($this->destinations->countCardInLocation('shared'));
+        if ($visibleCardsCount < NUMBER_OF_SHARED_DESTINATION_CARDS) {
+            $spots = [];
+            $citiesNames=[];
+            for ($i = $visibleCardsCount; $i < NUMBER_OF_SHARED_DESTINATION_CARDS; $i++) {
+                $newCard = $this->getDestinationFromDb($this->destinations->pickCardForLocation('deck', 'shared', $i));
+                $citiesNames[] = $this->CITIES[$newCard->to];
+                $spots[] = $newCard;
+            }
+            $this->notifyAllPlayers('newSharedDestinationsOnTable', clienttranslate('New shared destination drawn: ${cities_names}'), [
+                'sharedDestinations' => $spots,
+                'cities_names' => implode(",", $citiesNames),
+            ]);
+        }
+    }
+
     public function getRevealableDestinations(int $playerId) {
         $cards = $this->getPlayerDestinationCards($playerId);
         return array_values(array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
@@ -93,7 +110,7 @@ trait DestinationDeckTrait {
      * Get destination cards in player hand.
      */
     public function getPlayerDestinationCards(int $playerId) {
-        $cards = $this->getDestinationsFromDb($this->destinations->getCardsInLocation("hand",$playerId));
+        $cards = $this->getDestinationsFromDb($this->destinations->getCardsInLocation("hand", $playerId));
         return $cards;
     }
 

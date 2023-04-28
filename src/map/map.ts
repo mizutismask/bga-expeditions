@@ -215,9 +215,9 @@ class TtrMap {
 		return [181, 182, 183];
 	}
 
-	private getXCoord(city: City, route:Route): number {		
+	private getXCoord(city: City, route: Route): number {
 		if (this.isCityOnMapEdge(city)) {
-			return this.getEdgeFromRoute(city, route) == "left" ? 0 : 1742;//right edge position
+			return this.getEdgeFromRoute(city, route) == "left" ? 0 : 1742; //right edge position
 		} else {
 			return city.x;
 		}
@@ -235,7 +235,7 @@ class TtrMap {
 		const originX = this.getXCoord(origin, route);
 		const destinationX = this.getXCoord(destination, route);
 		let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
-		
+
 		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
 			.toUpperCase()}`;
@@ -752,6 +752,15 @@ class TtrMap {
 				document.getElementById(`city${d.to}`).dataset.toConnect = "true";
 			});
 		});
+	}
+
+	/**
+	 * Removes player ownership marker.
+	 */
+	public removeRevealedDestination(dest: Destination) {
+		let dataset = document.getElementById(`city${dest.to}`).dataset;
+		dataset.revealedBy = "";
+		dataset.toConnect = "false";
 	}
 
 	/**

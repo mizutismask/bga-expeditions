@@ -157,9 +157,9 @@ trait ActionTrait {
 
         $loop = $this->checkLoop($playerId, $route, $reverseDirection);
         $this->nextState($playerId, $loop);
-        // in case there is less than 5 visible cards on the table, we refill with newly discarded cards
-        //$this->checkVisibleTrainCarCards();
-
+        // in case there is less than 6 visible cards on the table, we refill
+        $this->checkVisibleSharedCardsAreEnough();
+        
     }
     private function nextState($playerId, $loop) {
         if (boolval($this->getGameStateValue(MAIN_ACTION_DONE)) && !$loop && !$this->canUseTicket($playerId) && $this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING) == 0) {

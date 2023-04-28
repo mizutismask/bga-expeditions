@@ -151,6 +151,10 @@ interface NotifDestinationRevealedArgs {
 	destination: Destination;
 }
 
+interface NotifNewSharedDestinationsOnTableArgs {
+	sharedDestinations: Destination[];
+}
+
 interface NotifDestinationsPickedArgs {
 	playerId: number;
 	number: number;
