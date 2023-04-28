@@ -1635,7 +1635,7 @@ var TtrMap = /** @class */ (function () {
         if (route.color === YELLOW) {
             return;
         }
-        var shift = route.color === BLUE ? -15 : 15;
+        var shift = route.color === BLUE ? 15 : -15;
         this.shiftArrow(route, -shift);
     };
     TtrMap.prototype.getShiftedCoords = function (route, shift) {

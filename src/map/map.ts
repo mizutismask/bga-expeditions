@@ -402,7 +402,7 @@ class TtrMap {
 		if (route.color === YELLOW) {
 			return;
 		}
-		const shift: number = route.color === BLUE ? -15 : 15;
+		const shift: number = route.color === BLUE ? 15 : -15;
 		this.shiftArrow(route, -shift);
 	}
 
