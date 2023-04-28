@@ -178,7 +178,7 @@ class TtrMap {
 			dojo.place(
 				`<div id="city${city.id}" class="city" 
                 style="transform: translate(${city.x}px, ${city.y}px)"
-                title="${getCityName(city.id)}"
+                title="${this.getLocationName(city.id)}"
             ></div>`,
 				"cities"
 			)
@@ -272,9 +272,9 @@ class TtrMap {
 						space.angle
 					}deg); width:${space.length}px"
                     title="${dojo.string.substitute(_("${from} to ${to}"), {
-						from: this.getCityName(route.from),
-						to: this.getCityName(route.to),
-					})}, ${(route.spaces as any).length} ${getColor(route.color)}"
+						from: this.getLocationName(route.from),
+						to: this.getLocationName(route.to),
+					})}, ${getColor(route.color)}"
                     data-route="${route.id}" data-color="${route.color}"
                 ></div>`,
 					destination
@@ -796,7 +796,30 @@ class TtrMap {
 		});
 	}
 
-	public getCityName(cityId: number) {
-		return cityId - 100 < CITIES_NAMES.length ? CITIES_NAMES[cityId - 100] : "unknown";
-	}
+	/**
+     * Locations are not only green cities, but also blue and red points.
+     */
+    public getLocationColor(cityId:number): number {
+        let color = 0;
+        if (cityId >= 100 && cityId <= 180) {
+            color = GREEN;
+        } else if (cityId >= 181 && cityId <= 201) {
+            color = RED;
+        } else if (cityId >= 182 && cityId <= 221) {
+            color = BLUE;
+        }
+        return color;
+    }
+
+    public getLocationName( cityId:number) {
+        let color = this.getLocationColor(cityId);
+        switch (color) {
+            case RED:
+                return _("red point");
+            case BLUE:
+                return _("blue point");
+			case GREEN:
+				return CITIES_NAMES[cityId - 100];
+        }
+    }
 }

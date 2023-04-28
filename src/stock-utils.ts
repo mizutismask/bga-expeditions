@@ -12,6 +12,7 @@ function setupDestinationCards(stock: Stock) {
 const BLUE = 1;
 const YELLOW = 2;
 const RED = 3;
+const GREEN = 4;
 
 const COLORS = [BLUE, YELLOW, RED];
 

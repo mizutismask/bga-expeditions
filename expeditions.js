@@ -24,6 +24,7 @@ function setupDestinationCards(stock) {
 var BLUE = 1;
 var YELLOW = 2;
 var RED = 3;
+var GREEN = 4;
 var COLORS = [BLUE, YELLOW, RED];
 function getColor(color, translatable) {
     if (translatable === void 0) { translatable = true; }
@@ -1435,6 +1436,7 @@ var TtrMap = /** @class */ (function () {
      * Place map corner illustration and borders, cities, routes, and bind events.
      */
     function TtrMap(game, players, claimedRoutes, revealedDestinations) {
+        var _this = this;
         this.game = game;
         this.players = players;
         // map border
@@ -1442,7 +1444,7 @@ var TtrMap = /** @class */ (function () {
         SIDES.forEach(function (side) { return dojo.place("<div class=\"side ".concat(side, "\"></div>"), "map-and-borders"); });
         CORNERS.forEach(function (corner) { return dojo.place("<div class=\"corner ".concat(corner, "\"></div>"), "map-and-borders"); });
         CITIES.forEach(function (city) {
-            return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(getCityName(city.id), "\"\n            ></div>"), "cities");
+            return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(_this.getLocationName(city.id), "\"\n            ></div>"), "cities");
         });
         this.createRouteSpaces();
         this.showRevealedDestinations(revealedDestinations);
@@ -1516,9 +1518,9 @@ var TtrMap = /** @class */ (function () {
             return route.spaces.forEach(function (space, spaceIndex) {
                 var coords = _this.getShiftedCoords(route, _this.getColorShift(route, 20, 30));
                 dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(coords.x, "px, ").concat(coords.y, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
-                    from: _this.getCityName(route.from),
-                    to: _this.getCityName(route.to),
-                }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
+                    from: _this.getLocationName(route.from),
+                    to: _this.getLocationName(route.to),
+                }), ", ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
                 var spaceDiv = document.getElementById("".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex));
                 _this.setSpaceClickEvents(spaceDiv, route);
             });
@@ -1970,8 +1972,32 @@ var TtrMap = /** @class */ (function () {
             document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
         });
     };
-    TtrMap.prototype.getCityName = function (cityId) {
-        return cityId - 100 < CITIES_NAMES.length ? CITIES_NAMES[cityId - 100] : "unknown";
+    /**
+     * Locations are not only green cities, but also blue and red points.
+     */
+    TtrMap.prototype.getLocationColor = function (cityId) {
+        var color = 0;
+        if (cityId >= 100 && cityId <= 180) {
+            color = GREEN;
+        }
+        else if (cityId >= 181 && cityId <= 201) {
+            color = RED;
+        }
+        else if (cityId >= 182 && cityId <= 221) {
+            color = BLUE;
+        }
+        return color;
+    };
+    TtrMap.prototype.getLocationName = function (cityId) {
+        var color = this.getLocationColor(cityId);
+        switch (color) {
+            case RED:
+                return _("red point");
+            case BLUE:
+                return _("blue point");
+            case GREEN:
+                return CITIES_NAMES[cityId - 100];
+        }
     };
     return TtrMap;
 }());
