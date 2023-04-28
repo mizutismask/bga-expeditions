@@ -623,10 +623,6 @@ class Expeditions implements ExpeditionsGame {
 			return;
 		}
 
-		if (needToCheckDoubleRoute === undefined) {
-			needToCheckDoubleRoute = this.askDoubleRouteActive();
-		}
-
 		//const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
 
 		if (!this.canClaimRoute(route, 0) && !dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
@@ -646,6 +642,11 @@ class Expeditions implements ExpeditionsGame {
 			}
 			this.startActionTimer(`unclaimRouteConfirm_button`, 1);
 		} else {
+			if (this.selectedArrowColor != route.color) {
+				console.log("clic on the wrong color:", this.selectArrowColor, "instead of", route.color);
+				return;
+			}
+
 			if (!$(`claimRouteConfirm_button`)) {
 				(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
 					dojo.destroy(`claimRouteConfirm_button`);
@@ -855,13 +856,6 @@ class Expeditions implements ExpeditionsGame {
 		if (enabledButtons.length == 1) {
 			enabledButtons[0].click();
 		}
-	}
-	/**
-	 * Check if player should be asked for the color he wants when he clicks on a double route.
-	 */
-	private askDoubleRouteActive() {
-		const preferenceValue = Number((this as any).prefs[209]?.value);
-		return preferenceValue === 1;
 	}
 
 	public getCityName(cityId: number) {

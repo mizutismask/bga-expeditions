@@ -90,7 +90,11 @@ trait ActionTrait {
 
         $playerId = intval(self::getActivePlayerId());
 
-        //$route = $this->$this->getAllRoutes()[$routeId];
+        $route = $this->getRoute($routeId);
+        if ($route->color != $color) {
+            self::notifyPlayer($playerId, 'msg', _("You clicked on a route of a different color than the one you selected"), []);
+            return;
+        }
 
         $remainingTrainCars = $this->getRemainingArrows($color);
         if ($remainingTrainCars <= 0) {
