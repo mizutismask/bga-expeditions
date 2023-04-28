@@ -1448,7 +1448,7 @@ var TtrMap = /** @class */ (function () {
         CITIES.forEach(function (city) {
             return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(getCityName(city.id), "\"\n            ></div>"), "cities");
         });
-        this.createRouteSpaces("route-spaces");
+        this.createRouteSpaces("route-spaces", 10, 10, true);
         this.showRevealedDestinations(revealedDestinations);
         this.setClaimedRoutes(claimedRoutes, null);
         this.resizedDiv = document.getElementById("resized");
@@ -1497,13 +1497,24 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getRouteDestination = function (route, claimed) {
         return claimed.reverseDirection ? route.from : route.to;
     };
-    TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY) {
+    TtrMap.prototype.getColorShift = function (color, baseShift) {
+        switch (color) {
+            case BLUE:
+                return baseShift;
+            case RED:
+                return -baseShift;
+            case YELLOW:
+                return 0;
+        }
+    };
+    TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY, autoshiftOnColor) {
         var _this = this;
         if (shiftX === void 0) { shiftX = 0; }
         if (shiftY === void 0) { shiftY = 0; }
+        if (autoshiftOnColor === void 0) { autoshiftOnColor = false; }
         this.getAllRoutes().forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
-                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + shiftX, "px, ").concat(space.y + shiftY, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
+                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + _this.getColorShift(route.color, shiftX), "px, ").concat(space.y + _this.getColorShift(route.color, shiftY), "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
                     to: _this.getCityName(route.to),
                 }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
@@ -1950,68 +1961,6 @@ var TtrMap = /** @class */ (function () {
             document.getElementById("city".concat(d.to)).dataset.revealedBy = "shared";
             document.getElementById("city".concat(d.to)).dataset.toConnect = "true";
         });
-    };
-    /**
-     * Create the crosshair target when drag starts over the drag overlay.
-     */
-    TtrMap.prototype.overlayDragEnter = function (e) {
-        if (!this.crosshairTarget) {
-            this.crosshairTarget = document.createElement("div");
-            this.crosshairTarget.id = "map-drag-target";
-            this.crosshairTarget.style.left = e.offsetX + "px";
-            this.crosshairTarget.style.top = e.offsetY + "px";
-            this.crosshairTarget.style.width = this.crosshairHalfSize * 2 + "px";
-            this.crosshairTarget.style.height = this.crosshairHalfSize * 2 + "px";
-            this.crosshairTarget.style.marginLeft = -(this.crosshairHalfSize + this.crosshairShift) + "px";
-            this.crosshairTarget.style.marginTop = -(this.crosshairHalfSize + this.crosshairShift) + "px";
-            this.dragOverlay.appendChild(this.crosshairTarget);
-        }
-    };
-    /**
-     * Move the crosshair target.
-     */
-    TtrMap.prototype.overlayDragMove = function (e) {
-        if (this.crosshairTarget && e.target.id === this.dragOverlay.id) {
-            this.crosshairTarget.style.left = e.offsetX + "px";
-            this.crosshairTarget.style.top = e.offsetY + "px";
-        }
-    };
-    /**
-     * Create a div overlay when dragging starts.
-     * This allow to create a crosshair target on it, and to make it shifted from mouse position.
-     * In touch mode, crosshair must be shifted from finger to see the target. For this, the drag zones on the overlay are shifted in accordance.
-     * If there isn't touch support, the crosshair is centered on the mouse.
-     */
-    TtrMap.prototype.addDragOverlay = function () {
-        var _this = this;
-        var id = "map-drag-overlay";
-        this.dragOverlay = document.createElement("div");
-        this.dragOverlay.id = id;
-        document.getElementById("map").appendChild(this.dragOverlay);
-        this.crosshairHalfSize = CROSSHAIR_SIZE / this.game.getZoom();
-        var touchDevice = "ontouchstart" in window;
-        this.crosshairShift = touchDevice ? this.crosshairHalfSize : 0;
-        this.createRouteSpaces(id, 100 + this.crosshairShift, 100 + this.crosshairShift);
-        this.dragOverlay.addEventListener("dragenter", function (e) { return _this.overlayDragEnter(e); });
-        var debounceTimer = null;
-        var lastEvent = null;
-        this.dragOverlay.addEventListener("dragover", function (e) {
-            lastEvent = e;
-            if (!debounceTimer) {
-                debounceTimer = setTimeout(function () {
-                    _this.overlayDragMove(lastEvent);
-                    debounceTimer = null;
-                }, 50);
-            }
-        });
-    };
-    /**
-     * Detroy the div overlay when dragging ends.
-     */
-    TtrMap.prototype.removeDragOverlay = function () {
-        this.crosshairTarget = null;
-        document.getElementById("map").removeChild(this.dragOverlay);
-        this.dragOverlay = null;
     };
     TtrMap.prototype.getCityName = function (cityId) {
         return cityId - 100 < CITIES_NAMES.length ? CITIES_NAMES[cityId - 100] : "unknown";

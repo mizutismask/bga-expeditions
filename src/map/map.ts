@@ -189,7 +189,7 @@ class TtrMap {
 			)
 		);
 
-		this.createRouteSpaces("route-spaces");
+		this.createRouteSpaces("route-spaces", 10,10,true);
 		this.showRevealedDestinations(revealedDestinations);
 		this.setClaimedRoutes(claimedRoutes, null);
 
@@ -249,17 +249,28 @@ class TtrMap {
 		return claimed.reverseDirection ? route.from : route.to;
 	}
 
+	private getColorShift(color:number, baseShift) {
+		switch (color) {
+			case BLUE:
+				return baseShift;
+			case RED:
+				return -baseShift;
+			case YELLOW:
+				return 0;
+		}
+	}
 	private createRouteSpaces(
 		destination: "route-spaces" | "map-drag-overlay",
 		shiftX: number = 0,
-		shiftY: number = 0
+		shiftY: number = 0,
+		autoshiftOnColor=false
 	) {
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
 				dojo.place(
 					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
-                    style="transform-origin:left center; transform: translate(${space.x + shiftX}px, ${
-						space.y + shiftY
+                    style="transform-origin:left center; transform: translate(${space.x + this.getColorShift(route.color,shiftX)}px, ${
+						space.y + this.getColorShift(route.color,shiftY)
 					}px) rotate(${space.angle}deg); width:${space.length}px"
                     title="${dojo.string.substitute(_("${from} to ${to}"), {
 						from: this.getCityName(route.from),
@@ -771,74 +782,6 @@ class TtrMap {
 			document.getElementById(`city${d.to}`).dataset.revealedBy = "shared";
 			document.getElementById(`city${d.to}`).dataset.toConnect = "true";
 		});
-	}
-
-	/**
-	 * Create the crosshair target when drag starts over the drag overlay.
-	 */
-	private overlayDragEnter(e: DragEvent | MouseEvent) {
-		if (!this.crosshairTarget) {
-			this.crosshairTarget = document.createElement("div");
-			this.crosshairTarget.id = "map-drag-target";
-			this.crosshairTarget.style.left = e.offsetX + "px";
-			this.crosshairTarget.style.top = e.offsetY + "px";
-			this.crosshairTarget.style.width = this.crosshairHalfSize * 2 + "px";
-			this.crosshairTarget.style.height = this.crosshairHalfSize * 2 + "px";
-			this.crosshairTarget.style.marginLeft = -(this.crosshairHalfSize + this.crosshairShift) + "px";
-			this.crosshairTarget.style.marginTop = -(this.crosshairHalfSize + this.crosshairShift) + "px";
-			this.dragOverlay.appendChild(this.crosshairTarget);
-		}
-	}
-
-	/**
-	 * Move the crosshair target.
-	 */
-	private overlayDragMove(e: DragEvent | MouseEvent) {
-		if (this.crosshairTarget && (e.target as any).id === this.dragOverlay.id) {
-			this.crosshairTarget.style.left = e.offsetX + "px";
-			this.crosshairTarget.style.top = e.offsetY + "px";
-		}
-	}
-
-	/**
-	 * Create a div overlay when dragging starts.
-	 * This allow to create a crosshair target on it, and to make it shifted from mouse position.
-	 * In touch mode, crosshair must be shifted from finger to see the target. For this, the drag zones on the overlay are shifted in accordance.
-	 * If there isn't touch support, the crosshair is centered on the mouse.
-	 */
-	public addDragOverlay() {
-		const id = "map-drag-overlay";
-		this.dragOverlay = document.createElement("div");
-		this.dragOverlay.id = id;
-		document.getElementById(`map`).appendChild(this.dragOverlay);
-
-		this.crosshairHalfSize = CROSSHAIR_SIZE / this.game.getZoom();
-		const touchDevice = "ontouchstart" in window;
-		this.crosshairShift = touchDevice ? this.crosshairHalfSize : 0;
-		this.createRouteSpaces(id, 100 + this.crosshairShift, 100 + this.crosshairShift);
-
-		this.dragOverlay.addEventListener("dragenter", (e) => this.overlayDragEnter(e));
-
-		let debounceTimer = null;
-		let lastEvent: DragEvent = null;
-		this.dragOverlay.addEventListener("dragover", (e) => {
-			lastEvent = e;
-			if (!debounceTimer) {
-				debounceTimer = setTimeout(() => {
-					this.overlayDragMove(lastEvent);
-					debounceTimer = null;
-				}, 50);
-			}
-		});
-	}
-
-	/**
-	 * Detroy the div overlay when dragging ends.
-	 */
-	public removeDragOverlay() {
-		this.crosshairTarget = null;
-		document.getElementById(`map`).removeChild(this.dragOverlay);
-		this.dragOverlay = null;
 	}
 
 	public getCityName(cityId: number) {
