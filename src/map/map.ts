@@ -152,11 +152,6 @@ class TtrMap {
 	private resizedDiv: HTMLDivElement;
 	private mapDiv: HTMLDivElement;
 
-	private dragOverlay: HTMLDivElement = null;
-	private crosshairTarget: HTMLDivElement = null;
-	private crosshairHalfSize: number = 0;
-	private crosshairShift: number = 0;
-
 	/**
 	 * Place map corner illustration and borders, cities, routes, and bind events.
 	 */
@@ -189,7 +184,7 @@ class TtrMap {
 			)
 		);
 
-		this.createRouteSpaces("route-spaces", 10,10,true);
+		this.createRouteSpaces();
 		this.showRevealedDestinations(revealedDestinations);
 		this.setClaimedRoutes(claimedRoutes, null);
 
@@ -249,29 +244,33 @@ class TtrMap {
 		return claimed.reverseDirection ? route.from : route.to;
 	}
 
-	private getColorShift(color:number, baseShift) {
-		switch (color) {
+	private getColorShift(route: Route, baseShift: number, shortRoutesShift: number) {
+		switch (route.color) {
 			case BLUE:
-				return baseShift;
+				return this.isShortRoute(route) ? -shortRoutesShift : -baseShift;
 			case RED:
-				return -baseShift;
+				return this.isShortRoute(route) ? shortRoutesShift : baseShift;
 			case YELLOW:
 				return 0;
 		}
 	}
-	private createRouteSpaces(
-		destination: "route-spaces" | "map-drag-overlay",
-		shiftX: number = 0,
-		shiftY: number = 0,
-		autoshiftOnColor=false
-	) {
+
+	private isShortRoute(route: Route) {
+		const angle = route.spaces[0].angle;
+		console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+		return angle >= 35 && angle < 65;
+		//return false;
+	}
+	private createRouteSpaces() {
+		const destination = "route-spaces";
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
+				const coords = this.getShiftedCoords(route, this.getColorShift(route, 20, 30));
 				dojo.place(
 					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
-                    style="transform-origin:left center; transform: translate(${space.x + this.getColorShift(route.color,shiftX)}px, ${
-						space.y + this.getColorShift(route.color,shiftY)
-					}px) rotate(${space.angle}deg); width:${space.length}px"
+                    style="transform-origin:left center; transform: translate(${coords.x}px, ${coords.y}px) rotate(${
+						space.angle
+					}deg); width:${space.length}px"
                     title="${dojo.string.substitute(_("${from} to ${to}"), {
 						from: this.getCityName(route.from),
 						to: this.getCityName(route.to),
@@ -281,11 +280,7 @@ class TtrMap {
 					destination
 				);
 				const spaceDiv = document.getElementById(`${destination}-route${route.id}-space${spaceIndex}`);
-				if (destination == "route-spaces") {
-					this.setSpaceClickEvents(spaceDiv, route);
-				} else {
-					this.setSpaceDragEvents(spaceDiv, route);
-				}
+				this.setSpaceClickEvents(spaceDiv, route);
 			})
 		);
 	}
@@ -306,36 +301,10 @@ class TtrMap {
 	}
 
 	/**
-	 * Handle dragging train car cards over a route.
-	 */
-	private routeDragOver(e: DragEvent, route: Route) {}
-
-	/**
-	 * Handle dropping train car cards over a route.
-	 */
-	private routeDragDrop(e: DragEvent, route: Route) {
-		e.preventDefault();
-	}
-
-	/**
 	 * Bind click events to route space.
 	 */
 	private setSpaceClickEvents(spaceDiv: HTMLElement, route: Route) {
-		spaceDiv.addEventListener("dragenter", (e) => this.routeDragOver(e, route));
-		spaceDiv.addEventListener("dragover", (e) => this.routeDragOver(e, route));
-		//spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
-		spaceDiv.addEventListener("drop", (e) => this.routeDragDrop(e, route));
 		spaceDiv.addEventListener("click", () => this.game.clickedRoute(route));
-	}
-
-	/**
-	 * Bind drag events to route space.
-	 */
-	private setSpaceDragEvents(spaceDiv: HTMLElement, route: Route) {
-		spaceDiv.addEventListener("dragenter", (e) => this.routeDragOver(e, route));
-		spaceDiv.addEventListener("dragover", (e) => this.routeDragOver(e, route));
-		//spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
-		spaceDiv.addEventListener("drop", (e) => this.routeDragDrop(e, route));
 	}
 
 	/**
@@ -435,6 +404,49 @@ class TtrMap {
 		}
 		const shift: number = route.color === BLUE ? -15 : 15;
 		this.shiftArrow(route, -shift);
+	}
+
+	private getShiftedCoords(route: Route, shift: number): Coords {
+		const space = route.spaces[0];
+		let angle = -space.angle;
+		console.log("*******angle", angle);
+		while (angle < 0) {
+			angle += 180;
+			console.log("angle", angle);
+		}
+		while (angle >= 180) {
+			angle -= 180;
+			console.log("angle", angle);
+		}
+		let x = space.x;
+		let y = space.y;
+
+		console.log("shift amount", shift, "angle", angle);
+
+		console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+		console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+
+		let shiftX = shift;
+		if (this.isShortRoute(route)) {
+			shiftX = shiftX * 1.5;
+		}
+
+		// we shift a little the train car to let the other route visible
+		x += Math.round(shiftX * Math.abs(Math.sin((angle * Math.PI) / 180)));
+		y += Math.round(shiftX * Math.abs(Math.cos((angle * Math.PI) / 180)));
+
+		/*
+		any horizontal shift with a 0° rotation becomes a 0
+		a 10 horizontal shift with a 45° rotation becomes a 7
+		a 20 horizontal shift with a 45° rotation becomes a 14
+		a 30 horizontal shift with a 45° rotation becomes a 21
+		a 10 horizontal shift with a 90° rotation becomes a 10
+		a 20 horizontal shift with a 90° rotation becomes a 20
+		a 30 horizontal shift with a 90° rotation becomes a 30
+		*/
+		console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+
+		return { x: x, y: y };
 	}
 
 	/**

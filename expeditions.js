@@ -1437,10 +1437,6 @@ var TtrMap = /** @class */ (function () {
     function TtrMap(game, players, claimedRoutes, revealedDestinations) {
         this.game = game;
         this.players = players;
-        this.dragOverlay = null;
-        this.crosshairTarget = null;
-        this.crosshairHalfSize = 0;
-        this.crosshairShift = 0;
         // map border
         dojo.place("\n            <div id=\"cities\"></div>\n            <div id=\"route-spaces\"></div>\n            <div id=\"train-cars\"></div>\n        ", "map", "first");
         SIDES.forEach(function (side) { return dojo.place("<div class=\"side ".concat(side, "\"></div>"), "map-and-borders"); });
@@ -1448,7 +1444,7 @@ var TtrMap = /** @class */ (function () {
         CITIES.forEach(function (city) {
             return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(getCityName(city.id), "\"\n            ></div>"), "cities");
         });
-        this.createRouteSpaces("route-spaces", 10, 10, true);
+        this.createRouteSpaces();
         this.showRevealedDestinations(revealedDestinations);
         this.setClaimedRoutes(claimedRoutes, null);
         this.resizedDiv = document.getElementById("resized");
@@ -1497,34 +1493,34 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getRouteDestination = function (route, claimed) {
         return claimed.reverseDirection ? route.from : route.to;
     };
-    TtrMap.prototype.getColorShift = function (color, baseShift) {
-        switch (color) {
+    TtrMap.prototype.getColorShift = function (route, baseShift, shortRoutesShift) {
+        switch (route.color) {
             case BLUE:
-                return baseShift;
+                return this.isShortRoute(route) ? -shortRoutesShift : -baseShift;
             case RED:
-                return -baseShift;
+                return this.isShortRoute(route) ? shortRoutesShift : baseShift;
             case YELLOW:
                 return 0;
         }
     };
-    TtrMap.prototype.createRouteSpaces = function (destination, shiftX, shiftY, autoshiftOnColor) {
+    TtrMap.prototype.isShortRoute = function (route) {
+        var angle = route.spaces[0].angle;
+        console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+        return angle >= 35 && angle < 65;
+        //return false;
+    };
+    TtrMap.prototype.createRouteSpaces = function () {
         var _this = this;
-        if (shiftX === void 0) { shiftX = 0; }
-        if (shiftY === void 0) { shiftY = 0; }
-        if (autoshiftOnColor === void 0) { autoshiftOnColor = false; }
+        var destination = "route-spaces";
         this.getAllRoutes().forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
-                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(space.x + _this.getColorShift(route.color, shiftX), "px, ").concat(space.y + _this.getColorShift(route.color, shiftY), "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
+                var coords = _this.getShiftedCoords(route, _this.getColorShift(route, 20, 30));
+                dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(coords.x, "px, ").concat(coords.y, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getCityName(route.from),
                     to: _this.getCityName(route.to),
                 }), ", ").concat(route.spaces.length, " ").concat(getColor(route.color), "\"\n                    data-route=\"").concat(route.id, "\" data-color=\"").concat(route.color, "\"\n                ></div>"), destination);
                 var spaceDiv = document.getElementById("".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex));
-                if (destination == "route-spaces") {
-                    _this.setSpaceClickEvents(spaceDiv, route);
-                }
-                else {
-                    _this.setSpaceDragEvents(spaceDiv, route);
-                }
+                _this.setSpaceClickEvents(spaceDiv, route);
             });
         });
     };
@@ -1543,35 +1539,11 @@ var TtrMap = /** @class */ (function () {
         return size;
     };
     /**
-     * Handle dragging train car cards over a route.
-     */
-    TtrMap.prototype.routeDragOver = function (e, route) { };
-    /**
-     * Handle dropping train car cards over a route.
-     */
-    TtrMap.prototype.routeDragDrop = function (e, route) {
-        e.preventDefault();
-    };
-    /**
      * Bind click events to route space.
      */
     TtrMap.prototype.setSpaceClickEvents = function (spaceDiv, route) {
         var _this = this;
-        spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
-        spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
-        //spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
-        spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
         spaceDiv.addEventListener("click", function () { return _this.game.clickedRoute(route); });
-    };
-    /**
-     * Bind drag events to route space.
-     */
-    TtrMap.prototype.setSpaceDragEvents = function (spaceDiv, route) {
-        var _this = this;
-        spaceDiv.addEventListener("dragenter", function (e) { return _this.routeDragOver(e, route); });
-        spaceDiv.addEventListener("dragover", function (e) { return _this.routeDragOver(e, route); });
-        //spaceDiv.addEventListener("dragleave", (e) => this.setHoveredRoute(null));
-        spaceDiv.addEventListener("drop", function (e) { return _this.routeDragDrop(e, route); });
     };
     /**
      * Highlight selectable route spaces.
@@ -1663,6 +1635,42 @@ var TtrMap = /** @class */ (function () {
         }
         var shift = route.color === BLUE ? -15 : 15;
         this.shiftArrow(route, -shift);
+    };
+    TtrMap.prototype.getShiftedCoords = function (route, shift) {
+        var space = route.spaces[0];
+        var angle = -space.angle;
+        console.log("*******angle", angle);
+        while (angle < 0) {
+            angle += 180;
+            console.log("angle", angle);
+        }
+        while (angle >= 180) {
+            angle -= 180;
+            console.log("angle", angle);
+        }
+        var x = space.x;
+        var y = space.y;
+        console.log("shift amount", shift, "angle", angle);
+        console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+        console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+        var shiftX = shift;
+        if (this.isShortRoute(route)) {
+            shiftX = shiftX * 1.5;
+        }
+        // we shift a little the train car to let the other route visible
+        x += Math.round(shiftX * Math.abs(Math.sin((angle * Math.PI) / 180)));
+        y += Math.round(shiftX * Math.abs(Math.cos((angle * Math.PI) / 180)));
+        /*
+        any horizontal shift with a 0° rotation becomes a 0
+        a 10 horizontal shift with a 45° rotation becomes a 7
+        a 20 horizontal shift with a 45° rotation becomes a 14
+        a 30 horizontal shift with a 45° rotation becomes a 21
+        a 10 horizontal shift with a 90° rotation becomes a 10
+        a 20 horizontal shift with a 90° rotation becomes a 20
+        a 30 horizontal shift with a 90° rotation becomes a 30
+        */
+        console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+        return { x: x, y: y };
     };
     /**
      * Shifts given arrow if it has not been shifted before.

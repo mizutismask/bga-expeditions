@@ -35,6 +35,11 @@ interface ClaimedRoute {
 	reverseDirection: boolean;
 }
 
+interface Coords {
+	x: number;
+	y: number;
+}
+
 interface ExpeditionsPlayer extends Player {
 	playerNo: number;
 	ticketsCount: number;
