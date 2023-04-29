@@ -12,7 +12,9 @@ trait ExpansionTrait {
         switch ($expansion) {
             default:
                 foreach ($this->DESTINATIONS[1] as $typeArg => $destination) {
-                    $destinations[] = ['type' => 1, 'type_arg' => $typeArg, 'nbr' => 1];
+                    if ($typeArg != 0) {//starting point is excluded
+                        $destinations[] = ['type' => 1, 'type_arg' => $typeArg, 'nbr' => 1];
+                    }
                 }
                 break;
         }
@@ -23,7 +25,7 @@ trait ExpansionTrait {
     /**
      * Return the number of destinations cards shown at the beginning.
      */
-    function getInitialDestinationCardNumber():int {
+    function getInitialDestinationCardNumber(): int {
         $playerCount = $this->getPlayerCount();
         switch (EXPANSION) {
             default:
