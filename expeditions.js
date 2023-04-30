@@ -2698,6 +2698,7 @@ var Expeditions = /** @class */ (function () {
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
             this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
+            this.playerTable.setToDoSelectionMode("none");
         }
         this.destinationSelection = new DestinationSelection(this);
         this.createPlayerPanels(gamedatas);
@@ -2720,7 +2721,7 @@ var Expeditions = /** @class */ (function () {
     //
     Expeditions.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         log("Entering state: " + stateName, args.args);
         switch (stateName) {
             case "privateChooseInitialDestinations":
@@ -2749,7 +2750,8 @@ var Expeditions = /** @class */ (function () {
                         });
                         //this.destinationSelection.setCards(allDestinations);
                         //this.destinationSelection.setSelectableCards(possibleDestinations);
-                        (_e = this.playerTable) === null || _e === void 0 ? void 0 : _e.setToDoSelectableCards(possibleDestinations);
+                        (_e = this.playerTable) === null || _e === void 0 ? void 0 : _e.setToDoSelectionMode("single");
+                        (_f = this.playerTable) === null || _f === void 0 ? void 0 : _f.setToDoSelectableCards(possibleDestinations);
                     }
                 }
                 break;
@@ -2802,11 +2804,12 @@ var Expeditions = /** @class */ (function () {
     //                 You can use this method to perform some user interface changes at this moment.
     //
     Expeditions.prototype.onLeavingState = function (stateName) {
-        var _a;
+        var _a, _b, _c;
         log("Leaving state: " + stateName);
         switch (stateName) {
             case "revealDestination":
                 this.map.setHighligthedDestination(null);
+                (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setToDoSelectionMode("none");
                 break;
             case "privateChooseInitialDestinations":
             case "chooseInitialDestinations":
@@ -2819,7 +2822,7 @@ var Expeditions = /** @class */ (function () {
                 mapDiv
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = "false"); });
-                (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setToDoSelectionMode("none");
+                (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setToDoSelectionMode("none");
                 break;
             case "multiChooseInitialDestinations":
                 Array.from(document.getElementsByClassName("player-turn-order")).forEach(function (elem) {
@@ -2828,6 +2831,7 @@ var Expeditions = /** @class */ (function () {
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
+                (_c = this.playerTable) === null || _c === void 0 ? void 0 : _c.setToDoSelectableCards([]);
                 break;
         }
     };

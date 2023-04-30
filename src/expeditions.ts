@@ -103,6 +103,7 @@ class Expeditions implements ExpeditionsGame {
 				gamedatas.handDestinations,
 				gamedatas.completedDestinations
 			);
+			this.playerTable.setToDoSelectionMode("none");
 		}
 		this.destinationSelection = new DestinationSelection(this);
 
@@ -161,6 +162,7 @@ class Expeditions implements ExpeditionsGame {
 						);
 						//this.destinationSelection.setCards(allDestinations);
 						//this.destinationSelection.setSelectableCards(possibleDestinations);
+						this.playerTable?.setToDoSelectionMode("single");
 						this.playerTable?.setToDoSelectableCards(possibleDestinations);
 					}
 				}
@@ -224,6 +226,7 @@ class Expeditions implements ExpeditionsGame {
 		switch (stateName) {
 			case "revealDestination":
 				this.map.setHighligthedDestination(null);
+				this.playerTable?.setToDoSelectionMode("none");
 				break;
 			case "privateChooseInitialDestinations":
 			case "chooseInitialDestinations":
@@ -245,6 +248,7 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
+				this.playerTable?.setToDoSelectableCards([]);
 				break;
 		}
 	}
