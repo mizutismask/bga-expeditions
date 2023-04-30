@@ -65,7 +65,7 @@ trait DestinationDeckTrait {
         $visibleCardsCount = intval($this->destinations->countCardInLocation('shared'));
         if ($visibleCardsCount < NUMBER_OF_SHARED_DESTINATION_CARDS) {
             $spots = [];
-            $citiesNames=[];
+            $citiesNames = [];
             for ($i = $visibleCardsCount; $i < NUMBER_OF_SHARED_DESTINATION_CARDS; $i++) {
                 $newCard = $this->getDestinationFromDb($this->destinations->pickCardForLocation('deck', 'shared', $i));
                 $citiesNames[] = $this->CITIES[$newCard->to];
@@ -80,7 +80,8 @@ trait DestinationDeckTrait {
 
     public function getRevealableDestinations(int $playerId) {
         $cards = $this->getPlayerDestinationCards($playerId);
-        return array_values(array_filter($cards, fn ($card) =>  array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
+        $revealed = $this->getRevealedDestinationsIdsByPlayer($playerId);
+        return array_values(array_filter($cards, fn ($card) =>  $this->array_find($revealed, fn ($rc) => $rc === $card->id) == null && array_search(intval($card->type_arg) + 100, CITIES_NOT_FAR_ENOUGH_FROM_START, true) === false));
     }
 
     /**
