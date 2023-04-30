@@ -755,13 +755,22 @@ class TtrMap {
 	/**
 	 * Sets a player token next to the destination.
 	 */
-	public revealDestination(player: ExpeditionsPlayer, destination: Destination) {
-		const div = document.getElementById(`city${destination.to}`);
-		if (div.dataset.revealedBy) {
+	public revealDestination(player: ExpeditionsPlayer, destination: Destination, temporary: boolean = false) {
+		//remove old temporary ones
+		dojo.query("[data-revealed-by][data-temporary]='true'").forEach((div) => {
 			div.removeAttribute("data-revealed-by");
-		} else {
-			div.dataset.revealedBy = player.color;
-			document.getElementById(`city${destination.to}`).dataset.toConnect = "true";
+			div.removeAttribute("data-temporary");
+		});
+
+		if (destination) {
+			const div = document.getElementById(`city${destination.to}`);
+			if (div.dataset.revealedBy) {
+				div.removeAttribute("data-revealed-by");
+			} else {
+				div.dataset.revealedBy = player.color;
+				div.dataset.temporary = temporary.toString();
+				document.getElementById(`city${destination.to}`).dataset.toConnect = "true";
+			}
 		}
 	}
 
@@ -797,29 +806,29 @@ class TtrMap {
 	}
 
 	/**
-     * Locations are not only green cities, but also blue and red points.
-     */
-    public getLocationColor(cityId:number): number {
-        let color = 0;
-        if (cityId >= 100 && cityId <= 180) {
-            color = GREEN;
-        } else if (cityId >= 181 && cityId <= 201) {
-            color = RED;
-        } else if (cityId >= 182 && cityId <= 221) {
-            color = BLUE;
-        }
-        return color;
-    }
+	 * Locations are not only green cities, but also blue and red points.
+	 */
+	public getLocationColor(cityId: number): number {
+		let color = 0;
+		if (cityId >= 100 && cityId <= 180) {
+			color = GREEN;
+		} else if (cityId >= 181 && cityId <= 201) {
+			color = RED;
+		} else if (cityId >= 182 && cityId <= 221) {
+			color = BLUE;
+		}
+		return color;
+	}
 
-    public getLocationName( cityId:number) {
-        let color = this.getLocationColor(cityId);
-        switch (color) {
-            case RED:
-                return _("red point");
-            case BLUE:
-                return _("blue point");
+	public getLocationName(cityId: number) {
+		let color = this.getLocationColor(cityId);
+		switch (color) {
+			case RED:
+				return _("red point");
+			case BLUE:
+				return _("blue point");
 			case GREEN:
 				return CITIES_NAMES[cityId - 100];
-        }
-    }
+		}
+	}
 }

@@ -1934,14 +1934,23 @@ var TtrMap = /** @class */ (function () {
     /**
      * Sets a player token next to the destination.
      */
-    TtrMap.prototype.revealDestination = function (player, destination) {
-        var div = document.getElementById("city".concat(destination.to));
-        if (div.dataset.revealedBy) {
+    TtrMap.prototype.revealDestination = function (player, destination, temporary) {
+        if (temporary === void 0) { temporary = false; }
+        //remove old temporary ones
+        dojo.query("[data-revealed-by][data-temporary]='true'").forEach(function (div) {
             div.removeAttribute("data-revealed-by");
-        }
-        else {
-            div.dataset.revealedBy = player.color;
-            document.getElementById("city".concat(destination.to)).dataset.toConnect = "true";
+            div.removeAttribute("data-temporary");
+        });
+        if (destination) {
+            var div = document.getElementById("city".concat(destination.to));
+            if (div.dataset.revealedBy) {
+                div.removeAttribute("data-revealed-by");
+            }
+            else {
+                div.dataset.revealedBy = player.color;
+                div.dataset.temporary = temporary.toString();
+                document.getElementById("city".concat(destination.to)).dataset.toConnect = "true";
+            }
         }
     };
     /**
@@ -3047,7 +3056,7 @@ var Expeditions = /** @class */ (function () {
             ? (this.destinationToReveal = null)
             : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(destination);
-        this.map.revealDestination(this.getCurrentPlayer(), destination);
+        this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
         dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
     };
     /**

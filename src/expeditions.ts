@@ -527,7 +527,7 @@ class Expeditions implements ExpeditionsGame {
 			? (this.destinationToReveal = null)
 			: (this.destinationToReveal = destination);
 		this.map.setHighligthedDestination(destination);
-		this.map.revealDestination(this.getCurrentPlayer(), destination);
+		this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
 		dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
 	}
 
