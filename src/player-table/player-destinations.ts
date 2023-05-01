@@ -114,18 +114,22 @@ class PlayerDestinations {
 	/**
 	 * Add an animation to mark a destination as complete.
 	 */
-	public markDestinationCompleteAnimation(destination: Destination, destinationRoutes: Route[]) {
+	public markDestinationCompleteAnimation(destination: Destination) {
+		const endAnimLocation =
+			destination.location_arg === this.playerId
+				? `destination-card-${destination.id}`
+				: destination.location === "sharedCompleted"
+				? `common-completed-destinations-counter-${destination.location_arg}`
+				: `completed-destinations-counter-${destination.location_arg}`;
+
 		const newDac = new DestinationCompleteAnimation(
 			this.game,
 			destination,
-			destinationRoutes,
-			`destination-card-${destination.id}`,
-			`destination-card-${destination.id}`,
+			endAnimLocation,
 			{
-				start: (d) => document.getElementById(`destination-card-${d.id}`).classList.add("hidden-for-animation"),
+				start: (d) => document.getElementById(endAnimLocation)?.classList.add("hidden-for-animation"),
 				change: (d) => this.markDestinationCompleteNoAnimation(d),
-				end: (d) =>
-					document.getElementById(`destination-card-${d.id}`).classList.remove("hidden-for-animation"),
+				end: (d) => document.getElementById(endAnimLocation)?.classList.remove("hidden-for-animation"),
 			},
 			"completed"
 		);
@@ -136,9 +140,9 @@ class PlayerDestinations {
 	/**
 	 * Mark a destination as complete.
 	 */
-	public markDestinationComplete(destination: Destination, destinationRoutes?: Route[]) {
-		if (destinationRoutes && !(document.visibilityState === "hidden" || (this.game as any).instantaneousMode)) {
-			this.markDestinationCompleteAnimation(destination, destinationRoutes);
+	public markDestinationComplete(destination: Destination) {
+		if (!(document.visibilityState === "hidden" || (this.game as any).instantaneousMode)) {
+			this.markDestinationCompleteAnimation(destination);
 		} else {
 			this.markDestinationCompleteNoAnimation(destination);
 		}

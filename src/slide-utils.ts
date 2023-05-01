@@ -1,5 +1,5 @@
 /**
- * Animation to move a card to a player's counter (the destroy animated card).
+ * Animation to move a card to a player's counter (then destroy animated card).
  */ 
 function animateCardToCounterAndDestroy(game: ExpeditionsGame, cardOrCardId: string | HTMLElement, destinationId: string) {
     const card = typeof(cardOrCardId) === 'string' ? document.getElementById(cardOrCardId) : cardOrCardId;

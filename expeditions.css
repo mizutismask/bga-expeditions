@@ -1,5 +1,6 @@
 @charset "UTF-8";
 .player-board {
+  z-index: -1;
   color: white;
   background: url("img/playerboard-background-bottom.jpg");
   background-position: bottom;

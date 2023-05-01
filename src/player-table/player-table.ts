@@ -38,8 +38,8 @@ class PlayerTable {
 		this.playerDestinations.addDestinations(destinations, originStock);
 	}
 
-	public markDestinationComplete(destination: Destination, destinationRoutes?: Route[]) {
-		this.playerDestinations.markDestinationComplete(destination, destinationRoutes);
+	public markDestinationComplete(destination: Destination) {
+		this.playerDestinations.markDestinationComplete(destination);
 	}
 
 	public setToDoSelectionMode(selectionMode: CardSelectionMode) {

@@ -1112,7 +1112,7 @@ class Expeditions implements ExpeditionsGame {
 			this.completedDestinationsCounters[playerId].incValue(1);
 		}
 		this.gamedatas.completedDestinations.push(destination);
-		this.playerTable?.markDestinationComplete(destination, notif.args.destinationRoutes);
+		this.playerTable?.markDestinationComplete(destination);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
 		playSound(`ttr-completed-in-game`);

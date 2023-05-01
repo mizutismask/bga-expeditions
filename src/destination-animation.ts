@@ -2,90 +2,92 @@ type DestinationAnimationCallback = (destination: Destination) => void;
 
 /**
  * Destination animation : destination slides over the map, wagons used by destination are highlighted, destination is mark "done" or "uncomplete", and card slides back to original place.
- */ 
+ */
 class DestinationCompleteAnimation extends WagonsAnimation {
+	constructor(
+		game: ExpeditionsGame,
+		private destination: Destination,
+		private toId: string,
+		private actions: {
+			start?: DestinationAnimationCallback;
+			change?: DestinationAnimationCallback;
+			end?: DestinationAnimationCallback;
+		},
+		private state: "completed" | "uncompleted",
+		private initialSize: number = 1
+	) {
+		super(game);
+	}
 
-    constructor(
-        game: ExpeditionsGame,
-        private destination: Destination,
-        destinationRoutes: Route[],
-        private fromId: string,
-        private toId: string,
-        private actions: {
-            start?: DestinationAnimationCallback,
-            change?: DestinationAnimationCallback,
-            end?: DestinationAnimationCallback,
-        },
-        private state: 'completed' | 'uncompleted',
-        private initialSize: number = 1,
-    ) {
-        super(game, destinationRoutes);
-    }
+	public animate(): Promise<WagonsAnimation> {
+		return new Promise((resolve) => {
+			dojo.place(
+				`
+            <div id="animated-destination-card-${
+				this.destination.id
+			}" class="destination-card" style="${this.getCardPosition(
+					this.destination
+				)}${getBackgroundInlineStyleForDestination(this.destination)}
+                 transform:scale(0); z-index:1000;"></div>
+            `,
+				"map"
+			);
 
-    public animate(): Promise<WagonsAnimation> {
-        return new Promise(resolve => {
-            const fromBR = document.getElementById(this.fromId).getBoundingClientRect();
+			const card = document.getElementById(`animated-destination-card-${this.destination.id}`);
+			this.actions.start?.(this.destination);
 
-            dojo.place(`
-            <div id="animated-destination-card-${this.destination.id}" class="destination-card" style="${this.getCardPosition(this.destination)}${getBackgroundInlineStyleForDestination(this.destination)}"></div>
-            `, 'map');
+			const cardBR = card.getBoundingClientRect();
+			/*const x = cardBR.x / this.zoom;
+			const y = cardBR.y / this.zoom;
+			card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
+			console.log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
+*/
+			this.game.setSelectedDestination(this.destination, true);
 
-            const card = document.getElementById(`animated-destination-card-${this.destination.id}`);
-            this.actions.start?.(this.destination);
-            const cardBR = card.getBoundingClientRect();
-            
-            const x = (fromBR.x - cardBR.x) / this.zoom;
-            const y = (fromBR.y - cardBR.y) / this.zoom;
-            card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
-    
-            this.setWagonsVisibility(true);
-            this.game.setSelectedDestination(this.destination, true);
+			setTimeout(() => {
+				card.classList.add("animated");
+				card.style.transform = `scale(1)`;
+				setTimeout(() => {
+					card.style.transform = ``;
 
-            setTimeout(() => {
-                card.classList.add('animated');
-                card.style.transform = ``;
+					this.markComplete(card, cardBR, resolve);
+				}, 400);
+			}, 100);
+		});
+	}
 
-                this.markComplete(card, cardBR, resolve);
-            }, 100);
-        });
-    }
-    
-    private markComplete(card: HTMLElement, cardBR: DOMRect, resolve: any) {
-        
-        setTimeout(() => {
-            card.classList.add(this.state);
-            this.actions.change?.(this.destination);
+	private markComplete(card: HTMLElement, cardBR: DOMRect, resolve: any) {
+		setTimeout(() => {
+			card.classList.add(this.state); //marks card completed or not
+			this.actions.change?.(this.destination);
+			setTimeout(() => {
+				const toBR = document.getElementById(this.toId).getBoundingClientRect();
 
-            setTimeout(() => {
-                const toBR = document.getElementById(this.toId).getBoundingClientRect();
-                
-                const x = (toBR.x - cardBR.x) / this.zoom;
-                const y = (toBR.y - cardBR.y) / this.zoom;
-                card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
-                
-                setTimeout(() => this.endAnimation(resolve, card), 500);
-            }, 500);
-        }, 750);
-    }
+				const x = (toBR.x - cardBR.x) / this.zoom;
+				const y = (toBR.y - cardBR.y) / this.zoom;
+				card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
+				setTimeout(() => this.endAnimation(resolve, card), 500);
+			}, 500);
+		}, 750);
+	}
 
-    private endAnimation(resolve: any, card: HTMLElement) {
-        this.setWagonsVisibility(false);
-        this.game.setSelectedDestination(this.destination, false);
+	private endAnimation(resolve: any, card: HTMLElement) {
+		this.game.setSelectedDestination(this.destination, false);
 
-        resolve(this);
+		resolve(this);
 
-        this.game.endAnimation(this);
-        this.actions.end?.(this.destination);
+		this.game.endAnimation(this);
+		this.actions.end?.(this.destination);
 
-        card.parentElement.removeChild(card);
-    }
-    
-    private getCardPosition(destination: Destination) {
-        const positions = [destination.from, destination.to].map(cityId => CITIES.find(city => city.id == cityId));
+		card.parentElement.removeChild(card);
+	}
 
-        let x = (positions[0].x + positions[1].x) / 2;
-        let y = (positions[0].y + positions[1].y) / 2;
+	private getCardPosition(destination: Destination) {
+		const positions = [destination.to].map((cityId) => CITIES.find((city) => city.id == cityId));
+		let x = positions[0].x ;
+		let y = positions[0].y ;
 
-        return `left: ${x - CARD_WIDTH/2}px; top: ${y - CARD_HEIGHT/2}px;`;
-    }
+		//return `left: ${x - CARD_WIDTH / 2}px; top: ${y - CARD_HEIGHT / 2}px;`;
+		return `left: ${x}px; top: ${y}px;`;
+	}
 }

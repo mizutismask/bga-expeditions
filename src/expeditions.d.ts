@@ -16,7 +16,6 @@ interface Card {
 interface TrainCar extends Card {}
 
 interface Destination extends Card {
-	from: number;
 	to: number;
 }
 
@@ -195,7 +194,6 @@ interface NotifTicketUsedArgs {
 interface NotifDestinationCompletedArgs {
 	playerId: number;
 	destination: Destination;
-	destinationRoutes: Route[];
 	revealedTokenBack: number;
 }
 

@@ -1,4 +1,5 @@
 .player-board {
+	z-index: -1;//to make completed destinations animations fly over
 	color: white;
 	background: url("img/playerboard-background-bottom.jpg");
 	background-position: bottom;

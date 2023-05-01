@@ -1,5 +1,5 @@
 /**
- * Animation to move a card to a player's counter (the destroy animated card).
+ * Animation to move a card to a player's counter (then destroy animated card).
  */
 function animateCardToCounterAndDestroy(game, cardOrCardId, destinationId) {
     var card = typeof (cardOrCardId) === 'string' ? document.getElementById(cardOrCardId) : cardOrCardId;
@@ -424,21 +424,11 @@ function getBackgroundInlineStyleForDestination(destination) {
  * Animation with highlighted wagons.
  */
 var WagonsAnimation = /** @class */ (function () {
-    function WagonsAnimation(game, destinationRoutes) {
-        var _this = this;
+    function WagonsAnimation(game) {
         this.game = game;
         this.wagons = [];
         this.zoom = this.game.getZoom();
-        this.shadowDiv = document.getElementById('map-destination-highlight-shadow');
-        destinationRoutes === null || destinationRoutes === void 0 ? void 0 : destinationRoutes.forEach(function (route) {
-            var _a;
-            return (_a = _this.wagons).push.apply(_a, Array.from(document.querySelectorAll("[id^=\"wagon-route".concat(route.id, "-space\"]"))));
-        });
     }
-    WagonsAnimation.prototype.setWagonsVisibility = function (visible) {
-        this.shadowDiv.dataset.visible = visible ? 'true' : 'false';
-        this.wagons.forEach(function (wagon) { return wagon.classList.toggle('highlight', visible); });
-    };
     return WagonsAnimation;
 }());
 var __extends = (this && this.__extends) || (function () {
@@ -461,11 +451,10 @@ var __extends = (this && this.__extends) || (function () {
  */
 var DestinationCompleteAnimation = /** @class */ (function (_super) {
     __extends(DestinationCompleteAnimation, _super);
-    function DestinationCompleteAnimation(game, destination, destinationRoutes, fromId, toId, actions, state, initialSize) {
+    function DestinationCompleteAnimation(game, destination, toId, actions, state, initialSize) {
         if (initialSize === void 0) { initialSize = 1; }
-        var _this = _super.call(this, game, destinationRoutes) || this;
+        var _this = _super.call(this, game) || this;
         _this.destination = destination;
-        _this.fromId = fromId;
         _this.toId = toId;
         _this.actions = actions;
         _this.state = state;
@@ -476,20 +465,23 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
         var _this = this;
         return new Promise(function (resolve) {
             var _a, _b;
-            var fromBR = document.getElementById(_this.fromId).getBoundingClientRect();
-            dojo.place("\n            <div id=\"animated-destination-card-".concat(_this.destination.id, "\" class=\"destination-card\" style=\"").concat(_this.getCardPosition(_this.destination)).concat(getBackgroundInlineStyleForDestination(_this.destination), "\"></div>\n            "), 'map');
+            dojo.place("\n            <div id=\"animated-destination-card-".concat(_this.destination.id, "\" class=\"destination-card\" style=\"").concat(_this.getCardPosition(_this.destination)).concat(getBackgroundInlineStyleForDestination(_this.destination), "\n                 transform:scale(0); z-index:1000;\"></div>\n            "), "map");
             var card = document.getElementById("animated-destination-card-".concat(_this.destination.id));
             (_b = (_a = _this.actions).start) === null || _b === void 0 ? void 0 : _b.call(_a, _this.destination);
             var cardBR = card.getBoundingClientRect();
-            var x = (fromBR.x - cardBR.x) / _this.zoom;
-            var y = (fromBR.y - cardBR.y) / _this.zoom;
-            card.style.transform = "translate(".concat(x, "px, ").concat(y, "px) scale(").concat(_this.initialSize, ")");
-            _this.setWagonsVisibility(true);
+            /*const x = cardBR.x / this.zoom;
+            const y = cardBR.y / this.zoom;
+            card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
+            console.log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
+*/
             _this.game.setSelectedDestination(_this.destination, true);
             setTimeout(function () {
-                card.classList.add('animated');
-                card.style.transform = "";
-                _this.markComplete(card, cardBR, resolve);
+                card.classList.add("animated");
+                card.style.transform = "scale(1)";
+                setTimeout(function () {
+                    card.style.transform = "";
+                    _this.markComplete(card, cardBR, resolve);
+                }, 400);
             }, 100);
         });
     };
@@ -497,7 +489,7 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
         var _this = this;
         setTimeout(function () {
             var _a, _b;
-            card.classList.add(_this.state);
+            card.classList.add(_this.state); //marks card completed or not
             (_b = (_a = _this.actions).change) === null || _b === void 0 ? void 0 : _b.call(_a, _this.destination);
             setTimeout(function () {
                 var toBR = document.getElementById(_this.toId).getBoundingClientRect();
@@ -510,7 +502,6 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
     };
     DestinationCompleteAnimation.prototype.endAnimation = function (resolve, card) {
         var _a, _b;
-        this.setWagonsVisibility(false);
         this.game.setSelectedDestination(this.destination, false);
         resolve(this);
         this.game.endAnimation(this);
@@ -518,10 +509,11 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
         card.parentElement.removeChild(card);
     };
     DestinationCompleteAnimation.prototype.getCardPosition = function (destination) {
-        var positions = [destination.from, destination.to].map(function (cityId) { return CITIES.find(function (city) { return city.id == cityId; }); });
-        var x = (positions[0].x + positions[1].x) / 2;
-        var y = (positions[0].y + positions[1].y) / 2;
-        return "left: ".concat(x - CARD_WIDTH / 2, "px; top: ").concat(y - CARD_HEIGHT / 2, "px;");
+        var positions = [destination.to].map(function (cityId) { return CITIES.find(function (city) { return city.id == cityId; }); });
+        var x = positions[0].x;
+        var y = positions[0].y;
+        //return `left: ${x - CARD_WIDTH / 2}px; top: ${y - CARD_HEIGHT / 2}px;`;
+        return "left: ".concat(x, "px; top: ").concat(y, "px;");
     };
     return DestinationCompleteAnimation;
 }(WagonsAnimation));
@@ -2292,8 +2284,8 @@ var PlayerTable = /** @class */ (function () {
     PlayerTable.prototype.addDestinations = function (destinations, originStock) {
         this.playerDestinations.addDestinations(destinations, originStock);
     };
-    PlayerTable.prototype.markDestinationComplete = function (destination, destinationRoutes) {
-        this.playerDestinations.markDestinationComplete(destination, destinationRoutes);
+    PlayerTable.prototype.markDestinationComplete = function (destination) {
+        this.playerDestinations.markDestinationComplete(destination);
     };
     PlayerTable.prototype.setToDoSelectionMode = function (selectionMode) {
         this.playerDestinations.setToDoSelectionMode(selectionMode);
@@ -2407,23 +2399,26 @@ var PlayerDestinations = /** @class */ (function () {
     /**
      * Add an animation to mark a destination as complete.
      */
-    PlayerDestinations.prototype.markDestinationCompleteAnimation = function (destination, destinationRoutes) {
+    PlayerDestinations.prototype.markDestinationCompleteAnimation = function (destination) {
         var _this = this;
-        var newDac = new DestinationCompleteAnimation(this.game, destination, destinationRoutes, "destination-card-".concat(destination.id), "destination-card-".concat(destination.id), {
-            start: function (d) { return document.getElementById("destination-card-".concat(d.id)).classList.add("hidden-for-animation"); },
+        var endAnimLocation = destination.location_arg === this.playerId
+            ? "destination-card-".concat(destination.id)
+            : destination.location === "sharedCompleted"
+                ? "common-completed-destinations-counter-".concat(destination.location_arg)
+                : "completed-destinations-counter-".concat(destination.location_arg);
+        var newDac = new DestinationCompleteAnimation(this.game, destination, endAnimLocation, {
+            start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add("hidden-for-animation"); },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
-            end: function (d) {
-                return document.getElementById("destination-card-".concat(d.id)).classList.remove("hidden-for-animation");
-            },
+            end: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.remove("hidden-for-animation"); },
         }, "completed");
         this.game.addAnimation(newDac);
     };
     /**
      * Mark a destination as complete.
      */
-    PlayerDestinations.prototype.markDestinationComplete = function (destination, destinationRoutes) {
-        if (destinationRoutes && !(document.visibilityState === "hidden" || this.game.instantaneousMode)) {
-            this.markDestinationCompleteAnimation(destination, destinationRoutes);
+    PlayerDestinations.prototype.markDestinationComplete = function (destination) {
+        if (!(document.visibilityState === "hidden" || this.game.instantaneousMode)) {
+            this.markDestinationCompleteAnimation(destination);
         }
         else {
             this.markDestinationCompleteNoAnimation(destination);
@@ -3551,7 +3546,7 @@ var Expeditions = /** @class */ (function () {
             this.completedDestinationsCounters[playerId].incValue(1);
         }
         this.gamedatas.completedDestinations.push(destination);
-        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination, notif.args.destinationRoutes);
+        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         playSound("ttr-completed-in-game");
         this.disableNextMoveSound();
