@@ -2292,7 +2292,7 @@ var PlayerTable = /** @class */ (function () {
             document.getElementById("main-line").prepend(playerHandDiv);
         }
         else {
-            document.getElementById("resized").appendChild(playerHandDiv);
+            dojo.place("player-table", "destination-deck", "before");
         }
         playerHandDiv.classList.toggle("left", left);
     };
@@ -2343,8 +2343,10 @@ var PlayerDestinations = /** @class */ (function () {
         /** Destinations in "done" column */
         this.destinationsDone = [];
         this.playerId = Number(player.id);
-        var html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-todo\" class=\"player-table-destinations-column todo\"></div>\n        <div id=\"player-table-").concat(player.id, "-destinations-done\" class=\"player-table-destinations-column done\"></div>\n        ");
+        var html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-todo\" class=\"player-table-destinations-column todo\"></div>\n        ");
         dojo.place(html, "player-table-".concat(player.id, "-destinations"));
+        html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-done\" class=\"player-table-destinations-column done\"></div>\n        ");
+        dojo.place(html, "destination-deck", "after");
         this.initDestinationStocks([
             document.getElementById("player-table-".concat(this.playerId, "-destinations-todo")),
             document.getElementById("player-table-".concat(this.playerId, "-destinations-done")),

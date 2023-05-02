@@ -29,7 +29,7 @@ class PlayerTable {
 		if (left) {
 			document.getElementById("main-line").prepend(playerHandDiv);
 		} else {
-			document.getElementById("resized").appendChild(playerHandDiv);
+			dojo.place(`player-table`, "destination-deck", "before");
 		}
 		playerHandDiv.classList.toggle("left", left);
 	}

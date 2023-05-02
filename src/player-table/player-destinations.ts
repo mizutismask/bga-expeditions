@@ -27,10 +27,13 @@ class PlayerDestinations {
 
 		let html = `
         <div id="player-table-${player.id}-destinations-todo" class="player-table-destinations-column todo"></div>
+        `;
+		dojo.place(html, `player-table-${player.id}-destinations`);
+
+		html = `
         <div id="player-table-${player.id}-destinations-done" class="player-table-destinations-column done"></div>
         `;
-
-		dojo.place(html, `player-table-${player.id}-destinations`);
+		dojo.place(html, `destination-deck`, "after");
 
 		this.initDestinationStocks([
 			document.getElementById(`player-table-${this.playerId}-destinations-todo`),

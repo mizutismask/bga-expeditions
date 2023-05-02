@@ -1,36 +1,40 @@
 .player-table-destinations {
 	position: relative;
 	//width: 300px;
+}
 
-	.player-table-destinations-column {
-		//display: flex;
-		//width: 250px;
-		height: 100%;
-		pointer-events: none;
-		z-index: 50;
-		flex-direction: row;
+.player-table-destinations-column {
+	position: relative;
+	//display: flex;
+	//width: 250px;
+	//height: 100%;
+	pointer-events: none;
+	z-index: 50;
+	flex-direction: row;
+	margin-top: 20px;
 
-		&.front {
-			z-index: 51;
-		}
+	&.front {
+		z-index: 51;
+	}
 
-		&.done {
-			left: 35px;
-		}
+	&.done {
+	}
 
-		.destination-card.hidden-for-animation {
-			visibility: hidden;
-		}
+	.destination-card.hidden-for-animation {
+		visibility: hidden;
 	}
 }
 
 .left {
 	.player-table-destinations-column {
-		--direction: column !important;
-		width: 170px;
+		&.todo {
+			margin-top: unset;
+			--direction: column !important;
+			width: 170px;
 
-		.destination-card:not(.icon):not(:first-child) {
-			margin-top: -119px;
+			.destination-card:not(.icon):not(:first-child) {
+				margin-top: -119px;
+			}
 		}
 	}
 }
@@ -74,7 +78,6 @@
 	}
 
 	&.completed {
-
 		&::after {
 			content: "";
 			position: absolute;
@@ -118,7 +121,7 @@
 	text-transform: uppercase;
 	color: #4d78a3;
 	font-weight: bold;
-	margin-bottom:5px;
+	margin-bottom: 5px;
 }
 .xpd-location {
 	font-weight: bold;

@@ -681,27 +681,27 @@
 .player-table-destinations {
   position: relative;
 }
-.player-table-destinations .player-table-destinations-column {
-  height: 100%;
+
+.player-table-destinations-column {
+  position: relative;
   pointer-events: none;
   z-index: 50;
   flex-direction: row;
+  margin-top: 20px;
 }
-.player-table-destinations .player-table-destinations-column.front {
+.player-table-destinations-column.front {
   z-index: 51;
 }
-.player-table-destinations .player-table-destinations-column.done {
-  left: 35px;
-}
-.player-table-destinations .player-table-destinations-column .destination-card.hidden-for-animation {
+.player-table-destinations-column .destination-card.hidden-for-animation {
   visibility: hidden;
 }
 
-.left .player-table-destinations-column {
+.left .player-table-destinations-column.todo {
+  margin-top: unset;
   --direction: column !important;
   width: 170px;
 }
-.left .player-table-destinations-column .destination-card:not(.icon):not(:first-child) {
+.left .player-table-destinations-column.todo .destination-card:not(.icon):not(:first-child) {
   margin-top: -119px;
 }
 
