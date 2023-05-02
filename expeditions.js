@@ -447,7 +447,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 /**
- * Destination animation : destination slides over the map, wagons used by destination are highlighted, destination is mark "done" or "uncomplete", and card slides back to original place.
+ * Destination animation : destination card appears growing over the map next to its city, destination is mark "done" or "uncomplete", and card slides where it's been told to.
  */
 var DestinationCompleteAnimation = /** @class */ (function (_super) {
     __extends(DestinationCompleteAnimation, _super);
@@ -2358,7 +2358,7 @@ var PlayerDestinations = /** @class */ (function () {
         this.addDestinations(destinations);
         destinations
             .filter(function (destination) { return completedDestinations.some(function (d) { return d.id == destination.id; }); })
-            .forEach(function (destination) { return _this.markDestinationComplete(destination); });
+            .forEach(function (destination) { return _this.markDestinationCompleteNoAnimation(destination); });
         // highlight the first "to do" destination
         this.activateNextDestination(this.destinationsTodo);
     }
@@ -2411,6 +2411,7 @@ var PlayerDestinations = /** @class */ (function () {
         this.destinationsDone.push(destination);
         // fromStock: this.destinationsToDoStock
         this.destinationsDoneStock.addCard(destination, {}, {});
+        //this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
         /*document
                 .getElementById(`player-table-${this.playerId}-destinations-done`)
                 .appendChild(document.getElementById(`destination-card-${destination.id}`));*/
@@ -2428,6 +2429,7 @@ var PlayerDestinations = /** @class */ (function () {
         else {
             if (destination.location_arg === this.playerId) {
                 endAnimLocation = "destination-card-".concat(destination.id);
+                //endAnimLocation = `player-table-${destination.location_arg}-destinations-done`;
             }
             else {
                 endAnimLocation = "completed-destinations-counter-".concat(destination.location_arg);

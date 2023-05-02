@@ -46,7 +46,7 @@ class PlayerDestinations {
 		this.addDestinations(destinations);
 		destinations
 			.filter((destination) => completedDestinations.some((d) => d.id == destination.id))
-			.forEach((destination) => this.markDestinationComplete(destination));
+			.forEach((destination) => this.markDestinationCompleteNoAnimation(destination));
 
 		// highlight the first "to do" destination
 		this.activateNextDestination(this.destinationsTodo);
@@ -107,6 +107,7 @@ class PlayerDestinations {
 		this.destinationsDone.push(destination);
 		// fromStock: this.destinationsToDoStock
 		this.destinationsDoneStock.addCard(destination, {}, {});
+		//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
 
 		/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)
@@ -118,12 +119,13 @@ class PlayerDestinations {
 	 * Add an animation to mark a destination as complete.
 	 */
 	public markDestinationCompleteAnimation(destination: Destination) {
-		let endAnimLocation:string;
+		let endAnimLocation: string;
 		if (destination.location === LOCATION_SHARED_COMPLETED) {
 			endAnimLocation = `common-completed-destinations-counter-${destination.location_arg}`;
 		} else {
 			if (destination.location_arg === this.playerId) {
-				endAnimLocation=`destination-card-${destination.id}`;
+				endAnimLocation = `destination-card-${destination.id}`;
+				//endAnimLocation = `player-table-${destination.location_arg}-destinations-done`;
 			} else {
 				endAnimLocation = `completed-destinations-counter-${destination.location_arg}`;
 			}
@@ -139,7 +141,7 @@ class PlayerDestinations {
 				end: (d) => document.getElementById(endAnimLocation)?.classList.remove("hidden-for-animation"),
 			},
 			"completed",
-			"map"//"game_play_area_wrap"
+			"map" //"game_play_area_wrap"
 		);
 
 		this.game.addAnimation(newDac);

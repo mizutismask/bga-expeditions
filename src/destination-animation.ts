@@ -1,7 +1,7 @@
 type DestinationAnimationCallback = (destination: Destination) => void;
 
 /**
- * Destination animation : destination slides over the map, wagons used by destination are highlighted, destination is mark "done" or "uncomplete", and card slides back to original place.
+ * Destination animation : destination card appears growing over the map next to its city, destination is mark "done" or "uncomplete", and card slides where it's been told to.
  */
 class DestinationCompleteAnimation extends WagonsAnimation {
 	constructor(
@@ -14,8 +14,8 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 			end?: DestinationAnimationCallback;
 		},
 		private state: "completed" | "uncompleted",
-		private copyAnchor:string,
-		private initialSize: number = 1,
+		private copyAnchor: string,
+		private initialSize: number = 1
 	) {
 		super(game);
 		this.copyAnchor = copyAnchor;
@@ -64,7 +64,6 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 			this.actions.change?.(this.destination);
 			setTimeout(() => {
 				const toBR = document.getElementById(this.toId).getBoundingClientRect();
-
 				const x = (toBR.x - cardBR.x) / this.zoom;
 				const y = (toBR.y - cardBR.y) / this.zoom;
 				card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
@@ -86,8 +85,8 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 
 	private getCardPosition(destination: Destination) {
 		const positions = [destination.to].map((cityId) => CITIES.find((city) => city.id == cityId));
-		let x = positions[0].x ;
-		let y = positions[0].y ;
+		let x = positions[0].x;
+		let y = positions[0].y;
 
 		//return `left: ${x - CARD_WIDTH / 2}px; top: ${y - CARD_HEIGHT / 2}px;`;
 		return `left: ${x}px; top: ${y}px;`;
