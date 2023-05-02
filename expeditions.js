@@ -1499,7 +1499,7 @@ var TtrMap = /** @class */ (function () {
     };
     TtrMap.prototype.isShortRoute = function (route) {
         var angle = route.spaces[0].angle;
-        console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+        //console.log("isShortRoute", route.id, angle > 35 && angle < 65);
         return angle >= 35 && angle < 65;
         //return false;
     };
@@ -1633,20 +1633,20 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getShiftedCoords = function (route, shift) {
         var space = route.spaces[0];
         var angle = -space.angle;
-        console.log("*******angle", angle);
+        //console.log("*******angle", angle);
         while (angle < 0) {
             angle += 180;
-            console.log("angle", angle);
+            //console.log("angle", angle);
         }
         while (angle >= 180) {
             angle -= 180;
-            console.log("angle", angle);
+            //console.log("angle", angle);
         }
         var x = space.x;
         var y = space.y;
-        console.log("shift amount", shift, "angle", angle);
-        console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
-        console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+        //console.log("shift amount", shift, "angle", angle);
+        //console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+        //console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
         var shiftX = shift;
         if (this.isShortRoute(route)) {
             shiftX = shiftX * 1.5;
@@ -1663,7 +1663,7 @@ var TtrMap = /** @class */ (function () {
         a 20 horizontal shift with a 90° rotation becomes a 20
         a 30 horizontal shift with a 90° rotation becomes a 30
         */
-        console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+        //console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
         return { x: x, y: y };
     };
     /**
@@ -1936,9 +1936,12 @@ var TtrMap = /** @class */ (function () {
         if (destination) {
             var div = document.getElementById("city".concat(destination.to));
             if (div.dataset.revealedBy) {
+                //destination unselected
                 div.removeAttribute("data-revealed-by");
+                div.removeAttribute("data-temporary");
             }
             else {
+                //destination selected
                 div.dataset.revealedBy = player.color;
                 div.dataset.temporary = temporary.toString();
                 document.getElementById("city".concat(destination.to)).dataset.toConnect = "true";
@@ -2298,6 +2301,9 @@ var PlayerTable = /** @class */ (function () {
     };
     PlayerTable.prototype.removeDestination = function (destination) {
         this.playerDestinations.removeCard(destination);
+    };
+    PlayerTable.prototype.updateDestinations = function () {
+        this.playerDestinations.destinationColumnsUpdated();
     };
     return PlayerTable;
 }());
@@ -2760,6 +2766,7 @@ var Expeditions = /** @class */ (function () {
                 }
                 break;
             case "chooseAction":
+                dojo.query('[data-to-connect="true"]:not([data-selectable]):not([data-revealed-by])').forEach(function (elt) { return (elt.dataset.selectable = "true"); });
                 this.onEnteringChooseAction(args.args);
                 break;
             case "useTicket":
@@ -2813,6 +2820,7 @@ var Expeditions = /** @class */ (function () {
         switch (stateName) {
             case "revealDestination":
                 this.map.setHighligthedDestination(null);
+                //this.setDestinationsToConnect(this.destinationsTodo);
                 (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setToDoSelectionMode("none");
                 break;
             case "privateChooseInitialDestinations":
@@ -2835,6 +2843,7 @@ var Expeditions = /** @class */ (function () {
                 break;
             case "chooseAction":
                 this.map.setSelectableRoutes(false, []);
+                //this.map.setSelectableDestination()
                 (_c = this.playerTable) === null || _c === void 0 ? void 0 : _c.setToDoSelectableCards([]);
                 break;
         }
@@ -2859,6 +2868,7 @@ var Expeditions = /** @class */ (function () {
                 case "chooseAction":
                     var chooseActionArgs = args;
                     this.setActionBarChooseAction(false);
+                    //this.playerTable.destinationColumnsUpdated();
                     break;
                 case "useTicket":
                     this.setActionBarUseTicket(false);
@@ -3058,10 +3068,8 @@ var Expeditions = /** @class */ (function () {
      * Sets a player marker on the destination.
      */
     Expeditions.prototype.showRevealedDestination = function (player, destination) {
-        if (player.id != this.getCurrentPlayer().id) {
-            this.map.setHighligthedDestination(destination);
-            this.map.revealDestination(player, destination);
-        }
+        this.map.setHighligthedDestination(destination);
+        this.map.revealDestination(player, destination);
     };
     Expeditions.prototype.showSharedDestinations = function (destinations) {
         this.map.showSharedDestinations(destinations);

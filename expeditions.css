@@ -272,15 +272,26 @@
   border-radius: 50%;
   margin: -15px;
   pointer-events: none;
-  opacity: 0;
   transition: opacity 0.2s;
   position: relative;
   z-index: 1;
 }
+.city[data-to-connect=true] {
+  z-index: 8;
+  opacity: 1;
+  background: radial-gradient(#61f155 30%, rgb(29, 114, 39)) border-box;
+  border-radius: 50em;
+}
+.city[data-to-connect=true][data-selectable=false]:not([data-revealed-by]) {
+  background: grey;
+}
+.city[data-to-connect=true]:not([data-selectable]):not([data-revealed-by]) {
+  background: grey;
+}
 .city[data-selectable=true] {
   z-index: 8;
   opacity: 1;
-  background: url(img/cities.png) padding-box, radial-gradient(#61f155 30%, rgb(29, 114, 39)) border-box;
+  background: radial-gradient(#61f155 30%, rgb(29, 114, 39)) border-box;
   border-radius: 50em;
 }
 .city[data-selected=true] {

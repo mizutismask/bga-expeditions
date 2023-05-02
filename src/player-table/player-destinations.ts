@@ -192,7 +192,7 @@ class PlayerDestinations {
 	/**
 	 * Update destination cards placement when there is a change.
 	 */
-	private destinationColumnsUpdated() {
+	public destinationColumnsUpdated() {
 		const doubleColumn = this.destinationsTodo.length > 0 && this.destinationsDone.length > 0;
 
 		const destinationsDiv = document.getElementById(`player-table-${this.playerId}-destinations`);

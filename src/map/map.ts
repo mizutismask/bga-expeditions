@@ -257,7 +257,7 @@ class TtrMap {
 
 	private isShortRoute(route: Route) {
 		const angle = route.spaces[0].angle;
-		console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+		//console.log("isShortRoute", route.id, angle > 35 && angle < 65);
 		return angle >= 35 && angle < 65;
 		//return false;
 	}
@@ -409,22 +409,22 @@ class TtrMap {
 	private getShiftedCoords(route: Route, shift: number): Coords {
 		const space = route.spaces[0];
 		let angle = -space.angle;
-		console.log("*******angle", angle);
+		//console.log("*******angle", angle);
 		while (angle < 0) {
 			angle += 180;
-			console.log("angle", angle);
+			//console.log("angle", angle);
 		}
 		while (angle >= 180) {
 			angle -= 180;
-			console.log("angle", angle);
+			//console.log("angle", angle);
 		}
 		let x = space.x;
 		let y = space.y;
 
-		console.log("shift amount", shift, "angle", angle);
+		//console.log("shift amount", shift, "angle", angle);
 
-		console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
-		console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+		//console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+		//console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
 
 		let shiftX = shift;
 		if (this.isShortRoute(route)) {
@@ -444,7 +444,7 @@ class TtrMap {
 		a 20 horizontal shift with a 90° rotation becomes a 20
 		a 30 horizontal shift with a 90° rotation becomes a 30
 		*/
-		console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+		//console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
 
 		return { x: x, y: y };
 	}
@@ -765,8 +765,11 @@ class TtrMap {
 		if (destination) {
 			const div = document.getElementById(`city${destination.to}`);
 			if (div.dataset.revealedBy) {
+				//destination unselected
 				div.removeAttribute("data-revealed-by");
+				div.removeAttribute("data-temporary");
 			} else {
+				//destination selected
 				div.dataset.revealedBy = player.color;
 				div.dataset.temporary = temporary.toString();
 				document.getElementById(`city${destination.to}`).dataset.toConnect = "true";

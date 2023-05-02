@@ -97,15 +97,30 @@
 	border-radius: 50%;
 	margin: -15px;
 	pointer-events: none;
-	opacity: 0;
+	//opacity: 0;
 	transition: opacity 0.2s;
 	position: relative;
 	z-index: 1;
 
+	&[data-to-connect="true"] {
+		z-index: 8;
+		opacity: 1;
+		background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
+		border-radius: 50em;
+
+		&[data-selectable="false"] {
+			&:not([data-revealed-by]) {
+				background: grey;
+			}
+		}
+		&:not([data-selectable]):not([data-revealed-by]) {
+			background: grey;
+		}
+	}
 	&[data-selectable="true"] {
 		z-index: 8;
 		opacity: 1;
-		background: url(img/cities.png) padding-box, radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
+		background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
 		border-radius: 50em;
 	}
 	&[data-selected="true"] {
@@ -114,8 +129,8 @@
 	}
 	&[data-highlight="true"] {
 		z-index: 8;
-		-webkit-box-shadow: 0px 0px 1px 13px yellow; 
-			box-shadow: 0px 0px 1px 13px yellow;
+		-webkit-box-shadow: 0px 0px 1px 13px yellow;
+		box-shadow: 0px 0px 1px 13px yellow;
 		opacity: 1;
 	}
 	&[data-revealed-by] {
@@ -141,7 +156,7 @@
 			background-position: #{calc(5 * 100% / 5)} 50%;
 		}
 		&[data-revealed-by="shared"] {
-			background: radial-gradient(#7d57d5, #4a0adf,#4a0adf) border-box;
+			background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
 		}
 	}
 }

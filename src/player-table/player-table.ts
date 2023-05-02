@@ -57,4 +57,8 @@ class PlayerTable {
 	public removeDestination(destination: Destination) {
 		this.playerDestinations.removeCard(destination);
 	}
+
+	public updateDestinations() {
+		this.playerDestinations.destinationColumnsUpdated();
+	}
 }

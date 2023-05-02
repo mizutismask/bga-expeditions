@@ -167,7 +167,11 @@ class Expeditions implements ExpeditionsGame {
 					}
 				}
 				break;
-			case "chooseAction":
+			case "chooseAction": 
+				dojo.query('[data-to-connect="true"]:not([data-selectable]):not([data-revealed-by])').forEach(
+					(elt) => (elt.dataset.selectable = "true")
+				);
+
 				this.onEnteringChooseAction(args.args as EnteringChooseActionArgs);
 				break;
 			case "useTicket":
@@ -226,6 +230,7 @@ class Expeditions implements ExpeditionsGame {
 		switch (stateName) {
 			case "revealDestination":
 				this.map.setHighligthedDestination(null);
+				//this.setDestinationsToConnect(this.destinationsTodo);
 				this.playerTable?.setToDoSelectionMode("none");
 				break;
 			case "privateChooseInitialDestinations":
@@ -248,6 +253,7 @@ class Expeditions implements ExpeditionsGame {
 				break;
 			case "chooseAction":
 				this.map.setSelectableRoutes(false, []);
+				//this.map.setSelectableDestination()
 				this.playerTable?.setToDoSelectableCards([]);
 				break;
 		}
@@ -276,6 +282,7 @@ class Expeditions implements ExpeditionsGame {
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
 					this.setActionBarChooseAction(false);
+					//this.playerTable.destinationColumnsUpdated();
 					break;
 				case "useTicket":
 					this.setActionBarUseTicket(false);
@@ -535,10 +542,8 @@ class Expeditions implements ExpeditionsGame {
 	 * Sets a player marker on the destination.
 	 */
 	public showRevealedDestination(player: ExpeditionsPlayer, destination: Destination): void {
-		if (player.id != this.getCurrentPlayer().id) {
 			this.map.setHighligthedDestination(destination);
 			this.map.revealDestination(player, destination);
-		}
 	}
 
 	public showSharedDestinations(destinations: Destination[]): void {
