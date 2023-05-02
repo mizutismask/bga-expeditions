@@ -714,6 +714,15 @@ class TtrMap {
 	}
 
 	/**
+	 * Sets a destination as toConnect and selectable.
+	 */
+	public showNewDestination(destination: Destination, visible: boolean=true) {
+		const div = document.getElementById(`city${destination.to}`);
+		div.dataset.selectable = visible.toString();
+		div.dataset.toConnect = visible.toString();
+	}
+
+	/**
 	 * Highlight cities of selected destination.
 	 */
 	public setSelectedDestination(destination: Destination, visible: boolean): void {

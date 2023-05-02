@@ -1888,6 +1888,15 @@ var TtrMap = /** @class */ (function () {
         });
     };
     /**
+     * Sets a destination as toConnect and selectable.
+     */
+    TtrMap.prototype.showNewDestination = function (destination, visible) {
+        if (visible === void 0) { visible = true; }
+        var div = document.getElementById("city".concat(destination.to));
+        div.dataset.selectable = visible.toString();
+        div.dataset.toConnect = visible.toString();
+    };
+    /**
      * Highlight cities of selected destination.
      */
     TtrMap.prototype.setSelectedDestination = function (destination, visible) {
@@ -2838,9 +2847,6 @@ var Expeditions = /** @class */ (function () {
                 this.destinationSelection.hide();
                 var mapDiv = document.getElementById("map");
                 mapDiv
-                    .querySelectorAll(".city[data-selectable]")
-                    .forEach(function (city) { return (city.dataset.selectable = "false"); });
-                mapDiv
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = "false"); });
                 (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setToDoSelectionMode("none");
@@ -3511,11 +3517,10 @@ var Expeditions = /** @class */ (function () {
         if (destinations) {
             (_e = this.playerTable) === null || _e === void 0 ? void 0 : _e.addDestinations(destinations, this.destinationSelection.destinations);
             (_f = this.playerTable) === null || _f === void 0 ? void 0 : _f.removeDestination(discarded);
+            this.map.showNewDestination(destinations[0]);
+            this.map.showNewDestination(discarded, false);
         }
-        else {
-            this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
-        }
-        //this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
+        //this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
     };
     /**
      * Update claimed routes.

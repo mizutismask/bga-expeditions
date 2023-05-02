@@ -240,9 +240,6 @@ class Expeditions implements ExpeditionsGame {
 				this.destinationSelection.hide();
 				const mapDiv = document.getElementById("map");
 				mapDiv
-					.querySelectorAll(`.city[data-selectable]`)
-					.forEach((city: HTMLElement) => (city.dataset.selectable = "false"));
-				mapDiv
 					.querySelectorAll(`.city[data-selected]`)
 					.forEach((city: HTMLElement) => (city.dataset.selected = "false"));
 				this.playerTable?.setToDoSelectionMode("none");
@@ -1061,10 +1058,10 @@ class Expeditions implements ExpeditionsGame {
 		if (destinations) {
 			this.playerTable?.addDestinations(destinations, this.destinationSelection.destinations);
 			this.playerTable?.removeDestination(discarded);
-		} else {
-			this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
+			this.map.showNewDestination(destinations[0]);
+			this.map.showNewDestination(discarded, false);
 		}
-		//this.trainCarSelection.setDestinationCount(notif.args.remainingDestinationsInDeck);
+		//this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
 	}
 
 	/**
