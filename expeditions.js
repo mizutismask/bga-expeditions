@@ -1963,9 +1963,9 @@ var TtrMap = /** @class */ (function () {
      * Removes player ownership marker.
      */
     TtrMap.prototype.removeRevealedDestination = function (dest) {
-        var dataset = document.getElementById("city".concat(dest.to)).dataset;
-        dataset.revealedBy = "";
-        dataset.toConnect = "false";
+        var div = document.getElementById("city".concat(dest.to));
+        div.dataset.toConnect = "false";
+        div.removeAttribute("data-revealed-by");
     };
     /**
      * Sets a marker to indicate that the destination is shared.

@@ -793,9 +793,9 @@ class TtrMap {
 	 * Removes player ownership marker.
 	 */
 	public removeRevealedDestination(dest: Destination) {
-		let dataset = document.getElementById(`city${dest.to}`).dataset;
-		dataset.revealedBy = "";
-		dataset.toConnect = "false";
+		let div = document.getElementById(`city${dest.to}`);
+		div.dataset.toConnect = "false";
+		div.removeAttribute("data-revealed-by");
 	}
 
 	/**
