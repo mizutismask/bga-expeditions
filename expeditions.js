@@ -2407,11 +2407,18 @@ var PlayerDestinations = /** @class */ (function () {
      */
     PlayerDestinations.prototype.markDestinationCompleteAnimation = function (destination) {
         var _this = this;
-        var endAnimLocation = destination.location_arg === this.playerId
-            ? "destination-card-".concat(destination.id)
-            : destination.location === "sharedCompleted"
-                ? "common-completed-destinations-counter-".concat(destination.location_arg)
-                : "completed-destinations-counter-".concat(destination.location_arg);
+        var endAnimLocation;
+        if (destination.location === LOCATION_SHARED_COMPLETED) {
+            endAnimLocation = "common-completed-destinations-counter-".concat(destination.location_arg);
+        }
+        else {
+            if (destination.location_arg === this.playerId) {
+                endAnimLocation = "destination-card-".concat(destination.id);
+            }
+            else {
+                endAnimLocation = "completed-destinations-counter-".concat(destination.location_arg);
+            }
+        }
         var newDac = new DestinationCompleteAnimation(this.game, destination, endAnimLocation, {
             start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add("hidden-for-animation"); },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
@@ -2649,6 +2656,7 @@ var SCORE_MS = 1500;
 var isDebug = window.location.host == "studio.boardgamearena.com";
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var ACTION_TIMER_DURATION = 8;
+var LOCATION_SHARED_COMPLETED = "sharedCompleted";
 var ARROW_CLASSES_PERMUTATIONS = [
     "arrowLRB",
     "arrowLRY",
@@ -3545,7 +3553,7 @@ var Expeditions = /** @class */ (function () {
         var _a;
         var playerId = notif.args.playerId;
         var destination = notif.args.destination;
-        if (destination.location == "sharedCompleted") {
+        if (destination.location == LOCATION_SHARED_COMPLETED) {
             this.commonCompletedDestinationsCounters[playerId].incValue(1);
             this.map.removeRevealedDestination(destination);
             this.sharedDestinations.removeCard(destination);
@@ -3557,13 +3565,13 @@ var Expeditions = /** @class */ (function () {
         (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         this.playRandomCompletedSound();
-        this.disableNextMoveSound();
     };
     Expeditions.prototype.playRandomCompletedSound = function () {
         var min = 1;
         var max = 6;
         var i = Math.floor(Math.random() * (max - min + 1) + min);
         playSound("completed-in-game-".concat(i));
+        this.disableNextMoveSound();
     };
     /**
      * Show last turn banner.

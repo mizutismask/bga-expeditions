@@ -115,12 +115,16 @@ class PlayerDestinations {
 	 * Add an animation to mark a destination as complete.
 	 */
 	public markDestinationCompleteAnimation(destination: Destination) {
-		const endAnimLocation =
-			destination.location_arg === this.playerId
-				? `destination-card-${destination.id}`
-				: destination.location === "sharedCompleted"
-				? `common-completed-destinations-counter-${destination.location_arg}`
-				: `completed-destinations-counter-${destination.location_arg}`;
+		let endAnimLocation:string;
+		if (destination.location === LOCATION_SHARED_COMPLETED) {
+			endAnimLocation = `common-completed-destinations-counter-${destination.location_arg}`;
+		} else {
+			if (destination.location_arg === this.playerId) {
+				endAnimLocation=`destination-card-${destination.id}`;
+			} else {
+				endAnimLocation = `completed-destinations-counter-${destination.location_arg}`;
+			}
+		}
 
 		const newDac = new DestinationCompleteAnimation(
 			this.game,

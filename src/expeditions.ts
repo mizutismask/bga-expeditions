@@ -5,6 +5,7 @@ const isDebug = window.location.host == "studio.boardgamearena.com";
 const log = isDebug ? console.log.bind(window.console) : function () {};
 
 const ACTION_TIMER_DURATION = 8;
+const LOCATION_SHARED_COMPLETED = "sharedCompleted";
 const ARROW_CLASSES_PERMUTATIONS: string[] = [
 	"arrowLRB",
 	"arrowLRY",
@@ -1109,7 +1110,7 @@ class Expeditions implements ExpeditionsGame {
 	notif_destinationCompleted(notif: Notif<NotifDestinationCompletedArgs>) {
 		const playerId = notif.args.playerId;
 		const destination: Destination = notif.args.destination;
-		if (destination.location == "sharedCompleted") {
+		if (destination.location == LOCATION_SHARED_COMPLETED) {
 			this.commonCompletedDestinationsCounters[playerId].incValue(1);
 			this.map.removeRevealedDestination(destination);
 			this.sharedDestinations.removeCard(destination);
@@ -1121,7 +1122,6 @@ class Expeditions implements ExpeditionsGame {
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
 		this.playRandomCompletedSound();
-		(this as any).disableNextMoveSound();
 	}
 
 	playRandomCompletedSound() {
@@ -1129,6 +1129,7 @@ class Expeditions implements ExpeditionsGame {
 		const max = 6;
 		const i = Math.floor(Math.random() * (max - min + 1) + min);
 		playSound(`completed-in-game-${i}`);
+		(this as any).disableNextMoveSound();
 	}
 
 	/**
