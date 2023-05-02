@@ -167,7 +167,7 @@ class Expeditions implements ExpeditionsGame {
 					}
 				}
 				break;
-			case "chooseAction": 
+			case "chooseAction":
 				dojo.query('[data-to-connect="true"]:not([data-selectable]):not([data-revealed-by])').forEach(
 					(elt) => (elt.dataset.selectable = "true")
 				);
@@ -542,8 +542,8 @@ class Expeditions implements ExpeditionsGame {
 	 * Sets a player marker on the destination.
 	 */
 	public showRevealedDestination(player: ExpeditionsPlayer, destination: Destination): void {
-			this.map.setHighligthedDestination(destination);
-			this.map.revealDestination(player, destination);
+		this.map.setHighligthedDestination(destination);
+		this.map.revealDestination(player, destination);
 	}
 
 	public showSharedDestinations(destinations: Destination[]): void {
@@ -1120,8 +1120,15 @@ class Expeditions implements ExpeditionsGame {
 		this.playerTable?.markDestinationComplete(destination);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 
-		playSound(`ttr-completed-in-game`);
+		this.playRandomCompletedSound();
 		(this as any).disableNextMoveSound();
+	}
+
+	playRandomCompletedSound() {
+		const min = 1;
+		const max = 6;
+		const i = Math.floor(Math.random() * (max - min + 1) + min);
+		playSound(`completed-in-game-${i}`);
 	}
 
 	/**

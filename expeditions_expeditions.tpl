@@ -36,7 +36,22 @@
     </div>
 </div>
 
-<audio id="audiosrc_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.mp3" preload="none" autobuffer></audio>
-<audio id="audiosrc_o_ttr-completed-in-game" src="{GAMETHEMEURL}img/completed-in-game.ogg" preload="none" autobuffer></audio>
+<audio id="audiosrc_completed-in-game-1" src="{GAMETHEMEURL}img/completed-in-game-1.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-1" src="{GAMETHEMEURL}img/completed-in-game-1.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_completed-in-game-2" src="{GAMETHEMEURL}img/completed-in-game-2.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-2" src="{GAMETHEMEURL}img/completed-in-game-2.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_completed-in-game-3" src="{GAMETHEMEURL}img/completed-in-game-3.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-3" src="{GAMETHEMEURL}img/completed-in-game-3.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_completed-in-game-4" src="{GAMETHEMEURL}img/completed-in-game-4.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-4" src="{GAMETHEMEURL}img/completed-in-game-4.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_completed-in-game-5" src="{GAMETHEMEURL}img/completed-in-game-5.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-5" src="{GAMETHEMEURL}img/completed-in-game-5.ogg" preload="none" autobuffer></audio>
+
+<audio id="audiosrc_completed-in-game-6" src="{GAMETHEMEURL}img/completed-in-game-6.mp3" preload="none" autobuffer></audio>
+<audio id="audiosrc_o_completed-in-game-6" src="{GAMETHEMEURL}img/completed-in-game-6.ogg" preload="none" autobuffer></audio>
 
 {OVERALL_GAME_FOOTER}

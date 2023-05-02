@@ -3556,8 +3556,14 @@ var Expeditions = /** @class */ (function () {
         this.gamedatas.completedDestinations.push(destination);
         (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
-        playSound("ttr-completed-in-game");
+        this.playRandomCompletedSound();
         this.disableNextMoveSound();
+    };
+    Expeditions.prototype.playRandomCompletedSound = function () {
+        var min = 1;
+        var max = 6;
+        var i = Math.floor(Math.random() * (max - min + 1) + min);
+        playSound("completed-in-game-".concat(i));
     };
     /**
      * Show last turn banner.
