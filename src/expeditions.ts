@@ -1112,12 +1112,12 @@ class Expeditions implements ExpeditionsGame {
 		const destination: Destination = notif.args.destination;
 		if (destination.location == LOCATION_SHARED_COMPLETED) {
 			this.commonCompletedDestinationsCounters[playerId].incValue(1);
-			this.map.removeRevealedDestination(destination);
 			this.sharedDestinations.removeCard(destination);
 		} else {
 			this.completedDestinationsCounters[playerId].incValue(1);
 		}
 		this.gamedatas.completedDestinations.push(destination);
+		this.map.removeRevealedDestination(destination);
 		this.playerTable?.markDestinationComplete(destination);
 		this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
 

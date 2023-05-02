@@ -1964,8 +1964,9 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.removeRevealedDestination = function (dest) {
         var div = document.getElementById("city".concat(dest.to));
-        div.dataset.toConnect = "false";
         div.removeAttribute("data-revealed-by");
+        div.dataset.toConnect = "false";
+        div.dataset.selectable = "false";
     };
     /**
      * Sets a marker to indicate that the destination is shared.
@@ -3555,13 +3556,13 @@ var Expeditions = /** @class */ (function () {
         var destination = notif.args.destination;
         if (destination.location == LOCATION_SHARED_COMPLETED) {
             this.commonCompletedDestinationsCounters[playerId].incValue(1);
-            this.map.removeRevealedDestination(destination);
             this.sharedDestinations.removeCard(destination);
         }
         else {
             this.completedDestinationsCounters[playerId].incValue(1);
         }
         this.gamedatas.completedDestinations.push(destination);
+        this.map.removeRevealedDestination(destination);
         (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
         this.playRandomCompletedSound();

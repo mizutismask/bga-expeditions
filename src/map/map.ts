@@ -794,8 +794,9 @@ class TtrMap {
 	 */
 	public removeRevealedDestination(dest: Destination) {
 		let div = document.getElementById(`city${dest.to}`);
-		div.dataset.toConnect = "false";
 		div.removeAttribute("data-revealed-by");
+		div.dataset.toConnect = "false";
+		div.dataset.selectable = "false";
 	}
 
 	/**
