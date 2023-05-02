@@ -135,7 +135,8 @@ class PlayerDestinations {
 				change: (d) => this.markDestinationCompleteNoAnimation(d),
 				end: (d) => document.getElementById(endAnimLocation)?.classList.remove("hidden-for-animation"),
 			},
-			"completed"
+			"completed",
+			"map"//"game_play_area_wrap"
 		);
 
 		this.game.addAnimation(newDac);

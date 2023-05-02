@@ -451,21 +451,23 @@ var __extends = (this && this.__extends) || (function () {
  */
 var DestinationCompleteAnimation = /** @class */ (function (_super) {
     __extends(DestinationCompleteAnimation, _super);
-    function DestinationCompleteAnimation(game, destination, toId, actions, state, initialSize) {
+    function DestinationCompleteAnimation(game, destination, toId, actions, state, copyAnchor, initialSize) {
         if (initialSize === void 0) { initialSize = 1; }
         var _this = _super.call(this, game) || this;
         _this.destination = destination;
         _this.toId = toId;
         _this.actions = actions;
         _this.state = state;
+        _this.copyAnchor = copyAnchor;
         _this.initialSize = initialSize;
+        _this.copyAnchor = copyAnchor;
         return _this;
     }
     DestinationCompleteAnimation.prototype.animate = function () {
         var _this = this;
         return new Promise(function (resolve) {
             var _a, _b;
-            dojo.place("\n            <div id=\"animated-destination-card-".concat(_this.destination.id, "\" class=\"destination-card\" style=\"").concat(_this.getCardPosition(_this.destination)).concat(getBackgroundInlineStyleForDestination(_this.destination), "\n                 transform:scale(0); z-index:1000;\"></div>\n            "), "map");
+            dojo.place("\n            <div id=\"animated-destination-card-".concat(_this.destination.id, "\" class=\"destination-card\" style=\"").concat(_this.getCardPosition(_this.destination)).concat(getBackgroundInlineStyleForDestination(_this.destination), "\n                 transform:scale(0); z-index:1000;\"></div>\n            "), _this.copyAnchor);
             var card = document.getElementById("animated-destination-card-".concat(_this.destination.id));
             (_b = (_a = _this.actions).start) === null || _b === void 0 ? void 0 : _b.call(_a, _this.destination);
             var cardBR = card.getBoundingClientRect();
@@ -481,7 +483,7 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
                 setTimeout(function () {
                     card.style.transform = "";
                     _this.markComplete(card, cardBR, resolve);
-                }, 400);
+                }, 200);
             }, 100);
         });
     };
@@ -2433,7 +2435,8 @@ var PlayerDestinations = /** @class */ (function () {
             start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add("hidden-for-animation"); },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
             end: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.remove("hidden-for-animation"); },
-        }, "completed");
+        }, "completed", "map" //"game_play_area_wrap"
+        );
         this.game.addAnimation(newDac);
     };
     /**

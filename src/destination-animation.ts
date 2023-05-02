@@ -14,9 +14,11 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 			end?: DestinationAnimationCallback;
 		},
 		private state: "completed" | "uncompleted",
-		private initialSize: number = 1
+		private copyAnchor:string,
+		private initialSize: number = 1,
 	) {
 		super(game);
+		this.copyAnchor = copyAnchor;
 	}
 
 	public animate(): Promise<WagonsAnimation> {
@@ -30,7 +32,7 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 				)}${getBackgroundInlineStyleForDestination(this.destination)}
                  transform:scale(0); z-index:1000;"></div>
             `,
-				"map"
+				this.copyAnchor
 			);
 
 			const card = document.getElementById(`animated-destination-card-${this.destination.id}`);
@@ -51,7 +53,7 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 					card.style.transform = ``;
 
 					this.markComplete(card, cardBR, resolve);
-				}, 400);
+				}, 200);
 			}, 100);
 		});
 	}
