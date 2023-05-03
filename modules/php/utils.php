@@ -269,7 +269,7 @@ trait UtilTrait {
 
     function checkCompletedDestinations(int $playerId, int $reachedTarget) {
 
-        $handDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand'));
+        $handDestinations = $this->getDestinationsFromDb($this->destinations->getCards($this->getUncompletedDestinationsIds($playerId)));
         $sharedDestinations = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('shared'));
 
         foreach ($handDestinations as $destination) {
