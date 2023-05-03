@@ -100,21 +100,22 @@ class PlayerDestinations {
 	 */
 	public markDestinationCompleteNoAnimation(destination: Destination) {
 		//console.log("markDestinationComplete");
+		if (destination.location_arg === this.playerId) {
+			const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
+			if (index !== -1) {
+				this.destinationsTodo.splice(index, 1);
+				this.destinationsToDoStock.removeCard(destination);
+			}
+			this.destinationsDone.push(destination);
+			// fromStock: this.destinationsToDoStock
+			this.destinationsDoneStock.addCard(destination, {}, {});
+			//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
 
-		const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
-		if (index !== -1) {
-			this.destinationsTodo.splice(index, 1);
-			this.destinationsToDoStock.removeCard(destination);
-		}
-		this.destinationsDone.push(destination);
-		// fromStock: this.destinationsToDoStock
-		this.destinationsDoneStock.addCard(destination, {}, {});
-		//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
-
-		/*document
+			/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)
 				.appendChild(document.getElementById(`destination-card-${destination.id}`));*/
-		this.destinationColumnsUpdated();
+			this.destinationColumnsUpdated();
+		}
 	}
 
 	/**
@@ -300,7 +301,6 @@ class PlayerDestinations {
 			stock.onCardMouseOut = (dest: Destination) => this.game.setHighligthedDestination(null);
 
 			index == 0 ? (this.destinationsToDoStock = stock) : (this.destinationsDoneStock = stock);
-
 		});
 	}
 }

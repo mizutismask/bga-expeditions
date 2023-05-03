@@ -2407,19 +2407,21 @@ var PlayerDestinations = /** @class */ (function () {
      */
     PlayerDestinations.prototype.markDestinationCompleteNoAnimation = function (destination) {
         //console.log("markDestinationComplete");
-        var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
-        if (index !== -1) {
-            this.destinationsTodo.splice(index, 1);
-            this.destinationsToDoStock.removeCard(destination);
-        }
-        this.destinationsDone.push(destination);
-        // fromStock: this.destinationsToDoStock
-        this.destinationsDoneStock.addCard(destination, {}, {});
-        //this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
-        /*document
+        if (destination.location_arg === this.playerId) {
+            var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
+            if (index !== -1) {
+                this.destinationsTodo.splice(index, 1);
+                this.destinationsToDoStock.removeCard(destination);
+            }
+            this.destinationsDone.push(destination);
+            // fromStock: this.destinationsToDoStock
+            this.destinationsDoneStock.addCard(destination, {}, {});
+            //this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+            /*document
                 .getElementById(`player-table-${this.playerId}-destinations-done`)
                 .appendChild(document.getElementById(`destination-card-${destination.id}`));*/
-        this.destinationColumnsUpdated();
+            this.destinationColumnsUpdated();
+        }
     };
     /**
      * Add an animation to mark a destination as complete.
@@ -3579,8 +3581,8 @@ var Expeditions = /** @class */ (function () {
         }
         this.gamedatas.completedDestinations.push(destination);
         this.map.removeRevealedDestination(destination);
-        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
+        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
         this.playRandomCompletedSound();
     };
     Expeditions.prototype.playRandomCompletedSound = function () {
