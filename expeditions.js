@@ -1940,7 +1940,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.revealDestination = function (player, destination, temporary) {
         if (temporary === void 0) { temporary = false; }
         //remove old temporary ones
-        dojo.query("[data-revealed-by][data-temporary]='true'").forEach(function (div) {
+        dojo.query("[data-temporary=true]").forEach(function (div) {
             div.removeAttribute("data-revealed-by");
             div.removeAttribute("data-temporary");
         });

@@ -766,7 +766,7 @@ class TtrMap {
 	 */
 	public revealDestination(player: ExpeditionsPlayer, destination: Destination, temporary: boolean = false) {
 		//remove old temporary ones
-		dojo.query("[data-revealed-by][data-temporary]='true'").forEach((div) => {
+		dojo.query("[data-temporary=true]").forEach((div) => {
 			div.removeAttribute("data-revealed-by");
 			div.removeAttribute("data-temporary");
 		});
