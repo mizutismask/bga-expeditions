@@ -154,6 +154,10 @@ trait StateTrait {
             }
         }
 
-        $this->gamestate->nextState('endGame');
+        if ($this->getBgaEnvironment() == 'studio') {
+            $this->gamestate->nextState('debugEndGame');
+        } else {
+            $this->gamestate->nextState('endGame');
+        }
     }
 }

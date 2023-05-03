@@ -228,7 +228,8 @@ $gameGameStates = [
         "type" => "game",
         "action" => "stEndScore",
         "transitions" => [
-            "endGame" => ST_DEBUG_END_GAME, //ST_END_GAME or ST_DEBUG_END_GAME
+            "endGame" => ST_END_GAME,
+            "debugEndGame" => ST_DEBUG_END_GAME,
         ],
     ],
 ];
