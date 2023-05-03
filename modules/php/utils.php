@@ -237,8 +237,8 @@ trait UtilTrait {
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
-    function getRevealedToDoDestinationsIdsByPlayer(int $playerId) {
-        $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND `revealed` = 1 AND `completed` = 0";
+    function getRevealedToDoDestinationsIds() {
+        $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `revealed` = 1 AND `completed` = 0";
         $dbResults = self::getCollectionFromDB($sql);
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
