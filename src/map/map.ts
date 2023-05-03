@@ -716,7 +716,7 @@ class TtrMap {
 	/**
 	 * Sets a destination as toConnect and selectable.
 	 */
-	public showNewDestination(destination: Destination, visible: boolean=true) {
+	public showNewDestination(destination: Destination, visible: boolean = true) {
 		const div = document.getElementById(`city${destination.to}`);
 		div.dataset.selectable = visible.toString();
 		div.dataset.toConnect = visible.toString();
@@ -781,7 +781,6 @@ class TtrMap {
 				//destination selected
 				div.dataset.revealedBy = player.color;
 				div.dataset.temporary = temporary.toString();
-				document.getElementById(`city${destination.to}`).dataset.toConnect = "true";
 			}
 		}
 	}

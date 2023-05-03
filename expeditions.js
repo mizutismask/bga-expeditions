@@ -1955,7 +1955,6 @@ var TtrMap = /** @class */ (function () {
                 //destination selected
                 div.dataset.revealedBy = player.color;
                 div.dataset.temporary = temporary.toString();
-                document.getElementById("city".concat(destination.to)).dataset.toConnect = "true";
             }
         }
     };
@@ -2316,7 +2315,7 @@ var PlayerTable = /** @class */ (function () {
         this.playerDestinations.removeCard(destination);
     };
     PlayerTable.prototype.updateDestinations = function () {
-        this.playerDestinations.destinationColumnsUpdated();
+        this.playerDestinations.updateDestinationsToConnect();
     };
     return PlayerTable;
 }());
@@ -2397,7 +2396,7 @@ var PlayerDestinations = /** @class */ (function () {
         });
         originStock === null || originStock === void 0 ? void 0 : originStock.removeAll();
         (_a = this.destinationsTodo).push.apply(_a, destinations);
-        this.destinationColumnsUpdated();
+        this.updateDestinationsToConnect();
     };
     PlayerDestinations.prototype.setToDoSelectableCards = function (possibleDestinations) {
         this.destinationsToDoStock.setSelectableCards(possibleDestinations);
@@ -2420,8 +2419,8 @@ var PlayerDestinations = /** @class */ (function () {
             /*document
                 .getElementById(`player-table-${this.playerId}-destinations-done`)
                 .appendChild(document.getElementById(`destination-card-${destination.id}`));*/
-            this.destinationColumnsUpdated();
         }
+        this.updateDestinationsToConnect();
     };
     /**
      * Add an animation to mark a destination as complete.
@@ -2479,7 +2478,7 @@ var PlayerDestinations = /** @class */ (function () {
         document
             .getElementById("player-table-".concat(this.playerId, "-destinations-done"))
             .classList.toggle("front", destinationList == this.destinationsDone);
-        this.destinationColumnsUpdated();
+        this.updateDestinationsToConnect();
     };
     PlayerDestinations.prototype.setToDoSelectionMode = function (selectionMode) {
         this.destinationsToDoStock.setSelectionMode(selectionMode);
@@ -2495,28 +2494,9 @@ var PlayerDestinations = /** @class */ (function () {
         }
     };
     /**
-     * Update destination cards placement when there is a change.
+     * Update dataset property toConnect on map when there is a change.
      */
-    PlayerDestinations.prototype.destinationColumnsUpdated = function () {
-        var doubleColumn = this.destinationsTodo.length > 0 && this.destinationsDone.length > 0;
-        var destinationsDiv = document.getElementById("player-table-".concat(this.playerId, "-destinations"));
-        var maxBottom = Math.max(this.placeCards(this.destinationsTodo, doubleColumn ? DESTINATION_CARD_SHIFT : 0), this.placeCards(this.destinationsDone));
-        /* const height = `${maxBottom + CARD_HEIGHT}px`;
-        destinationsDiv.style.height = height;
-        document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
-*/
-        /*	const col1 = document.getElementById(
-            `player-table-${this.playerId}-destinations-todo`
-        );
-        const col2 = document.getElementById(
-            `player-table-${this.playerId}-destinations-todo`
-        );
-        const destinationCount =
-            this.destinationsTodo.length + this.destinationsDone.length;
-        col1.style.width =
-            (this.destinationsTodo.length * 100 / destinationCount) + "%";
-        col2.style.width =
-            (this.destinationsDone.length * 100) / destinationCount + "%";*/
+    PlayerDestinations.prototype.updateDestinationsToConnect = function () {
         this.game.setDestinationsToConnect(this.destinationsTodo);
     };
     /**

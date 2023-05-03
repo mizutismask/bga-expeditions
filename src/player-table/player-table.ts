@@ -59,6 +59,6 @@ class PlayerTable {
 	}
 
 	public updateDestinations() {
-		this.playerDestinations.destinationColumnsUpdated();
+		this.playerDestinations.updateDestinationsToConnect();
 	}
 }

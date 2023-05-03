@@ -89,7 +89,7 @@ class PlayerDestinations {
 
 		this.destinationsTodo.push(...destinations);
 
-		this.destinationColumnsUpdated();
+		this.updateDestinationsToConnect();
 	}
 
 	public setToDoSelectableCards(possibleDestinations: Destination[]) {
@@ -114,8 +114,8 @@ class PlayerDestinations {
 			/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)
 				.appendChild(document.getElementById(`destination-card-${destination.id}`));*/
-			this.destinationColumnsUpdated();
 		}
+		this.updateDestinationsToConnect();
 	}
 
 	/**
@@ -183,7 +183,7 @@ class PlayerDestinations {
 			.getElementById(`player-table-${this.playerId}-destinations-done`)
 			.classList.toggle("front", destinationList == this.destinationsDone);
 
-		this.destinationColumnsUpdated();
+		this.updateDestinationsToConnect();
 	}
 
 	public setToDoSelectionMode(selectionMode: CardSelectionMode) {
@@ -203,36 +203,9 @@ class PlayerDestinations {
 	}
 
 	/**
-	 * Update destination cards placement when there is a change.
+	 * Update dataset property toConnect on map when there is a change.
 	 */
-	public destinationColumnsUpdated() {
-		const doubleColumn = this.destinationsTodo.length > 0 && this.destinationsDone.length > 0;
-
-		const destinationsDiv = document.getElementById(`player-table-${this.playerId}-destinations`);
-
-		const maxBottom = Math.max(
-			this.placeCards(this.destinationsTodo, doubleColumn ? DESTINATION_CARD_SHIFT : 0),
-			this.placeCards(this.destinationsDone)
-		);
-
-		/* const height = `${maxBottom + CARD_HEIGHT}px`;
-        destinationsDiv.style.height = height;
-        document.getElementById(`player-table-${this.playerId}-train-cars`).style.height = height;
-*/
-
-		/*	const col1 = document.getElementById(
-			`player-table-${this.playerId}-destinations-todo`
-		);
-		const col2 = document.getElementById(
-			`player-table-${this.playerId}-destinations-todo`
-		);
-		const destinationCount =
-			this.destinationsTodo.length + this.destinationsDone.length;
-		col1.style.width =
-			(this.destinationsTodo.length * 100 / destinationCount) + "%";
-		col2.style.width =
-			(this.destinationsDone.length * 100) / destinationCount + "%";*/
-
+	public updateDestinationsToConnect() {
 		this.game.setDestinationsToConnect(this.destinationsTodo);
 	}
 
