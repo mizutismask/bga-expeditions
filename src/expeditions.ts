@@ -204,7 +204,8 @@ class Expeditions implements ExpeditionsGame {
 			this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
 		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
-
+		
+		this.map.setSelectableRoutes(false, []);
 		//this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 	}
 
@@ -250,7 +251,6 @@ class Expeditions implements ExpeditionsGame {
 				);
 				break;
 			case "chooseAction":
-				this.map.setSelectableRoutes(false, []);
 				//this.map.setSelectableDestination()
 				this.playerTable?.setToDoSelectableCards([]);
 				break;

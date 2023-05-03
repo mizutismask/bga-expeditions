@@ -2828,6 +2828,7 @@ var Expeditions = /** @class */ (function () {
             this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
         }
         var currentPlayerActive = this.isCurrentPlayerActive();
+        this.map.setSelectableRoutes(false, []);
         //this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
     };
     /**
@@ -2870,7 +2871,6 @@ var Expeditions = /** @class */ (function () {
                 });
                 break;
             case "chooseAction":
-                this.map.setSelectableRoutes(false, []);
                 //this.map.setSelectableDestination()
                 (_c = this.playerTable) === null || _c === void 0 ? void 0 : _c.setToDoSelectableCards([]);
                 break;
