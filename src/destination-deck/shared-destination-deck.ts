@@ -63,8 +63,10 @@ class SharedDestinationDeck {
 	 * Set visible destination cards.
 	 */
 	public setCards(destinations: Destination[]) {
+
 		//dojo.removeClass("destination-deck", "hidden");
-		this.sharedDestinationsStock.addCards(destinations);
+		this.sharedDestinationsStock.addCards(destinations, {fromElement: $("upperrightmenu"),
+			originalSide: "back"});
 		/*	destinations.forEach((destination) => {
 
 			this.sharedDestinations.addToStockWithId(

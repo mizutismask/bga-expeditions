@@ -2136,7 +2136,8 @@ var SharedDestinationDeck = /** @class */ (function () {
      */
     SharedDestinationDeck.prototype.setCards = function (destinations) {
         //dojo.removeClass("destination-deck", "hidden");
-        this.sharedDestinationsStock.addCards(destinations);
+        this.sharedDestinationsStock.addCards(destinations, { fromElement: $("upperrightmenu"),
+            originalSide: "back" });
         /*	destinations.forEach((destination) => {
 
             this.sharedDestinations.addToStockWithId(
@@ -2390,6 +2391,9 @@ var PlayerDestinations = /** @class */ (function () {
             if (originStock) {
                 _this.addAnimationFrom(card, document.getElementById("".concat(originStock.container_div.id, "_item_").concat(destination.id)));
             }
+            else {
+                _this.addAnimationFrom(card, document.getElementById("upperrightmenu"));
+            }
         });
         originStock === null || originStock === void 0 ? void 0 : originStock.removeAll();
         (_a = this.destinationsTodo).push.apply(_a, destinations);
@@ -2562,11 +2566,11 @@ var PlayerDestinations = /** @class */ (function () {
         };
         divs.forEach(function (stockToCreate, index) {
             var stock = new LineStockWithEvents(_this.game.destinationCardsManager, stockToCreate, stockSettings);
-            index == 0 ? (_this.destinationsToDoStock = stock) : (_this.destinationsDoneStock = stock);
             stock.setSelectionMode("single");
             // highlight destination's cities on the map, on mouse over
             stock.onCardMouseOver = function (dest) { return _this.game.setHighligthedDestination(dest); };
             stock.onCardMouseOut = function (dest) { return _this.game.setHighligthedDestination(null); };
+            index == 0 ? (_this.destinationsToDoStock = stock) : (_this.destinationsDoneStock = stock);
         });
     };
     return PlayerDestinations;

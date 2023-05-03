@@ -80,6 +80,8 @@ class PlayerDestinations {
 					card,
 					document.getElementById(`${originStock.container_div.id}_item_${destination.id}`)
 				);
+			} else {
+				this.addAnimationFrom(card, document.getElementById(`upperrightmenu`));
 			}
 		});
 
@@ -291,14 +293,14 @@ class PlayerDestinations {
 				stockToCreate,
 				stockSettings
 			);
-
-			index == 0 ? (this.destinationsToDoStock = stock) : (this.destinationsDoneStock = stock);
-
 			stock.setSelectionMode("single");
 
 			// highlight destination's cities on the map, on mouse over
 			stock.onCardMouseOver = (dest: Destination) => this.game.setHighligthedDestination(dest);
 			stock.onCardMouseOut = (dest: Destination) => this.game.setHighligthedDestination(null);
+
+			index == 0 ? (this.destinationsToDoStock = stock) : (this.destinationsDoneStock = stock);
+
 		});
 	}
 }
