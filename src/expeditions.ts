@@ -81,7 +81,7 @@ class Expeditions implements ExpeditionsGame {
 			this,
 			Object.values(gamedatas.players),
 			gamedatas.claimedRoutes,
-			this.getDestinationsByPlayer(this.gamedatas.revealedDestinations)
+			this.getDestinationsByPlayer(this.gamedatas.revealedDestinationsToDo)
 		);
 
 		this.destinationCardsManager = new CardsManager(this);
@@ -204,7 +204,7 @@ class Expeditions implements ExpeditionsGame {
 			this.setGamestateDescription(args.mainActionDone && args.canPass ? "MainActionDone" : "");
 		}
 		const currentPlayerActive = (this as any).isCurrentPlayerActive();
-		
+
 		this.map.setSelectableRoutes(false, []);
 		//this.map.setSelectableRoutes(currentPlayerActive, args.possibleRoutes);
 	}

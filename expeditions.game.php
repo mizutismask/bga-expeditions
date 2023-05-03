@@ -165,7 +165,7 @@ class Expeditions extends Table {
 
         $result['claimedRoutes'] = $this->getClaimedRoutes();
         $result['visibleTrainCards'] = $this->getSharedDestinationCards();
-        $result['revealedDestinations'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getRevealedDestinationsIds($currentPlayerId)));
+        $result['revealedDestinationsToDo'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getRevealedToDoDestinationsIdsByPlayer($currentPlayerId)));
 
         // private data : current player hidden informations
         $result['handDestinations'] = $this->getDestinationsFromDb($this->destinations->getCardsInLocation('hand', $currentPlayerId));

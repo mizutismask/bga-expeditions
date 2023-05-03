@@ -237,6 +237,12 @@ trait UtilTrait {
         return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
     }
 
+    function getRevealedToDoDestinationsIdsByPlayer(int $playerId) {
+        $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND `revealed` = 1 AND `completed` = 0";
+        $dbResults = self::getCollectionFromDB($sql);
+        return array_map(fn ($dbResult) => intval($dbResult['card_id']), array_values($dbResults));
+    }
+
     function getCompletedDestinationsIds(int $playerId) {
         $sql = "SELECT `card_id` FROM `destination` WHERE `card_location` = 'hand' AND `card_location_arg` = $playerId AND  `completed` = 1";
         $dbResults = self::getCollectionFromDB($sql);
@@ -290,7 +296,7 @@ trait UtilTrait {
 
         if ($shared) {
             $this->destinations->moveCard($destination->id, 'sharedCompleted', $ownerId);
-            $destination->location= 'sharedCompleted';
+            $destination->location = 'sharedCompleted';
             $destination->location_arg = $ownerId;
         }
 

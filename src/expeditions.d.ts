@@ -71,7 +71,7 @@ interface ExpeditionsGamedatas {
 	// Add here variables you set up in getAllDatas
 	claimedRoutes: ClaimedRoute[];
 	visibleTrainCards: Destination[];
-	revealedDestinations: Destination[];
+	revealedDestinationsToDo: Destination[];
 
 	// private informations for current player only
 	handTrainCars: TrainCar[];

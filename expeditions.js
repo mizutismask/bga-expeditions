@@ -1907,7 +1907,7 @@ var TtrMap = /** @class */ (function () {
         });
     };
     /**
-     * Highlight cities player must connect for its objectives.
+     * Highlight cities player must reach for its objectives.
      */
     TtrMap.prototype.setDestinationsToConnect = function (destinations) {
         this.mapDiv
@@ -2731,7 +2731,7 @@ var Expeditions = /** @class */ (function () {
         log("Starting game setup");
         this.gamedatas = gamedatas;
         log("gamedatas", gamedatas);
-        this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinations));
+        this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinationsToDo));
         this.destinationCardsManager = new CardsManager(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);

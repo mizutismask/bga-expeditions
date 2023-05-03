@@ -732,7 +732,7 @@ class TtrMap {
 	}
 
 	/**
-	 * Highlight cities player must connect for its objectives.
+	 * Highlight cities player must reach for its objectives.
 	 */
 	public setDestinationsToConnect(destinations: Destination[]): void {
 		this.mapDiv
