@@ -163,7 +163,6 @@ trait ActionTrait {
         $this->nextState($playerId, $loop);
         // in case there is less than 6 visible cards on the table, we refill
         $this->checkVisibleSharedCardsAreEnough();
-        
     }
     private function nextState($playerId, $loop) {
         if (boolval($this->getGameStateValue(MAIN_ACTION_DONE)) && !$loop && !$this->canUseTicket($playerId) && $this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING) == 0) {
@@ -273,25 +272,34 @@ trait ActionTrait {
         if ($loop) {
             $this->loopFound($playerId, $claimedRoute->color);
         }
-        return $loop;
+        return $this->isLoopUsefull($loop, $claimedRoute->color);
     }
 
     private function loopFound(int $playerId, int $color, bool $removingArrow = false) {
-        $this->setGameStateValue(NEW_LOOP_COLOR, $color);
         self::incStat(1, STAT_LOOPS, $playerId);
 
-        if (!$removingArrow) {
-            self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop with the ${color} expedition. A new arrow can be placed to continue it from any point.'), [
+        if ($this->getRemainingArrows($color) === 0) {
+            self::notifyAllPlayers('msg', clienttranslate('There are no more ${color} arrows, so ${player_name} can not use the benefit of the loop just made.'), [
                 'playerId' => $playerId,
                 'player_name' => $this->getPlayerName($playerId),
                 'color' => $this->getColorName($color),
             ]);
         } else {
-            self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop removing the last arrow from the ${color} expedition. A new arrow can be placed to continue it from any point.'), [
-                'playerId' => $playerId,
-                'player_name' => $this->getPlayerName($playerId),
-                'color' => $this->getColorName($color),
-            ]);
+            $this->setGameStateValue(NEW_LOOP_COLOR, $color);
+
+            if (!$removingArrow) {
+                self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop with the ${color} expedition. A new arrow can be placed to continue it from any point.'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'color' => $this->getColorName($color),
+                ]);
+            } else {
+                self::notifyAllPlayers('msg', clienttranslate('${player_name} made a loop removing the last arrow from the ${color} expedition. A new arrow can be placed to continue it from any point.'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'color' => $this->getColorName($color),
+                ]);
+            }
         }
     }
 
@@ -313,7 +321,11 @@ trait ActionTrait {
         if ($loop) {
             $this->loopFound($playerId, $unclaimedRoute->color);
         }
-        return $loop;
+        return $this->isLoopUsefull($loop, $unclaimedRoute->color);
+    }
+
+    private function isLoopUsefull($loop,$routeColor):bool{
+        return $loop && $this->getRemainingArrows($routeColor) >= 0;
     }
 
     function guessDirection(Route $claimedRoute): bool {
@@ -346,7 +358,7 @@ trait ActionTrait {
                 $end = $junction == $claimedRoute->from ? $claimedRoute->to : $claimedRoute->from;
                 $reversed = $junction > $end;
             } else {
-               // self::dump('*******************No previous route of color', $claimedRoute->color);
+                // self::dump('*******************No previous route of color', $claimedRoute->color);
             }
         }
         return $reversed;
