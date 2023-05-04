@@ -130,7 +130,7 @@ const CITIES = [
 	new City(198, 1241, 1084), //
 	new City(199, 1224, 1265), //
 	new City(200, 1337, 811), //
-	new City(201, 627, 677), //
+	new City(201, 1627, 677), //
 	new City(202, 110, 1230), //
 	new City(203, 379, 30), //
 	new City(204, 474, 386), //

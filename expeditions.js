@@ -655,7 +655,7 @@ var CITIES = [
     new City(198, 1241, 1084),
     new City(199, 1224, 1265),
     new City(200, 1337, 811),
-    new City(201, 627, 677),
+    new City(201, 1627, 677),
     new City(202, 110, 1230),
     new City(203, 379, 30),
     new City(204, 474, 386),
@@ -1479,6 +1479,7 @@ var TtrMap = /** @class */ (function () {
         var originX = this.getXCoord(origin, route);
         var destinationX = this.getXCoord(destination, route);
         var reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
+        console.log("reversedArrow ?", reverse, ":", route, "destX - originX) > 5", Math.abs(destinationX - originX) > 5, "destinationX < originX", destinationX < originX, "destination.y < origin.y", destination.y < origin.y, "destinationX", destinationX, "originX", originX, "destination.x", destination.x, "dest", destination);
         return "arrow".concat(this.getArrowSize(route)).concat(reverse ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
