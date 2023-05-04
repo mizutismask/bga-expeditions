@@ -50,7 +50,7 @@
 			background-position: #{calc(4 * 100% / 5)} 50%;
 		}
 		&[data-player-color="df3e33"] {
-			background-position: #{5 * 100% / 5} 50%;
+			background-position: #{calc(5 * 100% / 5)} 50%;
 		}
 	}
 
