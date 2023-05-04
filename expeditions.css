@@ -344,6 +344,10 @@
   border-radius: 50px;
   box-sizing: border-box;
   background-image: url("img/tokens.png");
+  width: 40px;
+  height: 40px;
+  margin: -20px;
+  background-size: auto 100%;
 }
 .city[data-revealed-by][data-revealed-by=d8d7d7] {
   background-position: 0% 50%;
