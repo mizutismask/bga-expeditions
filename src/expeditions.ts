@@ -437,7 +437,9 @@ class Expeditions implements ExpeditionsGame {
 						<div class="icon destination-card shared-destination"></div> 
 						<span id="common-completed-destinations-counter-${player.id}">${this.getPlayerId() !== playerId ? "?" : ""}</span>
 					</div>
-				</div>`,
+					<div id="additional-icons-${player.id}" class="additional-icons"></div> 
+				</div>
+				`,
 				`player_board_${player.id}`
 			);
 
@@ -469,13 +471,13 @@ class Expeditions implements ExpeditionsGame {
 			if (this.getPlayerId() === playerId) {
 				dojo.place(
 					`<div id="player-help" class="css-icon xpd-help-icon">?</div>`,
-					`additional-info-${player.id}`
+					`additional-icons-${player.id}`
 				);
 			}
 			if (player.playerNo === 1) {
 				dojo.place(
 					`<div id="firstPlayerIcon" class="css-icon player-turn-order">1</div>`,
-					`additional-info-${player.id}`,
+					`additional-icons-${player.id}`,
 					`last`
 				);
 			}

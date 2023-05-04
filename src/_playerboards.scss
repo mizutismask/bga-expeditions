@@ -53,6 +53,42 @@
 			background-position: #{5 * 100% / 5} 50%;
 		}
 	}
+
+	.additional-icons {
+		display: flex;
+		gap: 5px;
+
+		.css-icon {
+			width: 25px;
+			height: 25px;
+			background-color: white;
+			border-radius: 15px;
+			text-align: center;
+			font-weight: bolder;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			color: rgb(21, 104, 134);
+
+			&.xpd-help-icon {
+				cursor: pointer;
+				pointer-events: auto;
+			}
+		}
+	}
+}
+
+.help-card {
+	width: 355px;
+	height: 480px;
+
+	&.recto {
+		background: url("img/help1.jpg") no-repeat;
+	}
+
+	&.verso {
+		background: url("img/help2.jpg") no-repeat;
+	}
 }
 
 @keyframes train-car-low-count-animation {
@@ -91,10 +127,14 @@
 		}
 	}
 
-	&.additional-info {
-		column-gap: 5px;
-		justify-content: end;
+	.common-destinations-counter {
+		flex: 0;
 	}
+}
+
+.additional-info {
+	column-gap: 5px;
+	justify-content: space-evenly;
 }
 
 .player-turn-order {
