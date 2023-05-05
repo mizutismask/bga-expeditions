@@ -1265,6 +1265,17 @@ html,
   background-size: cover;
 }
 
+.animated-ticket {
+  width: 100px;
+  height: 58px;
+  position: absolute;
+  left: 0px;
+  box-shadow: 0 0 8px 1px black;
+  pointer-events: none;
+  transform-origin: center center;
+  transition: transform 0.5s;
+}
+
 .dijitTooltipContents .destinations-flex {
   display: flex;
   gap: 5px;

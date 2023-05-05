@@ -106,11 +106,13 @@ interface ExpeditionsGame extends Game {
 	revealDestination(destination: Destination): void;
 	showSharedDestinations(destinations: Destination[]): void;
 	setSelectedDestination(destination: Destination, visible: boolean): void;
-	addAnimation(animation: WagonsAnimation): void;
-	endAnimation(ended: WagonsAnimation): void;
+	addAnimation(animation: ExpeditionsAnimation): void;
+	endAnimation(ended: ExpeditionsAnimation): void;
 	selectedColorChanged(selectedColor: number | null): void;
 	setTooltip(id: string, html: string): void;
 	setTooltipToClass(className: string, html: string): void;
+	getRouteOrigin(route: Route, claimedRoute: ClaimedRoute): number;
+	getRouteDestination(route: Route, claimedRoute: ClaimedRoute): number;
 }
 
 interface EnteringChooseDestinationsArgs {

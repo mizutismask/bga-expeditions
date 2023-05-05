@@ -46,7 +46,7 @@ class Expeditions implements ExpeditionsGame {
 	private completedDestinationsCounters: Counter[] = [];
 	private commonCompletedDestinationsCounters: Counter[] = [];
 
-	private animations: WagonsAnimation[] = [];
+	private animations: ExpeditionsAnimation[] = [];
 	public animationManager: AnimationManager;
 
 	private isTouch = window.matchMedia("(hover: none)").matches;
@@ -301,6 +301,15 @@ class Expeditions implements ExpeditionsGame {
 	//// Utility methods
 
 	///////////////////////////////////////////////////
+
+	public getRouteOrigin(route: Route, claimed: ClaimedRoute) {
+		return claimed.reverseDirection ? route.to : route.from;
+	}
+
+	public getRouteDestination(route: Route, claimed: ClaimedRoute) {
+		return claimed.reverseDirection ? route.from : route.to;
+	}
+
 	/**
 	 * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
 	 * need to make a choice of resources or tokens.
@@ -588,7 +597,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Add an animation to the animation queue, and start it if there is no current animations.
 	 */
-	public addAnimation(animation: WagonsAnimation) {
+	public addAnimation(animation: ExpeditionsAnimation) {
 		this.animations.push(animation);
 		if (this.animations.length === 1) {
 			this.animations[0].animate();
@@ -598,7 +607,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Start the next animation in animation queue.
 	 */
-	public endAnimation(ended: WagonsAnimation) {
+	public endAnimation(ended: ExpeditionsAnimation) {
 		const index = this.animations.indexOf(ended);
 		if (index !== -1) {
 			this.animations.splice(index, 1);
@@ -777,14 +786,14 @@ class Expeditions implements ExpeditionsGame {
 		}
 		this.addImageActionButton(
 			"useTicket_button",
-			this.createDiv("expTicket", "expTicket"),
+			this.createDiv("expTicket", "expTicket-button"),
 			"blue",
 			_("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"),
 			() => {
 				this.useTicket();
 			}
 		);
-		$("expTicket").parentElement.style.padding = "0";
+		$("expTicket-button").parentElement.style.padding = "0";
 
 		dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
 		if (chooseActionArgs.canPass) {
@@ -1073,16 +1082,24 @@ class Expeditions implements ExpeditionsGame {
 		const playerId = notif.args.playerId;
 		const route: Route = notif.args.route;
 
-		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
 		this.gamedatas.claimedRoutes = notif.args.claimedRoutes;
-		this.map.addClaimedRoute(
-			{
+		const claimedRoute: ClaimedRoute = {
+			playerId,
+			routeId: route.id,
+			reverseDirection: notif.args.reverseDirection,
+		};
+		this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
+		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+		if (notif.args.ticketsGained > 0) {
+			const anim = new TicketAnimation(
+				this,
+				CITIES.find((city) => city.id == ((this as any).getRouteDestination(route, claimedRoute))),
+				{},
 				playerId,
-				routeId: route.id,
-				reverseDirection: notif.args.reverseDirection,
-			},
-			this.gamedatas.claimedRoutes
-		);
+				"map"
+			);
+			this.addAnimation(anim);
+		}
 	}
 
 	/**

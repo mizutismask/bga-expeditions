@@ -225,8 +225,8 @@ class TtrMap {
 	}
 
 	private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
-		const origin = CITIES.find((city) => city.id == this.getRouteOrigin(route, claimed));
-		const destination = CITIES.find((city) => city.id == this.getRouteDestination(route, claimed));
+		const origin = CITIES.find((city) => city.id == this.game.getRouteOrigin(route, claimed));
+		const destination = CITIES.find((city) => city.id == this.game.getRouteDestination(route, claimed));
 		const originX = this.getXCoord(origin, route);
 		const destinationX = this.getXCoord(destination, route);
 		let reverse = destinationX < originX;
@@ -259,14 +259,6 @@ class TtrMap {
 		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
 			.toUpperCase()}`;
-	}
-
-	private getRouteOrigin(route: Route, claimed: ClaimedRoute) {
-		return claimed.reverseDirection ? route.to : route.from;
-	}
-
-	private getRouteDestination(route: Route, claimed: ClaimedRoute) {
-		return claimed.reverseDirection ? route.from : route.to;
 	}
 
 	private getColorShift(route: Route, baseShift: number, shortRoutesShift: number) {

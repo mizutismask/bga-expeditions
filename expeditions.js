@@ -421,15 +421,14 @@ function getBackgroundInlineStyleForDestination(destination) {
     return "background-image: url('".concat(g_gamethemeurl, "img/").concat(file, "'); background-position: -").concat(xBackgroundPercent, "% -").concat(yBackgroundPercent, "%;");
 }
 /**
- * Animation with highlighted wagons.
+ * Base class for animations.
  */
-var WagonsAnimation = /** @class */ (function () {
-    function WagonsAnimation(game) {
+var ExpeditionsAnimation = /** @class */ (function () {
+    function ExpeditionsAnimation(game) {
         this.game = game;
-        this.wagons = [];
         this.zoom = this.game.getZoom();
     }
-    return WagonsAnimation;
+    return ExpeditionsAnimation;
 }());
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -518,7 +517,70 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
         return "left: ".concat(x, "px; top: ").concat(y, "px;");
     };
     return DestinationCompleteAnimation;
-}(WagonsAnimation));
+}(ExpeditionsAnimation));
+/**
+ * Destination animation : ticket appears growing over the map next to its city slides towards counter.
+ */
+var TicketAnimation = /** @class */ (function (_super) {
+    __extends(TicketAnimation, _super);
+    function TicketAnimation(game, city, actions, playerId, copyAnchor) {
+        var _this = _super.call(this, game) || this;
+        _this.city = city;
+        _this.actions = actions;
+        _this.playerId = playerId;
+        _this.copyAnchor = copyAnchor;
+        _this.copyAnchor = copyAnchor;
+        return _this;
+    }
+    TicketAnimation.prototype.animate = function () {
+        var _this = this;
+        console.log("ticket animate", this.city, this.getTicketPosition(this.city));
+        return new Promise(function (resolve) {
+            var _a, _b;
+            dojo.place("\n            <div id=\"animated-ticket-".concat(_this.city.id, "\" class=\"expTicket animated-ticket\" style=\"").concat(_this.getTicketPosition(_this.city), "\n                 transform:scale(0); z-index:1000;\"></div>\n            "), _this.copyAnchor);
+            var ticket = document.getElementById("animated-ticket-".concat(_this.city.id));
+            (_b = (_a = _this.actions).start) === null || _b === void 0 ? void 0 : _b.call(_a, _this.city);
+            var ticketBR = ticket.getBoundingClientRect();
+            setTimeout(function () {
+                ticket.classList.add("animated");
+                ticket.style.transform = "scale(3)";
+                setTimeout(function () {
+                    ticket.style.transform = "";
+                    _this.moveToPlayerBoard(ticket, ticketBR, resolve);
+                }, 200);
+            }, 100);
+        });
+    };
+    TicketAnimation.prototype.moveToPlayerBoard = function (ticket, ticketBR, resolve) {
+        var _this = this;
+        setTimeout(function () {
+            var _a, _b;
+            (_b = (_a = _this.actions).change) === null || _b === void 0 ? void 0 : _b.call(_a, _this.city);
+            setTimeout(function () {
+                var toBR = document
+                    .getElementById("tickets-counter-".concat(_this.playerId, "-wrapper"))
+                    .getBoundingClientRect();
+                var x = (toBR.x - ticketBR.x) / _this.zoom;
+                var y = (toBR.y - ticketBR.y) / _this.zoom;
+                ticket.style.transform = "translate(".concat(x, "px, ").concat(y, "px) scale(1)");
+                setTimeout(function () { return _this.endAnimation(resolve, ticket); }, 500);
+            }, 500);
+        }, 750);
+    };
+    TicketAnimation.prototype.endAnimation = function (resolve, ticket) {
+        var _a, _b;
+        resolve(this);
+        (_b = (_a = this.actions).end) === null || _b === void 0 ? void 0 : _b.call(_a, this.city);
+        //ticket.parentElement.removeChild(ticket);
+    };
+    TicketAnimation.prototype.getTicketPosition = function (city) {
+        var x = city.x;
+        var y = city.y;
+        return "position:absolute; left: ".concat(x - 23 / 2, "px; top: ").concat(y - 36 / 2, "px;");
+        //return `left: ${x}px; top: ${y}px;`;
+    };
+    return TicketAnimation;
+}(ExpeditionsAnimation));
 var City = /** @class */ (function () {
     function City(id, x, y) {
         this.id = id;
@@ -1474,8 +1536,8 @@ var TtrMap = /** @class */ (function () {
     };
     TtrMap.prototype.getClaimedArrowBackgroundClass = function (route, claimed) {
         var _this = this;
-        var origin = CITIES.find(function (city) { return city.id == _this.getRouteOrigin(route, claimed); });
-        var destination = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimed); });
+        var origin = CITIES.find(function (city) { return city.id == _this.game.getRouteOrigin(route, claimed); });
+        var destination = CITIES.find(function (city) { return city.id == _this.game.getRouteDestination(route, claimed); });
         var originX = this.getXCoord(origin, route);
         var destinationX = this.getXCoord(destination, route);
         var reverse = destinationX < originX;
@@ -1507,12 +1569,6 @@ var TtrMap = /** @class */ (function () {
         return "arrow".concat(this.getArrowSize(route)).concat(reverse ? "R" : "N").concat(getColor(route.color, false)
             .charAt(0)
             .toUpperCase());
-    };
-    TtrMap.prototype.getRouteOrigin = function (route, claimed) {
-        return claimed.reverseDirection ? route.to : route.from;
-    };
-    TtrMap.prototype.getRouteDestination = function (route, claimed) {
-        return claimed.reverseDirection ? route.from : route.to;
     };
     TtrMap.prototype.getColorShift = function (route, baseShift, shortRoutesShift) {
         switch (route.color) {
@@ -2923,6 +2979,12 @@ var Expeditions = /** @class */ (function () {
     ///////////////////////////////////////////////////
     //// Utility methods
     ///////////////////////////////////////////////////
+    Expeditions.prototype.getRouteOrigin = function (route, claimed) {
+        return claimed.reverseDirection ? route.to : route.from;
+    };
+    Expeditions.prototype.getRouteDestination = function (route, claimed) {
+        return claimed.reverseDirection ? route.from : route.to;
+    };
     /**
      * This method can be used instead of addActionButton, to add a button which is an image (i.e. resource). Can be useful when player
      * need to make a choice of resources or tokens.
@@ -3314,10 +3376,10 @@ var Expeditions = /** @class */ (function () {
         if (!chooseActionArgs.canPass) {
             this.addArrowsColoredButtons(chooseActionArgs.remainingArrows, chooseActionArgs.possibleRoutes);
         }
-        this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket"), "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
+        this.addImageActionButton("useTicket_button", this.createDiv("expTicket", "expTicket-button"), "blue", _("Use a ticket to place another arrow, remove the last one of any expedition or exchange a card"), function () {
             _this.useTicket();
         });
-        $("expTicket").parentElement.style.padding = "0";
+        $("expTicket-button").parentElement.style.padding = "0";
         dojo.toggleClass("useTicket_button", "disabled", !chooseActionArgs.canUseTicket);
         if (chooseActionArgs.canPass) {
             this.addActionButton("pass_button", _("End my turn"), function () { return _this.pass(); });
@@ -3551,15 +3613,21 @@ var Expeditions = /** @class */ (function () {
      * Update claimed routes.
      */
     Expeditions.prototype.notif_claimedRoute = function (notif) {
+        var _this = this;
         var playerId = notif.args.playerId;
         var route = notif.args.route;
-        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         this.gamedatas.claimedRoutes = notif.args.claimedRoutes;
-        this.map.addClaimedRoute({
+        var claimedRoute = {
             playerId: playerId,
             routeId: route.id,
             reverseDirection: notif.args.reverseDirection,
-        }, this.gamedatas.claimedRoutes);
+        };
+        this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
+        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+        if (notif.args.ticketsGained > 0) {
+            var anim = new TicketAnimation(this, CITIES.find(function (city) { return city.id == (_this.getRouteDestination(route, claimedRoute)); }), {}, playerId, "map");
+            this.addAnimation(anim);
+        }
     };
     /**
      * Update unclaimed route.

@@ -19,6 +19,7 @@
     "src/stock-utils.ts",
     "src/wagons-animation.ts",
     "src/destination-animation.ts",
+    "src/ticket-animation.ts",
     "src/map/map-material.ts",
     "src/map/map.ts",
     "src/destination-deck/destination-deck.ts",

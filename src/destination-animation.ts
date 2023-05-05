@@ -3,7 +3,7 @@ type DestinationAnimationCallback = (destination: Destination) => void;
 /**
  * Destination animation : destination card appears growing over the map next to its city, destination is mark "done" or "uncomplete", and card slides where it's been told to.
  */
-class DestinationCompleteAnimation extends WagonsAnimation {
+class DestinationCompleteAnimation extends ExpeditionsAnimation {
 	constructor(
 		game: ExpeditionsGame,
 		private destination: Destination,
@@ -21,7 +21,7 @@ class DestinationCompleteAnimation extends WagonsAnimation {
 		this.copyAnchor = copyAnchor;
 	}
 
-	public animate(): Promise<WagonsAnimation> {
+	public animate(): Promise<ExpeditionsAnimation> {
 		return new Promise((resolve) => {
 			dojo.place(
 				`
