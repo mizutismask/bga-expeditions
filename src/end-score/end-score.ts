@@ -45,11 +45,11 @@ class EndScore {
                     <td id="revealed-tokens-back${player.id}" class="score-number">${
 					player.revealedTokensBackCount
 				}</td>
-                    <td id="destination-unreached${player.id}" class="score-number">-${
-					player.uncompletedDestinations?.length
+                    <td id="destination-unreached${player.id}" class="score-number">${
+					this.preventMinusZero(player.uncompletedDestinations?.length)
 				}</td>
-                    <td id="revealed-tokens-left${player.id}" class="score-number">-${
-					player.revealedTokensLeftCount
+                    <td id="revealed-tokens-left${player.id}" class="score-number">${
+					this.preventMinusZero(player.revealedTokensLeftCount)
 				}</td>
                     <td id="total${player.id}" class="score-number total">${player.score}</td>
                 </tr>`,
@@ -72,10 +72,17 @@ class EndScore {
 				p.completedDestinations.length + p.sharedCompletedDestinationsCount
 			).toString();
 			document.getElementById(`revealed-tokens-back${p.id}`).innerHTML = p.revealedTokensBackCount.toString();
-			document.getElementById(`destination-unreached${p.id}`).innerHTML = "-" + p.uncompletedDestinations?.length;
-			document.getElementById(`revealed-tokens-left${p.id}`).innerHTML = "-" + p.revealedTokensLeftCount;
+			document.getElementById(`destination-unreached${p.id}`).innerHTML = this.preventMinusZero(p.uncompletedDestinations?.length);
+			document.getElementById(`revealed-tokens-left${p.id}`).innerHTML = this.preventMinusZero(p.revealedTokensLeftCount);
 			document.getElementById(`total${p.id}`).innerHTML = p.score.toString();
 		});
+	}
+
+	private preventMinusZero(score: number) {
+		if (score === 0) {
+			return "0";
+		}
+		return "-" + score.toString();
 	}
 
 	/**
