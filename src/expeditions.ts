@@ -1095,7 +1095,6 @@ class Expeditions implements ExpeditionsGame {
 				this,
 				CITIES.find((city) => city.id == ((this as any).getRouteDestination(route, claimedRoute))),
 				{},
-				playerId,
 				"map"
 			);
 			this.addAnimation(anim);
