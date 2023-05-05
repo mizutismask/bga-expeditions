@@ -126,7 +126,7 @@ const CITIES = [
 	new City(194, 1057, 1040), //
 	new City(195, 1064, 1278), //
 	new City(196, 1280, 155), //
-	new City(197, 1138, 69), //
+	new City(197, 1138, 692), //
 	new City(198, 1241, 1084), //
 	new City(199, 1224, 1265), //
 	new City(200, 1337, 811), //
@@ -134,7 +134,7 @@ const CITIES = [
 	new City(202, 110, 1230), //
 	new City(203, 379, 30), //
 	new City(204, 474, 386), //
-	new City(205, 45, 1084), //
+	new City(205, 435, 1084), //
 	new City(206, 597, 155), //
 	new City(207, 671, 329), //
 	new City(208, 575, 691), //
@@ -145,7 +145,7 @@ const CITIES = [
 	new City(213, 1024, 783), //
 	new City(214, 918, 1283), //
 	new City(215, 1117, 1165), //
-	new City(216, 1377, 277), //
+	new City(216, 1318, 277), //
 	new City(217, 1201, 831), //
 	new City(218, 1342, 954), //
 	new City(219, 1369, 1277), //
@@ -186,9 +186,9 @@ const ROUTES = [
 	new Route(28, 104, 109, [new RouteSpace(234, 204, 142, 33)], BLUE),
 	new Route(29, 104, 109, [new RouteSpace(234, 204, 142, 33)], YELLOW),
 	new Route(30, 104, 109, [new RouteSpace(234, 204, 142, 33)], RED),
-	new Route(31, 105, 108, [new RouteSpace(111, 229, 108, 88)], BLUE),
-	new Route(32, 105, 108, [new RouteSpace(111, 229, 108, 88)], YELLOW),
-	new Route(33, 105, 108, [new RouteSpace(111, 229, 108, 88)], RED),
+	new Route(31, 105, 108, [new RouteSpace(133, 339, 108, -92)], BLUE),
+	new Route(32, 105, 108, [new RouteSpace(133, 339, 108, -92)], YELLOW),
+	new Route(33, 105, 108, [new RouteSpace(133, 339, 108, -92)], RED),
 	new Route(34, 106, 108, [new RouteSpace(122, 340, 84, -60)], BLUE),
 	new Route(35, 106, 108, [new RouteSpace(122, 340, 84, -60)], YELLOW),
 	new Route(36, 106, 108, [new RouteSpace(122, 340, 84, -60)], RED),
@@ -306,9 +306,9 @@ const ROUTES = [
 	new Route(148, 137, 140, [new RouteSpace(930, 457, 135, 61)], BLUE),
 	new Route(149, 137, 140, [new RouteSpace(930, 457, 135, 61)], YELLOW),
 	new Route(150, 137, 140, [new RouteSpace(930, 457, 135, 61)], RED),
-	new Route(151, 138, 141, [new RouteSpace(697, 659, 97, -88)], BLUE),
-	new Route(152, 138, 141, [new RouteSpace(697, 659, 97, -88)], YELLOW),
-	new Route(153, 138, 141, [new RouteSpace(697, 659, 97, -88)], RED),
+	new Route(151, 138, 141, [new RouteSpace(701, 564, 97, 92)], BLUE),
+	new Route(152, 138, 141, [new RouteSpace(701, 564, 97, 92)], YELLOW),
+	new Route(153, 138, 141, [new RouteSpace(701, 564, 97, 92)], RED),
 	new Route(154, 139, 143, [new RouteSpace(934, 617, 113, 89)], BLUE),
 	new Route(155, 139, 143, [new RouteSpace(934, 617, 113, 89)], YELLOW),
 	new Route(156, 139, 143, [new RouteSpace(934, 617, 113, 89)], RED),

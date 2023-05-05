@@ -229,7 +229,32 @@ class TtrMap {
 		const destination = CITIES.find((city) => city.id == this.getRouteDestination(route, claimed));
 		const originX = this.getXCoord(origin, route);
 		const destinationX = this.getXCoord(destination, route);
-		let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
+		let reverse = destinationX < originX;
+		//let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
+		/*console.log(
+			"reversedArrow ?",
+			reverse,
+			":",
+			route.id,
+			"destX - originX) > 5",
+			Math.abs(destinationX - originX) > 5,
+			"destinationX < originX",
+			destinationX < originX,
+			"destination.y < origin.y",
+			destination.y < origin.y,
+			"destinationX",
+			destinationX,
+			"originX",
+			originX,
+			"destination.x",
+			destination.x,
+			"dest",
+			destination,
+			"originYX",
+			origin.y,
+			"destination.y",
+			destination.y
+		);*/
 
 		return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
 			.charAt(0)
