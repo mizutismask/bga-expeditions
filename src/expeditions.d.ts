@@ -180,6 +180,7 @@ interface NotifClaimedRouteArgs {
 	removeCards: TrainCar[];
 	reverseDirection: boolean;
 	ticketsGained: number;
+	isDestinationBlue: boolean;
 	claimedRoutes: ClaimedRoute[]; //to figure if the new route should be shifted or not
 }
 

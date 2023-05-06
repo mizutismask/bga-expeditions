@@ -597,7 +597,7 @@ class Expeditions implements ExpeditionsGame {
 	/**
 	 * Add an animation to the animation queue, and start it if there is no current animations.
 	 */
-	public addAnimation(animation: ExpeditionsAnimation) {		
+	public addAnimation(animation: ExpeditionsAnimation) {
 		this.animations.push(animation);
 		if (this.animations.length === 1) {
 			this.animations[0].animate();
@@ -1088,18 +1088,17 @@ class Expeditions implements ExpeditionsGame {
 			reverseDirection: notif.args.reverseDirection,
 		};
 		this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
-		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+
+		const city = CITIES.find((city) => city.id == (this as any).getRouteDestination(route, claimedRoute));
 		if (notif.args.ticketsGained > 0) {
-			console.log("new TicketAnimation");
-			
-			let anim = new TicketAnimation(
-				this,
-				CITIES.find((city) => city.id == ((this as any).getRouteDestination(route, claimedRoute))),
-				{},
-				"map"
-			);
+			const anim = new TicketAnimation(this, city, {}, "map");
 			this.addAnimation(anim);
 		}
+		if (notif.args.isDestinationBlue) {
+			const anim = new ReplayAnimation(this, city, {}, "map");
+			this.addAnimation(anim);
+		}
+		this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
 	}
 
 	/**

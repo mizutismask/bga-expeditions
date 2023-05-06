@@ -145,6 +145,7 @@ trait ActionTrait {
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
             'color' => $this->getColorName($color),
             'ticketsGained' => $destinationColor == RED ? 1 : 0,
+            'isDestinationBlue' => $destinationColor == BLUE ? 1 : 0,
             'claimedRoutes' => $this->getClaimedRoutes(),
         ]);
         $this->applyDestinationColorEffect($playerId, $target, $color);

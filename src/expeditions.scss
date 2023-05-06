@@ -36,7 +36,7 @@ $background: linear-gradient(90deg, rgba(57, 124, 150, 1) 0%, rgba(21, 104, 134,
 
 html,
 .mode_3d #game_play_area_background {
-	background: $background #b59958;
+	background: $background rgb(21, 104, 134);
 	background-repeat: no-repeat;
 	background-size: 100%;
 }
@@ -152,18 +152,34 @@ html,
 	background-size: cover;
 }
 
-.animated-ticket {
-	width: 50px;
-	height: 29px;
+.animated-element {
 	position: absolute;
 	left: 0px;
 	box-shadow: 0 0 8px 1px black;
 	pointer-events: none;
 	transform-origin: center center;
-	animation: ticketAnimation 2s ease 0s 1 normal forwards;
+	animation: cityAnimation 2s ease 0s 1 normal forwards;
 }
 
-@keyframes ticketAnimation {
+.replay {
+	width: 40px;
+	height: 40px;
+	background: white;
+	border-radius: 50%;
+	position: relative;
+
+	&:before {
+		content: "↻";
+		color: rgb(21, 104, 134);
+		font-weight: bolder;
+		font-size: 35px;
+		position: absolute;
+		top: 3px;
+		left: 10%;
+	}
+}
+
+@keyframes cityAnimation {
 	0% {
 		opacity: 1;
 		transform: scale(0.2);

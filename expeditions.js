@@ -519,40 +519,66 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
 }(ExpeditionsAnimation));
 var TICKET_WIDTH = 50;
 var TICKET_HEIGHT = 29;
+var REPLAY_WIDTH = 40;
+var REPLAY_HEIGHT = 40;
 /**
- * Destination animation : ticket appears growing over the city and disappears (css).
+ * City animation : an element (for exemple, a ticket or play again symbol…) appears growing over the city and then disappears (css).//checkmark:&#x2705;
  */
-var TicketAnimation = /** @class */ (function (_super) {
-    __extends(TicketAnimation, _super);
-    function TicketAnimation(game, city, actions, copyAnchor) {
+var CityAnimation = /** @class */ (function (_super) {
+    __extends(CityAnimation, _super);
+    function CityAnimation(game, city, actions, copyAnchor, elementType, classes, elementWidth, elementHeight) {
         var _this = _super.call(this, game) || this;
         _this.city = city;
         _this.actions = actions;
         _this.copyAnchor = copyAnchor;
+        _this.elementType = elementType;
+        _this.classes = classes;
+        _this.elementWidth = elementWidth;
+        _this.elementHeight = elementHeight;
         return _this;
     }
-    TicketAnimation.prototype.animate = function () {
+    CityAnimation.prototype.animate = function () {
         var _this = this;
         return new Promise(function (resolve) {
-            dojo.place("\n            <div id=\"animated-ticket-".concat(_this.city.id, "\" class=\"expTicket animated-ticket\" style=\"").concat(_this.getTicketPosition(_this.city), "\"></div>\n            "), _this.copyAnchor);
-            var ticket = document.getElementById("animated-ticket-".concat(_this.city.id));
-            setTimeout(function () { return _this.endAnimation(resolve, ticket); }, 2000); //ticketAnimation duration
+            dojo.place("\n            <div id=\"animated-".concat(_this.elementType, "-").concat(_this.city.id, "\" class=\"").concat(_this.classes.join(" "), "\" style=\"").concat(_this.getElementPosition(_this.city), "\"></div>\n            "), _this.copyAnchor);
+            var element = document.getElementById("animated-".concat(_this.elementType, "-").concat(_this.city.id));
+            setTimeout(function () { return _this.endAnimation(resolve, element); }, 2000); //animation duration
         });
     };
-    TicketAnimation.prototype.endAnimation = function (resolve, ticket) {
+    CityAnimation.prototype.endAnimation = function (resolve, ticket) {
         var _a, _b;
         resolve(this);
         this.game.endAnimation(this);
         (_b = (_a = this.actions).end) === null || _b === void 0 ? void 0 : _b.call(_a, this.city);
         ticket.parentElement.removeChild(ticket);
     };
-    TicketAnimation.prototype.getTicketPosition = function (city) {
+    CityAnimation.prototype.getElementPosition = function (city) {
         var x = city.x;
         var y = city.y;
-        return "left: ".concat(x - TICKET_WIDTH / 2, "px; top: ").concat(y - TICKET_HEIGHT / 2, "px;");
+        return "left: ".concat(x - this.elementWidth / 2, "px; top: ").concat(y - this.elementHeight / 2, "px;");
     };
-    return TicketAnimation;
+    return CityAnimation;
 }(ExpeditionsAnimation));
+/**
+ * Gained ticket animation.
+ */
+var TicketAnimation = /** @class */ (function (_super) {
+    __extends(TicketAnimation, _super);
+    function TicketAnimation(game, city, actions, copyAnchor) {
+        return _super.call(this, game, city, actions, copyAnchor, "ticket", ["expTicket", ".animated-element"], TICKET_WIDTH, TICKET_HEIGHT) || this;
+    }
+    return TicketAnimation;
+}(CityAnimation));
+/**
+ * Blue point reached animation.
+ */
+var ReplayAnimation = /** @class */ (function (_super) {
+    __extends(ReplayAnimation, _super);
+    function ReplayAnimation(game, city, actions, copyAnchor) {
+        return _super.call(this, game, city, actions, copyAnchor, "replay", ["replay", "animated-element"], REPLAY_WIDTH, REPLAY_HEIGHT) || this;
+    }
+    return ReplayAnimation;
+}(CityAnimation));
 var City = /** @class */ (function () {
     function City(id, x, y) {
         this.id = id;
@@ -3595,12 +3621,16 @@ var Expeditions = /** @class */ (function () {
             reverseDirection: notif.args.reverseDirection,
         };
         this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
-        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+        var city = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimedRoute); });
         if (notif.args.ticketsGained > 0) {
-            console.log("new TicketAnimation");
-            var anim = new TicketAnimation(this, CITIES.find(function (city) { return city.id == (_this.getRouteDestination(route, claimedRoute)); }), {}, "map");
+            var anim = new TicketAnimation(this, city, {}, "map");
             this.addAnimation(anim);
         }
+        if (notif.args.isDestinationBlue) {
+            var anim = new ReplayAnimation(this, city, {}, "map");
+            this.addAnimation(anim);
+        }
+        this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
     };
     /**
      * Update unclaimed route.
