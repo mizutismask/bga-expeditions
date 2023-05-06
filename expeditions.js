@@ -459,7 +459,6 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
         _this.state = state;
         _this.copyAnchor = copyAnchor;
         _this.initialSize = initialSize;
-        _this.copyAnchor = copyAnchor;
         return _this;
     }
     DestinationCompleteAnimation.prototype.animate = function () {
@@ -530,7 +529,6 @@ var TicketAnimation = /** @class */ (function (_super) {
         _this.city = city;
         _this.actions = actions;
         _this.copyAnchor = copyAnchor;
-        _this.copyAnchor = copyAnchor;
         return _this;
     }
     TicketAnimation.prototype.animate = function () {
@@ -544,6 +542,7 @@ var TicketAnimation = /** @class */ (function (_super) {
     TicketAnimation.prototype.endAnimation = function (resolve, ticket) {
         var _a, _b;
         resolve(this);
+        this.game.endAnimation(this);
         (_b = (_a = this.actions).end) === null || _b === void 0 ? void 0 : _b.call(_a, this.city);
         ticket.parentElement.removeChild(ticket);
     };
@@ -3598,6 +3597,7 @@ var Expeditions = /** @class */ (function () {
         this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         if (notif.args.ticketsGained > 0) {
+            console.log("new TicketAnimation");
             var anim = new TicketAnimation(this, CITIES.find(function (city) { return city.id == (_this.getRouteDestination(route, claimedRoute)); }), {}, "map");
             this.addAnimation(anim);
         }

@@ -18,7 +18,6 @@ class DestinationCompleteAnimation extends ExpeditionsAnimation {
 		private initialSize: number = 1
 	) {
 		super(game);
-		this.copyAnchor = copyAnchor;
 	}
 
 	public animate(): Promise<ExpeditionsAnimation> {

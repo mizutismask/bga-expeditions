@@ -17,14 +17,15 @@ class TicketAnimation extends ExpeditionsAnimation {
 		private copyAnchor: string
 	) {
 		super(game);
-		this.copyAnchor = copyAnchor;
 	}
 
 	public animate(): Promise<ExpeditionsAnimation> {
 		return new Promise((resolve) => {
 			dojo.place(
 				`
-            <div id="animated-ticket-${this.city.id}" class="expTicket animated-ticket" style="${this.getTicketPosition(this.city)}"></div>
+            <div id="animated-ticket-${this.city.id}" class="expTicket animated-ticket" style="${this.getTicketPosition(
+					this.city
+				)}"></div>
             `,
 				this.copyAnchor
 			);
@@ -35,6 +36,7 @@ class TicketAnimation extends ExpeditionsAnimation {
 
 	private endAnimation(resolve: any, ticket: HTMLElement) {
 		resolve(this);
+		this.game.endAnimation(this);
 		this.actions.end?.(this.city);
 		ticket.parentElement.removeChild(ticket);
 	}
