@@ -545,7 +545,7 @@ class Expeditions implements ExpeditionsGame {
 			: (this.destinationToReveal = destination);
 
 		if (this.destinationToReveal) {
-			this.startActionTimer(`revealDestination_button`, 5);
+			this.startActionTimer(`revealDestination_button`,3);
 		}
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
