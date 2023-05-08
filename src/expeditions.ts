@@ -276,6 +276,7 @@ class Expeditions implements ExpeditionsGame {
 						this.doRevealDestination()
 					);
 					dojo.addClass("revealDestination_button", "disabled");
+					dojo.addClass("revealDestination_button", "timer-button");
 					break;
 				case "chooseAction":
 					const chooseActionArgs = args as EnteringChooseActionArgs;
@@ -542,6 +543,10 @@ class Expeditions implements ExpeditionsGame {
 		this.destinationToReveal == destination
 			? (this.destinationToReveal = null)
 			: (this.destinationToReveal = destination);
+
+		if (this.destinationToReveal) {
+			this.startActionTimer(`revealDestination_button`, 5);
+		}
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
 		dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
@@ -659,7 +664,8 @@ class Expeditions implements ExpeditionsGame {
 					this.unclaimRoute(route.id);
 				});
 			}
-			this.startActionTimer(`unclaimRouteConfirm_button`, 1);
+			dojo.addClass("unclaimRouteConfirm_button", "timer-button");
+			this.startActionTimer(`unclaimRouteConfirm_button`, 5);
 		} else {
 			if (this.selectedArrowColor != route.color) {
 				console.log("clic on the wrong color:", this.selectArrowColor, "instead of", route.color);
@@ -671,9 +677,10 @@ class Expeditions implements ExpeditionsGame {
 					dojo.destroy(`claimRouteConfirm_button`);
 					this.claimRoute(route.id, this.selectedArrowColor);
 				});
+				dojo.addClass("claimRouteConfirm_button", "timer-button");
 			}
 
-			this.startActionTimer(`claimRouteConfirm_button`, 1);
+			this.startActionTimer(`claimRouteConfirm_button`, 5);
 		}
 		/*
 		const selectedColor = this.playerTable.getSelectedColor();
@@ -733,10 +740,7 @@ class Expeditions implements ExpeditionsGame {
 	private startActionTimer(buttonId: string, time: number) {
 		if (this.actionTimerId) {
 			window.clearInterval(this.actionTimerId);
-		}
-
-		if (Number((this as any).prefs[207]?.value) == 2) {
-			return false;
+			dojo.query(".timer-button").forEach((but: HTMLElement) => (but.innerHTML = this.stripTime(but.innerHTML)));
 		}
 
 		const button = document.getElementById(buttonId);
@@ -747,17 +751,25 @@ class Expeditions implements ExpeditionsGame {
 			const button = document.getElementById(buttonId);
 			if (button == null) {
 				window.clearInterval(this.actionTimerId);
+			} else if (button.classList.contains("disabled")) {
+				window.clearInterval(this.actionTimerId);
+				button.innerHTML = this.stripTime(button.innerHTML);
 			} else if (_actionTimerSeconds-- > 1) {
 				button.innerHTML = _actionTimerLabel + " (" + _actionTimerSeconds + ")";
 			} else {
 				window.clearInterval(this.actionTimerId);
 				button.click();
+				button.innerHTML = this.stripTime(button.innerHTML);
 			}
 		};
 		actionTimerFunction();
 		this.actionTimerId = window.setInterval(() => actionTimerFunction(), 1000);
 	}
 
+	private stripTime(buttonLabel: string): string {
+		const regex = /\s*\([0-9]+\)$/;
+		return buttonLabel.replace(regex, "");
+	}
 	private setChooseActionGamestateDescription(newText?: string) {
 		if (!this.originalTextChooseAction) {
 			this.originalTextChooseAction = document.getElementById("pagemaintitletext").innerHTML;

@@ -2958,6 +2958,7 @@ var Expeditions = /** @class */ (function () {
                         return _this.doRevealDestination();
                     });
                     dojo.addClass("revealDestination_button", "disabled");
+                    dojo.addClass("revealDestination_button", "timer-button");
                     break;
                 case "chooseAction":
                     var chooseActionArgs = args;
@@ -3160,6 +3161,9 @@ var Expeditions = /** @class */ (function () {
         this.destinationToReveal == destination
             ? (this.destinationToReveal = null)
             : (this.destinationToReveal = destination);
+        if (this.destinationToReveal) {
+            this.startActionTimer("revealDestination_button", 5);
+        }
         this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
         dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
@@ -3258,7 +3262,8 @@ var Expeditions = /** @class */ (function () {
                     _this.unclaimRoute(route.id);
                 });
             }
-            this.startActionTimer("unclaimRouteConfirm_button", 1);
+            dojo.addClass("unclaimRouteConfirm_button", "timer-button");
+            this.startActionTimer("unclaimRouteConfirm_button", 5);
         }
         else {
             if (this.selectedArrowColor != route.color) {
@@ -3270,8 +3275,9 @@ var Expeditions = /** @class */ (function () {
                     dojo.destroy("claimRouteConfirm_button");
                     _this.claimRoute(route.id, _this.selectedArrowColor);
                 });
+                dojo.addClass("claimRouteConfirm_button", "timer-button");
             }
-            this.startActionTimer("claimRouteConfirm_button", 1);
+            this.startActionTimer("claimRouteConfirm_button", 5);
         }
         /*
         const selectedColor = this.playerTable.getSelectedColor();
@@ -3326,12 +3332,9 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.startActionTimer = function (buttonId, time) {
         var _this = this;
-        var _a;
         if (this.actionTimerId) {
             window.clearInterval(this.actionTimerId);
-        }
-        if (Number((_a = this.prefs[207]) === null || _a === void 0 ? void 0 : _a.value) == 2) {
-            return false;
+            dojo.query(".timer-button").forEach(function (but) { return (but.innerHTML = _this.stripTime(but.innerHTML)); });
         }
         var button = document.getElementById(buttonId);
         var _actionTimerLabel = button.innerHTML;
@@ -3341,16 +3344,25 @@ var Expeditions = /** @class */ (function () {
             if (button == null) {
                 window.clearInterval(_this.actionTimerId);
             }
+            else if (button.classList.contains("disabled")) {
+                window.clearInterval(_this.actionTimerId);
+                button.innerHTML = _this.stripTime(button.innerHTML);
+            }
             else if (_actionTimerSeconds-- > 1) {
                 button.innerHTML = _actionTimerLabel + " (" + _actionTimerSeconds + ")";
             }
             else {
                 window.clearInterval(_this.actionTimerId);
                 button.click();
+                button.innerHTML = _this.stripTime(button.innerHTML);
             }
         };
         actionTimerFunction();
         this.actionTimerId = window.setInterval(function () { return actionTimerFunction(); }, 1000);
+    };
+    Expeditions.prototype.stripTime = function (buttonLabel) {
+        var regex = /\s*\([0-9]+\)$/;
+        return buttonLabel.replace(regex, "");
     };
     Expeditions.prototype.setChooseActionGamestateDescription = function (newText) {
         if (!this.originalTextChooseAction) {
