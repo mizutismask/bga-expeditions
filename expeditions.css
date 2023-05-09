@@ -117,7 +117,7 @@
   display: flex;
   gap: 5px;
 }
-.player-board .additional-icons .css-icon {
+.player-board .css-icon {
   width: 25px;
   height: 25px;
   background-color: white;
@@ -129,9 +129,15 @@
   align-items: center;
   color: rgb(21, 104, 134);
 }
-.player-board .additional-icons .css-icon.xpd-help-icon {
+.player-board .xpd-help-icon {
   cursor: pointer;
   pointer-events: auto;
+}
+.player-board .xpd-help-icon.xpd-help-icon-mini {
+  width: 15px;
+  height: 15px;
+  font-size: 10pt;
+  margin-left: 5px;
 }
 
 .help-card {

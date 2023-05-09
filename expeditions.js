@@ -3111,6 +3111,7 @@ var Expeditions = /** @class */ (function () {
             _this.commonCompletedDestinationsCounters[playerId] = commonCompletedDestinationsCounter;
             if (_this.getPlayerId() === playerId) {
                 dojo.place("<div id=\"player-help\" class=\"css-icon xpd-help-icon\">?</div>", "additional-icons-".concat(player.id));
+                dojo.place("<div id=\"player-help-scoring\" class=\"css-icon xpd-help-icon xpd-help-icon-mini\">?</div>", "icon_point_".concat(player.id), "after");
             }
             if (player.playerNo === 1) {
                 dojo.place("<div id=\"firstPlayerIcon\" class=\"css-icon player-turn-order\">1</div>", "additional-icons-".concat(player.id), "last");
@@ -3121,7 +3122,7 @@ var Expeditions = /** @class */ (function () {
         this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
         this.setTooltipToClass("common-destinations-counter", _("Shared destinations reached"));
         this.setTooltipToClass("xpd-help-icon", "<div class=\"help-card recto\"></div>");
-        this.setTooltipToClass("fa-star", "<div class=\"help-card verso\"></div>");
+        this.setTooltipToClass("xpd-help-icon-mini", "<div class=\"help-card verso\"></div>");
         this.setTooltipToClass("player-turn-order", _("First player"));
     };
     /**

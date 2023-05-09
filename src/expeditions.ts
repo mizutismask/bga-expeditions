@@ -483,6 +483,12 @@ class Expeditions implements ExpeditionsGame {
 					`<div id="player-help" class="css-icon xpd-help-icon">?</div>`,
 					`additional-icons-${player.id}`
 				);
+
+				dojo.place(
+					`<div id="player-help-scoring" class="css-icon xpd-help-icon xpd-help-icon-mini">?</div>`,
+					`icon_point_${player.id}`,
+					"after"
+				);
 			}
 			if (player.playerNo === 1) {
 				dojo.place(
@@ -498,7 +504,7 @@ class Expeditions implements ExpeditionsGame {
 		this.setTooltipToClass("destinations-counter", _("Completed / Total destination cards"));
 		this.setTooltipToClass("common-destinations-counter", _("Shared destinations reached"));
 		this.setTooltipToClass("xpd-help-icon", `<div class="help-card recto"></div>`);
-		this.setTooltipToClass("fa-star", `<div class="help-card verso"></div>`);
+		this.setTooltipToClass("xpd-help-icon-mini", `<div class="help-card verso"></div>`);
 		this.setTooltipToClass("player-turn-order", _("First player"));
 	}
 
@@ -647,7 +653,7 @@ class Expeditions implements ExpeditionsGame {
 			return;
 		}
 		//const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
-		
+
 		if (!this.canClaimRoute(route, 0) && !dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
 			return;
 		}
