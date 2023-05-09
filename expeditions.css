@@ -134,6 +134,9 @@
   pointer-events: auto;
 }
 .player-board .xpd-help-icon.xpd-help-icon-mini {
+  position: relative;
+  top: 50%;
+  transform: translateY(-8%);
   width: 15px;
   height: 15px;
   font-size: 10pt;
