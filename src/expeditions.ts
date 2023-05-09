@@ -545,7 +545,7 @@ class Expeditions implements ExpeditionsGame {
 			: (this.destinationToReveal = destination);
 
 		if (this.destinationToReveal) {
-			this.startActionTimer(`revealDestination_button`,3);
+			this.startActionTimer(`revealDestination_button`, 3);
 		}
 		this.map.setHighligthedDestination(destination);
 		this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
@@ -646,11 +646,13 @@ class Expeditions implements ExpeditionsGame {
 		if (!(this as any).isCurrentPlayerActive()) {
 			return;
 		}
-
 		//const otherRoute = getAllRoutes().find((r) => route.from == r.from && route.to == r.to && route.id != r.id);
-
+		
 		if (!this.canClaimRoute(route, 0) && !dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
 			return;
+		}
+		if ($(`claimRouteConfirm_button`)) {
+			dojo.destroy(`claimRouteConfirm_button`);
 		}
 
 		document
@@ -672,15 +674,15 @@ class Expeditions implements ExpeditionsGame {
 				return;
 			}
 
-			if (!$(`claimRouteConfirm_button`)) {
-				(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
-					dojo.destroy(`claimRouteConfirm_button`);
-					this.claimRoute(route.id, this.selectedArrowColor);
-				});
-				dojo.addClass("claimRouteConfirm_button", "timer-button");
-			}
+			(this as any).addActionButton(`claimRouteConfirm_button`, _("Confirm"), () => {
+				dojo.destroy(`claimRouteConfirm_button`);
+				this.claimRoute(route.id, this.selectedArrowColor);
+			});
+			dojo.addClass("claimRouteConfirm_button", "timer-button");
 
-			this.startActionTimer(`claimRouteConfirm_button`, 5);
+			this.startActionTimer(`claimRouteConfirm_button`, 5, () => {
+				dojo.destroy(`claimRouteConfirm_button`);
+			});
 		}
 		/*
 		const selectedColor = this.playerTable.getSelectedColor();
@@ -735,18 +737,35 @@ class Expeditions implements ExpeditionsGame {
 	}
 
 	/**
-	 * Timer for Confirm button
+	 * Timer for Confirm button. Also adds a cancel button to stop timer.
+	 * Cancel actions can be passed to be executed on cancel button click.
 	 */
-	private startActionTimer(buttonId: string, time: number) {
+	private startActionTimer(buttonId: string, time: number, cancelFunction?) {
 		if (this.actionTimerId) {
 			window.clearInterval(this.actionTimerId);
 			dojo.query(".timer-button").forEach((but: HTMLElement) => (but.innerHTML = this.stripTime(but.innerHTML)));
+			dojo.destroy(`cancel-button`);
 		}
 
+		//adds cancel button
 		const button = document.getElementById(buttonId);
+		(this as any).addActionButton(
+			`cancel-button`,
+			_("Cancel"),
+			() => {
+				window.clearInterval(this.actionTimerId);
+				button.innerHTML = this.stripTime(button.innerHTML);
+				cancelFunction?.();
+				dojo.destroy(`cancel-button`);
+			},
+			null,
+			null,
+			"red"
+		);
 
 		const _actionTimerLabel = button.innerHTML;
 		let _actionTimerSeconds = time;
+
 		const actionTimerFunction = () => {
 			const button = document.getElementById(buttonId);
 			if (button == null) {

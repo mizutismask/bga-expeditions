@@ -92,6 +92,10 @@ html,
 	}
 }
 
+.timer-button {
+	//transition: width 1s ease-in-out; //todo does not work on inline elts maybe see https://stackoverflow.com/questions/33057737/css-replacing-a-text-on-hover-but-smooth-transition-to-the-new-text-does-not-w
+}
+
 .place-arrow-button {
 	&.selected {
 		background-color: #56a8d1;

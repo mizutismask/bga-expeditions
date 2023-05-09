@@ -3252,6 +3252,9 @@ var Expeditions = /** @class */ (function () {
         if (!this.canClaimRoute(route, 0) && !dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), "removable")) {
             return;
         }
+        if ($("claimRouteConfirm_button")) {
+            dojo.destroy("claimRouteConfirm_button");
+        }
         document
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
@@ -3270,14 +3273,14 @@ var Expeditions = /** @class */ (function () {
                 console.log("clic on the wrong color:", this.selectArrowColor, "instead of", route.color);
                 return;
             }
-            if (!$("claimRouteConfirm_button")) {
-                this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
-                    dojo.destroy("claimRouteConfirm_button");
-                    _this.claimRoute(route.id, _this.selectedArrowColor);
-                });
-                dojo.addClass("claimRouteConfirm_button", "timer-button");
-            }
-            this.startActionTimer("claimRouteConfirm_button", 5);
+            this.addActionButton("claimRouteConfirm_button", _("Confirm"), function () {
+                dojo.destroy("claimRouteConfirm_button");
+                _this.claimRoute(route.id, _this.selectedArrowColor);
+            });
+            dojo.addClass("claimRouteConfirm_button", "timer-button");
+            this.startActionTimer("claimRouteConfirm_button", 5, function () {
+                dojo.destroy("claimRouteConfirm_button");
+            });
         }
         /*
         const selectedColor = this.playerTable.getSelectedColor();
@@ -3328,15 +3331,24 @@ var Expeditions = /** @class */ (function () {
         this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
     };
     /**
-     * Timer for Confirm button
+     * Timer for Confirm button. Also adds a cancel button to stop timer.
+     * Cancel actions can be passed to be executed on cancel button click.
      */
-    Expeditions.prototype.startActionTimer = function (buttonId, time) {
+    Expeditions.prototype.startActionTimer = function (buttonId, time, cancelFunction) {
         var _this = this;
         if (this.actionTimerId) {
             window.clearInterval(this.actionTimerId);
             dojo.query(".timer-button").forEach(function (but) { return (but.innerHTML = _this.stripTime(but.innerHTML)); });
+            dojo.destroy("cancel-button");
         }
+        //adds cancel button
         var button = document.getElementById(buttonId);
+        this.addActionButton("cancel-button", _("Cancel"), function () {
+            window.clearInterval(_this.actionTimerId);
+            button.innerHTML = _this.stripTime(button.innerHTML);
+            cancelFunction === null || cancelFunction === void 0 ? void 0 : cancelFunction();
+            dojo.destroy("cancel-button");
+        }, null, null, "red");
         var _actionTimerLabel = button.innerHTML;
         var _actionTimerSeconds = time;
         var actionTimerFunction = function () {
