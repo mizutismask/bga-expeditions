@@ -63,24 +63,24 @@ $stats_type = [
     // Statistics existing for each player
     "player" => $commonStats + [
 
-        "keptAdditionalDestinationCards" => [
+        "pointsWithPlayerCompletedDestinations" => [
             "id" => 20,
-            "name" => totranslate("Kept additional destination cards"),
+            "name" => totranslate("Completed player destinations"),
             "type" => "int"
         ],
-        "pointsWithCompletedDestinations" => [
+        "pointsLostWithPlayerUncompletedDestinations" => [
             "id" => 21,
-            "name" => totranslate("Points with completed destinations"),
+            "name" => totranslate("Uncompleted player destinations"),
             "type" => "int"
         ],
-        "pointsLostWithUncompletedDestinations" => [
+        "pointsWithSharedCompletedDestinations" => [
             "id" => 22,
-            "name" => totranslate("Points lost with uncompleted destinations"),
+            "name" => totranslate("Shared destinations"),
             "type" => "int"
         ],
-        "redLocationsReached" => [
+        "pointsWithRevealedDestinations" => [
             "id" => 23,
-            "name" => totranslate("Red locations reached"),
+            "name" => totranslate("Revealed destinations points"),
             "type" => "int"
         ],
         "blueLocationsReached" => [
@@ -101,6 +101,11 @@ $stats_type = [
         "ticketsEarned" => [
             "id" => 27,
             "name" => totranslate("Tickets earned"),
+            "type" => "int"
+        ],
+        "keptAdditionalDestinationCards" => [
+            "id" => 28,
+            "name" => totranslate("Traded destinations"),
             "type" => "int"
         ],
     ],

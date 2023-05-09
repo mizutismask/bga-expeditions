@@ -82,8 +82,10 @@ define('LAST_RED_ROUTES', 'LAST_RED_ROUTES'); //array of the 3 last arrows
     Stats
 */
 define('STAT_KEPT_ADDITIONAL_DESTINATION_CARDS', 'keptAdditionalDestinationCards');
-define('STAT_POINTS_WITH_COMPLETED_DESTINATIONS', 'pointsWithCompletedDestinations');
-define('STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS', 'pointsLostWithUncompletedDestinations');
+define('STAT_POINTS_WITH_PLAYER_COMPLETED_DESTINATIONS', 'pointsWithPlayerCompletedDestinations');
+define('STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS', 'pointsLostWithPlayerUncompletedDestinations');
+define('STAT_POINTS_WITH_SHARED_COMPLETED_DESTINATIONS', 'pointsWithSharedCompletedDestinations');
+define('STAT_POINTS_WITH_REVEALED_DESTINATIONS', 'pointsWithRevealedDestinations');
 define('STAT_BLUE_LOCATIONS_REACHED', 'blueLocationsReached');
 define('STAT_TICKETS_EARNED', 'ticketsEarned');
 define('STAT_TICKETS_USED', 'ticketsUsed');

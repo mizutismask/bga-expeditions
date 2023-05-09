@@ -207,4 +207,8 @@ trait DebugUtilTrait {
         }
         die('debug data : ' . json_encode($debugData));
     }
+
+    function endGame(){
+        $this->gamestate->nextState("endGame");
+    }
 }

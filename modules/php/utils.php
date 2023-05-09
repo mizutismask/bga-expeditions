@@ -299,12 +299,14 @@ trait UtilTrait {
         $revealed = $this->isDestinationRevealed($destination->id);
         if ($revealed) {
             $this->incScore($ownerId, 1);
+            self::incStat(1, STAT_POINTS_WITH_REVEALED_DESTINATIONS, $ownerId); 
         }
 
         if ($shared) {
             $this->destinations->moveCard($destination->id, 'sharedCompleted', $ownerId);
             $destination->location = 'sharedCompleted';
             $destination->location_arg = $ownerId;
+            self::incStat(1, STAT_POINTS_WITH_SHARED_COMPLETED_DESTINATIONS, $playerId);
         }
 
         $msg = $shared ?

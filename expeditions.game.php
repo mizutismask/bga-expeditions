@@ -117,8 +117,10 @@ class Expeditions extends Table {
         // Init game statistics
         $this->initStat('table', 'turnsNumber', 0);
         $this->initStat('player', 'turnsNumber', 0);
-        $this->initStat('player', STAT_POINTS_WITH_COMPLETED_DESTINATIONS, 0);
+        $this->initStat('player', STAT_POINTS_WITH_PLAYER_COMPLETED_DESTINATIONS, 0);
+        $this->initStat('player', STAT_POINTS_WITH_SHARED_COMPLETED_DESTINATIONS, 0);
         $this->initStat('player', STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS, 0);
+        $this->initStat('player', STAT_POINTS_WITH_REVEALED_DESTINATIONS, 0);
         $this->initStat('player', STAT_LOOPS, 0);
         $this->initStat('player', STAT_TICKETS_USED, 0);
         $this->initStat('player', STAT_TICKETS_EARNED, 0);

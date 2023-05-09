@@ -68,6 +68,7 @@ $basicGameStates = [
         "description" => clienttranslate("Debug end of game"),
         "type" => "manager",
         "args" => "argGameEnd",
+        "transitions" => ["endGame" => ST_END_GAME],
     ],
 
     // Final state.
