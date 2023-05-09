@@ -122,7 +122,6 @@ class Expeditions extends Table {
         $this->initStat('player', STAT_LOOPS, 0);
         $this->initStat('player', STAT_TICKETS_USED, 0);
         $this->initStat('player', STAT_TICKETS_EARNED, 0);
-        $this->initStat('player', STAT_RED_LOCATIONS_REACHED, 0);
         $this->initStat('player', STAT_BLUE_LOCATIONS_REACHED, 0);
         $this->initStat('player', STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, 0);
 

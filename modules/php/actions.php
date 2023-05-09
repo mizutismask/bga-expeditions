@@ -184,7 +184,6 @@ trait ActionTrait {
                 $this->checkCompletedDestinations($playerId, $destination);
                 break;
             case RED_CITY:
-                self::incStat(1, STAT_RED_LOCATIONS_REACHED, $playerId);
                 $this->earnTicket($playerId);
                 break;
             case BLUE_CITY:
