@@ -2955,6 +2955,10 @@ var Expeditions = /** @class */ (function () {
                 //this.map.setSelectableDestination()
                 (_c = this.playerTable) === null || _c === void 0 ? void 0 : _c.setToDoSelectableCards([]);
                 break;
+            case "useTicket":
+                dojo.query(".remove-arrow-handle").forEach(function (handle) { return dojo.destroy(handle); });
+                dojo.query(".removable").removeClass("removable");
+                break;
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the

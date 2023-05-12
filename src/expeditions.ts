@@ -254,6 +254,10 @@ class Expeditions implements ExpeditionsGame {
 				//this.map.setSelectableDestination()
 				this.playerTable?.setToDoSelectableCards([]);
 				break;
+			case "useTicket":
+				dojo.query(".remove-arrow-handle").forEach((handle) => dojo.destroy(handle));
+				dojo.query(".removable").removeClass("removable");
+				break;
 		}
 	}
 
