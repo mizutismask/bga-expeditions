@@ -74,7 +74,7 @@ class TicketAnimation extends CityAnimation {
 			actions,
 			copyAnchor,
 			"ticket",
-			["expTicket", ".animated-element"],
+			["expTicket", "animated-element"],
 			TICKET_WIDTH,
 			TICKET_HEIGHT
 		);

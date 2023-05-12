@@ -565,7 +565,7 @@ var CityAnimation = /** @class */ (function (_super) {
 var TicketAnimation = /** @class */ (function (_super) {
     __extends(TicketAnimation, _super);
     function TicketAnimation(game, city, actions, copyAnchor) {
-        return _super.call(this, game, city, actions, copyAnchor, "ticket", ["expTicket", ".animated-element"], TICKET_WIDTH, TICKET_HEIGHT) || this;
+        return _super.call(this, game, city, actions, copyAnchor, "ticket", ["expTicket", "animated-element"], TICKET_WIDTH, TICKET_HEIGHT) || this;
     }
     return TicketAnimation;
 }(CityAnimation));
