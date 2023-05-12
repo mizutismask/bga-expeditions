@@ -1355,6 +1355,9 @@ var ROUTES = [
     new Route(613, 103, 187, [new RouteSpace(411, 170, 93, -45)], BLUE),
     new Route(614, 103, 187, [new RouteSpace(411, 170, 93, -45)], YELLOW),
     new Route(615, 103, 187, [new RouteSpace(411, 170, 93, -45)], RED),
+    new Route(616, 128, 210, [new RouteSpace(572, 1283, 120, -46)], BLUE),
+    new Route(617, 128, 210, [new RouteSpace(572, 1283, 120, -46)], YELLOW),
+    new Route(618, 128, 210, [new RouteSpace(572, 1283, 120, -46)], RED),
     //routes from red points
     //routes from blue points
 ];
