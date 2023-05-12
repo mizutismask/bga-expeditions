@@ -384,7 +384,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
@@ -482,6 +484,10 @@
 .route-space.removable {
   pointer-events: auto;
   cursor: crosshair;
+}
+
+.remove-arrow-handle {
+  font-size: xxx-large;
 }
 
 @keyframes selectable-road-animation {

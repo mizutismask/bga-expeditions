@@ -352,13 +352,28 @@ class TtrMap {
 			routes.forEach((route) => {
 				this.getAllRoutes()
 					.find((r) => r.id == route.id)
-					.spaces.forEach((_, index) =>
-						document
-							.getElementById(`route-spaces-route${route.id}-space${index}`)
-							?.classList.add("removable")
-					);
+					.spaces.forEach((_, index) => {
+						let space = document.getElementById(`route-spaces-route${route.id}-space${index}`);
+						if (space) {
+							space.classList.add("removable");
+							this.createRemoveArrowHandle(route);
+						}
+					});
 			});
 		}
+	}
+
+	public createRemoveArrowHandle(route: Route): void {
+		const index = 0;
+		let space = document.getElementById(`route-spaces-route${route.id}-space${index}`);
+		let id = `remove-arrow-handle-${route.id}`;
+		dojo.place(
+			`
+            <div id=${id} class="remove-arrow-handle" transform="translate(-50%, -50%)">&#10060;</div>
+            `,
+			space.id
+		);
+		$(id).addEventListener("click", () => this.game.clickedRemovableRoute(route));
 	}
 
 	/**

@@ -92,6 +92,7 @@ interface ExpeditionsGame extends Game {
 	animationManager: AnimationManager;
 	destinationCardsManager: CardsManager;
 	clickedRoute(route: Route): void;
+	clickedRemovableRoute(route:Route): void;
 	toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination): void;
 	destinationSelectionChanged(selectedIds: number[]): void;
 	setPlayerTablePosition(left: boolean): void;

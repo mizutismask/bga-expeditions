@@ -666,14 +666,7 @@ class Expeditions implements ExpeditionsGame {
 			.forEach((button) => button.parentElement.removeChild(button));
 
 		if (dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
-			if (!$(`unclaimRouteConfirm_button`)) {
-				(this as any).addActionButton(`unclaimRouteConfirm_button`, _("Confirm"), () => {
-					dojo.destroy(`unclaimRouteConfirm_button`);
-					this.unclaimRoute(route.id);
-				});
-			}
-			dojo.addClass("unclaimRouteConfirm_button", "timer-button");
-			this.startActionTimer(`unclaimRouteConfirm_button`, 5);
+			return;
 		} else {
 			if (this.selectedArrowColor != route.color) {
 				console.log("clic on the wrong color:", this.selectArrowColor, "instead of", route.color);
@@ -722,6 +715,22 @@ class Expeditions implements ExpeditionsGame {
 				);
 			}
 		}*/
+	}
+
+	public clickedRemovableRoute(route: Route): void {
+		if (!(this as any).isCurrentPlayerActive()) {
+			return;
+		}
+		if (dojo.hasClass(`route-spaces-route${route.id}-space0`, "removable")) {
+			if (!$(`unclaimRouteConfirm_button`)) {
+				(this as any).addActionButton(`unclaimRouteConfirm_button`, _("Confirm"), () => {
+					dojo.destroy(`unclaimRouteConfirm_button`);
+					this.unclaimRoute(route.id);
+				});
+			}
+			dojo.addClass("unclaimRouteConfirm_button", "timer-button");
+			this.startActionTimer(`unclaimRouteConfirm_button`, 5);
+		}
 	}
 
 	public toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination) {
@@ -1142,6 +1151,9 @@ class Expeditions implements ExpeditionsGame {
 	 * Update unclaimed route.
 	 */
 	notif_unclaimedRoute(notif: Notif<NotifUnclaimedRouteArgs>) {
+		dojo.query(".remove-arrow-handle").forEach((handle) => dojo.destroy(handle));
+		dojo.query(".removable").removeClass("removable");
+
 		const playerId = notif.args.playerId;
 		const route: Route = notif.args.route;
 		this.map.unclaimRoute(route);

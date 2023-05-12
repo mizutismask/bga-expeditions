@@ -1652,12 +1652,22 @@ var TtrMap = /** @class */ (function () {
                 _this.getAllRoutes()
                     .find(function (r) { return r.id == route.id; })
                     .spaces.forEach(function (_, index) {
-                    var _a;
-                    return (_a = document
-                        .getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.add("removable");
+                    var space = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index));
+                    if (space) {
+                        space.classList.add("removable");
+                        _this.createRemoveArrowHandle(route);
+                    }
                 });
             });
         }
+    };
+    TtrMap.prototype.createRemoveArrowHandle = function (route) {
+        var _this = this;
+        var index = 0;
+        var space = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index));
+        var id = "remove-arrow-handle-".concat(route.id);
+        dojo.place("\n            <div id=".concat(id, " class=\"remove-arrow-handle\" transform=\"translate(-50%, -50%)\">&#10060;</div>\n            "), space.id);
+        $(id).addEventListener("click", function () { return _this.game.clickedRemovableRoute(route); });
     };
     /**
      * Place train cars on claimed routes.
@@ -3265,14 +3275,7 @@ var Expeditions = /** @class */ (function () {
             .querySelectorAll("[id^=\"claimRouteWithColor_button\"]")
             .forEach(function (button) { return button.parentElement.removeChild(button); });
         if (dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), "removable")) {
-            if (!$("unclaimRouteConfirm_button")) {
-                this.addActionButton("unclaimRouteConfirm_button", _("Confirm"), function () {
-                    dojo.destroy("unclaimRouteConfirm_button");
-                    _this.unclaimRoute(route.id);
-                });
-            }
-            dojo.addClass("unclaimRouteConfirm_button", "timer-button");
-            this.startActionTimer("unclaimRouteConfirm_button", 5);
+            return;
         }
         else {
             if (this.selectedArrowColor != route.color) {
@@ -3320,6 +3323,22 @@ var Expeditions = /** @class */ (function () {
                 );
             }
         }*/
+    };
+    Expeditions.prototype.clickedRemovableRoute = function (route) {
+        var _this = this;
+        if (!this.isCurrentPlayerActive()) {
+            return;
+        }
+        if (dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), "removable")) {
+            if (!$("unclaimRouteConfirm_button")) {
+                this.addActionButton("unclaimRouteConfirm_button", _("Confirm"), function () {
+                    dojo.destroy("unclaimRouteConfirm_button");
+                    _this.unclaimRoute(route.id);
+                });
+            }
+            dojo.addClass("unclaimRouteConfirm_button", "timer-button");
+            this.startActionTimer("unclaimRouteConfirm_button", 5);
+        }
     };
     Expeditions.prototype.toDoDestinationSelectionChanged = function (selection, lastChange) {
         if (this.gamedatas.gamestate.name == "revealDestination") {
@@ -3666,6 +3685,8 @@ var Expeditions = /** @class */ (function () {
      * Update unclaimed route.
      */
     Expeditions.prototype.notif_unclaimedRoute = function (notif) {
+        dojo.query(".remove-arrow-handle").forEach(function (handle) { return dojo.destroy(handle); });
+        dojo.query(".removable").removeClass("removable");
         var playerId = notif.args.playerId;
         var route = notif.args.route;
         this.map.unclaimRoute(route);
