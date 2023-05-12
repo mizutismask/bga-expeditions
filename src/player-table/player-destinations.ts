@@ -106,11 +106,13 @@ class PlayerDestinations {
 				this.destinationsTodo.splice(index, 1);
 				this.destinationsToDoStock.removeCard(destination);
 			}
-			this.destinationsDone.push(destination);
-			// fromStock: this.destinationsToDoStock
-			this.destinationsDoneStock.addCard(destination, {}, {});
-			//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
 
+			if (destination.location !== LOCATION_SHARED_COMPLETED) {
+				this.destinationsDone.push(destination);
+				// fromStock: this.destinationsToDoStock
+				this.destinationsDoneStock.addCard(destination, {}, {});
+				//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+			}
 			/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)
 				.appendChild(document.getElementById(`destination-card-${destination.id}`));*/
