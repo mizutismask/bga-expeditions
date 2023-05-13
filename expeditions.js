@@ -2685,7 +2685,7 @@ var EndScore = /** @class */ (function () {
         players.forEach(function (player) {
             var _a;
             var playerId = Number(player.id);
-            dojo.place("<tr id=\"score".concat(player.id, "\">\n                    <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\">").concat(player.name, "</td>\n                    <td id=\"destination-reached").concat(player.id, "\" class=\"score-number\">").concat(player.completedDestinations.length + player.sharedCompletedDestinationsCount, "</td>\n                    <td id=\"revealed-tokens-back").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensBackCount, "</td>\n                    <td id=\"destination-unreached").concat(player.id, "\" class=\"score-number\">").concat(_this.preventMinusZero((_a = player.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.length), "</td>\n                    <td id=\"revealed-tokens-left").concat(player.id, "\" class=\"score-number\">").concat(_this.preventMinusZero(player.revealedTokensLeftCount), "</td>\n                    <td id=\"total").concat(player.id, "\" class=\"score-number total\">").concat(player.score, "</td>\n                </tr>"), "score-table-body");
+            dojo.place("<tr id=\"score".concat(player.id, "\">\n                    <td id=\"score-name-").concat(player.id, "\" class=\"player-name\" style=\"color: #").concat(player.color, "\"><span id=\"score-winner-").concat(player.id, "\"/> <span>").concat(player.name, "</span></td>\n                    <td id=\"destination-reached").concat(player.id, "\" class=\"score-number\">").concat(player.completedDestinations.length + player.sharedCompletedDestinationsCount, "</td>\n                    <td id=\"revealed-tokens-back").concat(player.id, "\" class=\"score-number\">").concat(player.revealedTokensBackCount, "</td>\n                    <td id=\"destination-unreached").concat(player.id, "\" class=\"score-number\">").concat(_this.preventMinusZero((_a = player.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.length), "</td>\n                    <td id=\"revealed-tokens-left").concat(player.id, "\" class=\"score-number\">").concat(_this.preventMinusZero(player.revealedTokensLeftCount), "</td>\n                    <td id=\"total").concat(player.id, "\" class=\"score-number total\">").concat(player.score, "</td>\n                </tr>"), "score-table-body");
         });
         this.setBestScore(bestScore);
         players.forEach(function (player) {
@@ -2717,7 +2717,7 @@ var EndScore = /** @class */ (function () {
      */
     EndScore.prototype.highlightWinnerScore = function (playerId) {
         document.getElementById("score".concat(playerId)).classList.add("highlight");
-        document.getElementById("score-name-".concat(playerId)).style.color = "";
+        document.getElementById("score-winner-".concat(playerId)).classList.add("fa", "fa-trophy", "fa-lg");
     };
     /**
      * Save best score so we can move trains.
