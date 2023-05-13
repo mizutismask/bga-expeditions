@@ -1068,7 +1068,7 @@ class Expeditions implements ExpeditionsGame {
 		const notifs = [
 			["claimedRoute", ANIMATION_MS],
 			["unclaimedRoute", ANIMATION_MS],
-			["destinationCompleted", ANIMATION_MS],
+			["destinationCompleted", 2700],
 			["points", 1],
 			["ticketUsed", 1],
 			["destinationsPicked", 1],

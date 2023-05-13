@@ -110,8 +110,8 @@ class PlayerDestinations {
 			if (destination.location !== LOCATION_SHARED_COMPLETED) {
 				this.destinationsDone.push(destination);
 				// fromStock: this.destinationsToDoStock
-				this.destinationsDoneStock.addCard(destination, {}, {});
-				//this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+				this.destinationsDoneStock.addCard(destination);
+				this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
 			}
 			/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)

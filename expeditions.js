@@ -496,16 +496,16 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
                 var x = (toBR.x - cardBR.x) / _this.zoom;
                 var y = (toBR.y - cardBR.y) / _this.zoom;
                 card.style.transform = "translate(".concat(x, "px, ").concat(y, "px) scale(").concat(_this.initialSize, ")");
-                setTimeout(function () { return _this.endAnimation(resolve, card); }, 500);
-            }, 500);
-        }, 750);
+                setTimeout(function () { return _this.endAnimation(resolve, card); }, 850);
+            }, 800); //blocked time, before moving
+        }, 750); //time before marking it as done
     };
     DestinationCompleteAnimation.prototype.endAnimation = function (resolve, card) {
         var _a, _b;
         this.game.setSelectedDestination(this.destination, false);
         resolve(this);
-        this.game.endAnimation(this);
         (_b = (_a = this.actions).end) === null || _b === void 0 ? void 0 : _b.call(_a, this.destination);
+        this.game.endAnimation(this);
         card.parentElement.removeChild(card);
     };
     DestinationCompleteAnimation.prototype.getCardPosition = function (destination) {
@@ -2507,8 +2507,8 @@ var PlayerDestinations = /** @class */ (function () {
             if (destination.location !== LOCATION_SHARED_COMPLETED) {
                 this.destinationsDone.push(destination);
                 // fromStock: this.destinationsToDoStock
-                this.destinationsDoneStock.addCard(destination, {}, {});
-                //this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+                this.destinationsDoneStock.addCard(destination);
+                this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
             }
             /*document
                 .getElementById(`player-table-${this.playerId}-destinations-done`)
@@ -3608,7 +3608,7 @@ var Expeditions = /** @class */ (function () {
         var notifs = [
             ["claimedRoute", ANIMATION_MS],
             ["unclaimedRoute", ANIMATION_MS],
-            ["destinationCompleted", ANIMATION_MS],
+            ["destinationCompleted", 2700],
             ["points", 1],
             ["ticketUsed", 1],
             ["destinationsPicked", 1],

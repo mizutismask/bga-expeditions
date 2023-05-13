@@ -50,7 +50,6 @@ class DestinationCompleteAnimation extends ExpeditionsAnimation {
 				card.style.transform = `scale(1)`;
 				setTimeout(() => {
 					card.style.transform = ``;
-
 					this.markComplete(card, cardBR, resolve);
 				}, 200);
 			}, 100);
@@ -66,9 +65,9 @@ class DestinationCompleteAnimation extends ExpeditionsAnimation {
 				const x = (toBR.x - cardBR.x) / this.zoom;
 				const y = (toBR.y - cardBR.y) / this.zoom;
 				card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
-				setTimeout(() => this.endAnimation(resolve, card), 500);
-			}, 500);
-		}, 750);
+				setTimeout(() => this.endAnimation(resolve, card), 850);
+			}, 800);//blocked time, before moving
+		}, 750);//time before marking it as done
 	}
 
 	private endAnimation(resolve: any, card: HTMLElement) {
@@ -76,9 +75,8 @@ class DestinationCompleteAnimation extends ExpeditionsAnimation {
 
 		resolve(this);
 
-		this.game.endAnimation(this);
 		this.actions.end?.(this.destination);
-
+		this.game.endAnimation(this);
 		card.parentElement.removeChild(card);
 	}
 
