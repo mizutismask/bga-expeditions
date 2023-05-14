@@ -90,7 +90,7 @@ class EndScore {
 	}
 
 	/**
-	 * Add golden highlight to top score player(s)
+	 * Add trophee icon to top score player(s)
 	 */
 	public highlightWinnerScore(playerId: number | string) {
 		document.getElementById(`score${playerId}`).classList.add("highlight");

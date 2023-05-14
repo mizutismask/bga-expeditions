@@ -2713,7 +2713,7 @@ var EndScore = /** @class */ (function () {
         return "-" + score.toString();
     };
     /**
-     * Add golden highlight to top score player(s)
+     * Add trophee icon to top score player(s)
      */
     EndScore.prototype.highlightWinnerScore = function (playerId) {
         document.getElementById("score".concat(playerId)).classList.add("highlight");
