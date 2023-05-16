@@ -3709,6 +3709,9 @@ var Expeditions = /** @class */ (function () {
             routeId: route.id,
             reverseDirection: notif.args.reverseDirection,
         };
+        if (this.isCurrentPlayerActive()) {
+            this.map.setSelectableRoutes(false, []);
+        }
         this.map.addClaimedRoute(claimedRoute, this.gamedatas.claimedRoutes);
         var city = CITIES.find(function (city) { return city.id == _this.getRouteDestination(route, claimedRoute); });
         if (notif.args.ticketsGained > 0) {
