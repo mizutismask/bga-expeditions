@@ -1592,7 +1592,7 @@ var TtrMap = /** @class */ (function () {
         var destination = "route-spaces";
         this.getAllRoutes().forEach(function (route) {
             return route.spaces.forEach(function (space, spaceIndex) {
-                var coords = _this.getShiftedCoords(route, _this.getColorShift(route, 20, 30));
+                var coords = { x: space.x, y: space.y };
                 dojo.place("<div id=\"".concat(destination, "-route").concat(route.id, "-space").concat(spaceIndex, "\" class=\"route-space\" \n                    style=\"transform-origin:left center; transform: translate(").concat(coords.x, "px, ").concat(coords.y, "px) rotate(").concat(space.angle, "deg); width:").concat(space.length, "px\"\n                    title=\"").concat(dojo.string.substitute(_("${from} to ${to}"), {
                     from: _this.getLocationName(route.from),
                     to: _this.getLocationName(route.to),
@@ -1730,7 +1730,8 @@ var TtrMap = /** @class */ (function () {
         var blueRoute = sameRoutes.find(function (r) { return r.color === BLUE; });
         var yellowRoute = sameRoutes.find(function (r) { return r.color === YELLOW; });
         var redRoute = sameRoutes.find(function (r) { return r.color === RED; });
-        console.log("sameRoutes ", sameRoutes);
+        console.log("shiftArrowIfNeeded ", route);
+        console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
         if (sameRoutes.length === 3) {
             //shift needed, yellow is never moved
             if (route.color == BLUE)
@@ -1791,7 +1792,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.shiftArrow = function (route, shift) {
         var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
-        if (routeDiv.dataset.shifted == "false") {
+        if (!routeDiv.dataset.shifted) {
             console.log("shift arrow", route, shift);
             var space = route.spaces[0];
             var angle = -space.angle;
@@ -1814,7 +1815,7 @@ var TtrMap = /** @class */ (function () {
             routeDiv.style.transform = newTransform;
         }
         else {
-            console.log("shift aborted", route, shift);
+            console.log("shift aborted, route already shifted", route, shift);
         }
     };
     /**

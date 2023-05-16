@@ -282,7 +282,7 @@ class TtrMap {
 		const destination = "route-spaces";
 		this.getAllRoutes().forEach((route) =>
 			route.spaces.forEach((space, spaceIndex) => {
-				const coords = this.getShiftedCoords(route, this.getColorShift(route, 20, 30));
+				const coords ={ x: space.x, y: space.y };
 				dojo.place(
 					`<div id="${destination}-route${route.id}-space${spaceIndex}" class="route-space" 
                     style="transform-origin:left center; transform: translate(${coords.x}px, ${coords.y}px) rotate(${
@@ -444,7 +444,8 @@ class TtrMap {
 		let blueRoute = sameRoutes.find((r) => r.color === BLUE);
 		const yellowRoute = sameRoutes.find((r) => r.color === YELLOW);
 		const redRoute = sameRoutes.find((r) => r.color === RED);
-		console.log("sameRoutes ", sameRoutes);
+		console.log("shiftArrowIfNeeded ", route);
+		console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
 		if (sameRoutes.length === 3) {
 			//shift needed, yellow is never moved
 			if (route.color == BLUE) this.shiftArrow(route, -shift);
@@ -507,7 +508,7 @@ class TtrMap {
 	 */
 	private shiftArrow(route: Route, shift: number) {
 		const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-		if (routeDiv.dataset.shifted == "false"){
+		if (!routeDiv.dataset.shifted){
 			console.log("shift arrow", route, shift);
 
 		const space = route.spaces[0];
@@ -532,7 +533,7 @@ class TtrMap {
 			routeDiv.dataset.shifted = "true";
 			routeDiv.style.transform = newTransform;
 		}else{
-			console.log("shift aborted", route, shift);
+			console.log("shift aborted, route already shifted", route, shift);
 		}
 	}
 	/**
