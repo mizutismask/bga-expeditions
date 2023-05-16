@@ -24,7 +24,6 @@
     "src/map/map.ts",
     "src/destination-deck/destination-deck.ts",
     "src/destination-deck/shared-destination-deck.ts",
-    "src/train-car-deck/train-car-deck.ts",
     "src/player-table/player-table.ts",
     "src/player-table/player-destinations.ts",
     "src/arrows.ts",

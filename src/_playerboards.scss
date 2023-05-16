@@ -101,25 +101,6 @@
 	}
 }
 
-@keyframes train-car-low-count-animation {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(3);
-		color: red;
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-
-@keyframes train-car-low-count-after-animation {
-	50% {
-		box-shadow: 0 0 10px 10px red;
-	}
-}
-
 .counters {
 	display: flex;
 	align-items: center;

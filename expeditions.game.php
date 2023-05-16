@@ -165,7 +165,7 @@ class Expeditions extends Table {
         // Gather all information about current game situation (visible by player $currentPlayerId).
 
         $result['claimedRoutes'] = $this->getClaimedRoutes();
-        $result['visibleTrainCards'] = $this->getSharedDestinationCards();
+        $result['sharedDestinations'] = $this->getSharedDestinationCards();
         $result['revealedDestinationsToDo'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getRevealedToDoDestinationsIds()));
 
         // private data : current player hidden informations
@@ -189,12 +189,7 @@ class Expeditions extends Table {
             }
         }
 
-        // deck counters
-        $result['destinationDeckCount'] = $this->getRemainingDestinationCardsInDeck();
-        $result['destinationDeckMaxCount'] = 30;
-
         $result['expansion'] = EXPANSION;
-
         $result['showTurnOrder'] = intval($this->getGameStateValue(SHOW_TURN_ORDER)) == 2;
 
         if ($isEnd) {
@@ -202,8 +197,6 @@ class Expeditions extends Table {
         } else {
             $result['lastTurn'] = $this->getGameStateValue(LAST_TURN) > 0;
         }
-
-
         return $result;
     }
 

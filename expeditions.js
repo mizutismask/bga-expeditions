@@ -1982,33 +1982,6 @@ var TtrMap = /** @class */ (function () {
         }
     };
     /**
-     * Highlight hovered route (when dragging train cars).
-     */
-    /*public setHoveredRoute(route: Route | null, valid: boolean | null = null) {
-        this.inMapZoomManager.setHoveredRoute(route);
-
-        if (route) {
-            [route.from, route.to].forEach((city) => {
-                const cityDiv = document.getElementById(`city${city}`);
-                cityDiv.dataset.hovered = "true";
-                cityDiv.dataset.valid = valid.toString();
-            });
-
-            if (valid) {
-                this.setWagons(route, this.game.getCurrentPlayer(), null, true);
-            }
-        } else {
-            this.getAllRoutes().forEach((r) =>
-                [r.from, r.to].forEach((city) => (document.getElementById(`city${city}`).dataset.hovered = "false"))
-            );
-
-            // remove phantom wagons
-            this.mapDiv
-                .querySelectorAll(".wagon.phantom")
-                .forEach((spaceDiv) => spaceDiv.parentElement.removeChild(spaceDiv));
-        }
-    }*/
-    /**
      * Highlight cities of selectable destination.
      */
     TtrMap.prototype.setSelectableDestination = function (destination, visible) {
@@ -2296,111 +2269,6 @@ var SharedDestinationDeck = /** @class */ (function () {
         this.sharedDestinationsStock.removeCard(destination);
     };
     return SharedDestinationDeck;
-}());
-var DBL_CLICK_TIMEOUT = 300;
-var SPOTS_COUNT = 6;
-/**
- * Selection of new train cars and destination cards.
- */
-var TrainCarSelection = /** @class */ (function () {
-    /**
-     * Init stocks.
-     */
-    function TrainCarSelection(game, visibleCards, sharedDestinationDeck, destinationDeckCount, destinationDeckMaxCount) {
-        this.game = game;
-        this.visibleCards = [];
-        this.dblClickTimeout = null;
-        this.sharedDestinationDeck = sharedDestinationDeck;
-        /*for (let i = 1; i <= SPOTS_COUNT; i++) {
-            this.visibleCardsSpots[i] = new VisibleCardSpot(game, i);
-        }*/
-        //console.log("new TrainCarSelection", visibleCards);
-        this.visibleCards = Object.values(visibleCards);
-        this.setNewSharedCardsOnTable(visibleCards, false);
-    }
-    /**
-     * Set selection of hidden cards deck.
-     */
-    TrainCarSelection.prototype.setSelectableTopDeck = function (selectable, number) {
-        if (number === void 0) { number = 0; }
-        /*dojo.toggleClass(
-            "train-car-deck-hidden-pile",
-            "selectable",
-            selectable
-        );*/
-    };
-    /**
-     * Set selectable visible cards (locomotive can't be selected if 1 visible card has been picked).
-     */
-    TrainCarSelection.prototype.setSelectableVisibleCards = function (availableVisibleCards) {
-        for (var i = 1; i <= SPOTS_COUNT; i++) {
-            /*this.visibleCardsSpots[i].setSelectableVisibleCards(
-                availableVisibleCards
-            );*/
-        }
-    };
-    /**
-     * Reset visible cards state.
-     */
-    TrainCarSelection.prototype.removeSelectableVisibleCards = function () {
-        for (var i = 1; i <= SPOTS_COUNT; i++) {
-            /*this.visibleCardsSpots[i].removeSelectableVisibleCards();*/
-        }
-    };
-    /**
-     * Set new visible cards.
-     */
-    TrainCarSelection.prototype.setNewSharedCardsOnTable = function (spotsCards, fromDeck) {
-        this.sharedDestinationDeck.setCards(spotsCards);
-        this.game.showSharedDestinations(spotsCards);
-    };
-    /**
-     * Get HTML Element represented by "origin" (0 means invisible, 1 to 5 are visible cards).
-     */
-    TrainCarSelection.prototype.getStockElement = function (origin) {
-        return origin === 0
-            ? document.getElementById("train-car-deck-hidden-pile")
-            : document.getElementById("visible-train-cards-stock".concat(origin));
-    };
-    /**
-     * Animation when train car cards are picked by another player.
-     */
-    TrainCarSelection.prototype.moveTrainCarCardToPlayerBoard = function (playerId, from, number) {
-        var _this = this;
-        if (number === void 0) { number = 1; }
-        if (from > 0) {
-            /*this.visibleCardsSpots[from].moveTrainCarCardToPlayerBoard(
-                playerId
-            );*/
-        }
-        else {
-            var _loop_1 = function (i) {
-                setTimeout(function () {
-                    dojo.place("\n                    <div id=\"animated-train-car-card-0-".concat(i, "\" class=\"animated train-car-card from-hidden-pile\"></div>\n                    "), document.getElementById("train-car-deck-hidden-pile"));
-                    animateCardToCounterAndDestroy(_this.game, "animated-train-car-card-0-".concat(i), "tickets-counter-".concat(playerId, "-wrapper"));
-                }, 200 * i);
-            };
-            for (var i = 0; i < number; i++) {
-                _loop_1(i);
-            }
-        }
-    };
-    /**
-     * Animation when destination cards are picked by another player.
-     */
-    TrainCarSelection.prototype.moveDestinationCardToPlayerBoard = function (playerId, number) {
-        var _this = this;
-        var _loop_2 = function (i) {
-            setTimeout(function () {
-                dojo.place("\n                <div id=\"animated-destination-card-".concat(i, "\" class=\"animated-destination-card\"></div>\n                "), "overall_player_board_" + playerId);
-                animateCardToCounterAndDestroy(_this.game, "animated-destination-card-".concat(i), "destinations-counter-".concat(playerId, "-wrapper"));
-            }, 200 * i);
-        };
-        for (var i = 0; i < number; i++) {
-            _loop_2(i);
-        }
-    };
-    return TrainCarSelection;
 }());
 /**
  * Player table : destination cards.
@@ -2852,7 +2720,7 @@ var Expeditions = /** @class */ (function () {
         this.destinationCardsManager = new CardsManager(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
-        this.trainCarSelection = new TrainCarSelection(this, gamedatas.visibleTrainCards, this.sharedDestinations, gamedatas.destinationDeckCount, gamedatas.destinationDeckMaxCount);
+        this.showSharedDestinations(Object.values(gamedatas.sharedDestinations));
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
             this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
@@ -4414,11 +4282,11 @@ var CardStock = /** @class */ (function () {
             return;
         }
         if (shift) {
-            var _loop_3 = function (i) {
+            var _loop_1 = function (i) {
                 setTimeout(function () { return _this.addCard(cards[i], animation, settings); }, i * shift);
             };
             for (var i = 0; i < cards.length; i++) {
-                _loop_3(i);
+                _loop_1(i);
             }
         }
         else {

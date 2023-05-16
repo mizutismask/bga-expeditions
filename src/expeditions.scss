@@ -78,20 +78,6 @@ html,
 	}
 }
 
-#page-title {
-	.color-cards {
-		display: inline-block;
-
-		.icon.train-car-color:not(:first-child) {
-			margin-left: -20px;
-		}
-	}
-
-	.icon.train-car-color {
-		margin: -5px 0px;
-	}
-}
-
 .timer-button {
 	//transition: width 1s ease-in-out; //todo does not work on inline elts maybe see https://stackoverflow.com/questions/33057737/css-replacing-a-text-on-hover-but-smooth-transition-to-the-new-text-does-not-w
 }

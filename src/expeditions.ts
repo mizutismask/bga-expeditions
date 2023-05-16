@@ -31,7 +31,6 @@ class Expeditions implements ExpeditionsGame {
     private gamedatas: ExpeditionsGamedatas;
 
     public map: TtrMap;
-    private trainCarSelection: TrainCarSelection;
     private destinationSelection: DestinationSelection;
     private sharedDestinations: SharedDestinationDeck;
     public destinationCardsManager: CardsManager;
@@ -87,14 +86,7 @@ class Expeditions implements ExpeditionsGame {
         this.destinationCardsManager = new CardsManager(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
-
-        this.trainCarSelection = new TrainCarSelection(
-            this,
-            gamedatas.visibleTrainCards,
-            this.sharedDestinations,
-            gamedatas.destinationDeckCount,
-            gamedatas.destinationDeckMaxCount
-        );
+        this.showSharedDestinations(Object.values(gamedatas.sharedDestinations));
 
         const player = gamedatas.players[this.getPlayerId()];
         if (player) {

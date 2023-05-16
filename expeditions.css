@@ -154,23 +154,6 @@
   background: url("img/help2.jpg") no-repeat;
 }
 
-@keyframes train-car-low-count-animation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(3);
-    color: red;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes train-car-low-count-after-animation {
-  50% {
-    box-shadow: 0 0 10px 10px red;
-  }
-}
 .counters {
   display: flex;
   align-items: center;
@@ -849,18 +832,6 @@
 .player-table-train-cars.left {
   flex-direction: column;
 }
-.player-table-train-cars.left .train-car-group {
-  margin: -40px 0;
-  width: 260px;
-  height: 170px;
-}
-.player-table-train-cars.left .train-car-group .train-car-group-counter {
-  margin-top: unset;
-  font-size: 450%;
-}
-.player-table-train-cars.left .train-car-group .train-car-cards {
-  transform: unset;
-}
 
 @keyframes selected-card-animation {
   from {
@@ -870,62 +841,6 @@
     box-shadow: 0 0 10px 10px white;
   }
 }
-.train-car-group {
-  position: relative;
-  left: 0px;
-  width: 170px;
-  height: 260px;
-  margin: 0 -20px;
-  transform-origin: top center;
-  user-select: none;
-}
-.train-car-group[draggable=true] {
-  cursor: pointer;
-  touch-action: none;
-}
-.train-car-group.hide {
-  display: none;
-}
-.train-car-group.selected .train-car-card {
-  animation: selected-card-animation 1.5s 1 alternate ease-in-out;
-  animation-iteration-count: infinite;
-}
-.train-car-group .train-car-group-counter {
-  width: 100%;
-  text-align: center;
-  font-size: 600%;
-  color: white;
-  -webkit-text-stroke: 3px black;
-  position: relative;
-  z-index: 1;
-  font-weight: bold;
-  margin-top: 15px;
-  pointer-events: none;
-}
-.train-car-group .train-car-cards {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 209px;
-  pointer-events: none;
-  transform-origin: center center;
-  transform: rotate(90deg) translate(48px, 41px);
-}
-.train-car-group.drag {
-  position: absolute;
-  top: -1000px;
-  left: -1000px;
-  width: 190px;
-  height: 280px;
-  padding-top: 10px;
-  zoom: 0.5;
-}
-.train-car-group.disabled {
-  filter: contrast(0.6);
-  cursor: not-allowed;
-}
-
 .player-table {
   display: flex;
   z-index: 25;
@@ -1223,16 +1138,6 @@ html,
   cursor: not-allowed;
 }
 
-#page-title .color-cards {
-  display: inline-block;
-}
-#page-title .color-cards .icon.train-car-color:not(:first-child) {
-  margin-left: -20px;
-}
-#page-title .icon.train-car-color {
-  margin: -5px 0px;
-}
-
 .place-arrow-button.selected {
   background-color: #56a8d1;
 }
@@ -1377,3 +1282,5 @@ html[data-color-blind=true] [data-color-blind-player-no="4"]::after {
 html[data-color-blind=true] [data-color-blind-player-no="5"]::after {
   content: "⬟";
 }
+
+/*# sourceMappingURL=expeditions.css.map */
