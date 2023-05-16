@@ -3294,6 +3294,13 @@ var Expeditions = /** @class */ (function () {
         var args = this.gamedatas.gamestate.args;
         if (selectedColor) {
             this.map.setSelectableRoutes(true, args.possibleRoutes.filter(function (route) { return route.color === selectedColor; }));
+            //makes routes of the selected color on top
+            document.querySelectorAll(".selectable:not([data-color=\"".concat(selectedColor, "\"])")).forEach(function (r) {
+                r.style.zIndex = "100";
+            });
+            document
+                .querySelectorAll(".selectable[data-color=\"".concat(selectedColor, "\"]"))
+                .forEach(function (r) { return (r.style.zIndex = "101"); });
         }
     };
     /**

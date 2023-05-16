@@ -646,6 +646,14 @@ class Expeditions implements ExpeditionsGame {
                 true,
                 args.possibleRoutes.filter((route) => route.color === selectedColor)
             );
+
+            //makes routes of the selected color on top
+            document.querySelectorAll(`.selectable:not([data-color="${selectedColor}"])`).forEach((r: HTMLElement) => {
+                r.style.zIndex = "100";
+            });
+            document
+                .querySelectorAll(`.selectable[data-color="${selectedColor}"]`)
+                .forEach((r: HTMLElement) => (r.style.zIndex = "101"));
         }
     }
 
