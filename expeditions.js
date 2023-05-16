@@ -1609,10 +1609,12 @@ var TtrMap = /** @class */ (function () {
             if (length <= 60) {
                 size = "S";
             }
-            if (length <= 95) {
+            else if (length <= 95) {
                 size = "M";
             }
-            size = "L";
+            else {
+                size = "L";
+            }
         });
         return size;
     };

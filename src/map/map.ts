@@ -308,11 +308,11 @@ class TtrMap {
             let length = space.length;
             if (length <= 60) {
                 size = "S";
-            }
-            if (length <= 95) {
+            } else if (length <= 95) {
                 size = "M";
+            } else {
+                size = "L";
             }
-            size = "L";
         });
         return size;
     }
