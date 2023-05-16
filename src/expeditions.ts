@@ -186,7 +186,7 @@ class Expeditions implements ExpeditionsGame {
     }
 
     /**
-     * Show selectable routes, and make train car draggable.
+     * Show selectable routes.
      */
     private onEnteringChooseAction(args: EnteringChooseActionArgs) {
         if (args.loopToResolve) {

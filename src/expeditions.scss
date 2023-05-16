@@ -8,11 +8,6 @@ $player-colors: (
 	"blue": "30b0e1",
 	"red": "df3e33",
 );
-$wagon-colors: (
-	"red": "3",
-	"blue": "1",
-	"yellow": "2",
-);
 
 @import "playerboards";
 @import "map/map";
@@ -215,45 +210,5 @@ html,
 		flex: 1;
 		margin-left: unset;
 		min-width: 200px;
-	}
-}
-
-html[data-color-blind="true"] {
-	[data-color-blind-player-no]::after {
-		font-size: 120%;
-		display: flex;
-		justify-content: center;
-		color: white;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		align-items: center;
-		text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;
-	}
-
-	.wagon::after {
-		font-size: 200%;
-	}
-
-	[data-color-blind-player-no="1"]::after {
-		content: "●"; // circle
-	}
-
-	[data-color-blind-player-no="2"]::after {
-		content: "▲"; // triangle
-	}
-
-	[data-color-blind-player-no="3"]::after {
-		content: "■"; // square
-	}
-
-	[data-color-blind-player-no="4"]::after {
-		content: "◆"; // diamond
-	}
-
-	[data-color-blind-player-no="5"]::after {
-		content: "⬟"; // pentagon
 	}
 }

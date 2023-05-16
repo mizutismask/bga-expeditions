@@ -2802,7 +2802,7 @@ var Expeditions = /** @class */ (function () {
         this.map.setRemovableRoutes(currentPlayerActive, args.unclaimableRoutes);
     };
     /**
-     * Show selectable routes, and make train car draggable.
+     * Show selectable routes.
      */
     Expeditions.prototype.onEnteringChooseAction = function (args) {
         if (args.loopToResolve) {
