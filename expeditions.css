@@ -307,6 +307,9 @@
   opacity: 1;
   background: radial-gradient(#61f155 30%, rgb(29, 114, 39)) border-box;
   border-radius: 50em;
+  width: 36px;
+  height: 36px;
+  margin: -18px;
 }
 .city[data-to-connect=true][data-selectable=false]:not([data-revealed-by]) {
   background: grey;
@@ -361,6 +364,9 @@
 }
 .city[data-revealed-by][data-revealed-by=shared] {
   background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
+  width: 30px;
+  height: 30px;
+  margin: -15px;
 }
 
 @keyframes cityToReach {
