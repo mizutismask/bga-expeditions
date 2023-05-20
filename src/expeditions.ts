@@ -1240,13 +1240,21 @@ class Expeditions implements ExpeditionsGame {
                     args.arrowColor = `<div class="arrow icon ${this.getColorName(args.arrowColor)}"></div>`;
                 }
 
-                // make cities names in bold
-                ["from", "to", "cities_names"].forEach((field) => {
-                    if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
-                        args[field] = `<strong>${_(args[field])}</strong>`;
+                // make red and blue points red and blue and strong
+                ["from", "to"].forEach((field) => {
+                    if (args[field] !== null && args[field] !== undefined && args[field].includes("blue point")) {
+                        args[field] = `<strong><span style="color:blue">${_(args[field])}</span></strong>`;
+                    } else if (args[field] !== null && args[field] !== undefined && args[field].includes("red point")) {
+                        args[field] = `<strong><span style="color:red">${_(args[field])}</span></strong>`;
                     }
                 });
 
+                // make cities names in bold
+                ["from", "to", "cities_names"].forEach((field) => {
+                    if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
+                        args[field] = `<span style="color:#2cd51e"><strong>${_(args[field])}</strong></span>`;
+                    }
+                });
                 ["you", "actplayer", "player_name"].forEach((field) => {
                     if (
                         typeof args[field] === "string" &&

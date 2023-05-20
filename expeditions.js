@@ -3686,10 +3686,19 @@ var Expeditions = /** @class */ (function () {
                 if (typeof args.arrowColor == "number") {
                     args.arrowColor = "<div class=\"arrow icon ".concat(this.getColorName(args.arrowColor), "\"></div>");
                 }
+                // make red and blue points red and blue and strong
+                ["from", "to"].forEach(function (field) {
+                    if (args[field] !== null && args[field] !== undefined && args[field].includes("blue point")) {
+                        args[field] = "<strong><span style=\"color:blue\">".concat(_(args[field]), "</span></strong>");
+                    }
+                    else if (args[field] !== null && args[field] !== undefined && args[field].includes("red point")) {
+                        args[field] = "<strong><span style=\"color:red\">".concat(_(args[field]), "</span></strong>");
+                    }
+                });
                 // make cities names in bold
                 ["from", "to", "cities_names"].forEach(function (field) {
                     if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
-                        args[field] = "<strong>".concat(_(args[field]), "</strong>");
+                        args[field] = "<span style=\"color:#2cd51e\"><strong>".concat(_(args[field]), "</strong></span>");
                     }
                 });
                 ["you", "actplayer", "player_name"].forEach(function (field) {
