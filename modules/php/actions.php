@@ -251,9 +251,10 @@ trait ActionTrait {
     private function earnTicket(int $playerId) {
         $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
         self::incStat(1, STAT_TICKETS_EARNED, $playerId);
-        self::notifyAllPlayers('msg', clienttranslate('${player_name} gains 1 ticket'), [
+        self::notifyAllPlayers('msg', clienttranslate('${player_name} gains 1 ${ticket}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
+            'ticket' => 1,
         ]);
     }
 

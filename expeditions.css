@@ -981,6 +981,11 @@ html,
   width: 21.6px;
   height: 10.2px;
 }
+#logs .icon.expTicket {
+  width: 30px;
+  height: 17.4px;
+  vertical-align: top;
+}
 
 /* Makes the svg arrow to change color */
 .arrow {

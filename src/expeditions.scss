@@ -96,6 +96,11 @@ html,
         width: calc(36px * 0.6);
         height: calc(17px * 0.6);
     }
+    .icon.expTicket {
+        width: calc(50px * 0.6);
+        height: calc(29px * 0.6);
+        vertical-align: top;
+    }
 }
 /* Makes the svg arrow to change color */
 .arrow {

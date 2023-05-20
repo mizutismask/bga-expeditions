@@ -3686,6 +3686,9 @@ var Expeditions = /** @class */ (function () {
                 if (typeof args.arrowColor == "number") {
                     args.arrowColor = "<div class=\"arrow icon ".concat(this.getColorName(args.arrowColor), "\"></div>");
                 }
+                if (typeof args.ticket == "number") {
+                    args.ticket = "<div class=\"icon expTicket\"></div>";
+                }
                 // make red and blue points red and blue and strong
                 ["from", "to"].forEach(function (field) {
                     if (args[field] !== null && args[field] !== undefined && args[field].includes("blue point")) {

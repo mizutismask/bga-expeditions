@@ -1239,6 +1239,9 @@ class Expeditions implements ExpeditionsGame {
                 if (typeof args.arrowColor == "number") {
                     args.arrowColor = `<div class="arrow icon ${this.getColorName(args.arrowColor)}"></div>`;
                 }
+                if (typeof args.ticket == "number") {
+                    args.ticket = `<div class="icon expTicket"></div>`;
+                }
 
                 // make red and blue points red and blue and strong
                 ["from", "to"].forEach((field) => {
