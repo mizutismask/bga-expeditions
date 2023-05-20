@@ -363,6 +363,17 @@
   background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
 }
 
+@keyframes cityToReach {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .route-space {
   background-position: center;
   background-repeat: no-repeat;
