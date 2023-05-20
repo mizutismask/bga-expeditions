@@ -136,14 +136,14 @@ trait ActionTrait {
         $target = $reverseDirection ? $route->from : $route->to;
         $destinationColor = $this->getLocationColor($target);
 
-        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${color} arrow on the route from ${from} to ${to}'), [
+        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name} places a ${arrowColor} on the route from ${from} to ${to}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'route' => $route,
             'reverseDirection' => $reverseDirection,
             'from' => $this->getLocationName($reverseDirection ? $route->to : $route->from),
             'to' => $this->getLocationName($reverseDirection ? $route->from : $route->to),
-            'color' => $this->getColorName($color),
+            'arrowColor' => $color,
             'ticketsGained' => $destinationColor == RED ? 1 : 0,
             'isDestinationBlue' => $destinationColor == BLUE ? 1 : 0,
             'claimedRoutes' => $this->getClaimedRoutes(),

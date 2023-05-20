@@ -3683,16 +3683,11 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.format_string_recursive = function (log, args) {
         try {
             if (log && args && !args.processed) {
-                if (typeof args.color == "number") {
-                    args.color = "<div class=\"train-car-color icon\" data-color=\"".concat(args.color, "\"></div>");
-                }
-                if (typeof args.colors == "object") {
-                    args.colors = args.colors
-                        .map(function (color) { return "<div class=\"train-car-color icon\" data-color=\"".concat(color, "\"></div>"); })
-                        .join("");
+                if (typeof args.arrowColor == "number") {
+                    args.arrowColor = "<div class=\"arrow icon ".concat(this.getColorName(args.arrowColor), "\"></div>");
                 }
                 // make cities names in bold
-                ["from", "to", "count", "extraCards", "pickedCards"].forEach(function (field) {
+                ["from", "to", "cities_names"].forEach(function (field) {
                     if (args[field] !== null && args[field] !== undefined && args[field][0] != "<") {
                         args[field] = "<strong>".concat(_(args[field]), "</strong>");
                     }
@@ -3710,6 +3705,16 @@ var Expeditions = /** @class */ (function () {
             console.error(log, args, "Exception thrown", e.stack);
         }
         return this.inherited(arguments);
+    };
+    Expeditions.prototype.getColorName = function (color) {
+        switch (color) {
+            case BLUE:
+                return "blue";
+            case YELLOW:
+                return "yellow";
+            case RED:
+                return "red";
+        }
     };
     return Expeditions;
 }());

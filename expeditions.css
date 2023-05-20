@@ -977,6 +977,11 @@ html,
   margin-left: 2px;
 }
 
+#logs .arrow {
+  width: 21.6px;
+  height: 10.2px;
+}
+
 /* Makes the svg arrow to change color */
 .arrow {
   width: 36px;
