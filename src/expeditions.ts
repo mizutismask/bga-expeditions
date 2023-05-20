@@ -563,6 +563,7 @@ class Expeditions implements ExpeditionsGame {
     }
 
     public showSharedDestinations(destinations: Destination[]): void {
+        this.sharedDestinations.setCards(destinations);
         this.map.showSharedDestinations(destinations);
     }
 
@@ -1104,8 +1105,7 @@ class Expeditions implements ExpeditionsGame {
      * Adds shared destinations.
      */
     notif_newSharedDestinationsOnTable(notif: Notif<NotifNewSharedDestinationsOnTableArgs>) {
-        this.sharedDestinations.setCards(notif.args.sharedDestinations);
-        this.map.showSharedDestinations(notif.args.sharedDestinations);
+        this.showSharedDestinations(notif.args.sharedDestinations);
     }
 
     /**

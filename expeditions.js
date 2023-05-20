@@ -3111,6 +3111,7 @@ var Expeditions = /** @class */ (function () {
         this.map.revealDestination(player, destination);
     };
     Expeditions.prototype.showSharedDestinations = function (destinations) {
+        this.sharedDestinations.setCards(destinations);
         this.map.showSharedDestinations(destinations);
     };
     /**
@@ -3563,8 +3564,7 @@ var Expeditions = /** @class */ (function () {
      * Adds shared destinations.
      */
     Expeditions.prototype.notif_newSharedDestinationsOnTable = function (notif) {
-        this.sharedDestinations.setCards(notif.args.sharedDestinations);
-        this.map.showSharedDestinations(notif.args.sharedDestinations);
+        this.showSharedDestinations(notif.args.sharedDestinations);
     };
     /**
      * Update player destinations.
