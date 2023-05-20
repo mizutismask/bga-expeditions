@@ -1571,12 +1571,22 @@ var TtrMap = /** @class */ (function () {
             .charAt(0)
             .toUpperCase());
     };
-    TtrMap.prototype.getColorShift = function (route, baseShift, shortRoutesShift) {
+    TtrMap.prototype.getColorShiftX = function (route, baseShift) {
         switch (route.color) {
             case BLUE:
-                return this.isShortRoute(route) ? -shortRoutesShift : -baseShift;
+                return -baseShift;
             case RED:
-                return this.isShortRoute(route) ? shortRoutesShift : baseShift;
+                return baseShift;
+            case YELLOW:
+                return 0;
+        }
+    };
+    TtrMap.prototype.getColorShiftY = function (route, baseShift) {
+        switch (route.color) {
+            case BLUE:
+                return this.isShortRoute(route) ? -(baseShift - 10) : -baseShift;
+            case RED:
+                return this.isShortRoute(route) ? baseShift + 10 : baseShift;
             case YELLOW:
                 return 0;
         }
@@ -1584,7 +1594,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.isShortRoute = function (route) {
         var angle = route.spaces[0].angle;
         //console.log("isShortRoute", route.id, angle > 35 && angle < 65);
-        return angle >= 35 && angle < 65;
+        return angle >= 35 && angle < 45;
         //return false;
     };
     TtrMap.prototype.createRouteSpaces = function () {
@@ -1727,29 +1737,28 @@ var TtrMap = /** @class */ (function () {
         if (route.color === YELLOW) {
             return;
         }
-        var shift = route.color === BLUE ? 15 : -15;
+        var shiftX = this.getColorShiftX(route, 15);
+        var shiftY = this.getColorShiftY(route, 15);
         var sameRoutes = this.getAllRoutes().filter(function (r) { return route.from == r.from && route.to == r.to && allClaimedRoutes.find(function (cr) { return cr.routeId === r.id; }); });
-        var blueRoute = sameRoutes.find(function (r) { return r.color === BLUE; });
         var yellowRoute = sameRoutes.find(function (r) { return r.color === YELLOW; });
-        var redRoute = sameRoutes.find(function (r) { return r.color === RED; });
-        console.log("shiftArrowIfNeeded ", route);
-        console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
+        //console.log("shiftArrowIfNeeded ", route);
+        //console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
         if (sameRoutes.length === 3) {
             //shift needed, yellow is never moved
             if (route.color == BLUE)
-                this.shiftArrow(route, -shift);
+                this.shiftArrow(route, shiftX, shiftY);
             if (route.color == RED)
-                this.shiftArrow(route, shift);
+                this.shiftArrow(route, shiftX, shiftY);
         }
         else if (sameRoutes.length == 2) {
             if (yellowRoute) {
                 //const otherColor = sameRoutes.find((r) => r.color !== YELLOW);
                 if (route.color != YELLOW)
-                    this.shiftArrow(route, -shift);
+                    this.shiftArrow(route, shiftX, shiftY);
             }
             else {
                 if (route.color == BLUE)
-                    this.shiftArrow(route, -shift);
+                    this.shiftArrow(route, shiftX, shiftY);
             }
         }
     };
@@ -1792,10 +1801,10 @@ var TtrMap = /** @class */ (function () {
     /**
      * Shifts given arrow if it has not been shifted before.
      */
-    TtrMap.prototype.shiftArrow = function (route, shift) {
+    TtrMap.prototype.shiftArrow = function (route, shiftX, shiftY) {
         var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
         if (!routeDiv.dataset.shifted) {
-            console.log("shift arrow", route, shift);
+            //console.log("shift arrow", route, shiftX, shiftY);
             var space = route.spaces[0];
             var angle = -space.angle;
             while (angle < 0) {
@@ -1807,17 +1816,17 @@ var TtrMap = /** @class */ (function () {
             var x = space.x;
             var y = space.y;
             // we shift a little the train car to let the other route visible
-            x += Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180)));
-            y += Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180)));
+            x += Math.round(shiftX * Math.abs(Math.sin((angle * Math.PI) / 180)));
+            y += Math.round(shiftY * Math.abs(Math.cos((angle * Math.PI) / 180)));
             var oldTransform = routeDiv.style.transform;
-            console.log("oldTransform", oldTransform);
+            //console.log("oldTransform", oldTransform);
             var newTransform = oldTransform.replace(new RegExp("translate(.*px, .*px)"), "translate(".concat(x, "px, ").concat(y, "px"));
-            console.log("newTransform", newTransform);
+            //console.log("newTransform", newTransform);
             routeDiv.dataset.shifted = "true";
             routeDiv.style.transform = newTransform;
         }
         else {
-            console.log("shift aborted, route already shifted", route, shift);
+            //console.log("shift aborted, route already shifted", route, shiftX, shiftY);
         }
     };
     /**
