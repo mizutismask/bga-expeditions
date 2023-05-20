@@ -314,9 +314,10 @@ trait ActionTrait {
         $origin = $this->getRouteOrigin($route, $claimedRoute);
 
         $claimedRoutes = $this->getClaimedRoutes();
-        $comingOut = array_filter($claimedRoutes, fn ($route) => $this->getRouteOriginFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
-        $comingIn = array_filter($claimedRoutes, fn ($route) => $this->getRouteDestinationFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
-
+        $comingOut = array_filter($claimedRoutes, fn ($route) => $this->getRoute($route->routeId)->color === $unclaimedRoute->color && $this->getRouteOriginFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
+        $comingIn = array_filter($claimedRoutes, fn ($route) => $this->getRoute($route->routeId)->color === $unclaimedRoute->color && $this->getRouteDestinationFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
+        //self::dump("*******************coming in", $comingIn);
+        //self::dump("*******************coming out", $comingOut);
         $loop = !empty($comingOut) && !empty($comingIn);
         if ($loop) {
             $this->loopFound($playerId, $unclaimedRoute->color);
@@ -324,7 +325,7 @@ trait ActionTrait {
         return $this->isLoopUsefull($loop, $unclaimedRoute->color);
     }
 
-    private function isLoopUsefull($loop,$routeColor):bool{
+    private function isLoopUsefull($loop, $routeColor): bool {
         return $loop && $this->getRemainingArrows($routeColor) >= 0;
     }
 
