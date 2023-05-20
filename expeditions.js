@@ -1678,7 +1678,7 @@ var TtrMap = /** @class */ (function () {
         var index = 0;
         var space = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index));
         var id = "remove-arrow-handle-".concat(route.id);
-        dojo.place("\n            <div id=".concat(id, " class=\"remove-arrow-handle\" transform=\"translate(-50%, -50%)\">&#10060;</div>\n            "), space.id);
+        dojo.place("\n            <div id=".concat(id, " class=\"remove-arrow-handle\" transform=\"translate(-50%, -50%)\"></div>\n            "), space.id);
         $(id).addEventListener("click", function () { return _this.game.clickedRemovableRoute(route); });
     };
     /**

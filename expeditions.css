@@ -464,13 +464,23 @@
   background: url("img/forbidden.png") no-repeat;
   background-position: center center;
 }
-.route-space.removable {
-  pointer-events: auto;
-  cursor: crosshair;
+.route-space .remove-arrow-handle {
+  width: 40px;
+  height: 40px;
+  background-size: 100%;
+  transition: zoom 0.2s;
 }
-
-.remove-arrow-handle {
-  font-size: xxx-large;
+.route-space .remove-arrow-handle:hover {
+  zoom: 1.2;
+}
+.route-space[data-color="1"] .remove-arrow-handle {
+  background-image: url("img/crossBlue.svg");
+}
+.route-space[data-color="2"] .remove-arrow-handle {
+  background-image: url("img/crossYellow.svg");
+}
+.route-space[data-color="3"] .remove-arrow-handle {
+  background-image: url("img/crossRed.svg");
 }
 
 @keyframes selectable-road-animation {
@@ -1067,5 +1077,3 @@ html,
   margin-left: unset;
   min-width: 200px;
 }
-
-/*# sourceMappingURL=expeditions.css.map */

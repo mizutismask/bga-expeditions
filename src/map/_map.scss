@@ -1,259 +1,276 @@
 #map-zoom-wrapper {
-	position: relative;
-	user-select: none;
-	display: flex;
-	justify-content: center;
+    position: relative;
+    user-select: none;
+    display: flex;
+    justify-content: center;
 
-	#map-zoom {
-		//flex: 1;
-		max-width: 100%; //calc(100% - 250px);
+    #map-zoom {
+        //flex: 1;
+        max-width: 100%; //calc(100% - 250px);
 
-		&.scrollable {
-			overflow: auto;
-		}
-	}
+        &.scrollable {
+            overflow: auto;
+        }
+    }
 
-	#zoom-button {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 120px;
-		height: 120px;
-		cursor: pointer;
-		background: url("img/zoom.png");
-		background-position: 66.66% 50%;
+    #zoom-button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        background: url("img/zoom.png");
+        background-position: 66.66% 50%;
 
-		&:hover {
-			background-position: 100% 50%;
+        &:hover {
+            background-position: 100% 50%;
 
-			&.zoomed {
-				background-position: 33.33% 50%;
-			}
-		}
-		&.zoomed {
-			background-position: 0% 50%;
-		}
-	}
+            &.zoomed {
+                background-position: 33.33% 50%;
+            }
+        }
+        &.zoomed {
+            background-position: 0% 50%;
+        }
+    }
 }
 
 .disable-scrollbars::-webkit-scrollbar {
-	background: transparent; /* Chrome/Safari/Webkit */
-	width: 0px;
-	display: none;
+    background: transparent; /* Chrome/Safari/Webkit */
+    width: 0px;
+    display: none;
 }
 
 .disable-scrollbars {
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
 }
 
 #resized {
-	transform-origin: top center;
+    transform-origin: top center;
 }
 
 #main-line {
-	display: flex;
+    display: flex;
 }
 
 #map-and-borders {
-	position: relative;
+    position: relative;
 }
 
 #map-destination-highlight-shadow {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 5;
-	pointer-events: none;
-	background: #00000099;
-	opacity: 0;
-	transition: opacity 0.2s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: #00000099;
+    opacity: 0;
+    transition: opacity 0.2s;
 
-	&[data-visible="true"] {
-		opacity: 1;
-	}
+    &[data-visible="true"] {
+        opacity: 1;
+    }
 }
 
 #map-zoom {
-	position: relative;
+    position: relative;
 }
 
 #map {
-	position: relative;
-	width: 1744px;
-	height: 1321px;
-	background: url("img/map.jpg");
-	transform-origin: top left;
-	box-shadow: 1px 1px 20px 3px black;
+    position: relative;
+    width: 1744px;
+    height: 1321px;
+    background: url("img/map.jpg");
+    transform-origin: top left;
+    box-shadow: 1px 1px 20px 3px black;
 }
 
 .city {
-	//radial-gradient(#7d57d5 2%, #4a0adf,#100f103d 67%)  border-box
-	display: inline-block;
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	margin: -15px;
-	pointer-events: none;
-	//opacity: 0;
-	transition: opacity 0.2s;
-	position: relative;
-	z-index: 1;
+    //radial-gradient(#7d57d5 2%, #4a0adf,#100f103d 67%)  border-box
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: -15px;
+    pointer-events: none;
+    //opacity: 0;
+    transition: opacity 0.2s;
+    position: relative;
+    z-index: 1;
 
-	&[data-to-connect="true"] {
-		z-index: 8;
-		opacity: 1;
-		background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
-		border-radius: 50em;
+    &[data-to-connect="true"] {
+        z-index: 8;
+        opacity: 1;
+        background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
+        border-radius: 50em;
 
-		&[data-selectable="false"] {
-			&:not([data-revealed-by]) {
-				background: grey;
-			}
-		}
-		&:not([data-selectable]):not([data-revealed-by]) {
-			background: grey;
-		}
-	}
-	&[data-selectable="true"] {
-		z-index: 8;
-		opacity: 1;
-		background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
-		border-radius: 50em;
-	}
-	&[data-selected="true"] {
-		z-index: 8;
-		opacity: 1;
-	}
-	&[data-highlight="true"] {
-		z-index: 8;
-		-webkit-box-shadow: 0px 0px 1px 13px yellow;
-		box-shadow: 0px 0px 1px 13px yellow;
-		opacity: 1;
-	}
-	&[data-revealed-by] {
-		z-index: 8;
-		opacity: 1;
-		border-radius: 50px;
-		box-sizing: border-box;
-		background-image: url("img/tokens.png");
-		width: 40px;
-		height: 40px;
-		margin: -20px;
-		background-size: auto 100%;
-		&[data-revealed-by="d8d7d7"] {
-			background-position: #{calc(0 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="df74b2"] {
-			background-position: #{calc(1 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="eca51c"] {
-			background-position: #{calc(2 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="77bd25"] {
-			background-position: #{calc(3 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="30b0e1"] {
-			background-position: #{calc(4 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="df3e33"] {
-			background-position: #{calc(5 * 100% / 5)} 50%;
-		}
-		&[data-revealed-by="shared"] {
-			background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
-		}
-	}
+        &[data-selectable="false"] {
+            &:not([data-revealed-by]) {
+                background: grey;
+            }
+        }
+        &:not([data-selectable]):not([data-revealed-by]) {
+            background: grey;
+        }
+    }
+    &[data-selectable="true"] {
+        z-index: 8;
+        opacity: 1;
+        background: radial-gradient(#61f155 30%, rgb(29 114 39)) border-box; //lighter green
+        border-radius: 50em;
+    }
+    &[data-selected="true"] {
+        z-index: 8;
+        opacity: 1;
+    }
+    &[data-highlight="true"] {
+        z-index: 8;
+        -webkit-box-shadow: 0px 0px 1px 13px yellow;
+        box-shadow: 0px 0px 1px 13px yellow;
+        opacity: 1;
+    }
+    &[data-revealed-by] {
+        z-index: 8;
+        opacity: 1;
+        border-radius: 50px;
+        box-sizing: border-box;
+        background-image: url("img/tokens.png");
+        width: 40px;
+        height: 40px;
+        margin: -20px;
+        background-size: auto 100%;
+        &[data-revealed-by="d8d7d7"] {
+            background-position: #{calc(0 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="df74b2"] {
+            background-position: #{calc(1 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="eca51c"] {
+            background-position: #{calc(2 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="77bd25"] {
+            background-position: #{calc(3 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="30b0e1"] {
+            background-position: #{calc(4 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="df3e33"] {
+            background-position: #{calc(5 * 100% / 5)} 50%;
+        }
+        &[data-revealed-by="shared"] {
+            background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
+        }
+    }
 }
 
 .route-space {
-	//background: #ff000026;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: contain;
+    //background: #ff000026;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	//margin: 10px;
-	//border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //margin: 10px;
+    //border: 1px solid;
 
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 54px;
-	height: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 54px;
+    height: 16px;
 
-	@each $size in "S", "M", "L" {
-		@each $reverse in "R", "N" {
-			@each $color in "B", "Y", "R" {
-				&.arrow#{$size}#{$reverse}#{$color} {
-					background-image: url("img/arrow#{$size}#{$reverse}#{$color}.svg");
-				}
-			}
-		}
-	}
+    @each $size in "S", "M", "L" {
+        @each $reverse in "R", "N" {
+            @each $color in "B", "Y", "R" {
+                &.arrow#{$size}#{$reverse}#{$color} {
+                    background-image: url("img/arrow#{$size}#{$reverse}#{$color}.svg");
+                }
+            }
+        }
+    }
 
-	&.selectable {
-		cursor: pointer;
+    &.selectable {
+        cursor: pointer;
 
-		&::before {
-			height: 19px;
-			content: "";
-			position: absolute;
-			//top: -15px;
-			//bottom: -13px;
-			//left: -10px;
-			//right: -15px;
+        &::before {
+            height: 19px;
+            content: "";
+            position: absolute;
+            //top: -15px;
+            //bottom: -13px;
+            //left: -10px;
+            //right: -15px;
 
-			top: -7px;
-			bottom: 0px;
-			left: -1px;
-			right: 13px;
-			background: url("img/road-highlight.png") no-repeat;
-			background-size: 300% 100%;
+            top: -7px;
+            bottom: 0px;
+            left: -1px;
+            right: 13px;
+            background: url("img/road-highlight.png") no-repeat;
+            background-size: 300% 100%;
 
-			animation: selectable-road-animation 1s alternate-reverse infinite ease-in-out;
-		}
+            animation: selectable-road-animation 1s alternate-reverse infinite ease-in-out;
+        }
 
-		@for $i from 1 through 3 {
-			&[data-color="#{$i}"] {
-				&::before {
-					background-position: #{($i - 1) * 50%} 50%;
-				}
-			}
-		}
-	}
+        @for $i from 1 through 3 {
+            &[data-color="#{$i}"] {
+                &::before {
+                    background-position: #{($i - 1) * 50%} 50%;
+                }
+            }
+        }
+    }
 
-	&.forbidden {
-		&::before {
-			content: "";
-			position: absolute;
-			top: -13px;
-			bottom: -13px;
-			left: 0;
-			right: 0;
-			background: url("img/forbidden.png") no-repeat;
-			background-position: center center;
-		}
-	}
+    &.forbidden {
+        &::before {
+            content: "";
+            position: absolute;
+            top: -13px;
+            bottom: -13px;
+            left: 0;
+            right: 0;
+            background: url("img/forbidden.png") no-repeat;
+            background-position: center center;
+        }
+    }
 
-	&.removable {
-		pointer-events: auto;
-		cursor: crosshair;
-	}
-}
+    .remove-arrow-handle {
+        width: 40px;
+        height: 40px;
+        background-size: 100%;
+        transition: zoom 0.2s;
+        &:hover {
+            zoom: 1.2;
+        }
+    }
 
-.remove-arrow-handle {
-	font-size: xxx-large;
+    &[data-color="1"] {
+        .remove-arrow-handle {
+            background-image: url("img/crossBlue.svg");
+        }
+    }
+    &[data-color="2"] {
+        .remove-arrow-handle {
+            background-image: url("img/crossYellow.svg");
+        }
+    }
+    &[data-color="3"] {
+        .remove-arrow-handle {
+            background-image: url("img/crossRed.svg");
+        }
+    }
 }
 
 @keyframes selectable-road-animation {
-	from {
-		opacity: 0.5;
-	}
-	to {
-		opacity: 1;
-	}
+    from {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
 }

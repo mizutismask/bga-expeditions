@@ -380,7 +380,7 @@ class TtrMap {
         let id = `remove-arrow-handle-${route.id}`;
         dojo.place(
             `
-            <div id=${id} class="remove-arrow-handle" transform="translate(-50%, -50%)">&#10060;</div>
+            <div id=${id} class="remove-arrow-handle" transform="translate(-50%, -50%)"></div>
             `,
             space.id
         );
