@@ -2411,8 +2411,9 @@ var PlayerDestinations = /** @class */ (function () {
     /**
      * Mark destination as complete (place it on the "complete" column).
      */
-    PlayerDestinations.prototype.markDestinationCompleteNoAnimation = function (destination) {
-        //console.log("markDestinationComplete");
+    PlayerDestinations.prototype.markDestinationCompleteNoAnimation = function (destination, withinAnimation) {
+        if (withinAnimation === void 0) { withinAnimation = false; }
+        //console.log("markDestinationComplete", destination);
         if (destination.location_arg === this.playerId) {
             var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
             if (index !== -1) {
@@ -2423,7 +2424,9 @@ var PlayerDestinations = /** @class */ (function () {
                 this.destinationsDone.push(destination);
                 // fromStock: this.destinationsToDoStock
                 this.destinationsDoneStock.addCard(destination);
-                this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+                if (withinAnimation) {
+                    this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+                }
             }
             /*document
                 .getElementById(`player-table-${this.playerId}-destinations-done`)
@@ -2451,7 +2454,7 @@ var PlayerDestinations = /** @class */ (function () {
         }
         var newDac = new DestinationCompleteAnimation(this.game, destination, endAnimLocation, {
             start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add("hidden-for-animation"); },
-            change: function (d) { return _this.markDestinationCompleteNoAnimation(d); },
+            change: function (d) { return _this.markDestinationCompleteNoAnimation(d, true); },
             end: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.remove("hidden-for-animation"); },
         }, "completed", "map" //"game_play_area_wrap"
         );
