@@ -18,7 +18,8 @@ class CardsManager extends CardManager<Destination> {
                 info.innerText = "?";
                 info.classList.add("css-icon", "card-info");
                 div.appendChild(info);
-                (this.game as any).addTooltipHtml(info.id, this.getTooltip(card.type * 100 + card.type_arg));
+                const cardTypeId = card.type * 100 + card.type_arg;
+                (this.game as any).addTooltipHtml(info.id, this.getTooltip(card, cardTypeId));
             },
             setupBackDiv: (card: Destination, div: HTMLElement) => {
                 div.style.backgroundImage = `url('${g_gamethemeurl}img/destination-card-background.jpg')`;
@@ -66,25 +67,26 @@ class CardsManager extends CardManager<Destination> {
         return getCityName(cardTypeId);
     }
 
-    public getTooltip(cardUniqueId: number) {
+    public getTooltip(card: Destination, cardUniqueId: number) {
         const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
-        let tooltip = `<div class="xpd-city">${dojo.string.substitute(_("${to}"), {
-            to: getCityName(destination.to),
-        })}</div>
-		<div class="xpd-location">${dojo.string.substitute(_("${location}"), {
-            location: getCityLocation(destination.to),
-        })}</div>
-		<div class="xpd-city-desc"><p>${dojo.string.substitute(_("${description}"), {
-            description: getCityDescription(destination.to),
-        })}</p></div>
-		`;
+        let tooltip = `
+		<div class="xpd-city-zoom-wrapper">
+			<div id="xpd-city-${cardUniqueId}-zoom" class="xpd-city-zoom" style="${getBackgroundInlineStyleForDestination(
+            card
+        )}"></div>
+			<div class="xpd-city-zoom-desc-wrapper">
+				<div class="xpd-city">${dojo.string.substitute(_("${to}"), {
+                    to: getCityName(destination.to),
+                })}</div>
+				<div class="xpd-location">${dojo.string.substitute(_("${location}"), {
+                    location: getCityLocation(destination.to),
+                })}</div>
+				<div class="xpd-city-desc"><p>${dojo.string.substitute(_("${description}"), {
+                    description: getCityDescription(destination.to),
+                })}</p></div>
+			</div>
+		</div>`;
         return tooltip;
-    }
-
-    public setupNewCard(cardDiv: HTMLDivElement, cardType: number) {
-        (this.game as any).addTooltipHtml(cardDiv.id, this.getTooltip(cardType));
-        cardDiv.dataset.cardId = cardDiv.id.split("_")[2];
-        cardDiv.dataset.cardType = "" + cardType;
     }
 
     private setFrontBackground(cardDiv: HTMLDivElement, cardType: number) {
@@ -96,5 +98,6 @@ class CardsManager extends CardManager<Destination> {
         const yBackgroundPercent = row * 100;
         cardDiv.style.backgroundPositionX = `-${xBackgroundPercent}%`;
         cardDiv.style.backgroundPositionY = `-${yBackgroundPercent}%`;
+        cardDiv.style.backgroundSize = `1000%`;
     }
 }

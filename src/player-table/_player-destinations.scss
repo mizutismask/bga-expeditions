@@ -1,129 +1,145 @@
 .player-table-destinations {
-	position: relative;
-	//width: 300px;
+    position: relative;
+    //width: 300px;
 }
 
 .player-table-destinations-column {
-	position: relative;
-	//display: flex;
-	//width: 250px;
-	//height: 100%;
-	pointer-events: none;
-	z-index: 50;
-	flex-direction: row;
-	margin-top: 20px;
+    position: relative;
+    //display: flex;
+    //width: 250px;
+    //height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    flex-direction: row;
+    margin-top: 20px;
 
-	&.front {
-		z-index: 51;
-	}
+    &.front {
+        z-index: 51;
+    }
 
-	&.done {
-	}
+    &.done {
+    }
 
-	.destination-card.hidden-for-animation {
-		visibility: hidden;
-	}
+    .destination-card.hidden-for-animation {
+        visibility: hidden;
+    }
 }
 
 .left {
-	.player-table-destinations-column {
-		&.todo {
-			margin-top: unset;
-			--direction: column !important;
-			width: 170px;
+    .player-table-destinations-column {
+        &.todo {
+            margin-top: unset;
+            --direction: column !important;
+            width: 170px;
 
-			.destination-card:not(.icon):not(:first-child) {
-				margin-top: -119px;
-			}
-		}
-	}
+            .destination-card:not(.icon):not(:first-child) {
+                margin-top: -119px;
+            }
+        }
+    }
 }
 
 #map {
-	.destination-card:not(.icon) {
-		position: absolute;
-		z-index: 20;
-	}
+    .destination-card:not(.icon) {
+        position: absolute;
+        z-index: 20;
+    }
 }
 .card-side {
-	width: 150px;
-	height: 209px;
+    width: 150px;
+    height: 209px;
 }
 
 .destination-card:not(.icon) {
-	position: relative;
-	width: 150px;
-	height: 209px;
-	background-image: url("img/destinations.jpg");
-	border-radius: 6px;
-	box-shadow: 0 0 8px 1px black;
-	pointer-events: all;
-	transform-origin: top left;
-	margin-right: -15px;
+    position: relative;
+    width: 150px;
+    height: 209px;
+    background-image: url("img/destinations.jpg");
+    border-radius: 6px;
+    box-shadow: 0 0 8px 1px black;
+    pointer-events: all;
+    transform-origin: top left;
+    margin-right: -15px;
 
-	&.animated {
-		transition: transform 0.5s;
-	}
+    &.animated {
+        transition: transform 0.5s;
+    }
 
-	&.uncompleted {
-		&::after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: url("img/destination-todo.png");
-		}
-	}
+    &.uncompleted {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("img/destination-todo.png");
+        }
+    }
 
-	&.completed {
-		&::after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: url("img/destination-done.png");
-			box-shadow: 0 0 3px 3px #3c6c6c;
-		}
-	}
+    &.completed {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("img/destination-done.png");
+            box-shadow: 0 0 3px 3px #3c6c6c;
+        }
+    }
 
-	&.selected::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: url("img/destination-selected.png");
-		box-shadow: 0 0 3px 3px #4d78a3;
-		border-radius: 6px;
-	}
+    &.selected::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("img/destination-selected.png");
+        box-shadow: 0 0 3px 3px #4d78a3;
+        border-radius: 6px;
+    }
 }
 
 .done {
-	.destination-card:not(.icon) {
-		&::after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: url("img/destination-done.png");
-		}
-	}
+    .destination-card:not(.icon) {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("img/destination-done.png");
+        }
+    }
 }
 
-.xpd-city {
-	text-transform: uppercase;
-	color: #4d78a3;
-	font-weight: bold;
-	margin-bottom: 5px;
-}
-.xpd-location {
-	font-weight: bold;
-	font-style: italic;
+.xpd-city-zoom-wrapper {
+    $cityZoomWidth: calc($CARD_WIDTH * 1.8px);
+    min-width: $cityZoomWidth;
+    width: $cityZoomWidth;
+    .xpd-city-zoom {
+        width: $cityZoomWidth;
+        height: calc($CARD_HEIGHT * 1.8px);
+    }
+    .xpd-city-zoom-desc-wrapper {
+        width: calc($cityZoomWidth - 16 * 2px);
+        padding: 0px 16px;
+    }
+    .xpd-city {
+        text-transform: uppercase;
+        color: #4d78a3;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .xpd-location {
+        font-weight: bold;
+        font-style: italic;
+    }
+    .xpd-city-desc {
+        text-align: justify;
+    }
 }

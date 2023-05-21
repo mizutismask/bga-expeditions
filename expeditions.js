@@ -12,7 +12,7 @@ function animateCardToCounterAndDestroy(game, cardOrCardId, destinationId) {
     card.style.transform = "translate(".concat(x, "px, ").concat(y, "px) scale(").concat(0.15 / zoom, ")");
     setTimeout(function () { var _a; return (_a = card.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(card); }, 500);
 }
-var CARD_WIDTH = 150;
+var CARD_WIDTH = 150; //also change in scss
 var CARD_HEIGHT = 209;
 var DESTINATION_CARD_SHIFT = 32;
 function setupDestinationCards(stock) {
@@ -418,7 +418,7 @@ function getBackgroundInlineStyleForDestination(destination) {
     var row = Math.floor(imagePosition / IMAGE_ITEMS_PER_ROW);
     var xBackgroundPercent = (imagePosition - row * IMAGE_ITEMS_PER_ROW) * 100;
     var yBackgroundPercent = row * 100;
-    return "background-image: url('".concat(g_gamethemeurl, "img/").concat(file, "'); background-position: -").concat(xBackgroundPercent, "% -").concat(yBackgroundPercent, "%;");
+    return "background-image: url('".concat(g_gamethemeurl, "img/").concat(file, "'); background-position: -").concat(xBackgroundPercent, "% -").concat(yBackgroundPercent, "%; background-size:1000%;");
 }
 /**
  * Base class for animations.
@@ -4824,7 +4824,8 @@ var CardsManager = /** @class */ (function (_super) {
                 info.innerText = "?";
                 info.classList.add("css-icon", "card-info");
                 div.appendChild(info);
-                _this.game.addTooltipHtml(info.id, _this.getTooltip(card.type * 100 + card.type_arg));
+                var cardTypeId = card.type * 100 + card.type_arg;
+                _this.game.addTooltipHtml(info.id, _this.getTooltip(card, cardTypeId));
             },
             setupBackDiv: function (card, div) {
                 div.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destination-card-background.jpg')");
@@ -4868,21 +4869,16 @@ var CardsManager = /** @class */ (function (_super) {
     CardsManager.prototype.getCardName = function (cardTypeId) {
         return getCityName(cardTypeId);
     };
-    CardsManager.prototype.getTooltip = function (cardUniqueId) {
+    CardsManager.prototype.getTooltip = function (card, cardUniqueId) {
         var destination = DESTINATIONS.find(function (d) { return d.id == cardUniqueId; });
-        var tooltip = "<div class=\"xpd-city\">".concat(dojo.string.substitute(_("${to}"), {
+        var tooltip = "\n\t\t<div class=\"xpd-city-zoom-wrapper\">\n\t\t\t<div id=\"xpd-city-".concat(cardUniqueId, "-zoom\" class=\"xpd-city-zoom\" style=\"").concat(getBackgroundInlineStyleForDestination(card), "\"></div>\n\t\t\t<div class=\"xpd-city-zoom-desc-wrapper\">\n\t\t\t\t<div class=\"xpd-city\">").concat(dojo.string.substitute(_("${to}"), {
             to: getCityName(destination.to),
-        }), "</div>\n\t\t<div class=\"xpd-location\">").concat(dojo.string.substitute(_("${location}"), {
+        }), "</div>\n\t\t\t\t<div class=\"xpd-location\">").concat(dojo.string.substitute(_("${location}"), {
             location: getCityLocation(destination.to),
-        }), "</div>\n\t\t<div class=\"xpd-city-desc\"><p>").concat(dojo.string.substitute(_("${description}"), {
+        }), "</div>\n\t\t\t\t<div class=\"xpd-city-desc\"><p>").concat(dojo.string.substitute(_("${description}"), {
             description: getCityDescription(destination.to),
-        }), "</p></div>\n\t\t");
+        }), "</p></div>\n\t\t\t</div>\n\t\t</div>");
         return tooltip;
-    };
-    CardsManager.prototype.setupNewCard = function (cardDiv, cardType) {
-        this.game.addTooltipHtml(cardDiv.id, this.getTooltip(cardType));
-        cardDiv.dataset.cardId = cardDiv.id.split("_")[2];
-        cardDiv.dataset.cardType = "" + cardType;
     };
     CardsManager.prototype.setFrontBackground = function (cardDiv, cardType) {
         var destinationsUrl = "".concat(g_gamethemeurl, "img/destinations.jpg");
@@ -4893,6 +4889,7 @@ var CardsManager = /** @class */ (function (_super) {
         var yBackgroundPercent = row * 100;
         cardDiv.style.backgroundPositionX = "-".concat(xBackgroundPercent, "%");
         cardDiv.style.backgroundPositionY = "-".concat(yBackgroundPercent, "%");
+        cardDiv.style.backgroundSize = "1000%";
     };
     return CardsManager;
 }(CardManager));

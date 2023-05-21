@@ -637,16 +637,30 @@
   background: url("img/destination-done.png");
 }
 
-.xpd-city {
+.xpd-city-zoom-wrapper {
+  min-width: 270px;
+  width: 270px;
+}
+.xpd-city-zoom-wrapper .xpd-city-zoom {
+  width: 270px;
+  height: 376.2px;
+}
+.xpd-city-zoom-wrapper .xpd-city-zoom-desc-wrapper {
+  width: 238px;
+  padding: 0px 16px;
+}
+.xpd-city-zoom-wrapper .xpd-city {
   text-transform: uppercase;
   color: #4d78a3;
   font-weight: bold;
   margin-bottom: 5px;
 }
-
-.xpd-location {
+.xpd-city-zoom-wrapper .xpd-location {
   font-weight: bold;
   font-style: italic;
+}
+.xpd-city-zoom-wrapper .xpd-city-desc {
+  text-align: justify;
 }
 
 .player-table-train-cars {
