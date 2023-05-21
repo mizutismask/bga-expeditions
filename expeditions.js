@@ -2199,30 +2199,6 @@ var SharedDestinationDeck = /** @class */ (function () {
      * Init stock.
      */
     function SharedDestinationDeck(game) {
-        /*	this.sharedDestinations = new ebg.stock() as Stock;
-        this.sharedDestinations.setSelectionAppearance("class");
-        this.sharedDestinations.selectionClass = "selected";
-        this.sharedDestinations.setSelectionMode(0);
-        this.sharedDestinations.create(
-            game,
-            $(`shared-destination-stock`),
-            CARD_WIDTH,
-            CARD_HEIGHT
-        );
-        this.sharedDestinations.onItemCreate = (
-            cardDiv: HTMLDivElement,
-            cardUniqueId
-        ) => setupDestinationCardDiv(cardDiv, Number(cardUniqueId));
-        this.sharedDestinations.image_items_per_row = 10;
-        this.sharedDestinations.centerItems = true;
-        this.sharedDestinations.item_margin = 20;
-
-        //this.sharedDestinations.setOverlap(-1, 20);// = 20; // overlap
-        //this.sharedDestinations.horizontal_overlap = -1; // current bug in stock - this is needed to enable z-index on overlapping items
-        //this.sharedDestinations.item_margin = 0; // has to be 0 if using overlap
-        //this.sharedDestinations.set
-
-        setupDestinationCards(this.sharedDestinations);*/
         var _this = this;
         this.game = game;
         var stock = new LineStockWithEvents(this.game.destinationCardsManager, $("shared-destination-stock"), {
@@ -2235,46 +2211,13 @@ var SharedDestinationDeck = /** @class */ (function () {
         // highlight destination's cities on the map, on mouse over
         stock.onCardMouseOver = function (dest) { return _this.game.setHighligthedDestination(dest); };
         stock.onCardMouseOut = function (dest) { return _this.game.setHighligthedDestination(null); };
-        /*stock.onCardClick = (dest: Destination) =>
-            this.game.setSelectedDestination(
-                dest,
-                stock.getSelection().some((item) => Number(item.id) == dest.id)
-            );*/
         this.sharedDestinationsStock = stock;
     }
     /**
      * Set visible destination cards.
      */
     SharedDestinationDeck.prototype.setCards = function (destinations) {
-        //dojo.removeClass("destination-deck", "hidden");
-        this.sharedDestinationsStock.addCards(destinations, { fromElement: $("upperrightmenu"),
-            originalSide: "back" });
-        /*	destinations.forEach((destination) => {
-
-            this.sharedDestinations.addToStockWithId(
-                destination.type * 100 + destination.type_arg,
-                "" + destination.id
-            );
-
-            const cardDiv = document.getElementById(`shared-destination-stock_item_${destination.id}`);
-            // when mouse hover destination, highlight it on the map
-            cardDiv.addEventListener("mouseenter", () => this.game.setHighligthedDestination(destination));
-            cardDiv.addEventListener("mouseleave", () => this.game.setHighligthedDestination(null));
-            // when destinatin is selected, another highlight on the map
-            cardDiv.addEventListener("click", () =>
-                this.game.setSelectedDestination(
-                    destination,
-                    this.sharedDestinations.getSelectedItems().some((item) => Number(item.id) == destination.id)
-                )
-            );
-        });*/
-    };
-    /**
-     * Hide destination selector.
-     */
-    SharedDestinationDeck.prototype.hide = function () {
-        this.sharedDestinations.removeAll();
-        //dojo.addClass("shared-destination-deck", "hidden");
+        this.sharedDestinationsStock.addCards(destinations, { fromElement: $("upperrightmenu"), originalSide: "back" });
     };
     SharedDestinationDeck.prototype.removeCard = function (destination) {
         this.sharedDestinationsStock.removeCard(destination);
@@ -4888,7 +4831,12 @@ var CardsManager = /** @class */ (function (_super) {
                 _this.setFrontBackground(div, card.type_arg);
                 //this.setDivAsCard(div as HTMLDivElement, card.type);
                 div.id = "".concat(_super.prototype.getId.call(_this, card), "-front");
-                _this.game.addTooltipHtml(div.id, _this.getTooltip(card.type * 100 + card.type_arg));
+                var info = document.createElement("div");
+                info.id = "".concat(_super.prototype.getId.call(_this, card), "-front-info");
+                info.innerText = "?";
+                info.classList.add("css-icon", "card-info");
+                div.appendChild(info);
+                _this.game.addTooltipHtml(info.id, _this.getTooltip(card.type * 100 + card.type_arg));
             },
             setupBackDiv: function (card, div) {
                 div.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destination-card-background.jpg')");
@@ -4957,24 +4905,6 @@ var CardsManager = /** @class */ (function (_super) {
         var yBackgroundPercent = row * 100;
         cardDiv.style.backgroundPositionX = "-".concat(xBackgroundPercent, "%");
         cardDiv.style.backgroundPositionY = "-".concat(yBackgroundPercent, "%");
-    };
-    CardsManager.prototype.generateCardDiv = function (card) {
-        var tempDiv = document.createElement("div");
-        tempDiv.classList.add("stockitem");
-        tempDiv.style.width = "".concat(CARD_WIDTH, "px");
-        tempDiv.style.height = "".concat(CARD_HEIGHT, "px");
-        tempDiv.style.position = "relative";
-        tempDiv.style.backgroundImage = "url('".concat(g_gamethemeurl, "img/destinations.jpg')");
-        var imagePosition = (card.type % 100) - 1;
-        var image_items_per_row = 10;
-        var row = Math.floor(imagePosition / image_items_per_row);
-        var xBackgroundPercent = (imagePosition - row * image_items_per_row) * 100;
-        var yBackgroundPercent = row * 100;
-        tempDiv.style.backgroundPosition = "-".concat(xBackgroundPercent, "% -").concat(yBackgroundPercent, "%");
-        document.body.appendChild(tempDiv);
-        //this.setDivAsCard(tempDiv, card.type);
-        //document.body.removeChild(tempDiv);
-        return tempDiv;
     };
     return CardsManager;
 }(CardManager));

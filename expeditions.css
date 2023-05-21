@@ -117,22 +117,6 @@
   display: flex;
   gap: 5px;
 }
-.player-board .css-icon {
-  width: 25px;
-  height: 25px;
-  background-color: white;
-  border-radius: 15px;
-  text-align: center;
-  font-weight: bolder;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: rgb(21, 104, 134);
-}
-.player-board .xpd-help-icon {
-  cursor: pointer;
-  pointer-events: auto;
-}
 .player-board .xpd-help-icon.xpd-help-icon-mini {
   position: relative;
   top: 50%;
@@ -980,6 +964,34 @@ html,
 .stockitem.disabled {
   filter: contrast(0.6);
   cursor: not-allowed;
+}
+
+.css-icon {
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bolder;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(21, 104, 134);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.css-icon.card-info {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  top: 10px;
+  left: 10px;
+  color: white;
+  background-color: rgb(21, 104, 134);
+}
+
+.card .card-sides .card-side.front .card-info {
+  pointer-events: all;
 }
 
 .place-arrow-button.selected {

@@ -73,6 +73,35 @@ html,
     }
 }
 
+.css-icon {
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bolder;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(21, 104, 134);
+    cursor: pointer;
+    pointer-events: auto;
+
+    &.card-info {
+        width: 25px;
+        height: 25px;
+        position: relative;
+        top: 10px;
+        left: 10px;
+        color: white;
+        background-color: rgb(21, 104, 134);
+    }
+}
+
+.card .card-sides .card-side.front .card-info {
+    pointer-events: all;
+}
+
 .timer-button {
     //transition: width 1s ease-in-out; //todo does not work on inline elts maybe see https://stackoverflow.com/questions/33057737/css-replacing-a-text-on-hover-but-smooth-transition-to-the-new-text-does-not-w
 }

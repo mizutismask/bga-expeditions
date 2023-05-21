@@ -1,161 +1,145 @@
 .player-board {
-	//z-index: -1;//to make completed destinations animations fly over
-	color: white;
-	background: url("img/playerboard-background-bottom.jpg");
-	background-position: bottom;
-	background-size: cover;
+    //z-index: -1;//to make completed destinations animations fly over
+    color: white;
+    background: url("img/playerboard-background-bottom.jpg");
+    background-position: bottom;
+    background-size: cover;
 
-	@each $name, $color in $player-colors {
-		&[data-player-color="#{$color}"]::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 52px;
-			background: url("img/playerboard-background.png"), ##{$color};
-			background-size: cover;
-			background-repeat: no-repeat;
-			box-shadow: 0 0 3px 2px #8181c7;
-			border-radius: 8px;
-		}
-	}
+    @each $name, $color in $player-colors {
+        &[data-player-color="#{$color}"]::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: url("img/playerboard-background.png"), ##{$color};
+            background-size: cover;
+            background-repeat: no-repeat;
+            box-shadow: 0 0 3px 2px #8181c7;
+            border-radius: 8px;
+        }
+    }
 
-	.player-name,
-	.player-name a {
-		color: white !important; // to override inline color
-		text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-	}
-	.player_score_value {
-		font-weight: bold;
-		text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-	}
-	.token {
-		background-image: url("img/tokens.png");
-		//background-size: 600%;
+    .player-name,
+    .player-name a {
+        color: white !important; // to override inline color
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+    .player_score_value {
+        font-weight: bold;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+    .token {
+        background-image: url("img/tokens.png");
+        //background-size: 600%;
 
-		&[data-player-color="d8d7d7"] {
-			background-position: #{calc(0 * 100% / 5)} 50%;
-		}
-		&[data-player-color="df74b2"] {
-			background-position: #{calc(1 * 100% / 5)} 50%;
-		}
-		&[data-player-color="eca51c"] {
-			background-position: #{calc(2 * 100% / 5)} 50%;
-		}
-		&[data-player-color="77bd25"] {
-			background-position: #{calc(3 * 100% / 5)} 50%;
-		}
-		&[data-player-color="30b0e1"] {
-			background-position: #{calc(4 * 100% / 5)} 50%;
-		}
-		&[data-player-color="df3e33"] {
-			background-position: #{calc(5 * 100% / 5)} 50%;
-		}
-	}
+        &[data-player-color="d8d7d7"] {
+            background-position: #{calc(0 * 100% / 5)} 50%;
+        }
+        &[data-player-color="df74b2"] {
+            background-position: #{calc(1 * 100% / 5)} 50%;
+        }
+        &[data-player-color="eca51c"] {
+            background-position: #{calc(2 * 100% / 5)} 50%;
+        }
+        &[data-player-color="77bd25"] {
+            background-position: #{calc(3 * 100% / 5)} 50%;
+        }
+        &[data-player-color="30b0e1"] {
+            background-position: #{calc(4 * 100% / 5)} 50%;
+        }
+        &[data-player-color="df3e33"] {
+            background-position: #{calc(5 * 100% / 5)} 50%;
+        }
+    }
 
-	.additional-icons {
-		display: flex;
-		gap: 5px;
-	}
+    .additional-icons {
+        display: flex;
+        gap: 5px;
+    }
 
-	.css-icon {
-		width: 25px;
-		height: 25px;
-		background-color: white;
-		border-radius: 15px;
-		text-align: center;
-		font-weight: bolder;
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		color: rgb(21, 104, 134);
-	}
-
-	.xpd-help-icon {
-		cursor: pointer;
-		pointer-events: auto;
-
-		&.xpd-help-icon-mini {
-			position: relative;
-			top: 50%;
-			transform: translateY(-8%);
-			width: 15px;
-			height: 15px;
-			font-size: 10pt;
-			margin-left: 5px;
-		}
-	}
+    .xpd-help-icon {
+        &.xpd-help-icon-mini {
+            position: relative;
+            top: 50%;
+            transform: translateY(-8%);
+            width: 15px;
+            height: 15px;
+            font-size: 10pt;
+            margin-left: 5px;
+        }
+    }
 }
 
 .help-card {
-	width: 355px;
-	height: 480px;
+    width: 355px;
+    height: 480px;
 
-	&.recto {
-		background: url("img/help1.jpg") no-repeat;
-	}
+    &.recto {
+        background: url("img/help1.jpg") no-repeat;
+    }
 
-	&.verso {
-		background: url("img/help2.jpg") no-repeat;
-	}
+    &.verso {
+        background: url("img/help2.jpg") no-repeat;
+    }
 }
 
 .counters {
-	display: flex;
-	align-items: center;
-	margin: 5px 0;
-	font-weight: bold;
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    font-weight: bold;
 
-	.counter {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+    .counter {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-		span {
-			padding: 0 5px 0 5px;
-		}
-	}
+        span {
+            padding: 0 5px 0 5px;
+        }
+    }
 
-	.common-destinations-counter {
-		flex: 0;
-	}
+    .common-destinations-counter {
+        flex: 0;
+    }
 }
 
 .additional-info {
-	column-gap: 5px;
-	justify-content: space-evenly;
+    column-gap: 5px;
+    justify-content: space-evenly;
 }
 
 .player-turn-order {
-	user-select: none;
+    user-select: none;
 }
 
 .icon {
-	display: inline-block;
-	position: relative;
-	width: 32px;
-	height: 32px;
-	background-size: auto 100%;
-	background-repeat: no-repeat;
+    display: inline-block;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
 
-	&.destination-card {
-		background-image: url("img/destination-card-background.jpg");
-		height: 24px;
-		width: 18px;
+    &.destination-card {
+        background-image: url("img/destination-card-background.jpg");
+        height: 24px;
+        width: 18px;
 
-		&.shared-destination {
-			-webkit-box-shadow: inset 0px 0px 0px 2px #7d57d5;
-			-moz-box-shadow: inset 0px 0px 0px 2px #7d57d5;
-			box-shadow: inset 0px 0px 0px 2px #7d57d5;
-		}
-	}
+        &.shared-destination {
+            -webkit-box-shadow: inset 0px 0px 0px 2px #7d57d5;
+            -moz-box-shadow: inset 0px 0px 0px 2px #7d57d5;
+            box-shadow: inset 0px 0px 0px 2px #7d57d5;
+        }
+    }
 
-	&.expTicket {
-		height: 23px;
-		width: 36px;
-		background-size: contain;
-		border-radius: 2px;
-	}
+    &.expTicket {
+        height: 23px;
+        width: 36px;
+        background-size: contain;
+        border-radius: 2px;
+    }
 }
