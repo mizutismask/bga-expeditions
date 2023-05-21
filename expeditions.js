@@ -2553,7 +2553,6 @@ var EndScore = /** @class */ (function () {
             if (Number(player.score) == bestScore) {
                 _this.highlightWinnerScore(player.id);
             }
-            _this.updateDestinationsTooltip(player);
         });
     }
     EndScore.prototype.updateScores = function (players) {
@@ -2591,17 +2590,6 @@ var EndScore = /** @class */ (function () {
      */
     EndScore.prototype.setPoints = function (playerId, points) {
         this.scoreCounters[playerId].toValue(points);
-    };
-    EndScore.prototype.updateDestinationsTooltip = function (player) {
-        var _a;
-        var html = "<div class=\"destinations-flex\">\n            <div>\n                ".concat(player.completedDestinations.map(function (destination) {
-            return "<div class=\"destination-card completed\" style=\"".concat(getBackgroundInlineStyleForDestination(destination), "\"></div>");
-        }), "\n            </div>\n            <div>\n                ").concat((_a = player.uncompletedDestinations) === null || _a === void 0 ? void 0 : _a.map(function (destination) {
-            return "<div class=\"destination-card uncompleted\" style=\"".concat(getBackgroundInlineStyleForDestination(destination), "\"></div>");
-        }), "\n            </div>\n        </div>");
-        if (document.getElementById("destinations-score-".concat(player.id))) {
-            this.game.setTooltip("destinations-score-".concat(player.id), html);
-        }
     };
     return EndScore;
 }());
