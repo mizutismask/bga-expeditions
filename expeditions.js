@@ -1501,7 +1501,8 @@ var TtrMap = /** @class */ (function () {
         SIDES.forEach(function (side) { return dojo.place("<div class=\"side ".concat(side, "\"></div>"), "map-and-borders"); });
         CORNERS.forEach(function (corner) { return dojo.place("<div class=\"corner ".concat(corner, "\"></div>"), "map-and-borders"); });
         CITIES.forEach(function (city) {
-            return dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(_this.getLocationName(city.id), "\"\n            ></div>"), "cities");
+            dojo.place("<div id=\"city".concat(city.id, "\" class=\"city\" \n                style=\"transform: translate(").concat(city.x, "px, ").concat(city.y, "px)\"\n                title=\"").concat(_this.getLocationName(city.id), "\"\n            ></div>"), "cities");
+            $("city".concat(city.id)).addEventListener("click", function () { return _this.game.clickedCity(city); });
         });
         this.createRouteSpaces();
         this.showRevealedDestinations(revealedDestinations);
@@ -2039,13 +2040,16 @@ var TtrMap = /** @class */ (function () {
         var visible = Boolean(destination).toString();
         var shadow = document.getElementById("map-destination-highlight-shadow");
         shadow.dataset.visible = visible;
+        this.mapDiv
+            .querySelectorAll(".city[data-highlight=\"".concat(true, "\"]"))
+            .forEach(function (city) { return (city.dataset.highlight = "false"); });
         var cities;
         if (destination) {
             shadow.dataset.to = "" + destination.to;
             cities = [destination.to];
         }
         else {
-            cities = [shadow.dataset.to];
+            cities = []; //shadow.dataset.to
         }
         cities.forEach(function (city) { return (document.getElementById("city".concat(city)).dataset.highlight = visible); });
     };
@@ -3022,10 +3026,11 @@ var Expeditions = /** @class */ (function () {
         this.destinationToReveal == destination
             ? (this.destinationToReveal = null)
             : (this.destinationToReveal = destination);
+        this.map.setHighligthedDestination(null);
         if (this.destinationToReveal) {
             this.startActionTimer("revealDestination_button", 3);
+            this.map.setHighligthedDestination(this.destinationToReveal);
         }
-        this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
         dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
     };
@@ -3107,6 +3112,23 @@ var Expeditions = /** @class */ (function () {
             document
                 .querySelectorAll(".selectable[data-color=\"".concat(selectedColor, "\"]"))
                 .forEach(function (r) { return (r.style.zIndex = "101"); });
+        }
+    };
+    /**
+     * Handle city click during reveal state.
+     */
+    Expeditions.prototype.clickedCity = function (city) {
+        var _a, _b;
+        //console.log("clickedCity", city);
+        if (!this.isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "revealDestination") {
+            return;
+        }
+        var dest = this.gamedatas.handDestinations.find(function (d) { return d.type_arg + 100 == city.id; });
+        var cityDiv = $("city".concat(city.id));
+        if (dest &&
+            ((_a = cityDiv.dataset) === null || _a === void 0 ? void 0 : _a.selectable) === "true" &&
+            (!("revealedBy" in cityDiv.dataset) || ((_b = cityDiv.dataset) === null || _b === void 0 ? void 0 : _b.temporary) === "true")) {
+            this.revealDestination(dest);
         }
     };
     /**

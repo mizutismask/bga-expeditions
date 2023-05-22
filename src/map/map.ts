@@ -174,15 +174,16 @@ class TtrMap {
         SIDES.forEach((side) => dojo.place(`<div class="side ${side}"></div>`, "map-and-borders"));
         CORNERS.forEach((corner) => dojo.place(`<div class="corner ${corner}"></div>`, "map-and-borders"));
 
-        CITIES.forEach((city) =>
+        CITIES.forEach((city) => {
             dojo.place(
                 `<div id="city${city.id}" class="city" 
                 style="transform: translate(${city.x}px, ${city.y}px)"
                 title="${this.getLocationName(city.id)}"
             ></div>`,
                 "cities"
-            )
-        );
+            );
+            $(`city${city.id}`).addEventListener("click", () => this.game.clickedCity(city));
+        });
 
         this.createRouteSpaces();
         this.showRevealedDestinations(revealedDestinations);
@@ -798,12 +799,16 @@ class TtrMap {
         const shadow = document.getElementById("map-destination-highlight-shadow");
         shadow.dataset.visible = visible;
 
+        this.mapDiv
+            .querySelectorAll(`.city[data-highlight="${true}"]`)
+            .forEach((city: HTMLElement) => (city.dataset.highlight = "false"));
+
         let cities: (string | number)[];
         if (destination) {
             shadow.dataset.to = "" + destination.to;
             cities = [destination.to];
         } else {
-            cities = [shadow.dataset.to];
+            cities = []; //shadow.dataset.to
         }
         cities.forEach((city) => (document.getElementById(`city${city}`).dataset.highlight = visible));
     }

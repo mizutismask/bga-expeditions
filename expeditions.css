@@ -275,13 +275,16 @@
   box-shadow: 1px 1px 20px 3px black;
 }
 
+.gamestate_revealDestination .city[data-selectable=true]:not([data-revealed-by]), .gamestate_revealDestination .city[data-selectable=true][data-revealed-by][data-temporary=true] {
+  cursor: pointer;
+}
+
 .city {
   display: inline-block;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   margin: -15px;
-  pointer-events: none;
   transition: opacity 0.2s;
   position: relative;
   z-index: 1;

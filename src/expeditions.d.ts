@@ -87,6 +87,7 @@ interface ExpeditionsGame extends Game {
     map: TtrMap;
     animationManager: AnimationManager;
     destinationCardsManager: CardsManager;
+    clickedCity(city: City): void;
     clickedRoute(route: Route): void;
     clickedRemovableRoute(route: Route): void;
     toDoDestinationSelectionChanged(selection: Destination[], lastChange: Destination): void;

@@ -545,11 +545,12 @@ class Expeditions implements ExpeditionsGame {
         this.destinationToReveal == destination
             ? (this.destinationToReveal = null)
             : (this.destinationToReveal = destination);
+        this.map.setHighligthedDestination(null);
 
         if (this.destinationToReveal) {
             this.startActionTimer(`revealDestination_button`, 3);
+            this.map.setHighligthedDestination(this.destinationToReveal);
         }
-        this.map.setHighligthedDestination(destination);
         this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
         dojo.toggleClass("revealDestination_button", "disabled", this.destinationToReveal == null);
     }
@@ -650,6 +651,25 @@ class Expeditions implements ExpeditionsGame {
         }
     }
 
+    /**
+     * Handle city click during reveal state.
+     */
+    public clickedCity(city: City): void {
+        //console.log("clickedCity", city);
+        if (!(this as any).isCurrentPlayerActive() || this.gamedatas.gamestate.name !== "revealDestination") {
+            return;
+        }
+
+        const dest = this.gamedatas.handDestinations.find((d) => d.type_arg + 100 == city.id);
+        const cityDiv = $(`city${city.id}`);
+        if (
+            dest &&
+            cityDiv.dataset?.selectable === "true" &&
+            (!("revealedBy" in cityDiv.dataset) || cityDiv.dataset?.temporary === "true")
+        ) {
+            this.revealDestination(dest);
+        }
+    }
     /**
      * Handle route click.
      */

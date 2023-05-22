@@ -88,7 +88,14 @@
     transform-origin: top left;
     box-shadow: 1px 1px 20px 3px black;
 }
-
+.gamestate_revealDestination {
+    .city {
+        &[data-selectable="true"]:not([data-revealed-by]),
+        &[data-selectable="true"][data-revealed-by][data-temporary="true"] {
+            cursor: pointer;
+        }
+    }
+}
 .city {
     //radial-gradient(#7d57d5 2%, #4a0adf,#100f103d 67%)  border-box
     display: inline-block;
@@ -96,7 +103,6 @@
     height: 30px;
     border-radius: 50%;
     margin: -15px;
-    pointer-events: none;
     //opacity: 0;
     transition: opacity 0.2s;
     position: relative;
