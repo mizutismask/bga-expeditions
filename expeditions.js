@@ -1709,6 +1709,9 @@ var TtrMap = /** @class */ (function () {
         routeOnSamePath.forEach(function (r) {
             _this.shiftArrowIfNeeded(r, claimedRoutes);
         });
+        var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
+        routeDiv.classList.add("animated-arrow");
+        setTimeout(function () { return routeDiv.classList.remove("animated-arrow"); }, 1800);
     };
     /**
      * Removes the arrow from a route.
