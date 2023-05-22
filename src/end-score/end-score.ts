@@ -2,18 +2,13 @@ declare const playSound;
 
 /**
  * End score board.
- * It will start empty, and notifications will update it and start animations one by one.
+ * No notifications.
  */
 class EndScore {
-    /** Player scores (key is player id) */
-    private scoreCounters: Counter[] = [];
-
     constructor(
         private game: ExpeditionsGame,
         private players: ExpeditionsPlayer[],
-        /** fromReload: if a player refresh when game is over, we skip animations (as there will be no notifications to animate the score board) */
-        fromReload: boolean,
-        /** bestScore is the top score for the game, so progression shown as train moving forward is relative to best score */
+        /** bestScore is the top score for the game */
         private bestScore: number
     ) {
         const headers = document.getElementById("scoretr");
@@ -97,16 +92,9 @@ class EndScore {
     }
 
     /**
-     * Save best score so we can move trains.
+     * Save best score.
      */
     public setBestScore(bestScore: number) {
         this.bestScore = bestScore;
-    }
-
-    /**
-     * Set score, and animate train to new score.
-     */
-    public setPoints(playerId: number, points: number) {
-        this.scoreCounters[playerId].toValue(points);
     }
 }

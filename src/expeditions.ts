@@ -107,7 +107,7 @@ class Expeditions implements ExpeditionsGame {
         }
         if (Number(gamedatas.gamestate.id) >= 90) {
             // score or end
-            this.onEnteringEndScore(true);
+            this.onEnteringEndScore();
         }
 
         this.setupNotifications();
@@ -204,7 +204,7 @@ class Expeditions implements ExpeditionsGame {
     /**
      * Show score board.
      */
-    private onEnteringEndScore(fromReload: boolean = false) {
+    private onEnteringEndScore() {
         const lastTurnBar = document.getElementById("last-round");
         if (lastTurnBar) {
             lastTurnBar.style.display = "none";
@@ -212,7 +212,7 @@ class Expeditions implements ExpeditionsGame {
 
         document.getElementById("score").style.display = "flex";
 
-        this.endScore = new EndScore(this, Object.values(this.gamedatas.players), fromReload, this.gamedatas.bestScore);
+        this.endScore = new EndScore(this, Object.values(this.gamedatas.players), this.gamedatas.bestScore);
     }
 
     // onLeavingState: this method is called each time we are leaving a game state.
@@ -1091,7 +1091,6 @@ class Expeditions implements ExpeditionsGame {
      */
     notif_points(notif: Notif<NotifPointsArgs>) {
         this.setPoints(notif.args.playerId, notif.args.points);
-        this.endScore?.setPoints(notif.args.playerId, notif.args.points);
     }
 
     /**

@@ -109,8 +109,10 @@ trait StateTrait {
                     self::incStat(1, STAT_POINTS_WITH_PLAYER_COMPLETED_DESTINATIONS, $playerId);
                 } else {
                     $totalScore[$playerId] += -1;
+                    self::incScore($playerId, -1);
                     if ($this->isDestinationRevealed($destination->id)) {
                         $totalScore[$playerId] += -1;
+                        self::incScore($playerId, -1);
                         self::incStat(-1, STAT_POINTS_WITH_REVEALED_DESTINATIONS, $playerId);
                     }
                     self::incStat(1, STAT_POINTS_LOST_WITH_UNCOMPLETED_DESTINATIONS, $playerId);

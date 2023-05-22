@@ -2525,20 +2525,16 @@ var Arrow = /** @class */ (function () {
 }());
 /**
  * End score board.
- * It will start empty, and notifications will update it and start animations one by one.
+ * No notifications.
  */
 var EndScore = /** @class */ (function () {
     function EndScore(game, players, 
-    /** fromReload: if a player refresh when game is over, we skip animations (as there will be no notifications to animate the score board) */
-    fromReload, 
-    /** bestScore is the top score for the game, so progression shown as train moving forward is relative to best score */
+    /** bestScore is the top score for the game */
     bestScore) {
         var _this = this;
         this.game = game;
         this.players = players;
         this.bestScore = bestScore;
-        /** Player scores (key is player id) */
-        this.scoreCounters = [];
         var headers = document.getElementById("scoretr");
         if (!headers.childElementCount) {
             dojo.place("\n                <th></th>\n                <th id=\"th-destination-reached-score\" class=\"\">".concat(_("Destinations reached"), "</th>\n                <th id=\"th-revealed-tokens-back-score\" class=\"\">").concat(_("Revealed destinations reached"), "</th>\n                <th id=\"th-destination-unreached-score\" class=\"\">").concat(_("Destinations not reached"), "</th>\n                <th id=\"th-revelead-tokens-left-score\" class=\"\">").concat(_("Reveled destinations not reached"), "</th>\n                <th id=\"th-total-score\" class=\"\">").concat(_("Total"), "</th>\n            "), headers);
@@ -2580,16 +2576,10 @@ var EndScore = /** @class */ (function () {
         document.getElementById("score-winner-".concat(playerId)).classList.add("fa", "fa-trophy", "fa-lg");
     };
     /**
-     * Save best score so we can move trains.
+     * Save best score.
      */
     EndScore.prototype.setBestScore = function (bestScore) {
         this.bestScore = bestScore;
-    };
-    /**
-     * Set score, and animate train to new score.
-     */
-    EndScore.prototype.setPoints = function (playerId, points) {
-        this.scoreCounters[playerId].toValue(points);
     };
     return EndScore;
 }());
@@ -2678,7 +2668,7 @@ var Expeditions = /** @class */ (function () {
         }
         if (Number(gamedatas.gamestate.id) >= 90) {
             // score or end
-            this.onEnteringEndScore(true);
+            this.onEnteringEndScore();
         }
         this.setupNotifications();
         this.setupPreferences();
@@ -2764,14 +2754,13 @@ var Expeditions = /** @class */ (function () {
     /**
      * Show score board.
      */
-    Expeditions.prototype.onEnteringEndScore = function (fromReload) {
-        if (fromReload === void 0) { fromReload = false; }
+    Expeditions.prototype.onEnteringEndScore = function () {
         var lastTurnBar = document.getElementById("last-round");
         if (lastTurnBar) {
             lastTurnBar.style.display = "none";
         }
         document.getElementById("score").style.display = "flex";
-        this.endScore = new EndScore(this, Object.values(this.gamedatas.players), fromReload, this.gamedatas.bestScore);
+        this.endScore = new EndScore(this, Object.values(this.gamedatas.players), this.gamedatas.bestScore);
     };
     // onLeavingState: this method is called each time we are leaving a game state.
     //                 You can use this method to perform some user interface changes at this moment.
@@ -3484,9 +3473,7 @@ var Expeditions = /** @class */ (function () {
      * Update player score.
      */
     Expeditions.prototype.notif_points = function (notif) {
-        var _a;
         this.setPoints(notif.args.playerId, notif.args.points);
-        (_a = this.endScore) === null || _a === void 0 ? void 0 : _a.setPoints(notif.args.playerId, notif.args.points);
     };
     /**
      * Shows a revealed destination.
