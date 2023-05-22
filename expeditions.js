@@ -1710,8 +1710,8 @@ var TtrMap = /** @class */ (function () {
             _this.shiftArrowIfNeeded(r, claimedRoutes);
         });
         var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
-        routeDiv.classList.add("animated-arrow");
-        setTimeout(function () { return routeDiv.classList.remove("animated-arrow"); }, 1800);
+        routeDiv.classList.add("xpd-hidden", "animated-arrow");
+        setTimeout(function () { return routeDiv.classList.remove("xpd-hidden", "animated-arrow"); }, 1800);
     };
     /**
      * Removes the arrow from a route.

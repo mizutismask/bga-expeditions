@@ -415,8 +415,8 @@ class TtrMap {
             this.shiftArrowIfNeeded(r, claimedRoutes);
         });
         const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-        routeDiv.classList.add("animated-arrow");
-        setTimeout(() => routeDiv.classList.remove("animated-arrow"), 1800);
+        routeDiv.classList.add("xpd-hidden", "animated-arrow");
+        setTimeout(() => routeDiv.classList.remove("xpd-hidden", "animated-arrow"), 1800);
     }
 
     /**
