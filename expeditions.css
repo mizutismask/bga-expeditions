@@ -1057,6 +1057,9 @@ html,
   width: 21.6px;
   height: 10.2px;
 }
+#logs .arrow.yellow {
+  background-color: #dfdf1a;
+}
 #logs .icon.expTicket {
   width: 30px;
   height: 17.4px;

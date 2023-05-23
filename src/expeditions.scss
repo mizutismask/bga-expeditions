@@ -125,6 +125,10 @@ html,
     .arrow {
         width: calc(36px * 0.6);
         height: calc(17px * 0.6);
+
+        &.yellow {
+            background-color: #dfdf1a; //darker yellow because of logs white background
+        }
     }
     .icon.expTicket {
         width: calc(50px * 0.6);
