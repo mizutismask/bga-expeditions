@@ -678,6 +678,14 @@ class Expeditions implements ExpeditionsGame {
         if (!this.canClaimRoute(route, this.selectedArrowColor) && !dojo.hasClass(routeDivId, 'removable')) {
             return;
         }
+
+        dojo.query(`.route-space.selectable:not(#${routeDivId})`).removeClass('selected');
+        routeDiv.classList.toggle('selected');
+
+        if (!routeDiv.classList.contains('selected')) {
+            this.stopActionTimer();
+            return;
+        }
         if (this.bothDirectionsPossible(route)) {
             dojo.destroy(`claimRouteConfirm_button`);
             if (this.gamedatas.gamestate.name !== 'clientChooseDirection') {
@@ -723,41 +731,10 @@ class Expeditions implements ExpeditionsGame {
 
                 this.startActionTimer(`claimRouteConfirm_button`, 5, () => {
                     dojo.destroy(`claimRouteConfirm_button`);
+                    dojo.query(`.route-space.selectable`).removeClass('selected');
                 });
             }
         }
-        /*
-		const selectedColor = this.playerTable.getSelectedColor();
-
-		if (selectedColor !== null) {
-			this.askRouteClaimConfirmation(route, selectedColor);
-		} else {
-			const possibleColors: number[] =
-				this.playerTable?.getPossibleColors(route) || [];
-
-			if (possibleColors.length == 1) {
-				this.askRouteClaimConfirmation(route, possibleColors[0]);
-			} else if (possibleColors.length > 1) {
-				possibleColors.forEach((color) => {
-					const label = dojo.string.substitute(_("Use ${color}"), {
-						color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
-							color,
-							"train-car"
-						)}`,
-					});
-					(this as any).addActionButton(
-						`claimRouteWithColor_button${color}`,
-						label,
-						() => this.askRouteClaimConfirmation(route, color)
-					);
-				});
-
-				this.playerTable.setSelectableTrainCarColors(
-					route,
-					possibleColors
-				);
-			}
-		}*/
     }
 
     public clickedRemovableRoute(route: Route): void {
@@ -843,6 +820,15 @@ class Expeditions implements ExpeditionsGame {
         this.actionTimerId = window.setInterval(() => actionTimerFunction(), 1000);
     }
 
+    private stopActionTimer() {
+        if (this.actionTimerId) {
+            window.clearInterval(this.actionTimerId);
+            dojo.query('.timer-button').forEach((but: HTMLElement) => (dojo.destroy(but.id)));
+            dojo.destroy(`cancel-button`);
+            this.actionTimerId = undefined;
+        }
+    }
+
     private stripTime(buttonLabel: string): string {
         const regex = /\s*\([0-9]+\)$/;
         return buttonLabel.replace(regex, '');
@@ -915,7 +901,7 @@ class Expeditions implements ExpeditionsGame {
 
         (this as any).addActionButton(
             'undoTicket_button',
-            _('Undo'),
+            _('Undo use ticket'),
             () => this.takeAction('undoTicket'),
             null,
             null,

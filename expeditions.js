@@ -1659,6 +1659,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSelectableRoutes = function (selectable, possibleRoutes) {
         var _this = this;
+        dojo.query('.route-space.selectable').removeClass('selected');
         dojo.query('.route-space').removeClass('selectable');
         if (selectable) {
             possibleRoutes.forEach(function (route) {
@@ -3158,6 +3159,12 @@ var Expeditions = /** @class */ (function () {
         if (!this.canClaimRoute(route, this.selectedArrowColor) && !dojo.hasClass(routeDivId, 'removable')) {
             return;
         }
+        dojo.query(".route-space.selectable:not(#".concat(routeDivId, ")")).removeClass('selected');
+        routeDiv.classList.toggle('selected');
+        if (!routeDiv.classList.contains('selected')) {
+            this.stopActionTimer();
+            return;
+        }
         if (this.bothDirectionsPossible(route)) {
             dojo.destroy("claimRouteConfirm_button");
             if (this.gamedatas.gamestate.name !== 'clientChooseDirection') {
@@ -3195,41 +3202,10 @@ var Expeditions = /** @class */ (function () {
                 dojo.addClass('claimRouteConfirm_button', 'timer-button');
                 this.startActionTimer("claimRouteConfirm_button", 5, function () {
                     dojo.destroy("claimRouteConfirm_button");
+                    dojo.query(".route-space.selectable").removeClass('selected');
                 });
             }
         }
-        /*
-        const selectedColor = this.playerTable.getSelectedColor();
-
-        if (selectedColor !== null) {
-            this.askRouteClaimConfirmation(route, selectedColor);
-        } else {
-            const possibleColors: number[] =
-                this.playerTable?.getPossibleColors(route) || [];
-
-            if (possibleColors.length == 1) {
-                this.askRouteClaimConfirmation(route, possibleColors[0]);
-            } else if (possibleColors.length > 1) {
-                possibleColors.forEach((color) => {
-                    const label = dojo.string.substitute(_("Use ${color}"), {
-                        color: `<div class="train-car-color icon" data-color="${color}"></div> ${getColor(
-                            color,
-                            "train-car"
-                        )}`,
-                    });
-                    (this as any).addActionButton(
-                        `claimRouteWithColor_button${color}`,
-                        label,
-                        () => this.askRouteClaimConfirmation(route, color)
-                    );
-                });
-
-                this.playerTable.setSelectableTrainCarColors(
-                    route,
-                    possibleColors
-                );
-            }
-        }*/
     };
     Expeditions.prototype.clickedRemovableRoute = function (route) {
         var _this = this;
@@ -3304,6 +3280,14 @@ var Expeditions = /** @class */ (function () {
         actionTimerFunction();
         this.actionTimerId = window.setInterval(function () { return actionTimerFunction(); }, 1000);
     };
+    Expeditions.prototype.stopActionTimer = function () {
+        if (this.actionTimerId) {
+            window.clearInterval(this.actionTimerId);
+            dojo.query('.timer-button').forEach(function (but) { return (dojo.destroy(but.id)); });
+            dojo.destroy("cancel-button");
+            this.actionTimerId = undefined;
+        }
+    };
     Expeditions.prototype.stripTime = function (buttonLabel) {
         var regex = /\s*\([0-9]+\)$/;
         return buttonLabel.replace(regex, '');
@@ -3354,7 +3338,7 @@ var Expeditions = /** @class */ (function () {
         var stateArgs = this.gamedatas.gamestate.args;
         this.addArrowsColoredButtons(stateArgs.remainingArrows, stateArgs.possibleRoutes);
         this.addActionButton('drawDestinations_button', _('Trade one destination'), function () { return _this.drawDestinations(); }, null, null, 'blue');
-        this.addActionButton('undoTicket_button', _('Undo'), function () { return _this.takeAction('undoTicket'); }, null, null, 'red');
+        this.addActionButton('undoTicket_button', _('Undo use ticket'), function () { return _this.takeAction('undoTicket'); }, null, null, 'red');
     };
     Expeditions.prototype.selectArrowColor = function (color) {
         this.selectedArrowColor = color;

@@ -465,6 +465,9 @@
 .route-space.selectable[data-color="3"]::before {
   background-position: 100% 50%;
 }
+.route-space.selected::before {
+  box-shadow: 0 0 7px 7px black;
+}
 .route-space.forbidden::before {
   content: "";
   position: absolute;

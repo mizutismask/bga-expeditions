@@ -358,6 +358,7 @@ class TtrMap {
      * Highlight selectable route spaces.
      */
     public setSelectableRoutes(selectable: boolean, possibleRoutes: Route[]) {
+        dojo.query('.route-space.selectable').removeClass('selected');
         dojo.query('.route-space').removeClass('selectable');
 
         if (selectable) {

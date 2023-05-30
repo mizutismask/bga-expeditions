@@ -259,6 +259,11 @@ $route-space-background-size: 300% 100%;
         }
     }
 
+    &.selected{
+        &::before {
+            box-shadow:0 0 7px 7px black;
+    }}
+
     &.forbidden {
         &::before {
             content: '';
