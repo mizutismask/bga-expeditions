@@ -369,4 +369,8 @@ trait UtilTrait {
             && intval($this->getGameStateValue(REMAINING_YELLOW_ARROWS)) == 0
             && intval($this->getGameStateValue(REMAINING_RED_ARROWS)) == 0;
     }
+
+    function getColoredGameStateValue($gameStateValue, $color){
+       return $this->getGameStateValue($gameStateValue."_". strtoupper($this->getColorName($color)));
+    }
 }

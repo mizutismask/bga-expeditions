@@ -1,7 +1,7 @@
 const DRAG_AUTO_ZOOM_DELAY = 2000;
 
-const SIDES = ["left", "right", "top", "bottom"];
-const CORNERS = ["bottom-left", "bottom-right", "top-left", "top-right"];
+const SIDES = ['left', 'right', 'top', 'bottom'];
+const CORNERS = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 
 const MAP_WIDTH = 1744;
 const MAP_HEIGHT = 1321;
@@ -27,26 +27,26 @@ class InMapZoomManager {
     private dragClientY: number;
 
     constructor() {
-        this.mapZoomDiv = document.getElementById("map-zoom") as HTMLDivElement;
-        this.mapDiv = document.getElementById("map") as HTMLDivElement;
+        this.mapZoomDiv = document.getElementById('map-zoom') as HTMLDivElement;
+        this.mapDiv = document.getElementById('map') as HTMLDivElement;
         // Attach the handler
-        this.mapDiv.addEventListener("mousedown", (e) => this.mouseDownHandler(e));
-        document.addEventListener("mousemove", (e) => this.mouseMoveHandler(e));
-        document.addEventListener("mouseup", (e) => this.mouseUpHandler());
-        document.getElementById("zoom-button").addEventListener("click", () => this.toggleZoom());
+        this.mapDiv.addEventListener('mousedown', (e) => this.mouseDownHandler(e));
+        document.addEventListener('mousemove', (e) => this.mouseMoveHandler(e));
+        document.addEventListener('mouseup', (e) => this.mouseUpHandler());
+        document.getElementById('zoom-button').addEventListener('click', () => this.toggleZoom());
 
-        this.mapDiv.addEventListener("dragover", (e) => {
+        this.mapDiv.addEventListener('dragover', (e) => {
             if (e.offsetX !== this.dragClientX || e.offsetY !== this.dragClientY) {
                 this.dragClientX = e.offsetX;
                 this.dragClientY = e.offsetY;
                 this.dragOverMouseMoved(e.offsetX, e.offsetY);
             }
         });
-        this.mapDiv.addEventListener("dragleave", (e) => {
+        this.mapDiv.addEventListener('dragleave', (e) => {
             clearTimeout(this.autoZoomTimeout);
             this.autoZoomTimeout = null;
         });
-        this.mapDiv.addEventListener("drop", (e) => {
+        this.mapDiv.addEventListener('drop', (e) => {
             clearTimeout(this.autoZoomTimeout);
             this.autoZoomTimeout = null;
         });
@@ -70,11 +70,11 @@ class InMapZoomManager {
      */
     private toggleZoom(scrollRatioX: number = null, scrollRatioY: number = null) {
         this.zoomed = !this.zoomed;
-        this.mapDiv.style.transform = this.zoomed ? `scale(1.8)` : "";
-        dojo.toggleClass("zoom-button", "zoomed", this.zoomed);
-        dojo.toggleClass("map-zoom", "scrollable", this.zoomed);
+        this.mapDiv.style.transform = this.zoomed ? `scale(1.8)` : '';
+        dojo.toggleClass('zoom-button', 'zoomed', this.zoomed);
+        dojo.toggleClass('map-zoom', 'scrollable', this.zoomed);
 
-        this.mapDiv.style.cursor = this.zoomed ? "grab" : "default";
+        this.mapDiv.style.cursor = this.zoomed ? 'grab' : 'default';
 
         if (this.zoomed) {
             if (scrollRatioX && scrollRatioY) {
@@ -95,7 +95,7 @@ class InMapZoomManager {
         if (!this.zoomed) {
             return;
         }
-        this.mapDiv.style.cursor = "grabbing";
+        this.mapDiv.style.cursor = 'grabbing';
 
         this.pos = {
             dragging: true,
@@ -134,7 +134,7 @@ class InMapZoomManager {
             return;
         }
 
-        this.mapDiv.style.cursor = "grab";
+        this.mapDiv.style.cursor = 'grab';
         this.pos.dragging = false;
     }
 
@@ -168,11 +168,11 @@ class TtrMap {
             <div id="route-spaces"></div>
             <div id="train-cars"></div>
         `,
-            "map",
-            "first"
+            'map',
+            'first'
         );
-        SIDES.forEach((side) => dojo.place(`<div class="side ${side}"></div>`, "map-and-borders"));
-        CORNERS.forEach((corner) => dojo.place(`<div class="corner ${corner}"></div>`, "map-and-borders"));
+        SIDES.forEach((side) => dojo.place(`<div class="side ${side}"></div>`, 'map-and-borders'));
+        CORNERS.forEach((corner) => dojo.place(`<div class="corner ${corner}"></div>`, 'map-and-borders'));
 
         CITIES.forEach((city) => {
             dojo.place(
@@ -180,17 +180,17 @@ class TtrMap {
                 style="transform: translate(${city.x}px, ${city.y}px)"
                 title="${this.getLocationName(city.id)}"
             ></div>`,
-                "cities"
+                'cities'
             );
-            $(`city${city.id}`).addEventListener("click", () => this.game.clickedCity(city));
+            $(`city${city.id}`).addEventListener('click', () => this.game.clickedCity(city));
         });
 
         this.createRouteSpaces();
         this.showRevealedDestinations(revealedDestinations);
         this.setClaimedRoutes(claimedRoutes, null);
 
-        this.resizedDiv = document.getElementById("resized") as HTMLDivElement;
-        this.mapDiv = document.getElementById("map") as HTMLDivElement;
+        this.resizedDiv = document.getElementById('resized') as HTMLDivElement;
+        this.mapDiv = document.getElementById('map') as HTMLDivElement;
 
         this.inMapZoomManager = new InMapZoomManager();
     }
@@ -213,16 +213,16 @@ class TtrMap {
 
     private getXCoord(city: City, route: Route): number {
         if (this.isCityOnMapEdge(city)) {
-            return this.getEdgeFromRoute(city, route) == "left" ? 0 : 1742; //right edge position
+            return this.getEdgeFromRoute(city, route) == 'left' ? 0 : 1742; //right edge position
         } else {
             return city.x;
         }
     }
 
-    private getEdgeFromRoute(redEdgecity: City, route: Route): "left" | "right" {
+    private getEdgeFromRoute(redEdgecity: City, route: Route): 'left' | 'right' {
         let cityConnectedToRedPoint = route.from == redEdgecity.id ? route.to : route.from;
         const citiesOnTheLeft = [101, 105, 108, 111, 124, 126, 202]; //list of cites connected to edges on the left
-        return citiesOnTheLeft.indexOf(cityConnectedToRedPoint) != -1 ? "left" : "right";
+        return citiesOnTheLeft.indexOf(cityConnectedToRedPoint) != -1 ? 'left' : 'right';
     }
 
     private getClaimedArrowBackgroundClass(route: Route, claimed: ClaimedRoute) {
@@ -257,9 +257,27 @@ class TtrMap {
 			destination.y
 		);*/
 
-        return `arrow${this.getArrowSize(route)}${reverse ? "R" : "N"}${getColor(route.color, false)
+        return `arrow${this.getArrowSize(route)}${reverse ? 'R' : 'N'}${getColor(route.color, false)
             .charAt(0)
             .toUpperCase()}`;
+    }
+
+    public showOtherDirection(route: Route, routeDiv: HTMLElement) {
+        this.setSelectableRoutes(true, [route]);
+        let reverse: boolean = 'reverseDirection' in routeDiv.dataset && routeDiv.dataset.reverseDirection === 'true';
+        //invert the value
+        reverse = !reverse;
+        routeDiv.dataset.reverseDirection = reverse.toString();
+        const possibleDirection: ClaimedRoute = { routeId: route.id, playerId: undefined, reverseDirection: reverse };
+        const className: string = this.getClaimedArrowBackgroundClass(route, possibleDirection);
+        const utilDiv = $('util-choose-direction');
+        if (utilDiv.classList) {
+            utilDiv.classList.remove(...utilDiv.classList);
+        }
+        utilDiv.classList.add('route-space', className);
+        const background = getComputedStyle($('util-choose-direction')).backgroundImage;
+        document.documentElement.style.setProperty('--route-space-background', background);
+        document.documentElement.style.setProperty('--route-space-background-size', "100%");
     }
 
     private getColorShiftX(route: Route, baseShift: number) {
@@ -291,7 +309,7 @@ class TtrMap {
         //return false;
     }
     private createRouteSpaces() {
-        const destination = "route-spaces";
+        const destination = 'route-spaces';
         this.getAllRoutes().forEach((route) =>
             route.spaces.forEach((space, spaceIndex) => {
                 const coords = { x: space.x, y: space.y };
@@ -300,7 +318,7 @@ class TtrMap {
                     style="transform-origin:left center; transform: translate(${coords.x}px, ${coords.y}px) rotate(${
                         space.angle
                     }deg); width:${space.length}px"
-                    title="${dojo.string.substitute(_("${from} to ${to}"), {
+                    title="${dojo.string.substitute(_('${from} to ${to}'), {
                         from: this.getLocationName(route.from),
                         to: this.getLocationName(route.to),
                     })}, ${getColor(route.color)}"
@@ -315,15 +333,15 @@ class TtrMap {
     }
 
     private getArrowSize(route: Route): String {
-        let size = "U";
+        let size = 'U';
         route.spaces.forEach((space) => {
             let length = space.length;
             if (length <= 60) {
-                size = "S";
+                size = 'S';
             } else if (length <= 95) {
-                size = "M";
+                size = 'M';
             } else {
-                size = "L";
+                size = 'L';
             }
         });
         return size;
@@ -333,14 +351,14 @@ class TtrMap {
      * Bind click events to route space.
      */
     private setSpaceClickEvents(spaceDiv: HTMLElement, route: Route) {
-        spaceDiv.addEventListener("click", () => this.game.clickedRoute(route));
+        spaceDiv.addEventListener('click', () => this.game.clickedRoute(route));
     }
 
     /**
      * Highlight selectable route spaces.
      */
     public setSelectableRoutes(selectable: boolean, possibleRoutes: Route[]) {
-        dojo.query(".route-space").removeClass("selectable");
+        dojo.query('.route-space').removeClass('selectable');
 
         if (selectable) {
             possibleRoutes.forEach((route) =>
@@ -349,7 +367,7 @@ class TtrMap {
                     .spaces.forEach((_, index) =>
                         document
                             .getElementById(`route-spaces-route${route.id}-space${index}`)
-                            ?.classList.add("selectable")
+                            ?.classList.add('selectable')
                     )
             );
         }
@@ -359,7 +377,7 @@ class TtrMap {
      * Highlight removable route wagons.
      */
     public setRemovableRoutes(removable: boolean, routes: Route[]) {
-        dojo.query(".route-space").removeClass("removable");
+        dojo.query('.route-space').removeClass('removable');
         if (removable) {
             routes.forEach((route) => {
                 this.getAllRoutes()
@@ -367,7 +385,7 @@ class TtrMap {
                     .spaces.forEach((_, index) => {
                         let space = document.getElementById(`route-spaces-route${route.id}-space${index}`);
                         if (space) {
-                            space.classList.add("removable");
+                            space.classList.add('removable');
                             this.createRemoveArrowHandle(route);
                         }
                     });
@@ -385,7 +403,7 @@ class TtrMap {
             `,
             space.id
         );
-        $(id).addEventListener("click", () => this.game.clickedRemovableRoute(route));
+        $(id).addEventListener('click', () => this.game.clickedRemovableRoute(route));
     }
 
     /**
@@ -416,8 +434,8 @@ class TtrMap {
             this.shiftArrowIfNeeded(r, claimedRoutes);
         });
         const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-        routeDiv.classList.add("xpd-hidden", "animated-arrow");
-        setTimeout(() => routeDiv.classList.remove("xpd-hidden", "animated-arrow"), 1800);
+        routeDiv.classList.add('xpd-hidden', 'animated-arrow');
+        setTimeout(() => routeDiv.classList.remove('xpd-hidden', 'animated-arrow'), 1800);
     }
 
     /**
@@ -426,7 +444,7 @@ class TtrMap {
      */
     public unclaimRoute(route: Route) {
         const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
-        dojo.removeClass(`route-spaces-route${route.id}-space${0}`, ARROW_CLASSES_PERMUTATIONS.join(" "));
+        dojo.removeClass(`route-spaces-route${route.id}-space${0}`, ARROW_CLASSES_PERMUTATIONS.join(' '));
     }
 
     private animateWagonFromCounter(playerId: number, wagonId: string, toX: number, toY: number) {
@@ -443,7 +461,7 @@ class TtrMap {
 
         wagon.style.transform = `translate(${fromX + toX}px, ${fromY + toY}px)`;
         setTimeout(() => {
-            wagon.style.transition = "transform 0.5s";
+            wagon.style.transition = 'transform 0.5s';
             wagon.style.transform = `translate(${toX}px, ${toY}px`;
         }, 0);
     }
@@ -544,7 +562,7 @@ class TtrMap {
             //console.log("oldTransform", oldTransform);
             let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
             //console.log("newTransform", newTransform);
-            routeDiv.dataset.shifted = "true";
+            routeDiv.dataset.shifted = 'true';
             routeDiv.style.transform = newTransform;
         } else {
             //console.log("shift aborted, route already shifted", route, shiftX, shiftY);
@@ -564,7 +582,7 @@ class TtrMap {
         phantom: boolean,
         isLowestFromDoubleHorizontalRoute: boolean
     ) {
-        const id = `wagon-route${route.id}-space${spaceIndex}${phantom ? "-phantom" : ""}`;
+        const id = `wagon-route${route.id}-space${spaceIndex}${phantom ? '-phantom' : ''}`;
         if (document.getElementById(id)) {
             return;
         }
@@ -583,7 +601,7 @@ class TtrMap {
             (Math.acos((-2 * angle) / 180 + 1) / Math.PI) * EASE_WEIGHT + (angle / 180) * (1 - EASE_WEIGHT);
         const angleClassNumber = Math.round(angleOnOne * 36);
 
-        const alreadyPlacedWagons = Array.from(document.querySelectorAll(".wagon")) as HTMLDivElement[];
+        const alreadyPlacedWagons = Array.from(document.querySelectorAll('.wagon')) as HTMLDivElement[];
         const xy = x + y;
 
         if (isLowestFromDoubleHorizontalRoute) {
@@ -591,26 +609,26 @@ class TtrMap {
             x += 10 * Math.abs(Math.sin((angle * Math.PI) / 180));
             y += 10 * Math.abs(Math.cos((angle * Math.PI) / 180));
         }
-        const wagonHtml = `<div id="${id}" class="wagon angle${angleClassNumber} ${phantom ? "phantom" : ""} ${
-            space.top ? "top" : ""
+        const wagonHtml = `<div id="${id}" class="wagon angle${angleClassNumber} ${phantom ? 'phantom' : ''} ${
+            space.top ? 'top' : ''
         }" data-player-color="${route.color}" data-color-blind-player-no="${
             player.playerNo
         }" data-xy="${xy}" style="transform: translate(${x}px, ${y}px)"></div>`;
         // we consider a wagon must be more visible than another if its X + Y is > as the other
         if (!alreadyPlacedWagons.length) {
-            dojo.place(wagonHtml, "train-cars");
+            dojo.place(wagonHtml, 'train-cars');
         } else {
             let placed = false;
             for (let i = 0; i < alreadyPlacedWagons.length; i++) {
                 if (Number(alreadyPlacedWagons[i].dataset.xy) > xy) {
-                    dojo.place(wagonHtml, alreadyPlacedWagons[i].id, "before");
+                    dojo.place(wagonHtml, alreadyPlacedWagons[i].id, 'before');
                     placed = true;
                     break;
                 }
             }
 
             if (!placed) {
-                dojo.place(wagonHtml, "train-cars");
+                dojo.place(wagonHtml, 'train-cars');
             }
         }
 
@@ -705,7 +723,7 @@ class TtrMap {
             return;
         }
 
-        const screenRatio = document.getElementById("game_play_area").clientWidth / (window.innerHeight - 80);
+        const screenRatio = document.getElementById('game_play_area').clientWidth / (window.innerHeight - 80);
         const leftDistance = Math.abs(LEFT_RATIO - screenRatio);
         const bottomDistance = Math.abs(BOTTOM_RATIO - screenRatio);
         const left = leftDistance < bottomDistance || (this.game as any).isSpectator;
@@ -714,11 +732,11 @@ class TtrMap {
         const gameWidth = (left ? PLAYER_WIDTH : 0) + MAP_WIDTH + DECK_WIDTH;
         const gameHeight = MAP_HEIGHT + (left ? 0 : PLAYER_HEIGHT * 0.75);
 
-        const horizontalScale = document.getElementById("game_play_area").clientWidth / gameWidth;
+        const horizontalScale = document.getElementById('game_play_area').clientWidth / gameWidth;
         const verticalScale = (window.innerHeight - 80) / gameHeight;
         this.scale = Math.min(1, horizontalScale, verticalScale);
 
-        this.resizedDiv.style.transform = this.scale === 1 ? "" : `scale(${this.scale})`;
+        this.resizedDiv.style.transform = this.scale === 1 ? '' : `scale(${this.scale})`;
         this.resizedDiv.style.marginBottom = `-${(1 - this.scale) * gameHeight}px`;
     }
 
@@ -739,13 +757,13 @@ class TtrMap {
             }
 
             [previousDestination.to].forEach(
-                (city) => (document.getElementById(`city${city}`).dataset.selectedDestination = "false")
+                (city) => (document.getElementById(`city${city}`).dataset.selectedDestination = 'false')
             );
         }
 
         if (destination) {
             [destination.to].forEach(
-                (city) => (document.getElementById(`city${city}`).dataset.selectedDestination = "true")
+                (city) => (document.getElementById(`city${city}`).dataset.selectedDestination = 'true')
             );
         }
     }
@@ -757,7 +775,7 @@ class TtrMap {
         [destination.to].forEach((city) => {
             //console.log("search ", `city${city}`);
 
-            document.getElementById(`city${city}`).dataset.selectable = "" + visible;
+            document.getElementById(`city${city}`).dataset.selectable = '' + visible;
         });
     }
 
@@ -775,7 +793,7 @@ class TtrMap {
      */
     public setSelectedDestination(destination: Destination, visible: boolean): void {
         [destination.to].forEach((city) => {
-            document.getElementById(`city${city}`).dataset.selected = "" + visible;
+            document.getElementById(`city${city}`).dataset.selected = '' + visible;
         });
     }
 
@@ -785,10 +803,10 @@ class TtrMap {
     public setDestinationsToConnect(destinations: Destination[]): void {
         this.mapDiv
             .querySelectorAll(`.city[data-to-connect]:not([data-revealed-by])`)
-            .forEach((city: HTMLElement) => (city.dataset.toConnect = "false"));
+            .forEach((city: HTMLElement) => (city.dataset.toConnect = 'false'));
         const cities = [];
         destinations.forEach((destination) => cities.push(destination.to));
-        cities.forEach((city) => (document.getElementById(`city${city}`).dataset.toConnect = "true"));
+        cities.forEach((city) => (document.getElementById(`city${city}`).dataset.toConnect = 'true'));
     }
 
     /**
@@ -796,16 +814,16 @@ class TtrMap {
      */
     public setHighligthedDestination(destination: Destination | null): void {
         const visible = Boolean(destination).toString();
-        const shadow = document.getElementById("map-destination-highlight-shadow");
+        const shadow = document.getElementById('map-destination-highlight-shadow');
         shadow.dataset.visible = visible;
 
         this.mapDiv
             .querySelectorAll(`.city[data-highlight="${true}"]`)
-            .forEach((city: HTMLElement) => (city.dataset.highlight = "false"));
+            .forEach((city: HTMLElement) => (city.dataset.highlight = 'false'));
 
         let cities: (string | number)[];
         if (destination) {
-            shadow.dataset.to = "" + destination.to;
+            shadow.dataset.to = '' + destination.to;
             cities = [destination.to];
         } else {
             cities = []; //shadow.dataset.to
@@ -818,17 +836,17 @@ class TtrMap {
      */
     public revealDestination(player: ExpeditionsPlayer, destination: Destination, temporary: boolean = false) {
         //remove old temporary ones
-        dojo.query("[data-temporary=true]").forEach((div) => {
-            div.removeAttribute("data-revealed-by");
-            div.removeAttribute("data-temporary");
+        dojo.query('[data-temporary=true]').forEach((div) => {
+            div.removeAttribute('data-revealed-by');
+            div.removeAttribute('data-temporary');
         });
 
         if (destination) {
             const div = document.getElementById(`city${destination.to}`);
             if (div.dataset.revealedBy) {
                 //destination unselected
-                div.removeAttribute("data-revealed-by");
-                div.removeAttribute("data-temporary");
+                div.removeAttribute('data-revealed-by');
+                div.removeAttribute('data-temporary');
             } else {
                 //destination selected
                 div.dataset.revealedBy = player.color;
@@ -844,7 +862,7 @@ class TtrMap {
         destinationsByPlayer.forEach(function (destinations, player) {
             destinations.forEach((d) => {
                 document.getElementById(`city${d.to}`).dataset.revealedBy = player.color;
-                document.getElementById(`city${d.to}`).dataset.toConnect = "true";
+                document.getElementById(`city${d.to}`).dataset.toConnect = 'true';
             });
         });
     }
@@ -854,9 +872,9 @@ class TtrMap {
      */
     public removeRevealedDestination(dest: Destination) {
         let div = document.getElementById(`city${dest.to}`);
-        div.removeAttribute("data-revealed-by");
-        div.dataset.toConnect = "false";
-        div.dataset.selectable = "false";
+        div.removeAttribute('data-revealed-by');
+        div.dataset.toConnect = 'false';
+        div.dataset.selectable = 'false';
     }
 
     /**
@@ -864,8 +882,8 @@ class TtrMap {
      */
     public showSharedDestinations(destinations: Destination[]) {
         destinations.forEach((d) => {
-            document.getElementById(`city${d.to}`).dataset.revealedBy = "shared";
-            document.getElementById(`city${d.to}`).dataset.toConnect = "true";
+            document.getElementById(`city${d.to}`).dataset.revealedBy = 'shared';
+            document.getElementById(`city${d.to}`).dataset.toConnect = 'true';
         });
     }
 
@@ -888,9 +906,9 @@ class TtrMap {
         let color = this.getLocationColor(cityId);
         switch (color) {
             case RED:
-                return _("red point");
+                return _('red point');
             case BLUE:
-                return _("blue point");
+                return _('blue point');
             case GREEN:
                 return CITIES_NAMES[cityId - 100];
         }

@@ -56,6 +56,12 @@ class Expeditions extends Table {
             NEW_LOOP_COLOR => 15,
             MAIN_ACTION_DONE => 16,
             BLUEPOINT_ACTIONS_REMAINING => 17,
+            LAST_ARROW_FROM_START_BLUE => 18,
+            LAST_ARROW_FROM_START_YELLOW => 19,
+            LAST_ARROW_FROM_START_RED => 20,
+            ARROWS_SINCE_LOOP_BLUE => 21,
+            ARROWS_SINCE_LOOP_YELLOW => 22,
+            ARROWS_SINCE_LOOP_RED => 23,
             // options
             SHOW_TURN_ORDER => 110,
         ]);
@@ -109,6 +115,13 @@ class Expeditions extends Table {
         $this->setGameStateInitialValue(NEW_LOOP_COLOR, 0);
         $this->setGameStateInitialValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateInitialValue(BLUEPOINT_ACTIONS_REMAINING, 0);
+
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_BLUE, 0);
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_YELLOW, 0);
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_RED, 0);
+        $this->setGameStateInitialValue(LAST_ARROW_FROM_START_BLUE, 0);
+        $this->setGameStateInitialValue(LAST_ARROW_FROM_START_YELLOW, 0);
+        $this->setGameStateInitialValue(LAST_ARROW_FROM_START_RED, 0);
 
         $this->setGlobalVariable(LAST_BLUE_ROUTES, [null, null, null]);
         $this->setGlobalVariable(LAST_YELLOW_ROUTES, [null, null, null]);

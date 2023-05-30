@@ -81,8 +81,9 @@ class action_expeditions extends APP_GameAction {
 
         $routeId = self::getArg("routeId", AT_posint, true);
         $color = self::getArg("color", AT_posint, true);
+        $reverseDirection = self::getArg("reverseDirection", AT_bool, false);
 
-        $this->game->claimRoute($routeId, $color);
+        $this->game->claimRoute($routeId, $color,$reverseDirection);
 
         self::ajaxResponse();
     }

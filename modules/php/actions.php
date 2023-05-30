@@ -85,7 +85,10 @@ trait ActionTrait {
         $this->gamestate->nextState('useTicket');
     }
 
-    public function claimRoute(int $routeId, int $color) {
+    /**
+     * @param reverseDirection is provided only if routes can be taken in both direction
+     */
+    public function claimRoute(int $routeId, int $color, ?bool $reverseDirection) {
         self::checkAction('claimRoute');
 
         $playerId = intval(self::getActivePlayerId());
@@ -96,8 +99,8 @@ trait ActionTrait {
             return;
         }
 
-        $remainingTrainCars = $this->getRemainingArrows($color);
-        if ($remainingTrainCars <= 0) {
+        $remaining = $this->getRemainingArrows($color);
+        if ($remaining <= 0) {
             self::notifyPlayer($playerId, 'notEnoughTrainCars', _("All arrows of this color have been used"), []);
             return;
         }
@@ -110,15 +113,19 @@ trait ActionTrait {
         if (!$this->array_some($possibleRoutes, fn ($possibleRoute) => $possibleRoute->id == $routeId)) {
             throw new BgaUserException("You can't claim this route");
         }
-        $this->applyClaimRoute($playerId, $routeId, $color, 0);
+        $this->applyClaimRoute($playerId, $routeId, $color, $reverseDirection);
     }
 
-    function applyClaimRoute(int $playerId, int $routeId, int $color, int $extraCardCost = 0) {
+    function applyClaimRoute(int $playerId, int $routeId, int $color, ?bool $choosedReverseDirection = null) {
 
         $route = $this->getRoute($routeId);
         //self::dump('*******************applyClaimRoute', $routeId);
         // self::dump('*******************', $route);
-        $reverseDirection = $this->guessDirection($route);
+        if ($choosedReverseDirection) {
+            $reverseDirection = $choosedReverseDirection;
+        } else {
+            $reverseDirection = $this->guessDirection($route);
+        }
         //self::dump('**************reverseDirection*****', $reverseDirection);
         // save claimed route
         $reverseDirectionInt = intval($reverseDirection);
@@ -134,6 +141,7 @@ trait ActionTrait {
         ]), $color);
 
         $target = $reverseDirection ? $route->from : $route->to;
+        $from = $reverseDirection ? $route->to : $route->from;
         $destinationColor = $this->getLocationColor($target);
 
         self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name}: ${from} ${arrowColor} ${to}'), [
@@ -160,10 +168,54 @@ trait ActionTrait {
             $this->setGameStateValue(MAIN_ACTION_DONE, 1);
         }
 
+
         $loop = $this->checkLoop($playerId, $route, $reverseDirection);
+        $this->updateArrowsStateValues($color, $loop, $from === STARTING_POINT,  $routeId);
+
         $this->nextState($playerId, $loop);
         // in case there is less than 6 visible cards on the table, we refill
         $this->checkVisibleSharedCardsAreEnough();
+    }
+
+    function updateArrowsStateValues($color, $loop, $fromStartingPoint,  $routeId) {
+        switch ($color) {
+            case BLUE:
+                if ($loop) {
+                    $this->setGameStateValue(ARROWS_SINCE_LOOP_BLUE, 0);
+                } else {
+                    $this->incGameStateValue(ARROWS_SINCE_LOOP_BLUE, 1);
+                }
+                if ($fromStartingPoint) {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_BLUE, $routeId);
+                } else {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_BLUE, 0);
+                }
+                break;
+            case YELLOW:
+                if ($loop) {
+                    $this->setGameStateValue(ARROWS_SINCE_LOOP_YELLOW, 0);
+                } else {
+                    $this->incGameStateValue(ARROWS_SINCE_LOOP_YELLOW, 1);
+                }
+                if ($fromStartingPoint) {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_YELLOW, $routeId);
+                } else {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_YELLOW, 0);
+                }
+                break;
+            case RED:
+                if ($loop) {
+                    $this->setGameStateValue(ARROWS_SINCE_LOOP_RED, 0);
+                } else {
+                    $this->incGameStateValue(ARROWS_SINCE_LOOP_RED, 1);
+                }
+                if ($fromStartingPoint) {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_RED, $routeId);
+                } else {
+                    $this->setGameStateValue(LAST_ARROW_FROM_START_RED, 0);
+                }
+                break;
+        }
     }
     private function nextState($playerId, $loop) {
         if (boolval($this->getGameStateValue(MAIN_ACTION_DONE)) && !$loop && !$this->canUseTicket($playerId) && $this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING) == 0) {
@@ -319,7 +371,10 @@ trait ActionTrait {
         $comingIn = array_filter($claimedRoutes, fn ($route) => $this->getRoute($route->routeId)->color === $unclaimedRoute->color && $this->getRouteDestinationFromRouteId($route->routeId) === $origin && $route->routeId !== $unclaimedRoute->id);
         //self::dump("*******************coming in", $comingIn);
         //self::dump("*******************coming out", $comingOut);
-        $loop = !empty($comingOut) && !empty($comingIn);
+        //self::dump("*******************ARROWS_SINCE_LOOP",$this->getColoredGameStateValue("ARROWS_SINCE_LOOP", $route->color));
+        //self::dump("*******************LAST_ARROW_FROM_START",$this->getColoredGameStateValue("LAST_ARROW_FROM_START", $route->color));
+        $removingFromStartAfterLoop = $this->getColoredGameStateValue("ARROWS_SINCE_LOOP", $route->color) == 1 && $this->getColoredGameStateValue("LAST_ARROW_FROM_START", $route->color) == $unclaimedRoute->id;
+        $loop = (!empty($comingOut) && !empty($comingIn)) || $removingFromStartAfterLoop;
         if ($loop) {
             $this->loopFound($playerId, $unclaimedRoute->color);
         }

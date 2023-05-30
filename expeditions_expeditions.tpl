@@ -54,4 +54,5 @@
 <audio id="audiosrc_completed-in-game-6" src="{GAMETHEMEURL}img/completed-in-game-6.mp3" preload="none" autobuffer></audio>
 <audio id="audiosrc_o_completed-in-game-6" src="{GAMETHEMEURL}img/completed-in-game-6.ogg" preload="none" autobuffer></audio>
 
+<div id="util-choose-direction" style="display:none"></div>
 {OVERALL_GAME_FOOTER}

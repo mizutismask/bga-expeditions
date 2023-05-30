@@ -367,6 +367,13 @@
     transform: scale(1);
   }
 }
+:root {
+  --route-space-default-background: url("img/road-highlight.png");
+  --route-space-background: url("img/road-highlight.png");
+  --route-space-default-background-size: 300% 100%;
+  --route-space-background-size: 300% 100%;
+}
+
 .route-space {
   background-position: center;
   background-repeat: no-repeat;
@@ -445,8 +452,8 @@
   bottom: 0px;
   left: -1px;
   right: 13px;
-  background: url("img/road-highlight.png") no-repeat;
-  background-size: 300% 100%;
+  background: var(--route-space-background) no-repeat;
+  background-size: var(--route-space-background-size);
   animation: selectable-road-animation 1s alternate-reverse infinite ease-in-out;
 }
 .route-space.selectable[data-color="1"]::before {
