@@ -142,7 +142,8 @@ $playerActionsGameStates = [
         "possibleactions" => [
             "unclaimRoute",
             "drawDestinations",
-            "claimRoute"
+            "claimRoute",
+            "undoTicket",
         ],
         "transitions" => [
             "continue" => ST_PLAYER_CHOOSE_ACTION,

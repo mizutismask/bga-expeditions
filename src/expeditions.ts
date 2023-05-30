@@ -687,10 +687,16 @@ class Expeditions implements ExpeditionsGame {
             }
             this.map.showOtherDirection(route, routeDiv);
             (this as any).addActionButton(`claimRouteConfirm_button`, _('Confirm'), () => {
-                const reverseDirection = routeDiv.dataset.reverseDirection==="true";
+                const reverseDirection = routeDiv.dataset.reverseDirection === 'true';
                 this.claimRoute(route.id, this.selectedArrowColor, reverseDirection);
-                document.documentElement.style.setProperty("--route-space-background", "var(--route-space-default-background)");
-                document.documentElement.style.setProperty('--route-space-background-size', "var(--route-space-default-background-size)");
+                document.documentElement.style.setProperty(
+                    '--route-space-background',
+                    'var(--route-space-default-background)'
+                );
+                document.documentElement.style.setProperty(
+                    '--route-space-background-size',
+                    'var(--route-space-default-background-size)'
+                );
             });
         } else {
             if ($(`claimRouteConfirm_button`)) {
@@ -905,6 +911,15 @@ class Expeditions implements ExpeditionsGame {
             null,
             null,
             'blue'
+        );
+
+        (this as any).addActionButton(
+            'undoTicket_button',
+            _('Undo'),
+            () => this.takeAction('undoTicket'),
+            null,
+            null,
+            'red'
         );
     }
 
@@ -1189,7 +1204,7 @@ class Expeditions implements ExpeditionsGame {
      */
     notif_ticketUsed(notif: Notif<NotifTicketUsedArgs>) {
         const playerId = notif.args.playerId;
-        this.ticketsCounters[playerId].incValue(-1);
+        this.ticketsCounters[playerId].incValue(notif.args.canceled ? 1 : -1);
     }
 
     /**

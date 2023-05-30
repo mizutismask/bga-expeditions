@@ -101,4 +101,12 @@ class action_expeditions extends APP_GameAction {
 
         self::ajaxResponse();
     }
+
+    public function undoTicket() {
+        self::setAjaxMode();
+
+        $this->game->undoTicket();
+
+        self::ajaxResponse();
+    }
 }

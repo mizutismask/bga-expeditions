@@ -3167,10 +3167,10 @@ var Expeditions = /** @class */ (function () {
             }
             this.map.showOtherDirection(route, routeDiv);
             this.addActionButton("claimRouteConfirm_button", _('Confirm'), function () {
-                var reverseDirection = routeDiv.dataset.reverseDirection === "true";
+                var reverseDirection = routeDiv.dataset.reverseDirection === 'true';
                 _this.claimRoute(route.id, _this.selectedArrowColor, reverseDirection);
-                document.documentElement.style.setProperty("--route-space-background", "var(--route-space-default-background)");
-                document.documentElement.style.setProperty('--route-space-background-size', "var(--route-space-default-background-size)");
+                document.documentElement.style.setProperty('--route-space-background', 'var(--route-space-default-background)');
+                document.documentElement.style.setProperty('--route-space-background-size', 'var(--route-space-default-background-size)');
             });
         }
         else {
@@ -3354,6 +3354,7 @@ var Expeditions = /** @class */ (function () {
         var stateArgs = this.gamedatas.gamestate.args;
         this.addArrowsColoredButtons(stateArgs.remainingArrows, stateArgs.possibleRoutes);
         this.addActionButton('drawDestinations_button', _('Trade one destination'), function () { return _this.drawDestinations(); }, null, null, 'blue');
+        this.addActionButton('undoTicket_button', _('Undo'), function () { return _this.takeAction('undoTicket'); }, null, null, 'red');
     };
     Expeditions.prototype.selectArrowColor = function (color) {
         this.selectedArrowColor = color;
@@ -3595,7 +3596,7 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.notif_ticketUsed = function (notif) {
         var playerId = notif.args.playerId;
-        this.ticketsCounters[playerId].incValue(-1);
+        this.ticketsCounters[playerId].incValue(notif.args.canceled ? 1 : -1);
     };
     /**
      * Mark a destination as complete.

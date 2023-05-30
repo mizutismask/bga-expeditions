@@ -64,12 +64,27 @@ trait ActionTrait {
         self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} uses 1 ticket'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
+            'canceled' => false,
         ]);
         $this->incGameStateValue(TICKETS_USED, 1);
 
         self::incStat(1, STAT_TICKETS_USED, $playerId);
 
         $this->gamestate->nextState('useTicket');
+    }
+
+    public function undoTicket(){
+        self::checkAction('undoTicket');
+        $playerId = intval(self::getActivePlayerId());
+        $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
+        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} cancels the use of ticket'), [
+            'playerId' => $playerId,
+            'player_name' => $this->getPlayerName($playerId),
+            'canceled' => true,
+        ]);
+        $this->incGameStateValue(TICKETS_USED, -1);
+        self::incStat(-1, STAT_TICKETS_USED, $playerId);
+        $this->gamestate->nextState('continue');
     }
 
     /**

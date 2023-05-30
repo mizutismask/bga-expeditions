@@ -190,6 +190,7 @@ interface NotifUnclaimedRouteArgs {
 
 interface NotifTicketUsedArgs {
     playerId: number;
+    canceled: boolean;
 }
 
 interface NotifDestinationCompletedArgs {
