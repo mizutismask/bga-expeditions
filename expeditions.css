@@ -1014,6 +1014,7 @@ html,
 }
 .stockitem {
   border-radius: 6px;
+  background-size: 1000%;
 }
 .stockitem.disabled {
   filter: contrast(0.6);

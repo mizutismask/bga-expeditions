@@ -22,15 +22,6 @@ trait StateTrait {
         $this->gamestate->nextState('');
     }
 
-    function stChooseInitialDestinationsOld() {
-        $this->gamestate->setAllPlayersMultiactive();
-    }
-
-    function stChooseInitialDestinations() {
-        $this->gamestate->setAllPlayersMultiactive();
-        $this->gamestate->initializePrivateStateForAllActivePlayers();
-    }
-
     function hasReachedEndOfGameRequirements($playerId): bool {
         $end = count($this->getUncompletedDestinationsIds($playerId)) == 0;
         if ($end && intval(self::getGameStateValue(LAST_TURN) == 0)) {

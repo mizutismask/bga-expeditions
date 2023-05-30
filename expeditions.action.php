@@ -35,18 +35,6 @@ class action_expeditions extends APP_GameAction {
         }
     }
 
-    public function chooseInitialDestinations() {
-        self::setAjaxMode();
-
-        $destinationsIds = self::getArg("destinationsIds", AT_numberlist, true);
-
-        $this->game->chooseInitialDestinations(array_map(function ($idStr) {
-            return intval($idStr);
-        }, explode(',', $destinationsIds)));
-
-        self::ajaxResponse();
-    }
-
     public function revealDestination() {
         self::setAjaxMode();
 

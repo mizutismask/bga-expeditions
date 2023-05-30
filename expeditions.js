@@ -2710,8 +2710,6 @@ var Expeditions = /** @class */ (function () {
         var _a, _b, _c, _d, _e, _f;
         log('Entering state: ' + stateName, args.args);
         switch (stateName) {
-            case 'privateChooseInitialDestinations':
-            case 'chooseInitialDestinations':
             case 'chooseAdditionalDestinations':
                 if (args === null || args === void 0 ? void 0 : args.args) {
                     var chooseDestinationsArgs = args.args;
@@ -2799,8 +2797,6 @@ var Expeditions = /** @class */ (function () {
                 //this.setDestinationsToConnect(this.destinationsTodo);
                 (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.setToDoSelectionMode('none');
                 break;
-            case 'privateChooseInitialDestinations':
-            case 'chooseInitialDestinations':
             case 'chooseAdditionalDestinations':
                 this.destinationSelection.hide();
                 var mapDiv = document.getElementById('map');
@@ -2808,11 +2804,6 @@ var Expeditions = /** @class */ (function () {
                     .querySelectorAll(".city[data-selected]")
                     .forEach(function (city) { return (city.dataset.selected = 'false'); });
                 (_b = this.playerTable) === null || _b === void 0 ? void 0 : _b.setToDoSelectionMode('none');
-                break;
-            case 'multiChooseInitialDestinations':
-                Array.from(document.getElementsByClassName('player-turn-order')).forEach(function (elem) {
-                    return elem.remove();
-                });
                 break;
             case 'chooseAction':
                 //this.map.setSelectableDestination()
@@ -2831,10 +2822,6 @@ var Expeditions = /** @class */ (function () {
         var _this = this;
         if (this.isCurrentPlayerActive()) {
             switch (stateName) {
-                case 'privateChooseInitialDestinations':
-                    this.addActionButton('chooseInitialDestinations_button', _('Keep selected destinations'), function () { return _this.chooseInitialDestinations(); });
-                    this.destinationSelection.selectionChange();
-                    break;
                 case 'revealDestination':
                     this.addActionButton('revealDestination_button', _('Reveal this destination'), function () {
                         return _this.doRevealDestination();
@@ -3403,18 +3390,6 @@ var Expeditions = /** @class */ (function () {
     };
     Expeditions.prototype.getCityName = function (cityId) {
         return CITIES_NAMES[cityId - 100];
-    };
-    /**
-     * Apply destination selection (initial objectives).
-     */
-    Expeditions.prototype.chooseInitialDestinations = function () {
-        if (!this.checkAction('chooseInitialDestinations')) {
-            return;
-        }
-        var destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
-        this.takeAction('chooseInitialDestinations', {
-            destinationsIds: destinationsIds.join(','),
-        });
     };
     /**
      * Apply destination reveal.

@@ -10,19 +10,6 @@ trait ActionTrait {
         Each time a player is doing some game action, one of the methods below is called.
         (note: each method below must match an input method in nicodemus.action.php)
     */
-
-    public function chooseInitialDestinations(array $ids) {
-        self::checkAction('chooseInitialDestinations');
-
-        $playerId = intval(self::getCurrentPlayerId());
-
-        $this->keepInitialDestinationCards($playerId, $ids);
-
-
-        $this->gamestate->setPlayerNonMultiactive($playerId, 'start');
-        self::giveExtraTime($playerId);
-    }
-
     public function revealDestination(int $id) {
         self::checkAction('revealDestination');
 

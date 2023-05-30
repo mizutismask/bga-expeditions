@@ -128,8 +128,6 @@ class Expeditions implements ExpeditionsGame {
         log('Entering state: ' + stateName, args.args);
 
         switch (stateName) {
-            case 'privateChooseInitialDestinations':
-            case 'chooseInitialDestinations':
             case 'chooseAdditionalDestinations':
                 if (args?.args) {
                     const chooseDestinationsArgs = args.args as EnteringChooseDestinationsArgs;
@@ -227,8 +225,6 @@ class Expeditions implements ExpeditionsGame {
                 //this.setDestinationsToConnect(this.destinationsTodo);
                 this.playerTable?.setToDoSelectionMode('none');
                 break;
-            case 'privateChooseInitialDestinations':
-            case 'chooseInitialDestinations':
             case 'chooseAdditionalDestinations':
                 this.destinationSelection.hide();
                 const mapDiv = document.getElementById('map');
@@ -236,11 +232,6 @@ class Expeditions implements ExpeditionsGame {
                     .querySelectorAll(`.city[data-selected]`)
                     .forEach((city: HTMLElement) => (city.dataset.selected = 'false'));
                 this.playerTable?.setToDoSelectionMode('none');
-                break;
-            case 'multiChooseInitialDestinations':
-                (Array.from(document.getElementsByClassName('player-turn-order')) as HTMLDivElement[]).forEach((elem) =>
-                    elem.remove()
-                );
                 break;
             case 'chooseAction':
                 //this.map.setSelectableDestination()
@@ -259,14 +250,6 @@ class Expeditions implements ExpeditionsGame {
     public onUpdateActionButtons(stateName: string, args: any) {
         if ((this as any).isCurrentPlayerActive()) {
             switch (stateName) {
-                case 'privateChooseInitialDestinations':
-                    (this as any).addActionButton(
-                        'chooseInitialDestinations_button',
-                        _('Keep selected destinations'),
-                        () => this.chooseInitialDestinations()
-                    );
-                    this.destinationSelection.selectionChange();
-                    break;
                 case 'revealDestination':
                     (this as any).addActionButton('revealDestination_button', _('Reveal this destination'), () =>
                         this.doRevealDestination()
@@ -979,21 +962,6 @@ class Expeditions implements ExpeditionsGame {
 
     public getCityName(cityId: number) {
         return CITIES_NAMES[cityId - 100];
-    }
-
-    /**
-     * Apply destination selection (initial objectives).
-     */
-    public chooseInitialDestinations() {
-        if (!(this as any).checkAction('chooseInitialDestinations')) {
-            return;
-        }
-
-        const destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
-
-        this.takeAction('chooseInitialDestinations', {
-            destinationsIds: destinationsIds.join(','),
-        });
     }
 
     /**

@@ -11,31 +11,6 @@ trait ArgsTrait {
         These methods function is to return some additional information that is specific to the current
         game state.
     */
-
-    function argChooseInitialDestinationsOld() {
-        $playersIds = $this->getPlayersIds();
-
-        $private = [];
-
-        foreach ($playersIds as $playerId) {
-            $private[$playerId] = [
-                'destinations' => $this->getPickedDestinationCards($playerId),
-            ];
-        }
-
-        return [
-            'minimum' => $this->getInitialDestinationMinimumKept(),
-            '_private' => $private,
-        ];
-    }
-
-    function argPrivateChooseInitialDestinations(int $playerId) {
-        return [
-            'minimum' => $this->getInitialDestinationMinimumKept(),
-            'destinations' => $this->getPickedDestinationCards($playerId),
-        ];
-    }
-
     function argChooseAdditionalDestinations() {
         $playerId = intval(self::getActivePlayerId());
 
