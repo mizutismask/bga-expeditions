@@ -3212,6 +3212,7 @@ var Expeditions = /** @class */ (function () {
         if (!this.isCurrentPlayerActive()) {
             return;
         }
+        //clickedRoute method is also called, that’s why selected class is already managed
         if (dojo.hasClass("route-spaces-route".concat(route.id, "-space0"), 'removable')) {
             if (!$("unclaimRouteConfirm_button")) {
                 this.addActionButton("unclaimRouteConfirm_button", _('Confirm'), function () {

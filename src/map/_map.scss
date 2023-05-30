@@ -192,13 +192,13 @@
         transform: scale(1);
     }
 }
-$route-space-background: url("img/road-highlight.png");
+$route-space-background: url('img/road-highlight.png');
 $route-space-background-size: 300% 100%;
 :root {
-    --route-space-default-background: #{$route-space-background};//const
-    --route-space-background: #{$route-space-background};//var
-    --route-space-default-background-size: #{$route-space-background-size};//const
-    --route-space-background-size: #{$route-space-background-size};//var
+    --route-space-default-background: #{$route-space-background}; //const
+    --route-space-background: #{$route-space-background}; //var
+    --route-space-default-background-size: #{$route-space-background-size}; //const
+    --route-space-background-size: #{$route-space-background-size}; //var
 }
 .route-space {
     //background: #ff000026;
@@ -259,10 +259,14 @@ $route-space-background-size: 300% 100%;
         }
     }
 
-    &.selected{
+    &.selected {
         &::before {
-            box-shadow:0 0 7px 7px black;
-    }}
+            box-shadow: 0 0 7px 7px black;
+        }
+        .remove-arrow-handle {
+            animation: arrowAnimation 0.6s ease 0s infinite normal forwards;
+        }
+    }
 
     &.forbidden {
         &::before {

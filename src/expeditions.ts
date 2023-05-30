@@ -741,6 +741,7 @@ class Expeditions implements ExpeditionsGame {
         if (!(this as any).isCurrentPlayerActive()) {
             return;
         }
+        //clickedRoute method is also called, that’s why selected class is already managed
         if (dojo.hasClass(`route-spaces-route${route.id}-space0`, 'removable')) {
             if (!$(`unclaimRouteConfirm_button`)) {
                 (this as any).addActionButton(`unclaimRouteConfirm_button`, _('Confirm'), () => {
