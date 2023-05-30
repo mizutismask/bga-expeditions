@@ -240,11 +240,10 @@ trait ActionTrait {
                 break;
             case BLUE_CITY:
                 self::incStat(1, STAT_BLUE_LOCATIONS_REACHED, $playerId);
-                if ($this->getRemainingArrows($routeColor) == 0) {
-                    self::notifyAllPlayers('msg', clienttranslate('There are no more ${color} arrows, so ${player_name} can not use the benefit of the blue location.'), [
+                if ($this->noArrowLeft()) {
+                    self::notifyAllPlayers('msg', clienttranslate('There are no arrows of any color left, so ${player_name} can not use the benefit of the blue location.'), [
                         'playerId' => $playerId,
                         'player_name' => $this->getPlayerName($playerId),
-                        'color' => $this->getColorName($routeColor),
                     ]);
                 } else {
                     $this->incGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 1);
