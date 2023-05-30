@@ -116,9 +116,9 @@ class Expeditions extends Table {
         $this->setGameStateInitialValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateInitialValue(BLUEPOINT_ACTIONS_REMAINING, 0);
 
-        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_BLUE, 0);
-        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_YELLOW, 0);
-        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_RED, 0);
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_BLUE, -1);
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_YELLOW, -1);
+        $this->setGameStateInitialValue(ARROWS_SINCE_LOOP_RED, -1);
         $this->setGameStateInitialValue(LAST_ARROW_FROM_START_BLUE, 0);
         $this->setGameStateInitialValue(LAST_ARROW_FROM_START_YELLOW, 0);
         $this->setGameStateInitialValue(LAST_ARROW_FROM_START_RED, 0);

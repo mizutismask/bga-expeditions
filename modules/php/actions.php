@@ -73,7 +73,7 @@ trait ActionTrait {
         $this->gamestate->nextState('useTicket');
     }
 
-    public function undoTicket(){
+    public function undoTicket() {
         self::checkAction('undoTicket');
         $playerId = intval(self::getActivePlayerId());
         $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
@@ -180,11 +180,12 @@ trait ActionTrait {
     }
 
     function updateArrowsStateValues($color, $loop, $fromStartingPoint,  $routeId) {
+        $loopHappenedOnceMin = intval($this->getColoredGameStateValue("ARROWS_SINCE_LOOP", $color)) != -1;
         switch ($color) {
             case BLUE:
                 if ($loop) {
                     $this->setGameStateValue(ARROWS_SINCE_LOOP_BLUE, 0);
-                } else {
+                } else if ($loopHappenedOnceMin) {
                     $this->incGameStateValue(ARROWS_SINCE_LOOP_BLUE, 1);
                 }
                 if ($fromStartingPoint) {
@@ -196,7 +197,7 @@ trait ActionTrait {
             case YELLOW:
                 if ($loop) {
                     $this->setGameStateValue(ARROWS_SINCE_LOOP_YELLOW, 0);
-                } else {
+                } else  if ($loopHappenedOnceMin) {
                     $this->incGameStateValue(ARROWS_SINCE_LOOP_YELLOW, 1);
                 }
                 if ($fromStartingPoint) {
@@ -208,7 +209,7 @@ trait ActionTrait {
             case RED:
                 if ($loop) {
                     $this->setGameStateValue(ARROWS_SINCE_LOOP_RED, 0);
-                } else {
+                } else if ($loopHappenedOnceMin) {
                     $this->incGameStateValue(ARROWS_SINCE_LOOP_RED, 1);
                 }
                 if ($fromStartingPoint) {
