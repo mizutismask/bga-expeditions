@@ -172,7 +172,8 @@
             background-position: #{calc(5 * 100% / 5)} 50%;
         }
         &[data-revealed-by='shared'] {
-            background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
+            //background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
+            background: radial-gradient(#9989c1, #7f56e1, #4d2b9d) border-box;
             width: 30px;
             height: 30px;
             margin: -15px;

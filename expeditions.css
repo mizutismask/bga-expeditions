@@ -180,9 +180,9 @@
   width: 18px;
 }
 .icon.destination-card.shared-destination {
-  -webkit-box-shadow: inset 0px 0px 0px 2px #7d57d5;
-  -moz-box-shadow: inset 0px 0px 0px 2px #7d57d5;
-  box-shadow: inset 0px 0px 0px 2px #7d57d5;
+  -webkit-box-shadow: inset 0px 0px 0px 2px #9074d1;
+  -moz-box-shadow: inset 0px 0px 0px 2px #9074d1;
+  box-shadow: inset 0px 0px 0px 2px #9074d1;
 }
 .icon.expTicket {
   height: 23px;
@@ -350,7 +350,7 @@
   background-position: 100% 50%;
 }
 .city[data-revealed-by][data-revealed-by=shared] {
-  background: radial-gradient(#7d57d5, #4a0adf, #4a0adf) border-box;
+  background: radial-gradient(#9989c1, #7f56e1, #4d2b9d) border-box;
   width: 30px;
   height: 30px;
   margin: -15px;
