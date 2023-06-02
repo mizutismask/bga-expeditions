@@ -542,7 +542,7 @@ class Expeditions implements ExpeditionsGame {
         this.map.setHighligthedDestination(null);
 
         if (this.destinationToReveal) {
-            this.startActionTimer(`revealDestination_button`, 3);
+            this.startActionTimer(`revealDestination_button`, ACTION_TIMER_DURATION);
             this.map.setHighligthedDestination(this.destinationToReveal);
         }
         this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
@@ -729,7 +729,7 @@ class Expeditions implements ExpeditionsGame {
                 });
                 dojo.addClass('claimRouteConfirm_button', 'timer-button');
 
-                this.startActionTimer(`claimRouteConfirm_button`, 5, () => {
+                this.startActionTimer(`claimRouteConfirm_button`, ACTION_TIMER_DURATION, () => {
                     dojo.destroy(`claimRouteConfirm_button`);
                     dojo.query(`.route-space.selectable`).removeClass('selected');
                 });
@@ -750,7 +750,7 @@ class Expeditions implements ExpeditionsGame {
                 });
             }
             dojo.addClass('unclaimRouteConfirm_button', 'timer-button');
-            this.startActionTimer(`unclaimRouteConfirm_button`, 5);
+            this.startActionTimer(`unclaimRouteConfirm_button`, ACTION_TIMER_DURATION);
         }
     }
 

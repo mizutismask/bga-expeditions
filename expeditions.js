@@ -3042,7 +3042,7 @@ var Expeditions = /** @class */ (function () {
             : (this.destinationToReveal = destination);
         this.map.setHighligthedDestination(null);
         if (this.destinationToReveal) {
-            this.startActionTimer("revealDestination_button", 3);
+            this.startActionTimer("revealDestination_button", ACTION_TIMER_DURATION);
             this.map.setHighligthedDestination(this.destinationToReveal);
         }
         this.map.revealDestination(this.getCurrentPlayer(), this.destinationToReveal, true);
@@ -3200,7 +3200,7 @@ var Expeditions = /** @class */ (function () {
                     _this.claimRoute(route.id, _this.selectedArrowColor);
                 });
                 dojo.addClass('claimRouteConfirm_button', 'timer-button');
-                this.startActionTimer("claimRouteConfirm_button", 5, function () {
+                this.startActionTimer("claimRouteConfirm_button", ACTION_TIMER_DURATION, function () {
                     dojo.destroy("claimRouteConfirm_button");
                     dojo.query(".route-space.selectable").removeClass('selected');
                 });
@@ -3221,7 +3221,7 @@ var Expeditions = /** @class */ (function () {
                 });
             }
             dojo.addClass('unclaimRouteConfirm_button', 'timer-button');
-            this.startActionTimer("unclaimRouteConfirm_button", 5);
+            this.startActionTimer("unclaimRouteConfirm_button", ACTION_TIMER_DURATION);
         }
     };
     Expeditions.prototype.toDoDestinationSelectionChanged = function (selection, lastChange) {
