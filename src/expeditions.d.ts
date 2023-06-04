@@ -112,7 +112,6 @@ interface ExpeditionsGame extends Game {
     setTooltipToClass(className: string, html: string): void;
     getRouteOrigin(route: Route, claimedRoute: ClaimedRoute): number;
     getRouteDestination(route: Route, claimedRoute: ClaimedRoute): number;
-    updatePlayerOrdering(arguments):void;
 }
 
 interface EnteringChooseDestinationsArgs {

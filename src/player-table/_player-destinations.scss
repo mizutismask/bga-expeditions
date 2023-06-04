@@ -33,7 +33,7 @@
             width: 170px;
 
             .destination-card:not(.icon):not(:first-child) {
-                margin-top: -119px;
+                margin-top: -118px;
             }
         }
     }
@@ -50,6 +50,11 @@
     height: 209px;
 }
 
+#shared-destination-deck{
+    .destination-card:not(.icon){
+        margin-right: 0px;
+    }
+}
 .destination-card:not(.icon) {
     position: relative;
     width: 150px;

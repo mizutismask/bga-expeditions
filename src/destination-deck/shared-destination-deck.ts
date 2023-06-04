@@ -14,7 +14,7 @@ class SharedDestinationDeck {
             $(`shared-destination-stock`),
             {
                 center: true,
-                gap: "10px",
+                gap: "7px",
                 direction: "column",
                 wrap: "nowrap",
             }

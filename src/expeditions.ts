@@ -88,6 +88,13 @@ class Expeditions implements ExpeditionsGame {
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
         this.showSharedDestinations(Object.values(gamedatas.sharedDestinations));
+        
+        COLORS.forEach(color => {
+            const counter = new ebg.counter();
+            counter.create(`arrows-counter-color-${color}`);
+           counter.setValue(gamedatas.remainingArrows[color]);
+            this.arrowsCounters[color] = counter;
+        });
 
         const player = gamedatas.players[this.getPlayerId()];
         if (player) {
@@ -396,14 +403,6 @@ class Expeditions implements ExpeditionsGame {
      * Place counters on player panels.
      */
     private createPlayerPanels(gamedatas: ExpeditionsGamedatas) {
-        COLORS.forEach(color => {
-            const counter = new ebg.counter();
-            counter.create(`arrows-counter-color-${color}`);
-           counter.setValue(gamedatas.remainingArrows[color]);
-            this.arrowsCounters[color] = counter;
-        });
-       
-
         Object.values(gamedatas.players).forEach((player) => {
             const playerId = Number(player.id);
 
@@ -605,12 +604,6 @@ class Expeditions implements ExpeditionsGame {
     public getCurrentPlayer(): ExpeditionsPlayer {
         return this.gamedatas.players[this.getPlayerId()];
     }
-
-    /* @Override */
-	public updatePlayerOrdering() {
-		(this as any).inherited(arguments);
-		dojo.place('player_board_info', 'player_boards', 'first');
-	}
 
     /**
      * Add an animation to the animation queue, and start it if there is no current animations.

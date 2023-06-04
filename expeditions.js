@@ -2229,7 +2229,7 @@ var SharedDestinationDeck = /** @class */ (function () {
         this.game = game;
         var stock = new LineStockWithEvents(this.game.destinationCardsManager, $("shared-destination-stock"), {
             center: true,
-            gap: "10px",
+            gap: "7px",
             direction: "column",
             wrap: "nowrap",
         });
@@ -2683,6 +2683,12 @@ var Expeditions = /** @class */ (function () {
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
         this.showSharedDestinations(Object.values(gamedatas.sharedDestinations));
+        COLORS.forEach(function (color) {
+            var counter = new ebg.counter();
+            counter.create("arrows-counter-color-".concat(color));
+            counter.setValue(gamedatas.remainingArrows[color]);
+            _this.arrowsCounters[color] = counter;
+        });
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
             this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
@@ -2955,12 +2961,6 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.createPlayerPanels = function (gamedatas) {
         var _this = this;
-        COLORS.forEach(function (color) {
-            var counter = new ebg.counter();
-            counter.create("arrows-counter-color-".concat(color));
-            counter.setValue(gamedatas.remainingArrows[color]);
-            _this.arrowsCounters[color] = counter;
-        });
         Object.values(gamedatas.players).forEach(function (player) {
             var playerId = Number(player.id);
             document.getElementById("overall_player_board_".concat(player.id)).dataset.playerColor = player.color;
@@ -3096,11 +3096,6 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.getCurrentPlayer = function () {
         return this.gamedatas.players[this.getPlayerId()];
-    };
-    /* @Override */
-    Expeditions.prototype.updatePlayerOrdering = function () {
-        this.inherited(arguments);
-        dojo.place('player_board_info', 'player_boards', 'first');
     };
     /**
      * Add an animation to the animation queue, and start it if there is no current animations.

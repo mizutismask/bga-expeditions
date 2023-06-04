@@ -191,13 +191,6 @@
   border-radius: 2px;
 }
 
-.player_board_info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
-
 #map-zoom-wrapper {
   position: relative;
   user-select: none;
@@ -552,11 +545,21 @@
   flex-direction: column;
   z-index: 7;
   align-items: center;
+  margin-left: 12px;
 }
 #train-car-deck .stock {
   position: relative;
   width: 272px;
   height: 166px;
+}
+#train-car-deck .arrow-counters-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-bottom: 8px;
+  gap: 5px;
+  font-size: large;
 }
 
 .animated-destination-card {
@@ -622,7 +625,7 @@
   width: 170px;
 }
 .left .player-table-destinations-column.todo .destination-card:not(.icon):not(:first-child) {
-  margin-top: -119px;
+  margin-top: -118px;
 }
 
 #map .destination-card:not(.icon) {
@@ -633,6 +636,10 @@
 .card-side {
   width: 150px;
   height: 209px;
+}
+
+#shared-destination-deck .destination-card:not(.icon) {
+  margin-right: 0px;
 }
 
 .destination-card:not(.icon) {
