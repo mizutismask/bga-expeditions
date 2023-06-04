@@ -41,6 +41,7 @@ class Expeditions implements ExpeditionsGame {
 
     private revealedTokensBackCounters: Counter[] = [];
     private ticketsCounters: Counter[] = [];
+    private arrowsCounters: Counter[] = [];
     private destinationCardCounters: Counter[] = [];
     private completedDestinationsCounters: Counter[] = [];
     private commonCompletedDestinationsCounters: Counter[] = [];
@@ -395,6 +396,14 @@ class Expeditions implements ExpeditionsGame {
      * Place counters on player panels.
      */
     private createPlayerPanels(gamedatas: ExpeditionsGamedatas) {
+        COLORS.forEach(color => {
+            const counter = new ebg.counter();
+            counter.create(`arrows-counter-color-${color}`);
+           counter.setValue(gamedatas.remainingArrows[color]);
+            this.arrowsCounters[color] = counter;
+        });
+       
+
         Object.values(gamedatas.players).forEach((player) => {
             const playerId = Number(player.id);
 
@@ -596,6 +605,12 @@ class Expeditions implements ExpeditionsGame {
     public getCurrentPlayer(): ExpeditionsPlayer {
         return this.gamedatas.players[this.getPlayerId()];
     }
+
+    /* @Override */
+	public updatePlayerOrdering() {
+		(this as any).inherited(arguments);
+		dojo.place('player_board_info', 'player_boards', 'first');
+	}
 
     /**
      * Add an animation to the animation queue, and start it if there is no current animations.
@@ -1171,6 +1186,7 @@ class Expeditions implements ExpeditionsGame {
             this.addAnimation(anim);
         }
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+        this.arrowsCounters[route.color].incValue(-1);
     }
 
     /**
@@ -1184,6 +1200,7 @@ class Expeditions implements ExpeditionsGame {
         const route: Route = notif.args.route;
         this.map.unclaimRoute(route);
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
+        this.arrowsCounters[route.color].incValue(1);
     }
 
     /**

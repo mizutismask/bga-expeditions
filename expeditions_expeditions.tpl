@@ -36,6 +36,12 @@
     </div>
 </div>
 
+<div class='player_board_info player-board counters' id="player_board_info">    
+    <div class="counter"><div class="arrow icon blue"></div><span id="arrows-counter-color-1"></span></div>
+    <div class="counter"><div class="arrow icon yellow"></div><span id="arrows-counter-color-2"></span></div>
+    <div class="counter"><div class="arrow icon red"></div><span id="arrows-counter-color-3"></span></div>
+</div>
+
 <audio id="audiosrc_completed-in-game-1" src="{GAMETHEMEURL}img/completed-in-game-1.mp3" preload="none" autobuffer></audio>
 <audio id="audiosrc_o_completed-in-game-1" src="{GAMETHEMEURL}img/completed-in-game-1.ogg" preload="none" autobuffer></audio>
 

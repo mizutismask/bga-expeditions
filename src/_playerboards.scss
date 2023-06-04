@@ -1,19 +1,19 @@
 .player-board {
     //z-index: -1;//to make completed destinations animations fly over
     color: white;
-    background: url("img/playerboard-background-bottom.jpg");
+    background: url('img/playerboard-background-bottom.jpg');
     background-position: bottom;
     background-size: cover;
 
     @each $name, $color in $player-colors {
-        &[data-player-color="#{$color}"]::before {
-            content: "";
+        &[data-player-color='#{$color}']::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 52px;
-            background: url("img/playerboard-background.png"), ##{$color};
+            background: url('img/playerboard-background.png'), ##{$color};
             background-size: cover;
             background-repeat: no-repeat;
             box-shadow: 0 0 3px 2px #8181c7;
@@ -31,25 +31,25 @@
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     }
     .token {
-        background-image: url("img/tokens.png");
+        background-image: url('img/tokens.png');
         //background-size: 600%;
 
-        &[data-player-color="d8d7d7"] {
+        &[data-player-color='d8d7d7'] {
             background-position: #{calc(0 * 100% / 5)} 50%;
         }
-        &[data-player-color="df74b2"] {
+        &[data-player-color='df74b2'] {
             background-position: #{calc(1 * 100% / 5)} 50%;
         }
-        &[data-player-color="eca51c"] {
+        &[data-player-color='eca51c'] {
             background-position: #{calc(2 * 100% / 5)} 50%;
         }
-        &[data-player-color="77bd25"] {
+        &[data-player-color='77bd25'] {
             background-position: #{calc(3 * 100% / 5)} 50%;
         }
-        &[data-player-color="30b0e1"] {
+        &[data-player-color='30b0e1'] {
             background-position: #{calc(4 * 100% / 5)} 50%;
         }
-        &[data-player-color="df3e33"] {
+        &[data-player-color='df3e33'] {
             background-position: #{calc(5 * 100% / 5)} 50%;
         }
     }
@@ -77,11 +77,11 @@
     height: 480px;
 
     &.recto {
-        background: url("img/help1.jpg") no-repeat;
+        background: url('img/help1.jpg') no-repeat;
     }
 
     &.verso {
-        background: url("img/help2.jpg") no-repeat;
+        background: url('img/help2.jpg') no-repeat;
     }
 }
 
@@ -125,7 +125,7 @@
     background-repeat: no-repeat;
 
     &.destination-card {
-        background-image: url("img/destination-card-background.jpg");
+        background-image: url('img/destination-card-background.jpg');
         height: 24px;
         width: 18px;
 
@@ -142,4 +142,11 @@
         background-size: contain;
         border-radius: 2px;
     }
+}
+
+.player_board_info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
