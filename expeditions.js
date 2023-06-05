@@ -3244,7 +3244,8 @@ var Expeditions = /** @class */ (function () {
         (_a = document.getElementById('chooseAdditionalDestinations_button')) === null || _a === void 0 ? void 0 : _a.classList.toggle('disabled', disable);
     };
     Expeditions.prototype.destinationSelectionChanged = function (selectedIds) {
-        this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
+        var _a;
+        this.toggleDisableButtonTrade(((_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.getSelectedToDoDestinations().length) != selectedIds.length);
     };
     /**
      * Timer for Confirm button. Also adds a cancel button to stop timer.
@@ -3291,7 +3292,7 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.stopActionTimer = function () {
         if (this.actionTimerId) {
             window.clearInterval(this.actionTimerId);
-            dojo.query('.timer-button').forEach(function (but) { return (dojo.destroy(but.id)); });
+            dojo.query('.timer-button').forEach(function (but) { return dojo.destroy(but.id); });
             dojo.destroy("cancel-button");
             this.actionTimerId = undefined;
         }
@@ -3420,13 +3421,14 @@ var Expeditions = /** @class */ (function () {
      * Apply destination selection (additional objectives).
      */
     Expeditions.prototype.chooseAdditionalDestinations = function () {
+        var _a;
         if (!this.checkAction('chooseAdditionalDestinations')) {
             return;
         }
         var destinationsIds = this.destinationSelection.getSelectedDestinationsIds();
         this.takeAction('chooseAdditionalDestinations', {
             keptDestinationId: destinationsIds.pop(),
-            discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
+            discardedDestinationId: (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.getSelectedToDoDestinations().pop().id,
         });
     };
     /**
@@ -3609,8 +3611,20 @@ var Expeditions = /** @class */ (function () {
         this.gamedatas.completedDestinations.push(destination);
         this.map.removeRevealedDestination(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
-        (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
+        if (this.playerTable) {
+            (_a = this.playerTable) === null || _a === void 0 ? void 0 : _a.markDestinationComplete(destination);
+        }
+        else {
+            this.destinationCompleteAnimationSpectator(destination);
+        }
         this.playRandomCompletedSound();
+    };
+    Expeditions.prototype.destinationCompleteAnimationSpectator = function (destination) {
+        var endAnimLocation = destination.location === LOCATION_SHARED_COMPLETED
+            ? "common-completed-destinations-counter-".concat(destination.location_arg)
+            : "completed-destinations-counter-".concat(destination.location_arg);
+        var newDac = new DestinationCompleteAnimation(this, destination, endAnimLocation, {}, 'completed', 'map');
+        this.addAnimation(newDac);
     };
     Expeditions.prototype.playRandomCompletedSound = function () {
         var min = 1;

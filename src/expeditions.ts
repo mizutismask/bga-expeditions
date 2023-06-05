@@ -88,11 +88,11 @@ class Expeditions implements ExpeditionsGame {
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
         this.showSharedDestinations(Object.values(gamedatas.sharedDestinations));
-        
-        COLORS.forEach(color => {
+
+        COLORS.forEach((color) => {
             const counter = new ebg.counter();
             counter.create(`arrows-counter-color-${color}`);
-           counter.setValue(gamedatas.remainingArrows[color]);
+            counter.setValue(gamedatas.remainingArrows[color]);
             this.arrowsCounters[color] = counter;
         });
 
@@ -777,7 +777,7 @@ class Expeditions implements ExpeditionsGame {
     }
 
     public destinationSelectionChanged(selectedIds: number[]) {
-        this.toggleDisableButtonTrade(this.playerTable.getSelectedToDoDestinations().length != selectedIds.length);
+        this.toggleDisableButtonTrade(this.playerTable?.getSelectedToDoDestinations().length != selectedIds.length);
     }
 
     /**
@@ -832,7 +832,7 @@ class Expeditions implements ExpeditionsGame {
     private stopActionTimer() {
         if (this.actionTimerId) {
             window.clearInterval(this.actionTimerId);
-            dojo.query('.timer-button').forEach((but: HTMLElement) => (dojo.destroy(but.id)));
+            dojo.query('.timer-button').forEach((but: HTMLElement) => dojo.destroy(but.id));
             dojo.destroy(`cancel-button`);
             this.actionTimerId = undefined;
         }
@@ -1019,7 +1019,7 @@ class Expeditions implements ExpeditionsGame {
 
         this.takeAction('chooseAdditionalDestinations', {
             keptDestinationId: destinationsIds.pop(),
-            discardedDestinationId: this.playerTable.getSelectedToDoDestinations().pop().id,
+            discardedDestinationId: this.playerTable?.getSelectedToDoDestinations().pop().id,
         });
     }
 
@@ -1219,9 +1219,23 @@ class Expeditions implements ExpeditionsGame {
         this.gamedatas.completedDestinations.push(destination);
         this.map.removeRevealedDestination(destination);
         this.revealedTokensBackCounters[playerId].incValue(notif.args.revealedTokenBack);
-        this.playerTable?.markDestinationComplete(destination);
+        if (this.playerTable) {
+            this.playerTable?.markDestinationComplete(destination);
+        } else {
+            this.destinationCompleteAnimationSpectator(destination);
+        }
 
         this.playRandomCompletedSound();
+    }
+
+    public destinationCompleteAnimationSpectator(destination: Destination) {
+        const endAnimLocation =
+            destination.location === LOCATION_SHARED_COMPLETED
+                ? `common-completed-destinations-counter-${destination.location_arg}`
+                : `completed-destinations-counter-${destination.location_arg}`;
+
+        const newDac = new DestinationCompleteAnimation(this, destination, endAnimLocation, {}, 'completed', 'map');
+        this.addAnimation(newDac);
     }
 
     playRandomCompletedSound() {
