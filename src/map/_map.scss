@@ -262,7 +262,7 @@ $route-space-background-size: 300% 100%;
 
     &.selected {
         &::before {
-            box-shadow: 0 0 7px 7px black;
+            box-shadow: 0 0 7px 7px #33ddae;
         }
         .remove-arrow-handle {
             animation: arrowAnimation 0.6s ease 0s infinite normal forwards;
