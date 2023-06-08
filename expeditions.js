@@ -575,7 +575,7 @@ var TicketAnimation = /** @class */ (function (_super) {
 var ReplayAnimation = /** @class */ (function (_super) {
     __extends(ReplayAnimation, _super);
     function ReplayAnimation(game, city, actions, copyAnchor) {
-        return _super.call(this, game, city, actions, copyAnchor, "replay", ["replay", "animated-element"], REPLAY_WIDTH, REPLAY_HEIGHT) || this;
+        return _super.call(this, game, city, actions, copyAnchor, "replay", ["replay", "animated-element", "fa", "fa-refresh", "fa-2x"], REPLAY_WIDTH, REPLAY_HEIGHT) || this;
     }
     return ReplayAnimation;
 }(CityAnimation));

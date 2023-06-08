@@ -197,16 +197,10 @@ html,
     background: white;
     border-radius: 50%;
     position: relative;
-
-    &:before {
-        content: "↻";
-        color: rgb(21, 104, 134);
-        font-weight: bolder;
-        font-size: 35px;
-        position: absolute;
-        top: 3px;
-        left: 10%;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(21, 104, 134);
 }
 
 @keyframes cityAnimation {

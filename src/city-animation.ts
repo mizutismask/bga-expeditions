@@ -95,6 +95,6 @@ class ReplayAnimation extends CityAnimation {
 		},
 		copyAnchor: string
 	) {
-		super(game, city, actions, copyAnchor, "replay", ["replay", "animated-element"], REPLAY_WIDTH, REPLAY_HEIGHT);
+		super(game, city, actions, copyAnchor, "replay", ["replay", "animated-element", "fa", "fa-refresh", "fa-2x"], REPLAY_WIDTH, REPLAY_HEIGHT);
 	}
 }

@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .player-board {
   color: white;
   background: url("img/playerboard-background-bottom.jpg");
@@ -1147,15 +1146,10 @@ html,
   background: white;
   border-radius: 50%;
   position: relative;
-}
-.replay:before {
-  content: "↻";
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: rgb(21, 104, 134);
-  font-weight: bolder;
-  font-size: 35px;
-  position: absolute;
-  top: 3px;
-  left: 10%;
 }
 
 @keyframes cityAnimation {
