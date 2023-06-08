@@ -3506,7 +3506,7 @@ var Expeditions = /** @class */ (function () {
             ['newSharedDestinationsOnTable', 1],
             ['lastTurn', 1],
             ['bestScore', 1],
-            ['destinationRevealed', 1],
+            ['destinationRevealed', 600],
             ['highlightWinnerScore', 1],
             ['newLastArrow', 1],
         ];
