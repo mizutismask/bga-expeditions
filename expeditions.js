@@ -2655,6 +2655,7 @@ var Expeditions = /** @class */ (function () {
         this.destinationCardCounters = [];
         this.completedDestinationsCounters = [];
         this.commonCompletedDestinationsCounters = [];
+        this.lastArrowsByColor = new Map();
         this.animations = [];
         this.isTouch = window.matchMedia('(hover: none)').matches;
         this.routeToConfirm = null;
@@ -2703,6 +2704,7 @@ var Expeditions = /** @class */ (function () {
             // score or end
             this.onEnteringEndScore();
         }
+        COLORS.forEach(function (color) { return _this.replacePreviousLastRoute(gamedatas.lastArrowsByColor[color]); });
         this.setupNotifications();
         this.setupPreferences();
         this.onScreenWidthChange = function () { return _this.map.setAutoZoom(); };
@@ -3506,6 +3508,7 @@ var Expeditions = /** @class */ (function () {
             ['bestScore', 1],
             ['destinationRevealed', 1],
             ['highlightWinnerScore', 1],
+            ['newLastArrow', 1],
         ];
         notifs.forEach(function (notif) {
             dojo.subscribe(notif[0], _this, "notif_".concat(notif[0]));
@@ -3553,6 +3556,7 @@ var Expeditions = /** @class */ (function () {
         var _this = this;
         var playerId = notif.args.playerId;
         var route = notif.args.route;
+        this.replacePreviousLastRoute(route);
         this.gamedatas.claimedRoutes = notif.args.claimedRoutes;
         var claimedRoute = {
             playerId: playerId,
@@ -3575,6 +3579,19 @@ var Expeditions = /** @class */ (function () {
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         this.arrowsCounters[route.color].incValue(-1);
     };
+    Expeditions.prototype.replacePreviousLastRoute = function (route) {
+        var _a;
+        if (route) {
+            var previous = this.lastArrowsByColor.get(route.color);
+            var index = 0;
+            if (previous) {
+                (_a = document
+                    .getElementById("route-spaces-route".concat(previous.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.remove('last-arrow');
+            }
+            this.lastArrowsByColor.set(route.color, route);
+            document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index)).classList.add('last-arrow');
+        }
+    };
     /**
      * Update unclaimed route.
      */
@@ -3586,6 +3603,12 @@ var Expeditions = /** @class */ (function () {
         this.map.unclaimRoute(route);
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         this.arrowsCounters[route.color].incValue(1);
+    };
+    /**
+     * Update last arrow when an arrow has been removed.
+     */
+    Expeditions.prototype.notif_newLastArrow = function (notif) {
+        this.replacePreviousLastRoute(notif.args.newLastArrow);
     };
     /**
      * Update unclaimed routes.

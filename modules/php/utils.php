@@ -299,7 +299,7 @@ trait UtilTrait {
         $revealed = $this->isDestinationRevealed($destination->id);
         if ($revealed) {
             $this->incScore($ownerId, 1);
-            self::incStat(1, STAT_POINTS_WITH_REVEALED_DESTINATIONS, $ownerId); 
+            self::incStat(1, STAT_POINTS_WITH_REVEALED_DESTINATIONS, $ownerId);
         }
 
         if ($shared) {
@@ -370,7 +370,18 @@ trait UtilTrait {
             && intval($this->getGameStateValue(REMAINING_RED_ARROWS)) == 0;
     }
 
-    function getColoredGameStateValue($gameStateValue, $color){
-       return $this->getGameStateValue($gameStateValue."_". strtoupper($this->getColorName($color)));
+    function getColoredGameStateValue($gameStateValue, $color) {
+        return $this->getGameStateValue($gameStateValue . "_" . strtoupper($this->getColorName($color)));
+    }
+
+    function getLastArrows(): array {
+        $arrows = [BLUE => null, YELLOW => null, RED => null];
+        foreach (COLORS as $color) {
+            $claimed = $this->getLastClaimedRoute($color);
+            if ($claimed) {
+                $arrows[$color] = $this->getRoute($claimed->routeId);
+            }
+        }
+        return $arrows;
     }
 }

@@ -299,6 +299,11 @@ trait ActionTrait {
         $loop = $this->checkLoopAfterUnclaim($playerId, $route, $claimedRoute->reverseDirection);
         self::DbQuery("DELETE FROM `claimed_routes` where `route_id` = $routeId");
         $this->unshiftLastClaimedRoute($route->color);
+
+        self::notifyAllPlayers('newLastArrow', "", [
+            'newLastArrow' => $this->getLastArrows()[$route->color],
+        ]);
+
         $this->nextState($playerId, $loop);
     }
 

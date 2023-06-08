@@ -45,6 +45,7 @@ class Expeditions implements ExpeditionsGame {
     private destinationCardCounters: Counter[] = [];
     private completedDestinationsCounters: Counter[] = [];
     private commonCompletedDestinationsCounters: Counter[] = [];
+    private lastArrowsByColor: Map<number, Route> = new Map();
 
     private animations: ExpeditionsAnimation[] = [];
     public animationManager: AnimationManager;
@@ -117,6 +118,8 @@ class Expeditions implements ExpeditionsGame {
             // score or end
             this.onEnteringEndScore();
         }
+
+        COLORS.forEach((color) => this.replacePreviousLastRoute(gamedatas.lastArrowsByColor[color]));
 
         this.setupNotifications();
         this.setupPreferences();
@@ -1106,6 +1109,7 @@ class Expeditions implements ExpeditionsGame {
             ['bestScore', 1],
             ['destinationRevealed', 1],
             ['highlightWinnerScore', 1],
+            ['newLastArrow', 1],
         ];
 
         notifs.forEach((notif) => {
@@ -1158,6 +1162,8 @@ class Expeditions implements ExpeditionsGame {
         const playerId = notif.args.playerId;
         const route: Route = notif.args.route;
 
+        this.replacePreviousLastRoute(route);
+
         this.gamedatas.claimedRoutes = notif.args.claimedRoutes;
         const claimedRoute: ClaimedRoute = {
             playerId,
@@ -1182,6 +1188,19 @@ class Expeditions implements ExpeditionsGame {
         this.arrowsCounters[route.color].incValue(-1);
     }
 
+    replacePreviousLastRoute(route: Route): void {
+        if (route) {
+            const previous: Route = this.lastArrowsByColor.get(route.color);
+            const index = 0;
+            if (previous) {
+                document
+                    .getElementById(`route-spaces-route${previous.id}-space${index}`)?.classList.remove('last-arrow');
+            }
+            this.lastArrowsByColor.set(route.color, route);
+            document.getElementById(`route-spaces-route${route.id}-space${index}`).classList.add('last-arrow');
+        }
+    }
+
     /**
      * Update unclaimed route.
      */
@@ -1194,6 +1213,13 @@ class Expeditions implements ExpeditionsGame {
         this.map.unclaimRoute(route);
         this.ticketsCounters[playerId].incValue(notif.args.ticketsGained);
         this.arrowsCounters[route.color].incValue(1);
+    }
+
+    /**
+     * Update last arrow when an arrow has been removed.
+     */
+    notif_newLastArrow(notif: Notif<NotifNewLastArrowArgs>) {
+        this.replacePreviousLastRoute(notif.args.newLastArrow);
     }
 
     /**

@@ -177,6 +177,7 @@ class Expeditions extends Table {
 
         // Gather all information about current game situation (visible by player $currentPlayerId).
         $result['remainingArrows'] = [BLUE => $this->getRemainingArrows(BLUE), YELLOW => $this->getRemainingArrows(YELLOW), RED => $this->getRemainingArrows(RED)];
+        $result['lastArrowsByColor'] = $this->getLastArrows();
         $result['claimedRoutes'] = $this->getClaimedRoutes();
         $result['sharedDestinations'] = $this->getSharedDestinationCards();
         $result['revealedDestinationsToDo'] = $this->getDestinationsFromDb($this->destinations->getCards($this->getRevealedToDoDestinationsIds()));

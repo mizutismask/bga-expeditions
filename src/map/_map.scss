@@ -291,7 +291,10 @@ $route-space-background-size: 300% 100%;
             zoom: 1.2;
         }
     }
-
+    
+    &.last-arrow{
+        filter:drop-shadow(0px 0px 5px #33ddae) saturate(175%);//#18d8e3 //#18e39a
+    }
     &[data-color='1'] {
         .remove-arrow-handle {
             background-image: url('img/crossBlue.svg');

@@ -72,6 +72,7 @@ interface ExpeditionsGamedatas {
     claimedRoutes: ClaimedRoute[];
     sharedDestinations: Destination[];
     revealedDestinationsToDo: Destination[];
+    lastArrowsByColor: Map<number, Route>;
 
     // private informations for current player only
     handDestinations: Destination[];
@@ -187,6 +188,10 @@ interface NotifUnclaimedRouteArgs {
     playerId: number;
     route: Route;
     ticketsGained: number;
+}
+
+interface NotifNewLastArrowArgs {
+    newLastArrow: Route;
 }
 
 interface NotifTicketUsedArgs {
