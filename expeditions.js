@@ -3580,7 +3580,7 @@ var Expeditions = /** @class */ (function () {
         this.arrowsCounters[route.color].incValue(-1);
     };
     Expeditions.prototype.replacePreviousLastRoute = function (route) {
-        var _a;
+        var _a, _b;
         if (route) {
             var previous = this.lastArrowsByColor.get(route.color);
             var index = 0;
@@ -3589,7 +3589,7 @@ var Expeditions = /** @class */ (function () {
                     .getElementById("route-spaces-route".concat(previous.id, "-space").concat(index))) === null || _a === void 0 ? void 0 : _a.classList.remove('last-arrow');
             }
             this.lastArrowsByColor.set(route.color, route);
-            document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index)).classList.add('last-arrow');
+            (_b = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(index))) === null || _b === void 0 ? void 0 : _b.classList.add('last-arrow');
         }
     };
     /**

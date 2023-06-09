@@ -1197,7 +1197,7 @@ class Expeditions implements ExpeditionsGame {
                     .getElementById(`route-spaces-route${previous.id}-space${index}`)?.classList.remove('last-arrow');
             }
             this.lastArrowsByColor.set(route.color, route);
-            document.getElementById(`route-spaces-route${route.id}-space${index}`).classList.add('last-arrow');
+            document.getElementById(`route-spaces-route${route.id}-space${index}`)?.classList.add('last-arrow');
         }
     }
 
