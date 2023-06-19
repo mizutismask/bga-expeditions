@@ -2322,12 +2322,12 @@ var PlayerDestinations = /** @class */ (function () {
         var html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-todo\" class=\"player-table-destinations-column todo\"></div>\n        ");
         dojo.place(html, "player-table-".concat(player.id, "-destinations"));
         html = "\n        <div id=\"player-table-".concat(player.id, "-destinations-done\" class=\"player-table-destinations-column done\"></div>\n        ");
-        dojo.place(html, "destination-deck", "after");
+        dojo.place(html, "destination-deck", 'after');
         this.initDestinationStocks([
             document.getElementById("player-table-".concat(this.playerId, "-destinations-todo")),
             document.getElementById("player-table-".concat(this.playerId, "-destinations-done")),
         ]);
-        this.destinationsDoneStock.setSelectionMode("none");
+        this.destinationsDoneStock.setSelectionMode('none');
         this.destinationsToDoStock.onSelectionChange = function (selection, lastChange) {
             return _this.game.toDoDestinationSelectionChanged(selection, lastChange);
         };
@@ -2394,7 +2394,7 @@ var PlayerDestinations = /** @class */ (function () {
                 // fromStock: this.destinationsToDoStock
                 this.destinationsDoneStock.addCard(destination);
                 if (withinAnimation) {
-                    this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+                    this.destinationsDoneStock.getCardElement(destination).classList.add('hidden-for-animation');
                 }
             }
             /*document
@@ -2422,10 +2422,10 @@ var PlayerDestinations = /** @class */ (function () {
             }
         }
         var newDac = new DestinationCompleteAnimation(this.game, destination, endAnimLocation, {
-            start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add("hidden-for-animation"); },
+            start: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.add('hidden-for-animation'); },
             change: function (d) { return _this.markDestinationCompleteNoAnimation(d, true); },
-            end: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.remove("hidden-for-animation"); },
-        }, "completed", "map" //"game_play_area_wrap"
+            end: function (d) { var _a; return (_a = document.getElementById(endAnimLocation)) === null || _a === void 0 ? void 0 : _a.classList.remove('hidden-for-animation'); },
+        }, 'completed', 'map' //"game_play_area_wrap"
         );
         this.game.addAnimation(newDac);
     };
@@ -2433,7 +2433,7 @@ var PlayerDestinations = /** @class */ (function () {
      * Mark a destination as complete.
      */
     PlayerDestinations.prototype.markDestinationComplete = function (destination) {
-        if (!(document.visibilityState === "hidden" || this.game.instantaneousMode)) {
+        if (!(document.visibilityState === 'hidden' || this.game.instantaneousMode)) {
             this.markDestinationCompleteAnimation(destination);
         }
         else {
@@ -2455,10 +2455,10 @@ var PlayerDestinations = /** @class */ (function () {
         this.game.setActiveDestination(this.selectedDestination, oldSelectedDestination);
         document
             .getElementById("player-table-".concat(this.playerId, "-destinations-todo"))
-            .classList.toggle("front", destinationList == this.destinationsTodo);
+            .classList.toggle('front', destinationList == this.destinationsTodo);
         document
             .getElementById("player-table-".concat(this.playerId, "-destinations-done"))
-            .classList.toggle("front", destinationList == this.destinationsDone);
+            .classList.toggle('front', destinationList == this.destinationsDone);
         this.updateDestinationsToConnect();
     };
     PlayerDestinations.prototype.setToDoSelectionMode = function (selectionMode) {
@@ -2502,14 +2502,17 @@ var PlayerDestinations = /** @class */ (function () {
      * Add an animation to the card (when it is created).
      */
     PlayerDestinations.prototype.addAnimationFrom = function (card, from) {
-        if (document.visibilityState === "hidden" || this.game.instantaneousMode) {
+        if (document.visibilityState === 'hidden' || this.game.instantaneousMode) {
+            return;
+        }
+        if (!from || !card) {
             return;
         }
         var destinationBR = card.getBoundingClientRect();
         var originBR = from.getBoundingClientRect();
         var deltaX = destinationBR.left - originBR.left;
         var deltaY = destinationBR.top - originBR.top;
-        card.style.zIndex = "10";
+        card.style.zIndex = '10';
         card.style.transition = "transform 0.5s linear";
         var zoom = this.game.getZoom();
         card.style.transform = "translate(".concat(-deltaX / zoom, "px, ").concat(-deltaY / zoom, "px)");
@@ -2523,13 +2526,13 @@ var PlayerDestinations = /** @class */ (function () {
         var _this = this;
         var stockSettings = {
             center: false,
-            gap: "10px",
-            direction: "row",
-            wrap: "nowrap",
+            gap: '10px',
+            direction: 'row',
+            wrap: 'nowrap',
         };
         divs.forEach(function (stockToCreate, index) {
             var stock = new LineStockWithEvents(_this.game.destinationCardsManager, stockToCreate, stockSettings);
-            stock.setSelectionMode("single");
+            stock.setSelectionMode('single');
             // highlight destination's cities on the map, on mouse over
             stock.onCardMouseOver = function (dest) { return _this.game.setHighligthedDestination(dest); };
             stock.onCardMouseOut = function (dest) { return _this.game.setHighligthedDestination(null); };
@@ -3537,6 +3540,7 @@ var Expeditions = /** @class */ (function () {
      * Update player destinations.
      */
     Expeditions.prototype.notif_destinationsPicked = function (notif) {
+        //console.log("notif_destinationsPicked",notif);
         var _a, _b, _c, _d, _e, _f;
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         var destinations = (_b = (_a = notif.args._private) === null || _a === void 0 ? void 0 : _a[this.getPlayerId()]) === null || _b === void 0 ? void 0 : _b.destinations;
@@ -3547,7 +3551,6 @@ var Expeditions = /** @class */ (function () {
             this.map.showNewDestination(destinations[0]);
             this.map.showNewDestination(discarded, false);
         }
-        //this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
     };
     /**
      * Update claimed routes.

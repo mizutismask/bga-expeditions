@@ -1143,6 +1143,8 @@ class Expeditions implements ExpeditionsGame {
      * Update player destinations.
      */
     notif_destinationsPicked(notif: Notif<NotifDestinationsPickedArgs>) {
+        //console.log("notif_destinationsPicked",notif);
+        
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         const destinations = notif.args._private?.[this.getPlayerId()]?.destinations;
         const discarded = notif.args._private?.[this.getPlayerId()]?.discardedDestination;
@@ -1152,7 +1154,6 @@ class Expeditions implements ExpeditionsGame {
             this.map.showNewDestination(destinations[0]);
             this.map.showNewDestination(discarded, false);
         }
-        //this.trainCarSelection.moveDestinationCardToPlayerBoard(notif.args.playerId, notif.args.number);
     }
 
     /**

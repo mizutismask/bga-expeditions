@@ -33,13 +33,13 @@ class PlayerDestinations {
         html = `
         <div id="player-table-${player.id}-destinations-done" class="player-table-destinations-column done"></div>
         `;
-        dojo.place(html, `destination-deck`, "after");
+        dojo.place(html, `destination-deck`, 'after');
 
         this.initDestinationStocks([
             document.getElementById(`player-table-${this.playerId}-destinations-todo`),
             document.getElementById(`player-table-${this.playerId}-destinations-done`),
         ]);
-        this.destinationsDoneStock.setSelectionMode("none");
+        this.destinationsDoneStock.setSelectionMode('none');
         this.destinationsToDoStock.onSelectionChange = (selection: Destination[], lastChange: Destination) =>
             this.game.toDoDestinationSelectionChanged(selection, lastChange);
 
@@ -112,7 +112,7 @@ class PlayerDestinations {
                 // fromStock: this.destinationsToDoStock
                 this.destinationsDoneStock.addCard(destination);
                 if (withinAnimation) {
-                    this.destinationsDoneStock.getCardElement(destination).classList.add("hidden-for-animation");
+                    this.destinationsDoneStock.getCardElement(destination).classList.add('hidden-for-animation');
                 }
             }
             /*document
@@ -143,12 +143,12 @@ class PlayerDestinations {
             destination,
             endAnimLocation,
             {
-                start: (d) => document.getElementById(endAnimLocation)?.classList.add("hidden-for-animation"),
+                start: (d) => document.getElementById(endAnimLocation)?.classList.add('hidden-for-animation'),
                 change: (d) => this.markDestinationCompleteNoAnimation(d, true),
-                end: (d) => document.getElementById(endAnimLocation)?.classList.remove("hidden-for-animation"),
+                end: (d) => document.getElementById(endAnimLocation)?.classList.remove('hidden-for-animation'),
             },
-            "completed",
-            "map" //"game_play_area_wrap"
+            'completed',
+            'map' //"game_play_area_wrap"
         );
 
         this.game.addAnimation(newDac);
@@ -158,7 +158,7 @@ class PlayerDestinations {
      * Mark a destination as complete.
      */
     public markDestinationComplete(destination: Destination) {
-        if (!(document.visibilityState === "hidden" || (this.game as any).instantaneousMode)) {
+        if (!(document.visibilityState === 'hidden' || (this.game as any).instantaneousMode)) {
             this.markDestinationCompleteAnimation(destination);
         } else {
             this.markDestinationCompleteNoAnimation(destination);
@@ -182,10 +182,10 @@ class PlayerDestinations {
 
         document
             .getElementById(`player-table-${this.playerId}-destinations-todo`)
-            .classList.toggle("front", destinationList == this.destinationsTodo);
+            .classList.toggle('front', destinationList == this.destinationsTodo);
         document
             .getElementById(`player-table-${this.playerId}-destinations-done`)
-            .classList.toggle("front", destinationList == this.destinationsDone);
+            .classList.toggle('front', destinationList == this.destinationsDone);
 
         this.updateDestinationsToConnect();
     }
@@ -236,7 +236,10 @@ class PlayerDestinations {
      * Add an animation to the card (when it is created).
      */
     private addAnimationFrom(card: HTMLElement, from: HTMLElement) {
-        if (document.visibilityState === "hidden" || (this.game as any).instantaneousMode) {
+        if (document.visibilityState === 'hidden' || (this.game as any).instantaneousMode) {
+            return;
+        }
+        if (!from || !card) {
             return;
         }
 
@@ -246,7 +249,7 @@ class PlayerDestinations {
         const deltaX = destinationBR.left - originBR.left;
         const deltaY = destinationBR.top - originBR.top;
 
-        card.style.zIndex = "10";
+        card.style.zIndex = '10';
         card.style.transition = `transform 0.5s linear`;
         const zoom = this.game.getZoom();
         card.style.transform = `translate(${-deltaX / zoom}px, ${-deltaY / zoom}px)`;
@@ -261,9 +264,9 @@ class PlayerDestinations {
     private initDestinationStocks(divs: HTMLElement[]) {
         var stockSettings = {
             center: false,
-            gap: "10px",
-            direction: "row" as "row",
-            wrap: "nowrap" as "nowrap",
+            gap: '10px',
+            direction: 'row' as 'row',
+            wrap: 'nowrap' as 'nowrap',
         };
         divs.forEach((stockToCreate, index) => {
             let stock = new LineStockWithEvents<Destination>(
@@ -271,7 +274,7 @@ class PlayerDestinations {
                 stockToCreate,
                 stockSettings
             );
-            stock.setSelectionMode("single");
+            stock.setSelectionMode('single');
 
             // highlight destination's cities on the map, on mouse over
             stock.onCardMouseOver = (dest: Destination) => this.game.setHighligthedDestination(dest);
