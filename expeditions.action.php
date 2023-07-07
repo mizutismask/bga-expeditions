@@ -71,7 +71,7 @@ class action_expeditions extends APP_GameAction {
         $color = self::getArg("color", AT_posint, true);
         $reverseDirection = self::getArg("reverseDirection", AT_bool, false);
 
-        $this->game->claimRoute($routeId, $color,$reverseDirection);
+        $this->game->claimRoute($routeId, $color, $reverseDirection);
 
         self::ajaxResponse();
     }
@@ -107,6 +107,13 @@ class action_expeditions extends APP_GameAction {
 
         $this->game->undoTicket();
 
+        self::ajaxResponse();
+    }
+
+    public function loadBugSQL() {
+        self::setAjaxMode();
+        $reportId = (int) self::getArg('report_id', AT_int, true);
+        $this->game->loadBugSQL($reportId);
         self::ajaxResponse();
     }
 }

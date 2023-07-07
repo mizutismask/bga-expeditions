@@ -80,7 +80,7 @@ class Expeditions implements ExpeditionsGame {
 
         this.map = new TtrMap(
             this,
-            Object.values(gamedatas.players),
+           // Object.values(gamedatas.players),
             gamedatas.claimedRoutes,
             this.getDestinationsByPlayer(this.gamedatas.revealedDestinationsToDo)
         );
@@ -99,6 +99,7 @@ class Expeditions implements ExpeditionsGame {
 
         const player = gamedatas.players[this.getPlayerId()];
         if (player) {
+            //if (player && !(this as any).isSpectator) {
             this.playerTable = new PlayerTable(
                 this,
                 player,
@@ -660,7 +661,7 @@ class Expeditions implements ExpeditionsGame {
      * Handle city click during reveal state.
      */
     public clickedCity(city: City): void {
-        //console.log("clickedCity", city);
+        //log("clickedCity", city);
         if (!(this as any).isCurrentPlayerActive() || this.gamedatas.gamestate.name !== 'revealDestination') {
             return;
         }
@@ -730,7 +731,7 @@ class Expeditions implements ExpeditionsGame {
                 return;
             } else {
                 if (this.selectedArrowColor != route.color) {
-                    console.log('clic on the wrong color:', this.selectArrowColor, 'instead of', route.color);
+                    log('clic on the wrong color:', this.selectArrowColor, 'instead of', route.color);
                     return;
                 }
 
@@ -1116,6 +1117,8 @@ class Expeditions implements ExpeditionsGame {
             dojo.subscribe(notif[0], this, `notif_${notif[0]}`);
             (this as any).notifqueue.setSynchronous(notif[0], notif[1]);
         });
+
+       // dojo.subscribe("loadBug", this, "loadBug");
     }
 
     /**
@@ -1143,8 +1146,8 @@ class Expeditions implements ExpeditionsGame {
      * Update player destinations.
      */
     notif_destinationsPicked(notif: Notif<NotifDestinationsPickedArgs>) {
-        //console.log("notif_destinationsPicked",notif);
-        
+        log('notif_destinationsPicked', notif);
+
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         const destinations = notif.args._private?.[this.getPlayerId()]?.destinations;
         const discarded = notif.args._private?.[this.getPlayerId()]?.discardedDestination;
@@ -1195,7 +1198,8 @@ class Expeditions implements ExpeditionsGame {
             const index = 0;
             if (previous) {
                 document
-                    .getElementById(`route-spaces-route${previous.id}-space${index}`)?.classList.remove('last-arrow');
+                    .getElementById(`route-spaces-route${previous.id}-space${index}`)
+                    ?.classList.remove('last-arrow');
             }
             this.lastArrowsByColor.set(route.color, route);
             document.getElementById(`route-spaces-route${route.id}-space${index}`)?.classList.add('last-arrow');
@@ -1356,5 +1360,48 @@ class Expeditions implements ExpeditionsGame {
             case RED:
                 return 'red';
         }
+    }
+
+    // Load production bug report handler
+    public loadBug(n) {
+        function fetchNextUrl() {
+            var url = n.args.urls.shift();
+            console.log('Fetching URL', url, '...');
+            // all the calls have to be made with ajaxcall in order to add the csrf token, otherwise you'll get "Invalid session information for this action. Please try reloading the page or logging in again"
+            this.ajaxcall(
+                url,
+                {
+                    lock: true,
+                },
+                self,
+                function (success) {
+                    console.log('=> Success ', success);
+
+                    if (n.args.urls.length > 1) {
+                        fetchNextUrl();
+                    } else if (n.args.urls.length > 0) {
+                        //except the last one, clearing php cache
+                        url = n.args.urls.shift();
+                        dojo.xhrGet({
+                            url: url,
+                            load: function (success) {
+                                console.log('Success for URL', url, success);
+                                console.log('Done, reloading page');
+                                window.location.reload();
+                            },
+                            handleAs: 'text',
+                            error: function (error) {
+                                console.log('Error while loading : ', error);
+                            },
+                        });
+                    }
+                },
+                function (error) {
+                    if (error) console.log('=> Error ', error);
+                }
+            );
+        }
+        console.log('Notif: load bug', n.args);
+        fetchNextUrl();
     }
 }

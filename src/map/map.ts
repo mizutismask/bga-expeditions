@@ -157,7 +157,6 @@ class TtrMap {
      */
     constructor(
         private game: ExpeditionsGame,
-        private players: ExpeditionsPlayer[],
         claimedRoutes: ClaimedRoute[],
         revealedDestinations: Map<ExpeditionsPlayer, Destination[]>
     ) {

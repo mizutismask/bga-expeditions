@@ -1492,10 +1492,9 @@ var TtrMap = /** @class */ (function () {
     /**
      * Place map corner illustration and borders, cities, routes, and bind events.
      */
-    function TtrMap(game, players, claimedRoutes, revealedDestinations) {
+    function TtrMap(game, claimedRoutes, revealedDestinations) {
         var _this = this;
         this.game = game;
-        this.players = players;
         // map border
         dojo.place("\n            <div id=\"cities\"></div>\n            <div id=\"route-spaces\"></div>\n            <div id=\"train-cars\"></div>\n        ", 'map', 'first');
         SIDES.forEach(function (side) { return dojo.place("<div class=\"side ".concat(side, "\"></div>"), 'map-and-borders'); });
@@ -2682,7 +2681,9 @@ var Expeditions = /** @class */ (function () {
         log('Starting game setup');
         this.gamedatas = gamedatas;
         log('gamedatas', gamedatas);
-        this.map = new TtrMap(this, Object.values(gamedatas.players), gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinationsToDo));
+        this.map = new TtrMap(this, 
+        // Object.values(gamedatas.players),
+        gamedatas.claimedRoutes, this.getDestinationsByPlayer(this.gamedatas.revealedDestinationsToDo));
         this.destinationCardsManager = new CardsManager(this);
         this.sharedDestinations = new SharedDestinationDeck(this);
         this.animationManager = new AnimationManager(this);
@@ -2695,6 +2696,7 @@ var Expeditions = /** @class */ (function () {
         });
         var player = gamedatas.players[this.getPlayerId()];
         if (player) {
+            //if (player && !(this as any).isSpectator) {
             this.playerTable = new PlayerTable(this, player, gamedatas.handDestinations, gamedatas.completedDestinations);
             this.playerTable.setToDoSelectionMode('none');
         }
@@ -3145,7 +3147,7 @@ var Expeditions = /** @class */ (function () {
      */
     Expeditions.prototype.clickedCity = function (city) {
         var _a, _b;
-        //console.log("clickedCity", city);
+        //log("clickedCity", city);
         if (!this.isCurrentPlayerActive() || this.gamedatas.gamestate.name !== 'revealDestination') {
             return;
         }
@@ -3204,7 +3206,7 @@ var Expeditions = /** @class */ (function () {
             }
             else {
                 if (this.selectedArrowColor != route.color) {
-                    console.log('clic on the wrong color:', this.selectArrowColor, 'instead of', route.color);
+                    log('clic on the wrong color:', this.selectArrowColor, 'instead of', route.color);
                     return;
                 }
                 this.addActionButton("claimRouteConfirm_button", _('Confirm'), function () {
@@ -3517,6 +3519,7 @@ var Expeditions = /** @class */ (function () {
             dojo.subscribe(notif[0], _this, "notif_".concat(notif[0]));
             _this.notifqueue.setSynchronous(notif[0], notif[1]);
         });
+        // dojo.subscribe("loadBug", this, "loadBug");
     };
     /**
      * Update player score.
@@ -3540,8 +3543,8 @@ var Expeditions = /** @class */ (function () {
      * Update player destinations.
      */
     Expeditions.prototype.notif_destinationsPicked = function (notif) {
-        //console.log("notif_destinationsPicked",notif);
         var _a, _b, _c, _d, _e, _f;
+        log('notif_destinationsPicked', notif);
         this.destinationCardCounters[notif.args.playerId].incValue(notif.args.number);
         var destinations = (_b = (_a = notif.args._private) === null || _a === void 0 ? void 0 : _a[this.getPlayerId()]) === null || _b === void 0 ? void 0 : _b.destinations;
         var discarded = (_d = (_c = notif.args._private) === null || _c === void 0 ? void 0 : _c[this.getPlayerId()]) === null || _d === void 0 ? void 0 : _d.discardedDestination;
@@ -3731,6 +3734,43 @@ var Expeditions = /** @class */ (function () {
             case RED:
                 return 'red';
         }
+    };
+    // Load production bug report handler
+    Expeditions.prototype.loadBug = function (n) {
+        function fetchNextUrl() {
+            var url = n.args.urls.shift();
+            console.log('Fetching URL', url, '...');
+            // all the calls have to be made with ajaxcall in order to add the csrf token, otherwise you'll get "Invalid session information for this action. Please try reloading the page or logging in again"
+            this.ajaxcall(url, {
+                lock: true,
+            }, self, function (success) {
+                console.log('=> Success ', success);
+                if (n.args.urls.length > 1) {
+                    fetchNextUrl();
+                }
+                else if (n.args.urls.length > 0) {
+                    //except the last one, clearing php cache
+                    url = n.args.urls.shift();
+                    dojo.xhrGet({
+                        url: url,
+                        load: function (success) {
+                            console.log('Success for URL', url, success);
+                            console.log('Done, reloading page');
+                            window.location.reload();
+                        },
+                        handleAs: 'text',
+                        error: function (error) {
+                            console.log('Error while loading : ', error);
+                        },
+                    });
+                }
+            }, function (error) {
+                if (error)
+                    console.log('=> Error ', error);
+            });
+        }
+        console.log('Notif: load bug', n.args);
+        fetchNextUrl();
     };
     return Expeditions;
 }());
