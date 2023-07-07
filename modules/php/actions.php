@@ -221,11 +221,15 @@ trait ActionTrait {
         }
     }
     private function nextState($playerId, $loop) {
-        if (boolval($this->getGameStateValue(MAIN_ACTION_DONE)) && !$loop && !$this->canUseTicket($playerId) && $this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING) == 0) {
+        if ($this->noArrowLeft() || $this->isTurnFinished($playerId, $loop)) {
             $this->gamestate->nextState('nextPlayer');
         } else {
             $this->gamestate->nextState('continue');
         }
+    }
+
+    private function isTurnFinished($playerId, $loop) {
+        return boolval($this->getGameStateValue(MAIN_ACTION_DONE)) && !$loop && !$this->canUseTicket($playerId) && $this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING) == 0;
     }
 
     private function canUseTicket($playerId) {
