@@ -78,10 +78,11 @@ trait ActionTrait {
         self::checkAction('undoTicket');
         $playerId = intval(self::getActivePlayerId());
         $this->dbIncField("player", "player_remaining_tickets", 1, "player_id", $playerId);
-        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} cancels the use of ticket'), [
+        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} cancels the use of ${ticket}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'canceled' => true,
+            "ticket" => 1,
         ]);
         $this->incGameStateValue(TICKETS_USED, -1);
         self::incStat(-1, STAT_TICKETS_USED, $playerId);
