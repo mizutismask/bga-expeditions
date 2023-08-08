@@ -23,7 +23,10 @@ trait StateTrait {
     }
 
     function hasReachedEndOfGameRequirements($playerId): bool {
-        $end = count($this->getUncompletedDestinationsIds($playerId)) == 0;
+        $playersIds = $this->getPlayersIds();
+        //any player can have reached the end even if it’s not his turn (active player can have reached someone’s last destination)
+        $reachedEnd = array_filter($playersIds, fn ($p) =>  count($this->getUncompletedDestinationsIds($p)) == 0);
+        $end = !empty($reachedEnd);
         if ($end && intval(self::getGameStateValue(LAST_TURN) == 0)) {
             self::setGameStateValue(LAST_TURN, $this->getLastPlayer()); //we play until the last player to finish the round
             if (!$this->isLastPlayer($playerId)) {
