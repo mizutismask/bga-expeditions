@@ -61,10 +61,11 @@ trait ActionTrait {
         }
 
         $this->dbIncField("player", "player_remaining_tickets", -1, "player_id", $playerId);
-        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} uses 1 ticket'), [
+        self::notifyAllPlayers('ticketUsed', clienttranslate('${player_name} uses 1 ${ticket}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'canceled' => false,
+            "ticket" => 1,
         ]);
         $this->incGameStateValue(TICKETS_USED, 1);
 
