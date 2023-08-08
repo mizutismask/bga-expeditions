@@ -59,6 +59,10 @@ trait StateTrait {
             $playerId = self::activeNextPlayer();
             self::giveExtraTime($playerId);
             $this->gamestate->nextState('nextPlayer');
+            $this->notifyAllPlayers('msg', clienttranslate('&#10148; Start of ${player_name}\'s turn'), [
+                'playerId' => $playerId,
+                'player_name' => $this->getPlayerName($playerId),
+            ]);
         }
     }
 
