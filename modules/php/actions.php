@@ -144,11 +144,25 @@ trait ActionTrait {
             'reverse_direction' => $reverseDirection,
         ]), $color);
 
+        //updating context
+        $mainAction = false;
+        if ($this->getGameStateValue(NEW_LOOP_COLOR)) {
+            $this->setGameStateValue(NEW_LOOP_COLOR, 0);
+        } else if ($this->gamestate->state()['name'] === "useTicket") {
+            //it’s not the main action
+        } else if ($this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING)) {
+            $this->incGameStateValue(BLUEPOINT_ACTIONS_REMAINING, -1);
+        } else {
+            $mainAction = true;
+            $this->setGameStateValue(MAIN_ACTION_DONE, 1);
+        }
+
         $target = $reverseDirection ? $route->from : $route->to;
         $from = $reverseDirection ? $route->to : $route->from;
         $destinationColor = $this->getLocationColor($target);
+        $mainActionMention = $mainAction? clienttranslate("(Mandatory arrow)"):"";
 
-        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name}: ${from} ${arrowColor} ${to}'), [
+        self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name}: ${from} ${arrowColor} ${to} ${mainActionMention}'), [
             'playerId' => $playerId,
             'player_name' => $this->getPlayerName($playerId),
             'route' => $route,
@@ -159,20 +173,10 @@ trait ActionTrait {
             'ticketsGained' => $destinationColor == RED ? 1 : 0,
             'isDestinationBlue' => $destinationColor == BLUE ? 1 : 0,
             'claimedRoutes' => $this->getClaimedRoutes(),
+            'mainActionMention' => $mainActionMention,
+            'i18n' => array('mainActionMention'),
         ]);
         $this->applyDestinationColorEffect($playerId, $target, $color);
-
-        if ($this->getGameStateValue(NEW_LOOP_COLOR)) {
-            $this->setGameStateValue(NEW_LOOP_COLOR, 0);
-        } else if ($this->gamestate->state()['name'] === "useTicket") {
-            //nothing to do but we don't want to use a blue point action
-        } else if ($this->getGameStateValue(BLUEPOINT_ACTIONS_REMAINING)) {
-            $this->incGameStateValue(BLUEPOINT_ACTIONS_REMAINING, -1);
-        } else {
-            $this->setGameStateValue(MAIN_ACTION_DONE, 1);
-        }
-
-
         $loop = $this->checkLoop($playerId, $route, $reverseDirection);
         $this->updateArrowsStateValues($color, $loop, $from === STARTING_POINT,  $routeId);
 
