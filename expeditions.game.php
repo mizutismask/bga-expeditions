@@ -62,6 +62,7 @@ class Expeditions extends Table {
             ARROWS_SINCE_LOOP_BLUE => 21,
             ARROWS_SINCE_LOOP_YELLOW => 22,
             ARROWS_SINCE_LOOP_RED => 23,
+            ARROW_COUNT_BY_TURN => 24,
             // options
             SHOW_TURN_ORDER => 110,
         ]);
@@ -139,6 +140,7 @@ class Expeditions extends Table {
         $this->initStat('player', STAT_TICKETS_EARNED, 0);
         $this->initStat('player', STAT_BLUE_LOCATIONS_REACHED, 0);
         $this->initStat('player', STAT_KEPT_ADDITIONAL_DESTINATION_CARDS, 0);
+        $this->initStat('player', STAT_BIGGEST_ARROW_COUNT, 0);
 
         // setup the initial game situation here
 
@@ -289,29 +291,27 @@ class Expeditions extends Table {
     */
 
     function upgradeTableDb($from_version) {
-        // $from_version is the current version of this game database, in numerical form.
-        // For example, if the game was running with a release of your game named "140430-1345",
-        // $from_version is equal to 1404301345
+        $changes = [
+            [2307071828, "INSERT INTO DBPREFIX_global (`global_id`, `global_value`) VALUES (24, 0)"], 
+           // [2208182316, "INSERT INTO DBPREFIX_stats (`stats_id`, `global_value`) VALUES (29, 0)"], 
+        ];
 
-        // Example:
-        //        if( $from_version <= 1404301345 )
-        //        {
-        //            // ! important ! Use DBPREFIX_<table_name> for all tables
-        //
-        //            $sql = "ALTER TABLE DBPREFIX_xxxxxxx ....";
-        //            $this->applyDbUpgradeToAllDB( $sql );
-        //        }
-        //        if( $from_version <= 1405061421 )
-        //        {
-        //            // ! important ! Use DBPREFIX_<table_name> for all tables
-        //
-        //            $sql = "CREATE TABLE DBPREFIX_xxxxxxx ....";
-        //            $this->applyDbUpgradeToAllDB( $sql );
-        //        }
-        //        // Please add your future database scheme changes here
-        //
-        //
-
-
+        foreach ($changes as [$version, $sql]) {
+            if ($from_version <= $version) {
+                try {
+                    self::warn("upgradeTableDb apply 1: from_version=$from_version, change=[ $version, $sql ]");
+                    self::applyDbUpgradeToAllDB($sql);
+                } catch (Exception $e) {
+                    // See https://studio.boardgamearena.com/bug?id=64
+                    // BGA framework can produce invalid SQL with non-existant tables when using DBPREFIX_.
+                    // The workaround is to retry the query on the base table only.
+                    self::error("upgradeTableDb apply 1 failed: from_version=$from_version, change=[ $version, $sql ]");
+                    $sql = str_replace("DBPREFIX_", "", $sql);
+                    self::warn("upgradeTableDb apply 2: from_version=$from_version, change=[ $version, $sql ]");
+                    self::applyDbUpgradeToAllDB($sql);
+                }
+            }
+        }
+        self::warn("upgradeTableDb complete: from_version=$from_version");
     }
 }

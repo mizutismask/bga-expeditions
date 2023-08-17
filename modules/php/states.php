@@ -49,6 +49,12 @@ trait StateTrait {
         $this->setGameStateValue(NEW_LOOP_COLOR, 0);
         $this->setGameStateValue(MAIN_ACTION_DONE, 0);
 
+        $arrowCount = intval(self::getGameStateValue(ARROW_COUNT_BY_TURN));
+        if ($arrowCount > intval(self::getStat(STAT_BIGGEST_ARROW_COUNT, $playerId))) {
+            self::setStat($arrowCount, STAT_BIGGEST_ARROW_COUNT, $playerId);
+        }
+        $this->setGameStateValue(ARROW_COUNT_BY_TURN, 0);
+
         $lastTurn = intval(self::getGameStateValue(LAST_TURN));
 
         // check if it was last action from the last player or if there is no arrow left

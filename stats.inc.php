@@ -108,6 +108,11 @@ $stats_type = [
             "name" => totranslate("Traded destinations"),
             "type" => "int"
         ],
+        "biggestArrowCount" => [
+            "id" => 29,
+            "name" => totranslate("Biggest arrow count used in one turn"),
+            "type" => "int"
+        ],
     ],
 
 ];

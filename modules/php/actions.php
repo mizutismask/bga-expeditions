@@ -160,7 +160,7 @@ trait ActionTrait {
         $target = $reverseDirection ? $route->from : $route->to;
         $from = $reverseDirection ? $route->to : $route->from;
         $destinationColor = $this->getLocationColor($target);
-        $mainActionMention = $mainAction? clienttranslate("(Mandatory arrow)"):"";
+        $mainActionMention = $mainAction ? clienttranslate("(Mandatory arrow)") : "";
 
         self::notifyAllPlayers('claimedRoute', clienttranslate('${player_name}: ${from} ${arrowColor} ${to} ${mainActionMention}'), [
             'playerId' => $playerId,
@@ -176,6 +176,8 @@ trait ActionTrait {
             'mainActionMention' => $mainActionMention,
             'i18n' => array('mainActionMention'),
         ]);
+        $this->incGlobalVariable(ARROW_COUNT_BY_TURN, 1);
+
         $this->applyDestinationColorEffect($playerId, $target, $color);
         $loop = $this->checkLoop($playerId, $route, $reverseDirection);
         $this->updateArrowsStateValues($color, $loop, $from === STARTING_POINT,  $routeId);
