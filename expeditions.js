@@ -2565,7 +2565,7 @@ var EndScore = /** @class */ (function () {
         this.bestScore = bestScore;
         var headers = document.getElementById("scoretr");
         if (!headers.childElementCount) {
-            dojo.place("\n                <th></th>\n                <th id=\"th-destination-reached-score\" class=\"\">".concat(_("Destinations reached"), "</th>\n                <th id=\"th-revealed-tokens-back-score\" class=\"\">").concat(_("Revealed destinations reached"), "</th>\n                <th id=\"th-destination-unreached-score\" class=\"\">").concat(_("Destinations not reached"), "</th>\n                <th id=\"th-revelead-tokens-left-score\" class=\"\">").concat(_("Reveled destinations not reached"), "</th>\n                <th id=\"th-total-score\" class=\"\">").concat(_("Total"), "</th>\n            "), headers);
+            dojo.place("\n                <th></th>\n                <th id=\"th-destination-reached-score\" class=\"\">".concat(_("Destinations reached"), "</th>\n                <th id=\"th-revealed-tokens-back-score\" class=\"\">").concat(_("Revealed destinations reached"), "</th>\n                <th id=\"th-destination-unreached-score\" class=\"\">").concat(_("Destinations not reached"), "</th>\n                <th id=\"th-revelead-tokens-left-score\" class=\"\">").concat(_("Revealed destinations not reached"), "</th>\n                <th id=\"th-total-score\" class=\"\">").concat(_("Total"), "</th>\n            "), headers);
         }
         players.forEach(function (player) {
             var _a;
