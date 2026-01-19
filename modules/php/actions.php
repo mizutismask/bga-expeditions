@@ -429,7 +429,7 @@ trait ActionTrait {
             if ($previous) {
                 $previousRoute = $this->getRoute($previous->routeId);
                 $previousTo = $previous->reverseDirection ? $previousRoute->from : $previousRoute->to;
-                $this->logRoute("previousRoute", $previousRoute, $previous->reverseDirection);
+                //$this->logRoute("previousRoute", $previousRoute, $previous->reverseDirection);
                 $junction = $previousTo == $claimedRoute->from ? $claimedRoute->from : $claimedRoute->to;
                 $end = $junction == $claimedRoute->from ? $claimedRoute->to : $claimedRoute->from;
                 $reversed = $junction > $end;

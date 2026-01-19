@@ -393,9 +393,9 @@ var DESTINATIONS = [
 ];
 function setupDestinationCardDiv(cardDiv, cardUniqueId) {
     var destination = DESTINATIONS.find(function (d) { return d.id == cardUniqueId; });
-    //console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
-    cardDiv.title = "".concat(dojo.string.substitute(_("${to}"), {
-        to: getCityName(destination.to),
+    //log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
+    cardDiv.title = "".concat(dojo.string.substitute(_('${to}'), {
+        to: getCityName(destination.to)
     }));
 }
 function getCityName(cityId) {
@@ -472,11 +472,11 @@ var DestinationCompleteAnimation = /** @class */ (function (_super) {
             /*const x = cardBR.x / this.zoom;
             const y = cardBR.y / this.zoom;
             card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
-            console.log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
+            log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
 */
             _this.game.setSelectedDestination(_this.destination, true);
             setTimeout(function () {
-                card.classList.add("animated");
+                card.classList.add('animated');
                 card.style.transform = "scale(1)";
                 setTimeout(function () {
                     card.style.transform = "";
@@ -1543,7 +1543,7 @@ var TtrMap = /** @class */ (function () {
         var destinationX = this.getXCoord(destination, route);
         var reverse = destinationX < originX;
         //let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
-        /*console.log(
+        /*log(
             "reversedArrow ?",
             reverse,
             ":",
@@ -1611,7 +1611,7 @@ var TtrMap = /** @class */ (function () {
     };
     TtrMap.prototype.isShortRoute = function (route) {
         var angle = route.spaces[0].angle;
-        //console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+        //log("isShortRoute", route.id, angle > 35 && angle < 65);
         return angle >= 35 && angle < 45;
         //return false;
     };
@@ -1763,8 +1763,8 @@ var TtrMap = /** @class */ (function () {
         var shiftY = this.getColorShiftY(route, 15);
         var sameRoutes = this.getAllRoutes().filter(function (r) { return route.from == r.from && route.to == r.to && allClaimedRoutes.find(function (cr) { return cr.routeId === r.id; }); });
         var yellowRoute = sameRoutes.find(function (r) { return r.color === YELLOW; });
-        //console.log("shiftArrowIfNeeded ", route);
-        //console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
+        //log("shiftArrowIfNeeded ", route);
+        //log(sameRoutes.length, " sameRoutes ", sameRoutes);
         if (sameRoutes.length === 3) {
             //shift needed, yellow is never moved
             if (route.color == BLUE)
@@ -1787,20 +1787,20 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.getShiftedCoords = function (route, shift) {
         var space = route.spaces[0];
         var angle = -space.angle;
-        //console.log("*******angle", angle);
+        //log("*******angle", angle);
         while (angle < 0) {
             angle += 180;
-            //console.log("angle", angle);
+            //log("angle", angle);
         }
         while (angle >= 180) {
             angle -= 180;
-            //console.log("angle", angle);
+            //log("angle", angle);
         }
         var x = space.x;
         var y = space.y;
-        //console.log("shift amount", shift, "angle", angle);
-        //console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
-        //console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+        //log("shift amount", shift, "angle", angle);
+        //log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+        //log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
         var shiftX = shift;
         if (this.isShortRoute(route)) {
             shiftX = shiftX * 1.5;
@@ -1817,7 +1817,7 @@ var TtrMap = /** @class */ (function () {
         a 20 horizontal shift with a 90° rotation becomes a 20
         a 30 horizontal shift with a 90° rotation becomes a 30
         */
-        //console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+        //log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
         return { x: x, y: y };
     };
     /**
@@ -1826,7 +1826,7 @@ var TtrMap = /** @class */ (function () {
     TtrMap.prototype.shiftArrow = function (route, shiftX, shiftY) {
         var routeDiv = document.getElementById("route-spaces-route".concat(route.id, "-space").concat(0));
         if (!routeDiv.dataset.shifted) {
-            //console.log("shift arrow", route, shiftX, shiftY);
+            //log("shift arrow", route, shiftX, shiftY);
             var space = route.spaces[0];
             var angle = -space.angle;
             while (angle < 0) {
@@ -1841,14 +1841,14 @@ var TtrMap = /** @class */ (function () {
             x += Math.round(shiftX * Math.abs(Math.sin((angle * Math.PI) / 180)));
             y += Math.round(shiftY * Math.abs(Math.cos((angle * Math.PI) / 180)));
             var oldTransform = routeDiv.style.transform;
-            //console.log("oldTransform", oldTransform);
+            //log("oldTransform", oldTransform);
             var newTransform = oldTransform.replace(new RegExp("translate(.*px, .*px)"), "translate(".concat(x, "px, ").concat(y, "px"));
-            //console.log("newTransform", newTransform);
+            //log("newTransform", newTransform);
             routeDiv.dataset.shifted = 'true';
             routeDiv.style.transform = newTransform;
         }
         else {
-            //console.log("shift aborted, route already shifted", route, shiftX, shiftY);
+            //log("shift aborted, route already shifted", route, shiftX, shiftY);
         }
     };
     /**
@@ -2019,7 +2019,7 @@ var TtrMap = /** @class */ (function () {
      */
     TtrMap.prototype.setSelectableDestination = function (destination, visible) {
         [destination.to].forEach(function (city) {
-            //console.log("search ", `city${city}`);
+            //log("search ", `city${city}`);
             document.getElementById("city".concat(city)).dataset.selectable = '' + visible;
         });
     };
@@ -2381,7 +2381,7 @@ var PlayerDestinations = /** @class */ (function () {
      */
     PlayerDestinations.prototype.markDestinationCompleteNoAnimation = function (destination, withinAnimation) {
         if (withinAnimation === void 0) { withinAnimation = false; }
-        //console.log("markDestinationComplete", destination);
+        //log("markDestinationComplete", destination);
         if (destination.location_arg === this.playerId) {
             var index = this.destinationsTodo.findIndex(function (d) { return d.id == destination.id; });
             if (index !== -1) {
@@ -3739,12 +3739,12 @@ var Expeditions = /** @class */ (function () {
     Expeditions.prototype.loadBug = function (n) {
         function fetchNextUrl() {
             var url = n.args.urls.shift();
-            console.log('Fetching URL', url, '...');
+            log('Fetching URL', url, '...');
             // all the calls have to be made with ajaxcall in order to add the csrf token, otherwise you'll get "Invalid session information for this action. Please try reloading the page or logging in again"
             this.ajaxcall(url, {
-                lock: true,
+                lock: true
             }, self, function (success) {
-                console.log('=> Success ', success);
+                log('=> Success ', success);
                 if (n.args.urls.length > 1) {
                     fetchNextUrl();
                 }
@@ -3754,22 +3754,22 @@ var Expeditions = /** @class */ (function () {
                     dojo.xhrGet({
                         url: url,
                         load: function (success) {
-                            console.log('Success for URL', url, success);
-                            console.log('Done, reloading page');
+                            log('Success for URL', url, success);
+                            log('Done, reloading page');
                             window.location.reload();
                         },
                         handleAs: 'text',
                         error: function (error) {
-                            console.log('Error while loading : ', error);
-                        },
+                            log('Error while loading : ', error);
+                        }
                     });
                 }
             }, function (error) {
                 if (error)
-                    console.log('=> Error ', error);
+                    log('=> Error ', error);
             });
         }
-        console.log('Notif: load bug', n.args);
+        log('Notif: load bug', n.args);
         fetchNextUrl();
     };
     return Expeditions;

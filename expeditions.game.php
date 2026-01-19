@@ -293,7 +293,7 @@ class Expeditions extends Table {
     function upgradeTableDb($from_version) {
         $changes = [
             [2307071828, "INSERT INTO DBPREFIX_global (`global_id`, `global_value`) VALUES (24, 0)"], 
-           // [2208182316, "INSERT INTO DBPREFIX_stats (`stats_id`, `global_value`) VALUES (29, 0)"], 
+           // [2208182316, "INSERT INTO DBPREFIX_stats (`stats_id`, `global_value`) VALUES (29, 0)"], //stat was added but there is no need to add anything here
         ];
 
         foreach ($changes as [$version, $sql]) {

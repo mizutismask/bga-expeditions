@@ -32,27 +32,27 @@ class DestinationCompleteAnimation extends ExpeditionsAnimation {
                  transform:scale(0); z-index:1000;"></div>
             `,
 				this.copyAnchor
-			);
+			)
 
-			const card = document.getElementById(`animated-destination-card-${this.destination.id}`);
-			this.actions.start?.(this.destination);
+			const card = document.getElementById(`animated-destination-card-${this.destination.id}`)
+			this.actions.start?.(this.destination)
 
-			const cardBR = card.getBoundingClientRect();
+			const cardBR = card.getBoundingClientRect()
 			/*const x = cardBR.x / this.zoom;
 			const y = cardBR.y / this.zoom;
 			card.style.transform = `translate(${x}px, ${y}px) scale(${this.initialSize})`;
-			console.log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
+			log(`animate transform = translate(${x}px, ${y}px) scale(${this.initialSize})`);
 */
-			this.game.setSelectedDestination(this.destination, true);
+			this.game.setSelectedDestination(this.destination, true)
 
 			setTimeout(() => {
-				card.classList.add("animated");
-				card.style.transform = `scale(1)`;
+				card.classList.add('animated')
+				card.style.transform = `scale(1)`
 				setTimeout(() => {
-					card.style.transform = ``;
-					this.markComplete(card, cardBR, resolve);
-				}, 200);
-			}, 100);
+					card.style.transform = ``
+					this.markComplete(card, cardBR, resolve)
+				}, 200)
+			}, 100)
 		});
 	}
 

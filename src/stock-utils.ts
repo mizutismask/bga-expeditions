@@ -383,11 +383,11 @@ const DESTINATIONS = [
 ];
 
 function setupDestinationCardDiv(cardDiv: HTMLDivElement, cardUniqueId: number) {
-    const destination = DESTINATIONS.find((d) => d.id == cardUniqueId);
-    //console.log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
-    cardDiv.title = `${dojo.string.substitute(_("${to}"), {
-        to: getCityName(destination.to),
-    })}`;
+	const destination = DESTINATIONS.find((d) => d.id == cardUniqueId)
+	//log("setupDestinationCardDiv", cardDiv, cardUniqueId, destination);
+	cardDiv.title = `${dojo.string.substitute(_('${to}'), {
+		to: getCityName(destination.to)
+	})}`
 }
 
 function getCityName(cityId: number) {

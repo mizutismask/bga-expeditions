@@ -1365,43 +1365,43 @@ class Expeditions implements ExpeditionsGame {
     // Load production bug report handler
     public loadBug(n) {
         function fetchNextUrl() {
-            var url = n.args.urls.shift();
-            console.log('Fetching URL', url, '...');
-            // all the calls have to be made with ajaxcall in order to add the csrf token, otherwise you'll get "Invalid session information for this action. Please try reloading the page or logging in again"
-            this.ajaxcall(
-                url,
-                {
-                    lock: true,
-                },
-                self,
-                function (success) {
-                    console.log('=> Success ', success);
+			var url = n.args.urls.shift()
+			log('Fetching URL', url, '...')
+			// all the calls have to be made with ajaxcall in order to add the csrf token, otherwise you'll get "Invalid session information for this action. Please try reloading the page or logging in again"
+			this.ajaxcall(
+				url,
+				{
+					lock: true
+				},
+				self,
+				function (success) {
+					log('=> Success ', success)
 
-                    if (n.args.urls.length > 1) {
-                        fetchNextUrl();
-                    } else if (n.args.urls.length > 0) {
-                        //except the last one, clearing php cache
-                        url = n.args.urls.shift();
-                        dojo.xhrGet({
-                            url: url,
-                            load: function (success) {
-                                console.log('Success for URL', url, success);
-                                console.log('Done, reloading page');
-                                window.location.reload();
-                            },
-                            handleAs: 'text',
-                            error: function (error) {
-                                console.log('Error while loading : ', error);
-                            },
-                        });
-                    }
-                },
-                function (error) {
-                    if (error) console.log('=> Error ', error);
-                }
-            );
-        }
-        console.log('Notif: load bug', n.args);
+					if (n.args.urls.length > 1) {
+						fetchNextUrl()
+					} else if (n.args.urls.length > 0) {
+						//except the last one, clearing php cache
+						url = n.args.urls.shift()
+						dojo.xhrGet({
+							url: url,
+							load: function (success) {
+								log('Success for URL', url, success)
+								log('Done, reloading page')
+								window.location.reload()
+							},
+							handleAs: 'text',
+							error: function (error) {
+								log('Error while loading : ', error)
+							}
+						})
+					}
+				},
+				function (error) {
+					if (error) log('=> Error ', error)
+				}
+			)
+		}
+		log('Notif: load bug', n.args)
         fetchNextUrl();
     }
 }

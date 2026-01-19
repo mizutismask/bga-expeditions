@@ -99,28 +99,28 @@ class PlayerDestinations {
      * Mark destination as complete (place it on the "complete" column).
      */
     public markDestinationCompleteNoAnimation(destination: Destination, withinAnimation: boolean = false) {
-        //console.log("markDestinationComplete", destination);
-        if (destination.location_arg === this.playerId) {
-            const index = this.destinationsTodo.findIndex((d) => d.id == destination.id);
-            if (index !== -1) {
-                this.destinationsTodo.splice(index, 1);
-                this.destinationsToDoStock.removeCard(destination);
-            }
+		//log("markDestinationComplete", destination);
+		if (destination.location_arg === this.playerId) {
+			const index = this.destinationsTodo.findIndex((d) => d.id == destination.id)
+			if (index !== -1) {
+				this.destinationsTodo.splice(index, 1)
+				this.destinationsToDoStock.removeCard(destination)
+			}
 
-            if (destination.location !== LOCATION_SHARED_COMPLETED) {
-                this.destinationsDone.push(destination);
-                // fromStock: this.destinationsToDoStock
-                this.destinationsDoneStock.addCard(destination);
-                if (withinAnimation) {
-                    this.destinationsDoneStock.getCardElement(destination).classList.add('hidden-for-animation');
-                }
-            }
-            /*document
+			if (destination.location !== LOCATION_SHARED_COMPLETED) {
+				this.destinationsDone.push(destination)
+				// fromStock: this.destinationsToDoStock
+				this.destinationsDoneStock.addCard(destination)
+				if (withinAnimation) {
+					this.destinationsDoneStock.getCardElement(destination).classList.add('hidden-for-animation')
+				}
+			}
+			/*document
 				.getElementById(`player-table-${this.playerId}-destinations-done`)
 				.appendChild(document.getElementById(`destination-card-${destination.id}`));*/
-        }
-        this.updateDestinationsToConnect();
-    }
+		}
+		this.updateDestinationsToConnect()
+	}
 
     /**
      * Add an animation to mark a destination as complete.

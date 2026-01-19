@@ -231,7 +231,7 @@ class TtrMap {
         const destinationX = this.getXCoord(destination, route);
         let reverse = destinationX < originX;
         //let reverse = Math.abs(destinationX - originX) > 5 ? destinationX < originX : destination.y < origin.y;
-        /*console.log(
+        /*log(
 			"reversedArrow ?",
 			reverse,
 			":",
@@ -303,7 +303,7 @@ class TtrMap {
 
     private isShortRoute(route: Route) {
         const angle = route.spaces[0].angle;
-        //console.log("isShortRoute", route.id, angle > 35 && angle < 65);
+        //log("isShortRoute", route.id, angle > 35 && angle < 65);
         return angle >= 35 && angle < 45;
         //return false;
     }
@@ -476,8 +476,8 @@ class TtrMap {
             (r) => route.from == r.from && route.to == r.to && allClaimedRoutes.find((cr) => cr.routeId === r.id)
         );
         const yellowRoute = sameRoutes.find((r) => r.color === YELLOW);
-        //console.log("shiftArrowIfNeeded ", route);
-        //console.log(sameRoutes.length, " sameRoutes ", sameRoutes);
+        //log("shiftArrowIfNeeded ", route);
+        //log(sameRoutes.length, " sameRoutes ", sameRoutes);
         if (sameRoutes.length === 3) {
             //shift needed, yellow is never moved
             if (route.color == BLUE) this.shiftArrow(route, shiftX, shiftY);
@@ -495,22 +495,22 @@ class TtrMap {
     private getShiftedCoords(route: Route, shift: number): Coords {
         const space = route.spaces[0];
         let angle = -space.angle;
-        //console.log("*******angle", angle);
+        //log("*******angle", angle);
         while (angle < 0) {
             angle += 180;
-            //console.log("angle", angle);
+            //log("angle", angle);
         }
         while (angle >= 180) {
             angle -= 180;
-            //console.log("angle", angle);
+            //log("angle", angle);
         }
         let x = space.x;
         let y = space.y;
 
-        //console.log("shift amount", shift, "angle", angle);
+        //log("shift amount", shift, "angle", angle);
 
-        //console.log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
-        //console.log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
+        //log("x", Math.round(shift * Math.abs(Math.sin((angle * Math.PI) / 180))));
+        //log("y", Math.round(shift * Math.abs(Math.cos((angle * Math.PI) / 180))));
 
         let shiftX = shift;
         if (this.isShortRoute(route)) {
@@ -530,7 +530,7 @@ class TtrMap {
 		a 20 horizontal shift with a 90° rotation becomes a 20
 		a 30 horizontal shift with a 90° rotation becomes a 30
 		*/
-        //console.log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
+        //log("route", route.id, "color", route.color, "x", space.x, "y", space.y, "=>x", x, "y", y);
 
         return { x: x, y: y };
     }
@@ -541,7 +541,7 @@ class TtrMap {
     private shiftArrow(route: Route, shiftX: number, shiftY: number) {
         const routeDiv = document.getElementById(`route-spaces-route${route.id}-space${0}`);
         if (!routeDiv.dataset.shifted) {
-            //console.log("shift arrow", route, shiftX, shiftY);
+            //log("shift arrow", route, shiftX, shiftY);
 
             const space = route.spaces[0];
             let angle = -space.angle;
@@ -559,13 +559,13 @@ class TtrMap {
             y += Math.round(shiftY * Math.abs(Math.cos((angle * Math.PI) / 180)));
 
             let oldTransform = routeDiv.style.transform;
-            //console.log("oldTransform", oldTransform);
+            //log("oldTransform", oldTransform);
             let newTransform = oldTransform.replace(new RegExp(`translate\(.*px, .*px\)`), `translate(${x}px, ${y}px`);
-            //console.log("newTransform", newTransform);
+            //log("newTransform", newTransform);
             routeDiv.dataset.shifted = 'true';
             routeDiv.style.transform = newTransform;
         } else {
-            //console.log("shift aborted, route already shifted", route, shiftX, shiftY);
+            //log("shift aborted, route already shifted", route, shiftX, shiftY);
         }
     }
     /**
@@ -773,7 +773,7 @@ class TtrMap {
      */
     public setSelectableDestination(destination: Destination, visible: boolean): void {
         [destination.to].forEach((city) => {
-            //console.log("search ", `city${city}`);
+            //log("search ", `city${city}`);
 
             document.getElementById(`city${city}`).dataset.selectable = '' + visible;
         });
