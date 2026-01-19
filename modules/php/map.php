@@ -81,7 +81,9 @@ trait MapTrait {
     }
 
     public function getRoute(int $routeId) {
-        return $this->ROUTES[$routeId];
+        $route = $this->ROUTES[$routeId];
+        $route->id = $routeId;
+        return $route;
     }
     
     private function getRoutesConnectedToCity(int $city, int $color = 0) {
