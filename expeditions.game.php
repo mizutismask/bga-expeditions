@@ -44,6 +44,10 @@ class Expeditions extends Table {
     use DebugUtilTrait;
     use ExpansionTrait;
 
+    public array $CITIES;
+    public array $ROUTES;
+    public array $DESTINATIONS;
+
     function __construct() {
         parent::__construct();
 
@@ -209,7 +213,7 @@ class Expeditions extends Table {
         $result['showTurnOrder'] = intval($this->getGameStateValue(SHOW_TURN_ORDER)) == 2;
 
         if ($isEnd) {
-            $result['bestScore'] = max(array_map(fn ($player) => intval($player['score']), $result['players']));
+            $result['bestScore'] = max(array_map(fn($player) => intval($player['score']), $result['players']));
         } else {
             $result['lastTurn'] = $this->getGameStateValue(LAST_TURN) > 0;
         }
@@ -292,8 +296,8 @@ class Expeditions extends Table {
 
     function upgradeTableDb($from_version) {
         $changes = [
-            [2307071828, "INSERT INTO DBPREFIX_global (`global_id`, `global_value`) VALUES (24, 0)"], 
-           // [2208182316, "INSERT INTO DBPREFIX_stats (`stats_id`, `global_value`) VALUES (29, 0)"], //stat was added but there is no need to add anything here
+            [2307071828, "INSERT INTO DBPREFIX_global (`global_id`, `global_value`) VALUES (24, 0)"],
+            // [2208182316, "INSERT INTO DBPREFIX_stats (`stats_id`, `global_value`) VALUES (29, 0)"], //stat was added but there is no need to add anything here
         ];
 
         foreach ($changes as [$version, $sql]) {

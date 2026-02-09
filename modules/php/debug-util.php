@@ -24,7 +24,7 @@ trait DebugUtilTrait {
         //$this->gamestate->changeActivePlayer(2343492);
     }
 
-    function debugRevealCards(bool $all = false) {
+    function debug_revealCards(bool $all = false) {
         $players = $this->getPlayersIds();
         $restriction = $all ? "" : " limit 4";
         foreach ($players as $playerId) {
@@ -34,13 +34,13 @@ trait DebugUtilTrait {
     }
 
     function rc(bool $all = false) {
-        $this->debugRevealCards($all);
+        $this->debug_revealCards($all);
     }
     function cd() {
-        $this->debugCompleteDestinations();
+        $this->debug_completeDestinations();
     }
 
-    function debugCompleteDestinations() {
+    function debug_completeDestinations() {
         $players = $this->getPlayersIds();
         $restriction = " limit " . ($this->getInitialDestinationCardNumber() - 1);
         foreach ($players as $playerId) {
@@ -49,17 +49,17 @@ trait DebugUtilTrait {
         $this->gamestate->jumpToState(ST_PLAYER_CHOOSE_ACTION);
     }
 
-    function debugSetDestinationInHand($cardType, $playerId) {
+    function debug_setDestinationInHand($cardType, $playerId) {
         $card = $this->getDestinationFromDb(array_values($this->destinations->getCardsOfType(1, $cardType))[0]);
         $this->destinations->moveCard($card->id, 'hand', $playerId);
         return $card;
     }
 
-    function debugEmptyDestinationDeck() {
+    function debug_emptyDestinationDeck() {
         $this->destinations->moveAllCardsInLocation('deck', 'void');
     }
 
-    function debugAlmostEmptyDestinationDeck() {
+    function debug_almostEmptyDestinationDeck() {
         $moveNumber = $this->getRemainingDestinationCardsInDeck() - 1;
         $this->destinations->pickCardsForLocation($moveNumber, 'deck', 'discard');
     }
@@ -68,7 +68,7 @@ trait DebugUtilTrait {
         $this->debugClaimExpeditionRoutes();
     }
 
-    function clear() {
+    function debug_clear() {
         self::DbQuery("DELETE FROM `claimed_routes`");
         $this->setGlobalVariable(LAST_BLUE_ROUTES, [null, null, null]);
         $this->setGlobalVariable(LAST_YELLOW_ROUTES, [null, null, null]);
@@ -76,7 +76,7 @@ trait DebugUtilTrait {
         $this->setGameStateValue(NEW_LOOP_COLOR, 0);
         $this->setGameStateValue(MAIN_ACTION_DONE, 0);
         $this->setGameStateValue(BLUEPOINT_ACTIONS_REMAINING, 0);
-        $this->debugResetArrowsLeft();
+        $this->debug_resetArrowsLeft();
         self::DbQuery("UPDATE `destination` set `completed` = false");
     }
 
@@ -122,17 +122,17 @@ trait DebugUtilTrait {
         ]);
     }
 
-    function debugArrowLeft() {
+    function debug_arrowLeft() {
         $this->setRemainingArrows(BLUE, 0);
         $this->setRemainingArrows(YELLOW, 0);
         $this->setRemainingArrows(RED, 1);
     }
 
     function al() {
-        $this->debugArrowLeft();
+        $this->debug_arrowLeft();
     }
 
-    function debugResetArrowsLeft() {
+    function debug_resetArrowsLeft() {
         $this->setRemainingArrows(BLUE, 45);
         $this->setRemainingArrows(YELLOW, 45);
         $this->setRemainingArrows(RED, 45);
@@ -140,7 +140,7 @@ trait DebugUtilTrait {
 
     function loop() {
         $playerId = $this->getActivePlayerId();
-        $this->clear();
+        $this->debug_clear();
         $routesInLoop = [9, 66, 471, 474];
         foreach ($routesInLoop as $routeId) {
             $this->debugClaimRoute($playerId, $this->ROUTES[$routeId]);
@@ -201,6 +201,11 @@ trait DebugUtilTrait {
         }
     }
 
+    public function debug_addTicket(int $amount=2) {
+        $this->dbIncField("player", "player_remaining_tickets", $amount, "player_id", $this->getCurrentPlayerId());
+        
+    }
+
     function debug($debugData) {
         if ($this->getBgaEnvironment() != 'studio') {
             return;
@@ -211,6 +216,8 @@ trait DebugUtilTrait {
     function endGame() {
         $this->gamestate->nextState("endGame");
     }
+
+
 
     /*
    * loadBug: in studio, type loadBug(20762) into the table chat to load a bug report from production
